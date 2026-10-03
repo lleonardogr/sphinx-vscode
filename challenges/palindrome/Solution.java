@@ -1,16 +1,8 @@
-import java.util.Scanner;
-
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String word = scanner.next().toLowerCase();
-        boolean palindrome = true;
-        for (int i = 0; i < word.length() / 2; i++) {
-            if (word.charAt(i) != word.charAt(word.length() - 1 - i)) {
-                palindrome = false;
-                break;
-            }
-        }
-        System.out.println(palindrome ? "Palindrome" : "Not a palindrome");
+void main() {
+    String word = IO.readln().trim().toLowerCase();
+    String reversed = "";
+    for (int i = word.length() - 1; i >= 0; i--) {
+        reversed += word.charAt(i);
     }
+    IO.println(word.equals(reversed) ? "Palindrome" : "Not a palindrome");
 }

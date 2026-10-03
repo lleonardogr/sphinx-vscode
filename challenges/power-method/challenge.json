@@ -4,7 +4,7 @@
   "difficulty": "Medium",
   "order": 2,
   "hints": [
-    "A method has a return type, a name and parameters: static long power(int base, int exponent) { ... }",
+    "A method has a return type, a name and parameters: long power(int base, int exponent) { ... } (classic Java adds static in front)",
     "Start with long result = 1; and multiply it by base, exponent times.",
     "Don't forget to return result; at the end of the method."
   ],

@@ -5,11 +5,12 @@ import { Progress } from './progress';
 export type PanelAction =
   | { type: 'run' }
   | { type: 'submit' }
+  | { type: 'terminal' }
   | { type: 'reset' }
   | { type: 'openCode' }
   | { type: 'goto'; line: number; column: number };
 
-const ACTIONS = new Set(['run', 'submit', 'reset', 'openCode', 'goto']);
+const ACTIONS = new Set(['run', 'submit', 'terminal', 'reset', 'openCode', 'goto']);
 
 function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -158,6 +159,7 @@ export class ChallengePanel {
     <div class="toolbar">
       <button data-action="run" title="Compile and run the sample tests (Cmd/Ctrl+Alt+R)">▶ Run</button>
       <button data-action="submit" class="primary" title="Run all tests, including hidden ones (Cmd/Ctrl+Alt+Enter)">✔ Submit</button>
+      <button data-action="terminal" class="secondary" title="Run your program in a terminal and type the input yourself">⌨ Run in Terminal</button>
       <span class="spacer"></span>
       <button data-action="openCode" class="secondary">Open code</button>
       <button data-action="reset" class="secondary">Reset code</button>
@@ -174,9 +176,9 @@ export class ChallengePanel {
     ${hiddenCount ? `<p class="muted">+ ${hiddenCount} hidden test${hiddenCount > 1 ? 's' : ''} run when you submit.</p>` : ''}
     ${hints}
     <p class="muted style-note">
-      Both Java styles are accepted, because only your program's output is checked. You can use the classic
-      <code>public class Main</code> with <code>public static void main(String[] args)</code>, <code>System.out.println</code> and <code>Scanner</code>,
-      or modern Java 25+ compact source files with <code>void main()</code>, <code>IO.println</code> and <code>IO.readln</code>.
+      Both Java styles are accepted, because only your program's output is checked. You can write modern Java 25+ with
+      <code>void main()</code> and <code>IO.println</code>, or classic Java with <code>public class Main</code> and
+      <code>System.out.println</code>. To get classic starter code, set <code>techChallenges.java.style</code> to <code>classic</code>.
     </p>
   </main>
 

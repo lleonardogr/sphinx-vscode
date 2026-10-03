@@ -1,19 +1,14 @@
-import java.util.Scanner;
-
-public class Main {
-
-    static long power(int base, int exponent) {
-        long result = 1;
-        for (int i = 0; i < exponent; i++) {
-            result *= base;
-        }
-        return result;
+long power(int base, int exponent) {
+    long result = 1;
+    for (int i = 0; i < exponent; i++) {
+        result *= base;
     }
+    return result;
+}
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int base = scanner.nextInt();
-        int exponent = scanner.nextInt();
-        System.out.println(base + "^" + exponent + " = " + power(base, exponent));
-    }
+void main() {
+    String[] parts = IO.readln().trim().split("\\s+");
+    int base = Integer.parseInt(parts[0]);
+    int exponent = Integer.parseInt(parts[1]);
+    IO.println(base + "^" + exponent + " = " + power(base, exponent));
 }

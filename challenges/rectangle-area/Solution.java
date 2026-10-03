@@ -1,13 +1,7 @@
-import java.util.Scanner;
-
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        double width = scanner.nextDouble();
-        double height = scanner.nextDouble();
-        double area = width * height;
-        double perimeter = 2 * (width + height);
-        System.out.printf("Area: %.2f%n", area);
-        System.out.printf("Perimeter: %.2f%n", perimeter);
-    }
+void main() {
+    String[] parts = IO.readln().trim().split("\\s+");
+    double width = Double.parseDouble(parts[0]);
+    double height = Double.parseDouble(parts[1]);
+    IO.println(String.format("Area: %.2f", width * height));
+    IO.println(String.format("Perimeter: %.2f", 2 * (width + height)));
 }

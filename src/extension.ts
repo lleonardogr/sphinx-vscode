@@ -4,29 +4,57 @@ import * as vscode from 'vscode';
 import { ChallengePanel, PanelAction } from './challengePanel';
 import { Challenge, loadChallenges } from './challenges';
 import { Progress } from './progress';
-import { RunOutcome, runChallengeCode } from './runner';
+import { RunOutcome, javacMajorVersion, runChallengeCode } from './runner';
+import { runInTerminal } from './terminalRunner';
 import { ChallengeNode, ChallengeTreeProvider } from './treeView';
 
 const CODE_FILE = 'Main.java';
 
 export function activate(context: vscode.ExtensionContext): void {
   const progress = new Progress(context.globalState);
-  const output = vscode.window.createOutputChannel('Java Challenges');
-  const diagnostics = vscode.languages.createDiagnosticCollection('javaChallenges');
+  const output = vscode.window.createOutputChannel('Tech Challenges');
+  const diagnostics = vscode.languages.createDiagnosticCollection('techChallenges');
   let challenges: Challenge[] = [];
   const running = new Set<string>();
 
   const tree = new ChallengeTreeProvider(() => challenges, progress);
-  const treeView = vscode.window.createTreeView('javaChallenges.list', { treeDataProvider: tree });
+  const treeView = vscode.window.createTreeView('techChallenges.list', { treeDataProvider: tree });
   const panel = new ChallengePanel(context.extensionUri, progress, (action, c) => handlePanelAction(action, c));
   const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-  status.command = 'javaChallenges.list.focus';
-  status.tooltip = 'Java Challenges: open the challenge list';
+  status.command = 'techChallenges.list.focus';
+  status.tooltip = 'Tech Challenges: open the challenge list';
   status.show();
 
   context.subscriptions.push(output, diagnostics, treeView, status, { dispose: () => panel.dispose() });
 
-  const config = () => vscode.workspace.getConfiguration('javaChallenges');
+  const config = () => vscode.workspace.getConfiguration('techChallenges');
+  const javaHome = () => config().get<string>('java.home', '').trim() || undefined;
+  const javaStyle = () => config().get<'modern' | 'classic'>('java.style', 'modern');
+  const starterFor = (c: Challenge) => (javaStyle() === 'classic' ? c.starterCodeClassic : c.starterCode);
+  let jdkChecked = false;
+
+  /** Modern starter code needs JDK 25+. Offer to switch to classic once per session if the JDK is older. */
+  async function checkJdkForStyle(): Promise<void> {
+    if (jdkChecked || javaStyle() !== 'modern') {
+      return;
+    }
+    jdkChecked = true;
+    const major = await javacMajorVersion(javaHome());
+    if (major === undefined || major >= 25) {
+      return;
+    }
+    const choice = await vscode.window.showWarningMessage(
+      `Your JDK is version ${major}, but the modern Java starter code (void main(), IO.println) needs JDK 25 or newer.`,
+      'Use Classic Java',
+      'Download JDK 25+',
+    );
+    if (choice === 'Use Classic Java') {
+      await config().update('java.style', 'classic', vscode.ConfigurationTarget.Global);
+      vscode.window.showInformationMessage('Classic Java starter code will be used for new challenges. Use "Reset Code to Starter" to switch a challenge you already opened.');
+    } else if (choice === 'Download JDK 25+') {
+      vscode.env.openExternal(vscode.Uri.parse('https://adoptium.net/temurin/releases/'));
+    }
+  }
 
   function reload(): void {
     const extra = config().get<string[]>('extraChallengePaths', []);
@@ -34,7 +62,7 @@ export function activate(context: vscode.ExtensionContext): void {
     challenges = result.challenges;
     if (result.errors.length) {
       result.errors.forEach((e) => output.appendLine(`[challenges] ${e}`));
-      vscode.window.showWarningMessage('Some challenges could not be loaded. See the "Java Challenges" output for details.');
+      vscode.window.showWarningMessage('Some challenges could not be loaded. See the "Tech Challenges" output for details.');
     }
     tree.refresh();
     updateStatus();
@@ -42,7 +70,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   function updateStatus(): void {
     const solved = progress.solvedCount(challenges.map((c) => c.id));
-    status.text = `$(coffee) ${solved}/${challenges.length} solved`;
+    status.text = `$(mortar-board) ${solved}/${challenges.length} solved`;
     treeView.message = challenges.length ? undefined : 'No challenges found.';
   }
 
@@ -54,7 +82,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }
     const ws = vscode.workspace.workspaceFolders?.[0];
     if (ws) {
-      return path.join(ws.uri.fsPath, 'java-challenges');
+      return path.join(ws.uri.fsPath, 'tech-challenges');
     }
     return path.join(context.globalStorageUri.fsPath, 'solutions');
   }
@@ -78,7 +106,7 @@ export function activate(context: vscode.ExtensionContext): void {
     const file = codePath(c);
     if (!fs.existsSync(file)) {
       fs.mkdirSync(path.dirname(file), { recursive: true });
-      fs.writeFileSync(file, c.starterCode);
+      fs.writeFileSync(file, starterFor(c));
     }
     return file;
   }
@@ -111,6 +139,7 @@ export function activate(context: vscode.ExtensionContext): void {
   }
 
   async function openChallenge(c: Challenge): Promise<void> {
+    void checkJdkForStyle();
     await panel.show(c);
     const file = ensureCodeFile(c);
     await vscode.window.showTextDocument(vscode.Uri.file(file), { viewColumn: vscode.ViewColumn.Two, preview: false });
@@ -184,7 +213,7 @@ export function activate(context: vscode.ExtensionContext): void {
             mustContain: c.mustContain,
             mustNotContain: c.mustNotContain,
             timeLimitMs: c.timeLimitMs,
-            javaHome: config().get<string>('javaHome', '').trim() || undefined,
+            javaHome: javaHome(),
           }),
       );
 
@@ -196,7 +225,7 @@ export function activate(context: vscode.ExtensionContext): void {
         if (choice === 'Download JDK') {
           vscode.env.openExternal(vscode.Uri.parse('https://adoptium.net/temurin/releases/'));
         } else if (choice === 'Open Settings') {
-          vscode.commands.executeCommand('workbench.action.openSettings', 'javaChallenges.javaHome');
+          vscode.commands.executeCommand('workbench.action.openSettings', 'techChallenges.java.home');
         }
         return;
       }
@@ -220,7 +249,7 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     } catch (e) {
       output.appendLine(`[run] ${(e as Error).stack ?? e}`);
-      vscode.window.showErrorMessage(`Java Challenges: ${(e as Error).message}`);
+      vscode.window.showErrorMessage(`Tech Challenges: ${(e as Error).message}`);
     } finally {
       running.delete(c.id);
     }
@@ -239,14 +268,28 @@ export function activate(context: vscode.ExtensionContext): void {
     const doc = vscode.workspace.textDocuments.find((d) => d.uri.fsPath === file);
     if (doc) {
       const edit = new vscode.WorkspaceEdit();
-      edit.replace(doc.uri, new vscode.Range(0, 0, doc.lineCount, 0), c.starterCode);
+      edit.replace(doc.uri, new vscode.Range(0, 0, doc.lineCount, 0), starterFor(c));
       await vscode.workspace.applyEdit(edit);
       await doc.save();
     } else {
-      fs.writeFileSync(file, c.starterCode);
+      fs.writeFileSync(file, starterFor(c));
     }
     diagnostics.delete(vscode.Uri.file(file));
     await revealCode(c);
+  }
+
+  async function runChallengeInTerminal(c: Challenge): Promise<void> {
+    const file = ensureCodeFile(c);
+    const doc = vscode.workspace.textDocuments.find((d) => d.uri.fsPath === file);
+    if (doc?.isDirty) {
+      await doc.save();
+    }
+    runInTerminal({
+      title: c.title,
+      file,
+      javaHome: javaHome(),
+      onCompiled: (outcome) => updateDiagnostics(file, outcome ?? { kind: 'tests', results: [] }),
+    });
   }
 
   function handlePanelAction(action: PanelAction, c: Challenge): void {
@@ -254,6 +297,9 @@ export function activate(context: vscode.ExtensionContext): void {
       case 'run':
       case 'submit':
         runChallenge(c, action.type);
+        break;
+      case 'terminal':
+        runChallengeInTerminal(c);
         break;
       case 'reset':
         resetCode(c);
@@ -270,7 +316,7 @@ export function activate(context: vscode.ExtensionContext): void {
   function updateContextKey(): void {
     const editor = vscode.window.activeTextEditor;
     const isChallenge = !!editor && !!challengeForFile(editor.document.uri.fsPath);
-    vscode.commands.executeCommand('setContext', 'javaChallenges.isChallengeFile', isChallenge);
+    vscode.commands.executeCommand('setContext', 'techChallenges.isChallengeFile', isChallenge);
   }
 
   const withChallenge = (fn: (c: Challenge) => unknown) => async (arg?: unknown) => {
@@ -281,12 +327,13 @@ export function activate(context: vscode.ExtensionContext): void {
   };
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('javaChallenges.open', withChallenge(openChallenge)),
-    vscode.commands.registerCommand('javaChallenges.run', withChallenge((c) => runChallenge(c, 'run'))),
-    vscode.commands.registerCommand('javaChallenges.submit', withChallenge((c) => runChallenge(c, 'submit'))),
-    vscode.commands.registerCommand('javaChallenges.resetCode', withChallenge(resetCode)),
-    vscode.commands.registerCommand('javaChallenges.refresh', reload),
-    vscode.commands.registerCommand('javaChallenges.resetProgress', async () => {
+    vscode.commands.registerCommand('techChallenges.open', withChallenge(openChallenge)),
+    vscode.commands.registerCommand('techChallenges.run', withChallenge((c) => runChallenge(c, 'run'))),
+    vscode.commands.registerCommand('techChallenges.submit', withChallenge((c) => runChallenge(c, 'submit'))),
+    vscode.commands.registerCommand('techChallenges.runInTerminal', withChallenge(runChallengeInTerminal)),
+    vscode.commands.registerCommand('techChallenges.resetCode', withChallenge(resetCode)),
+    vscode.commands.registerCommand('techChallenges.refresh', reload),
+    vscode.commands.registerCommand('techChallenges.resetProgress', async () => {
       const answer = await vscode.window.showWarningMessage(
         'Reset progress for all challenges? Your code files are kept.',
         { modal: true },
@@ -299,7 +346,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     vscode.window.onDidChangeActiveTextEditor(updateContextKey),
     vscode.workspace.onDidChangeConfiguration((e) => {
-      if (e.affectsConfiguration('javaChallenges')) {
+      if (e.affectsConfiguration('techChallenges')) {
         reload();
         updateContextKey();
       }

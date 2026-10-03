@@ -5,7 +5,7 @@
   "order": 4,
   "hints": [
     "scanner.nextDouble() reads a decimal number.",
-    "%.2f means: a decimal number with 2 digits after the point. %n is a new line."
+    "%.2f means: a decimal number with 2 digits after the point. \"Area: %.2f\".formatted(area) builds the text."
   ],
   "mustContain": [
     {

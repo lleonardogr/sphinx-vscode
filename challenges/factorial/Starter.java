@@ -1,10 +1,6 @@
-import java.util.Scanner;
+void main() {
+    Scanner scanner = new Scanner(System.in);
+    int n = scanner.nextInt();
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-
-        // TODO: calculate and print n!
-    }
+    // TODO: calculate and print n!
 }

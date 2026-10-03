@@ -1,7 +1,7 @@
 {
-  "name": "java-challenges",
-  "displayName": "Java Challenges",
-  "description": "HackerRank/LeetCode-style Java practice inside VS Code: variables, conditionals, loops, arrays, strings and methods.",
+  "name": "tech-challenges",
+  "displayName": "Tech Challenges",
+  "description": "LeetCode/HackerRank-style coding challenges inside VS Code. Starts with Java: variables, conditionals, loops, arrays, strings, methods and OOP.",
   "version": "0.1.0",
   "publisher": "class-plugin",
   "license": "MIT",
@@ -25,7 +25,9 @@
     "exercises",
     "challenges",
     "students",
-    "practice"
+    "practice",
+    "education",
+    "oop"
   ],
   "main": "./out/extension.js",
   "activationEvents": [],
@@ -33,123 +35,147 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "javaChallenges",
-          "title": "Java Challenges",
+          "id": "techChallenges",
+          "title": "Tech Challenges",
           "icon": "media/icon.svg"
         }
       ]
     },
     "views": {
-      "javaChallenges": [
+      "techChallenges": [
         {
-          "id": "javaChallenges.list",
+          "id": "techChallenges.list",
           "name": "Challenges"
         }
       ]
     },
     "commands": [
       {
-        "command": "javaChallenges.open",
+        "command": "techChallenges.open",
         "title": "Open Challenge",
-        "category": "Java Challenges",
+        "category": "Tech Challenges",
         "icon": "$(go-to-file)"
       },
       {
-        "command": "javaChallenges.run",
+        "command": "techChallenges.run",
         "title": "Run Sample Tests",
-        "category": "Java Challenges",
+        "category": "Tech Challenges",
         "icon": "$(play)"
       },
       {
-        "command": "javaChallenges.submit",
+        "command": "techChallenges.submit",
         "title": "Submit (Run All Tests)",
-        "category": "Java Challenges",
+        "category": "Tech Challenges",
         "icon": "$(check-all)"
       },
       {
-        "command": "javaChallenges.resetCode",
+        "command": "techChallenges.runInTerminal",
+        "title": "Run in Terminal (Type Input Yourself)",
+        "category": "Tech Challenges",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "techChallenges.resetCode",
         "title": "Reset Code to Starter",
-        "category": "Java Challenges",
+        "category": "Tech Challenges",
         "icon": "$(discard)"
       },
       {
-        "command": "javaChallenges.refresh",
+        "command": "techChallenges.refresh",
         "title": "Reload Challenges",
-        "category": "Java Challenges",
+        "category": "Tech Challenges",
         "icon": "$(refresh)"
       },
       {
-        "command": "javaChallenges.resetProgress",
+        "command": "techChallenges.resetProgress",
         "title": "Reset All Progress",
-        "category": "Java Challenges",
+        "category": "Tech Challenges",
         "icon": "$(clear-all)"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "javaChallenges.refresh",
-          "when": "view == javaChallenges.list",
+          "command": "techChallenges.refresh",
+          "when": "view == techChallenges.list",
           "group": "navigation"
         },
         {
-          "command": "javaChallenges.resetProgress",
-          "when": "view == javaChallenges.list"
+          "command": "techChallenges.resetProgress",
+          "when": "view == techChallenges.list"
         }
       ],
       "view/item/context": [
         {
-          "command": "javaChallenges.resetCode",
-          "when": "view == javaChallenges.list && viewItem == challenge"
+          "command": "techChallenges.resetCode",
+          "when": "view == techChallenges.list && viewItem == challenge"
         }
       ],
       "editor/title": [
         {
-          "command": "javaChallenges.run",
-          "when": "javaChallenges.isChallengeFile",
+          "command": "techChallenges.run",
+          "when": "techChallenges.isChallengeFile",
           "group": "navigation@1"
         },
         {
-          "command": "javaChallenges.submit",
-          "when": "javaChallenges.isChallengeFile",
+          "command": "techChallenges.runInTerminal",
+          "when": "techChallenges.isChallengeFile",
           "group": "navigation@2"
+        },
+        {
+          "command": "techChallenges.submit",
+          "when": "techChallenges.isChallengeFile",
+          "group": "navigation@3"
         }
       ],
       "commandPalette": [
         {
-          "command": "javaChallenges.resetCode",
-          "when": "javaChallenges.isChallengeFile"
+          "command": "techChallenges.resetCode",
+          "when": "techChallenges.isChallengeFile"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "javaChallenges.run",
+        "command": "techChallenges.run",
         "key": "ctrl+alt+r",
         "mac": "cmd+alt+r",
-        "when": "javaChallenges.isChallengeFile"
+        "when": "techChallenges.isChallengeFile"
       },
       {
-        "command": "javaChallenges.submit",
+        "command": "techChallenges.submit",
         "key": "ctrl+alt+enter",
         "mac": "cmd+alt+enter",
-        "when": "javaChallenges.isChallengeFile"
+        "when": "techChallenges.isChallengeFile"
       }
     ],
     "configuration": {
-      "title": "Java Challenges",
+      "title": "Tech Challenges",
       "properties": {
-        "javaChallenges.javaHome": {
+        "techChallenges.java.home": {
           "type": "string",
           "default": "",
           "markdownDescription": "Path to a JDK installation (the folder that contains `bin/javac`). Leave empty to use `javac`/`java` from your PATH."
         },
-        "javaChallenges.codeFolder": {
+        "techChallenges.java.style": {
+          "type": "string",
+          "enum": [
+            "modern",
+            "classic"
+          ],
+          "default": "modern",
+          "enumDescriptions": [
+            "Java 25+ compact source files: void main() and IO.println (requires JDK 25 or newer)",
+            "Classic public class Main with public static void main(String[] args) and System.out.println (JDK 17+)"
+          ],
+          "markdownDescription": "Style of the starter code for new challenges. Both styles are always accepted when you run or submit, because only the output is checked. Use **Reset Code to Starter** to switch a challenge you already opened."
+        },
+        "techChallenges.codeFolder": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Folder where your solutions are saved (one sub-folder per challenge). Leave empty to use `java-challenges/` inside the open workspace, or the extension's private storage when no folder is open."
+          "markdownDescription": "Folder where your solutions are saved (one sub-folder per challenge). Leave empty to use `tech-challenges/` inside the open workspace, or the extension's private storage when no folder is open."
         },
-        "javaChallenges.extraChallengePaths": {
+        "techChallenges.extraChallengePaths": {
           "type": "array",
           "items": {
             "type": "string"

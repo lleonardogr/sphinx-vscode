@@ -1,22 +1,17 @@
-import java.util.Scanner;
+// TODO: return true if n is a prime number, false otherwise
+boolean isPrime(int n) {
+    return false;
+}
 
-public class Main {
-
-    // TODO: return true if n is a prime number, false otherwise
-    static boolean isPrime(int n) {
-        return false;
-    }
-
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int t = scanner.nextInt();
-        for (int i = 0; i < t; i++) {
-            int n = scanner.nextInt();
-            if (isPrime(n)) {
-                System.out.println(n + " is prime");
-            } else {
-                System.out.println(n + " is not prime");
-            }
+void main() {
+    Scanner scanner = new Scanner(System.in);
+    int t = scanner.nextInt();
+    for (int i = 0; i < t; i++) {
+        int n = scanner.nextInt();
+        if (isPrime(n)) {
+            IO.println(n + " is prime");
+        } else {
+            IO.println(n + " is not prime");
         }
     }
 }

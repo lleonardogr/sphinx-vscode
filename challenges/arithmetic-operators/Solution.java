@@ -1,14 +1,10 @@
-import java.util.Scanner;
-
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int a = scanner.nextInt();
-        int b = scanner.nextInt();
-        System.out.println(a + " + " + b + " = " + (a + b));
-        System.out.println(a + " - " + b + " = " + (a - b));
-        System.out.println(a + " * " + b + " = " + (a * b));
-        System.out.println(a + " / " + b + " = " + (a / b));
-        System.out.println(a + " % " + b + " = " + (a % b));
-    }
+void main() {
+    String[] parts = IO.readln().trim().split("\\s+");
+    int a = Integer.parseInt(parts[0]);
+    int b = Integer.parseInt(parts[1]);
+    IO.println(a + " + " + b + " = " + (a + b));
+    IO.println(a + " - " + b + " = " + (a - b));
+    IO.println(a + " * " + b + " = " + (a * b));
+    IO.println(a + " / " + b + " = " + (a / b));
+    IO.println(a + " % " + b + " = " + (a % b));
 }
