@@ -9,4 +9,5 @@ node_modules/**
 .gitignore
 .github/**
 CONTRIBUTING.md
+tech-challenges/**
 java-challenges/**

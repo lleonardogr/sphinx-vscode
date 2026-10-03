@@ -1,8 +1,9 @@
 // Loads challenges from disk. Each challenge is a folder containing:
 //   challenge.json   metadata, rules and test cases
 //   description.md   the problem statement (Markdown)
-//   Starter.java     the code the student starts from
-//   Solution.java    reference solution (not shipped; used by `npm run validate`)
+//   Starter.java          the code the student starts from (modern Java 25+ compact source file)
+//   Starter.classic.java  the same starter as a classic `public class Main` (optional)
+//   Solution*.java        reference solutions (not shipped; used by `npm run validate`)
 import * as fs from 'fs';
 import * as path from 'path';
 import { Rule, TestCase } from './runner';
@@ -15,6 +16,7 @@ export interface Challenge {
   order: number;
   description: string;
   starterCode: string;
+  starterCodeClassic: string;
   hints: string[];
   mustContain: Rule[];
   mustNotContain: Rule[];
@@ -23,7 +25,7 @@ export interface Challenge {
   dir: string;
 }
 
-export const TOPIC_ORDER = ['Variables', 'Conditionals', 'Loops', 'Arrays', 'Strings', 'Methods'];
+export const TOPIC_ORDER = ['Variables', 'Conditionals', 'Loops', 'Arrays', 'Strings', 'Methods', 'OOP'];
 
 export function topicRank(topic: string): number {
   const i = TOPIC_ORDER.indexOf(topic);
@@ -48,6 +50,7 @@ export function loadChallenge(dir: string): Challenge {
     order: meta.order ?? 0,
     description: readOptional(dir, 'description.md'),
     starterCode: readOptional(dir, 'Starter.java'),
+    starterCodeClassic: readOptional(dir, 'Starter.classic.java') || readOptional(dir, 'Starter.java'),
     hints: meta.hints ?? [],
     mustContain: meta.mustContain ?? [],
     mustNotContain: meta.mustNotContain ?? [],

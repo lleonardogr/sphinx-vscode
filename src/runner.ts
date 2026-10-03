@@ -230,8 +230,37 @@ function toolMissing(cmd: string): RunOutcome {
     kind: 'toolMissing',
     message:
       `Could not run "${cmd}". Install a Java JDK (version 17 or newer; 25+ for modern syntax like IO.println), e.g. from https://adoptium.net, ` +
-      `then restart VS Code, or set "javaChallenges.javaHome" in Settings to your JDK folder.`,
+      `then restart VS Code, or set "techChallenges.java.home" in Settings to your JDK folder.`,
   };
+}
+
+export type CompileResult =
+  | { ok: true; outDir: string }
+  | { ok: false; outcome: Extract<RunOutcome, { kind: 'toolMissing' | 'compileError' }> };
+
+/** Compiles `file` into a fresh temp folder. On success the caller must delete `outDir`. */
+export async function compileJava(file: string, javaHome?: string): Promise<CompileResult> {
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tech-challenge-'));
+  const javac = javaBinary(javaHome, 'javac');
+  const compile = await exec(
+    javac,
+    ['-J-Duser.language=en', '-J-Duser.country=US', '-encoding', 'UTF-8', '-d', outDir, path.basename(file)],
+    { cwd: path.dirname(file), timeoutMs: 60_000 },
+  );
+  if (compile.spawnError || compile.code !== 0) {
+    fs.rmSync(outDir, { recursive: true, force: true });
+    if (compile.spawnError) {
+      return { ok: false, outcome: toolMissing(javac) as Extract<RunOutcome, { kind: 'toolMissing' }> };
+    }
+    const raw = (compile.stderr + compile.stdout).trim();
+    return { ok: false, outcome: { kind: 'compileError', errors: parseJavacErrors(raw), raw, hint: await modernSyntaxHint(raw, javaHome) } };
+  }
+  return { ok: true, outDir };
+}
+
+/** Command and arguments that run the compiled program in `outDir`. */
+export function javaCommand(outDir: string, javaHome?: string): { command: string; args: string[] } {
+  return { command: javaBinary(javaHome, 'java'), args: [...JVM_FLAGS, '-cp', outDir, 'Main'] };
 }
 
 export async function runChallengeCode(req: RunRequest): Promise<RunOutcome> {
@@ -241,32 +270,21 @@ export async function runChallengeCode(req: RunRequest): Promise<RunOutcome> {
     return { kind: 'ruleViolation', messages: violations };
   }
 
-  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'java-challenge-'));
+  const compiled = await compileJava(req.file, req.javaHome);
+  if (!compiled.ok) {
+    return compiled.outcome;
+  }
   try {
-    const javac = javaBinary(req.javaHome, 'javac');
-    const compile = await exec(
-      javac,
-      ['-J-Duser.language=en', '-J-Duser.country=US', '-encoding', 'UTF-8', '-d', outDir, path.basename(req.file)],
-      { cwd: path.dirname(req.file), timeoutMs: 60_000 },
-    );
-    if (compile.spawnError) {
-      return toolMissing(javac);
-    }
-    if (compile.code !== 0) {
-      const raw = (compile.stderr + compile.stdout).trim();
-      return { kind: 'compileError', errors: parseJavacErrors(raw), raw, hint: await modernSyntaxHint(raw, req.javaHome) };
-    }
-
-    const java = javaBinary(req.javaHome, 'java');
+    const { command, args } = javaCommand(compiled.outDir, req.javaHome);
     const results: TestResult[] = [];
     for (const [index, test] of req.tests.entries()) {
-      const r = await exec(java, [...JVM_FLAGS, '-cp', outDir, 'Main'], {
-        cwd: outDir,
+      const r = await exec(command, args, {
+        cwd: compiled.outDir,
         input: test.input,
         timeoutMs: req.timeLimitMs ?? 5000,
       });
       if (r.spawnError) {
-        return toolMissing(java);
+        return toolMissing(command);
       }
       results.push({
         index,
@@ -283,6 +301,6 @@ export async function runChallengeCode(req: RunRequest): Promise<RunOutcome> {
     }
     return { kind: 'tests', results };
   } finally {
-    fs.rmSync(outDir, { recursive: true, force: true });
+    fs.rmSync(compiled.outDir, { recursive: true, force: true });
   }
 }

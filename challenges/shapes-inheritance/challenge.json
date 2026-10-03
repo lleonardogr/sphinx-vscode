@@ -1,0 +1,41 @@
+{
+  "title": "Shapes (Inheritance)",
+  "topic": "OOP",
+  "difficulty": "Medium",
+  "order": 5,
+  "hints": [
+    "Copy the structure of Circle: fields, a constructor, name() and area().",
+    "extends Shape means a Square IS a Shape, so you can write: Shape shape = new Square(3);",
+    "Format with 2 decimals: \"%s: %.2f\".formatted(shape.name(), shape.area())"
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bclass\\s+Square\\s+extends\\s+Shape\\b",
+      "message": "Create class Square extends Shape."
+    },
+    {
+      "pattern": "\\bclass\\s+Triangle\\s+extends\\s+Shape\\b",
+      "message": "Create class Triangle extends Shape."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2\ncircle 2\nsquare 3\n",
+      "output": "Circle: 12.57\nSquare: 9.00\nTotal area: 21.57\n"
+    },
+    {
+      "input": "1\ntriangle 4 5\n",
+      "output": "Triangle: 10.00\nTotal area: 10.00\n"
+    },
+    {
+      "input": "4\nsquare 1.5\ntriangle 3 3\ncircle 1\nsquare 10\n",
+      "output": "Square: 2.25\nTriangle: 4.50\nCircle: 3.14\nSquare: 100.00\nTotal area: 109.89\n",
+      "hidden": true
+    },
+    {
+      "input": "3\ncircle 0.5\ncircle 10\ntriangle 0 7\n",
+      "output": "Circle: 0.79\nCircle: 314.16\nTriangle: 0.00\nTotal area: 314.94\n",
+      "hidden": true
+    }
+  ]
+}

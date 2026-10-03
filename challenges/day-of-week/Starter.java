@@ -1,10 +1,6 @@
-import java.util.Scanner;
+void main() {
+    Scanner scanner = new Scanner(System.in);
+    int day = scanner.nextInt();
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int day = scanner.nextInt();
-
-        // TODO: use a switch to print the day name
-    }
+    // TODO: use a switch to print the day name
 }

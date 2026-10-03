@@ -1,0 +1,45 @@
+{
+  "title": "Animals (Interfaces)",
+  "topic": "OOP",
+  "difficulty": "Medium",
+  "order": 6,
+  "hints": [
+    "interface Animal { String name(); String sound(); }",
+    "Methods that implement an interface must be public: public String sound() { return \"Woof\"; }",
+    "An Animal[] array can hold a Dog, a Cat… anything that implements Animal."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\binterface\\s+Animal\\b",
+      "message": "Create an interface named Animal."
+    },
+    {
+      "pattern": "\\bimplements\\s+Animal\\b",
+      "message": "Your animal classes should implement Animal."
+    },
+    {
+      "pattern": "\\bAnimal\\s*\\[\\s*\\]",
+      "message": "Store the animals in an Animal[] array."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\ndog cat cow\n",
+      "output": "The dog says Woof!\nThe cat says Meow!\nThe cow says Moo!\n"
+    },
+    {
+      "input": "2\nduck dog\n",
+      "output": "The duck says Quack!\nThe dog says Woof!\n"
+    },
+    {
+      "input": "1\ncat\n",
+      "output": "The cat says Meow!\n",
+      "hidden": true
+    },
+    {
+      "input": "6\ncow cow duck cat dog duck\n",
+      "output": "The cow says Moo!\nThe cow says Moo!\nThe duck says Quack!\nThe cat says Meow!\nThe dog says Woof!\nThe duck says Quack!\n",
+      "hidden": true
+    }
+  ]
+}

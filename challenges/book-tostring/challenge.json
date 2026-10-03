@@ -1,0 +1,36 @@
+{
+  "title": "Book with toString()",
+  "topic": "OOP",
+  "difficulty": "Easy",
+  "order": 3,
+  "hints": [
+    "The method signature must be exactly: public String toString()",
+    "Put @Override on the line above it. The compiler will then check that you really are overriding a method.",
+    "To put a double quote inside a String, escape it: \"\\\"\" is a String containing one \" character."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bclass\\s+Book\\b",
+      "message": "Create a class named Book."
+    },
+    {
+      "pattern": "public\\s+String\\s+toString\\s*\\(\\s*\\)",
+      "message": "Override public String toString() in Book."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2\nClean Code;Robert Martin;2008\nEffective Java;Joshua Bloch;2001\n",
+      "output": "\"Clean Code\" by Robert Martin (2008)\n\"Effective Java\" by Joshua Bloch (2001)\n"
+    },
+    {
+      "input": "1\nDune;Frank Herbert;1965\n",
+      "output": "\"Dune\" by Frank Herbert (1965)\n"
+    },
+    {
+      "input": "3\nThe Pragmatic Programmer;Andrew Hunt;1999\nHead First Java;Kathy Sierra;2003\nSICP;Harold Abelson;1985\n",
+      "output": "\"The Pragmatic Programmer\" by Andrew Hunt (1999)\n\"Head First Java\" by Kathy Sierra (2003)\n\"SICP\" by Harold Abelson (1985)\n",
+      "hidden": true
+    }
+  ]
+}

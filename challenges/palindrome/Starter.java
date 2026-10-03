@@ -1,10 +1,6 @@
-import java.util.Scanner;
+void main() {
+    Scanner scanner = new Scanner(System.in);
+    String word = scanner.next();
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String word = scanner.next();
-
-        // TODO: print "Palindrome" or "Not a palindrome"
-    }
+    // TODO: print "Palindrome" or "Not a palindrome"
 }

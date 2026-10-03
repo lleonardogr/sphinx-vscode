@@ -1,13 +1,9 @@
-import java.util.Scanner;
+void main() {
+    Scanner scanner = new Scanner(System.in);
+    int n = scanner.nextInt();
+    int sum = 0;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        int sum = 0;
+    // TODO: use a while loop to add up the digits
 
-        // TODO: use a while loop to add up the digits
-
-        System.out.println(sum);
-    }
+    IO.println(sum);
 }

@@ -1,10 +1,5 @@
-import java.util.Scanner;
-
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        double celsius = scanner.nextDouble();
-        double fahrenheit = celsius * 9 / 5 + 32;
-        System.out.printf("%.1f C = %.1f F%n", celsius, fahrenheit);
-    }
+void main() {
+    double celsius = Double.parseDouble(IO.readln().trim());
+    double fahrenheit = celsius * 9 / 5 + 32;
+    IO.println("%.1f C = %.1f F".formatted(celsius, fahrenheit));
 }

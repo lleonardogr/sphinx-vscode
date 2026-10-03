@@ -6,7 +6,7 @@
   "hints": [
     "The last element is at index numbers.length - 1.",
     "A loop can count down: for (int i = n - 1; i >= 0; i--)",
-    "System.out.print (without ln) does not move to a new line."
+    "IO.print (without ln) does not move to a new line. Classic Java: System.out.print."
   ],
   "mustContain": [
     {

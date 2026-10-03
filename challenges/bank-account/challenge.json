@@ -1,0 +1,52 @@
+{
+  "title": "Bank Account (Encapsulation)",
+  "topic": "OOP",
+  "difficulty": "Medium",
+  "order": 4,
+  "hints": [
+    "private means only code inside BankAccount can read or change balance.",
+    "Check the rule first, and return false early if the operation is not allowed.",
+    "balance += amount; adds to the field; balance -= amount; subtracts."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bclass\\s+BankAccount\\b",
+      "message": "Keep the class BankAccount."
+    },
+    {
+      "pattern": "\\bprivate\\s+(int|long)\\s+balance\\b",
+      "message": "Keep the balance field private (encapsulation)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\baccount\\s*\\.\\s*balance\\b",
+      "message": "Use account.getBalance() instead of reading the field directly."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\ndeposit 100\nwithdraw 30\nbalance\nwithdraw 100\nbalance\n",
+      "output": "Deposited 100\nWithdrew 30\nBalance: 70\nInsufficient funds\nBalance: 70\n"
+    },
+    {
+      "input": "3\nbalance\ndeposit 50\nbalance\n",
+      "output": "Balance: 0\nDeposited 50\nBalance: 50\n"
+    },
+    {
+      "input": "4\ndeposit 0\ndeposit -20\nwithdraw 0\nbalance\n",
+      "output": "Invalid amount\nInvalid amount\nInvalid amount\nBalance: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "6\ndeposit 10\nwithdraw 10\nbalance\nwithdraw 1\ndeposit 5\nbalance\n",
+      "output": "Deposited 10\nWithdrew 10\nBalance: 0\nInsufficient funds\nDeposited 5\nBalance: 5\n",
+      "hidden": true
+    },
+    {
+      "input": "3\nwithdraw 5\ndeposit 1000000\nbalance\n",
+      "output": "Insufficient funds\nDeposited 1000000\nBalance: 1000000\n",
+      "hidden": true
+    }
+  ]
+}

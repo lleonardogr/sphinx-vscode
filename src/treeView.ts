@@ -11,6 +11,7 @@ const TOPIC_ICONS: Record<string, string> = {
   Arrays: 'symbol-array',
   Strings: 'symbol-string',
   Methods: 'symbol-method',
+  OOP: 'symbol-class',
 };
 
 export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeNode> {
@@ -61,7 +62,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     item.id = `challenge:${c.id}`;
     item.description = c.difficulty;
     item.contextValue = 'challenge';
-    item.command = { command: 'javaChallenges.open', title: 'Open Challenge', arguments: [c.id] };
+    item.command = { command: 'techChallenges.open', title: 'Open Challenge', arguments: [c.id] };
     if (p?.status === 'solved') {
       item.iconPath = new vscode.ThemeIcon('pass-filled', new vscode.ThemeColor('testing.iconPassed'));
     } else if (p?.status === 'attempted') {

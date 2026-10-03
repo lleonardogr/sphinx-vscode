@@ -1,14 +1,8 @@
-import java.util.Scanner;
-
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int year = scanner.nextInt();
-        boolean leap = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
-        if (leap) {
-            System.out.println("Leap year");
-        } else {
-            System.out.println("Not a leap year");
-        }
+void main() {
+    int year = Integer.parseInt(IO.readln().trim());
+    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+        IO.println("Leap year");
+    } else {
+        IO.println("Not a leap year");
     }
 }
