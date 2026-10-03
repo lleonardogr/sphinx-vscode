@@ -38,7 +38,7 @@ export interface TestResult {
 export type RunOutcome =
   | { kind: 'toolMissing'; message: string }
   | { kind: 'ruleViolation'; messages: string[] }
-  | { kind: 'compileError'; errors: CompileError[]; raw: string }
+  | { kind: 'compileError'; errors: CompileError[]; raw: string; hint?: string }
   | { kind: 'tests'; results: TestResult[] };
 
 export interface RunRequest {
@@ -185,12 +185,52 @@ export function parseJavacErrors(raw: string): CompileError[] {
   return errors;
 }
 
+const versionCache = new Map<string, Promise<number | undefined>>();
+
+/** Major version of the JDK's javac (e.g. 17, 25), or undefined if it can't be determined. */
+export function javacMajorVersion(javaHome?: string): Promise<number | undefined> {
+  const javac = javaBinary(javaHome, 'javac');
+  let version = versionCache.get(javac);
+  if (!version) {
+    version = exec(javac, ['-version'], { cwd: os.tmpdir(), timeoutMs: 30_000 }).then((r) => {
+      const m = /javac\s+(\d+)(?:\.(\d+))?/.exec(r.stdout + r.stderr);
+      if (!m) {
+        versionCache.delete(javac);
+        return undefined;
+      }
+      // Java 8 and older report "1.8.0".
+      return m[1] === '1' ? Number(m[2]) : Number(m[1]);
+    });
+    versionCache.set(javac, version);
+  }
+  return version;
+}
+
+// Errors an older JDK gives for Java 25 syntax: compact source files (`void main()` without a
+// class) and the java.lang.IO class.
+const MODERN_SYNTAX_ERROR = /class, interface, enum, or record expected|implicitly declared class|unnamed class|preview feature|symbol:\s+(variable|class) IO\b/;
+
+async function modernSyntaxHint(raw: string, javaHome?: string): Promise<string | undefined> {
+  if (!MODERN_SYNTAX_ERROR.test(raw)) {
+    return undefined;
+  }
+  const major = await javacMajorVersion(javaHome);
+  if (major === undefined || major >= 25) {
+    return undefined;
+  }
+  return (
+    `If you are using modern Java syntax (void main() without a class, or IO.println / IO.readln), ` +
+    `it needs JDK 25 or newer, but you have JDK ${major}. Install a newer JDK, ` +
+    `or use the classic form: public class Main { public static void main(String[] args) { ... } } with System.out.println.`
+  );
+}
+
 function toolMissing(cmd: string): RunOutcome {
   return {
     kind: 'toolMissing',
     message:
-      `Could not run "${cmd}". Install a Java JDK (version 17 or newer, e.g. from https://adoptium.net), ` +
-      `then restart VS Code — or set "javaChallenges.javaHome" in Settings to your JDK folder.`,
+      `Could not run "${cmd}". Install a Java JDK (version 17 or newer; 25+ for modern syntax like IO.println), e.g. from https://adoptium.net, ` +
+      `then restart VS Code, or set "javaChallenges.javaHome" in Settings to your JDK folder.`,
   };
 }
 
@@ -214,7 +254,7 @@ export async function runChallengeCode(req: RunRequest): Promise<RunOutcome> {
     }
     if (compile.code !== 0) {
       const raw = (compile.stderr + compile.stdout).trim();
-      return { kind: 'compileError', errors: parseJavacErrors(raw), raw };
+      return { kind: 'compileError', errors: parseJavacErrors(raw), raw, hint: await modernSyntaxHint(raw, req.javaHome) };
     }
 
     const java = javaBinary(req.javaHome, 'java');

@@ -25,17 +25,41 @@ Students pick a challenge from the **Java Challenges** sidebar (☕ icon). The p
 - **Run / Submit** buttons in the panel and in the editor title bar (`Cmd/Ctrl+Alt+R` runs, `Cmd/Ctrl+Alt+Enter` submits).
 - **Clear feedback**: compiler errors show as red squiggles and link to the line, each test shows Expected vs. Your output with the first differing line, and the panel reports runtime exceptions and time-limit (infinite loop) failures.
 - **Hidden tests** catch edge cases like negative numbers, zero and overflow, without revealing their input.
+- **Classic and modern Java**: only the output is checked, so students can write the classic `public class Main` with `System.out.println` and `Scanner`, or a Java 25+ compact source file with `void main()`, `IO.println` and `IO.readln`. On an older JDK, modern syntax gets a clear "you need JDK 25+" message.
 - **Syntax requirements**: a challenge can require constructs (for example "use a `switch`" or "store the numbers in an array") or forbid shortcuts (`Math.max`, `reverse()`, `Math.pow`).
 - **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/25 solved` counter in the status bar.
 
 ## For students
 
-1. Install a **JDK 17 or newer** (for example [Eclipse Temurin](https://adoptium.net/temurin/releases/)). Check it in a terminal with `javac -version`.
+1. Install a **JDK**, for example [Eclipse Temurin](https://adoptium.net/temurin/releases/). Version 17 or newer works, but **25 or newer** is recommended so you can use modern syntax like `IO.println`. Check it in a terminal with `javac -version`.
 2. Download the latest `java-challenges-x.y.z.vsix` from the [Releases page](https://github.com/lleonardogr/tech-challenges-vscode/releases/latest). Then install it: **Extensions view → `...` menu → Install from VSIX…** From a terminal you can also run `code --install-extension java-challenges-0.1.0.vsix`.
 3. (Recommended) Open a folder (**File → Open Folder…**). Your solutions are saved in `java-challenges/<challenge>/Main.java` inside it.
 4. Click the ☕ icon in the Activity Bar and start with **Hello, World!**
 
-Your code reads input with `Scanner` and prints with `System.out.println`, exactly like HackerRank. Keep the class named `Main`.
+Your program reads its input and prints the answer, exactly like HackerRank. Both styles work:
+
+```java
+// Classic Java (JDK 17+)
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        System.out.println(n * 2);
+    }
+}
+```
+
+```java
+// Java 25+ compact source file
+void main() {
+    int n = Integer.parseInt(IO.readln().trim());
+    IO.println(n * 2);
+}
+```
+
+The file is always `Main.java`. If you write a class, name it `Main`.
 
 **Settings**
 
@@ -65,8 +89,11 @@ challenges/my-challenge/
   challenge.json    metadata, rules and tests
   description.md    problem statement (Markdown, starts with "# Title")
   Starter.java      code the student starts with (class Main)
-  Solution.java     your reference solution (used for validation, not shipped)
+  Solution.java          your reference solution in classic style (used for validation, not shipped)
+  Solution.modern.java   optional Java 25+ variant (compact source file, IO.println)
 ```
+
+`npm run validate` checks **every** `Solution*.java` against the same tests, which proves the challenge accepts both styles. Write rules that work for both: for example `boolean\s+isPrime` rather than `static\s+boolean\s+isPrime`, and `(System\.out|\bIO)\s*\.\s*print` rather than `System\.out\.print`. Modern solutions are skipped when your JDK is older than 25.
 
 `challenge.json`:
 

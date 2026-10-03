@@ -173,6 +173,11 @@ export class ChallengePanel {
     ${examples}
     ${hiddenCount ? `<p class="muted">+ ${hiddenCount} hidden test${hiddenCount > 1 ? 's' : ''} run when you submit.</p>` : ''}
     ${hints}
+    <p class="muted style-note">
+      Both Java styles are accepted, because only your program's output is checked. You can use the classic
+      <code>public class Main</code> with <code>public static void main(String[] args)</code>, <code>System.out.println</code> and <code>Scanner</code>,
+      or modern Java 25+ compact source files with <code>void main()</code>, <code>IO.println</code> and <code>IO.readln</code>.
+    </p>
   </main>
 
   <script nonce="${n}" src="${media('panel.js')}"></script>

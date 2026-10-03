@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- Support for modern Java 25+ syntax. Compact source files (`void main()` without a class), `IO.println` and `IO.readln` are accepted alongside the classic style, because only the output is checked.
+- A friendly compile message explaining that modern syntax needs JDK 25+ when an older JDK is installed.
+- `Solution.modern.java` reference solutions for all 25 challenges. The validator now checks every `Solution*.java`.
+- CI validates on JDK 25 (both styles, on all operating systems) and JDK 17 (classic style).
+
+### Changed
+
+- Challenge rules for `hello-world`, `is-prime` and `power-method` now accept both styles (`IO.println`, methods without `static`).
+
 ## [0.1.0] - 2026-10-03
 
 ### Added

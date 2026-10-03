@@ -1,6 +1,6 @@
 # Power (Method)
 
-Write a method `power(int base, int exponent)` that returns `base` raised to `exponent` (base<sup>exponent</sup>) as a `long`, **using a loop**.
+Write a method `long power(int base, int exponent)` that returns `base` raised to `exponent` (base<sup>exponent</sup>) as a `long`, **using a loop**.
 
 For example, `power(2, 10)` returns `1024`, and anything raised to `0` is `1`.
 

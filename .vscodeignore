@@ -1,7 +1,7 @@
 .vscode/**
 src/**
 scripts/**
-challenges/**/Solution.java
+challenges/**/Solution*.java
 **/*.map
 **/tsconfig.json
 node_modules/**
@@ -9,3 +9,4 @@ node_modules/**
 .gitignore
 .github/**
 CONTRIBUTING.md
+java-challenges/**
