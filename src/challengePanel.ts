@@ -1,0 +1,182 @@
+import * as vscode from 'vscode';
+import { Challenge } from './challenges';
+import { Progress } from './progress';
+
+export type PanelAction =
+  | { type: 'run' }
+  | { type: 'submit' }
+  | { type: 'reset' }
+  | { type: 'openCode' }
+  | { type: 'goto'; line: number; column: number };
+
+const ACTIONS = new Set(['run', 'submit', 'reset', 'openCode', 'goto']);
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function nonce(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  return Array.from({ length: 32 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+}
+
+async function renderMarkdown(md: string): Promise<string> {
+  try {
+    return await vscode.commands.executeCommand<string>('markdown.api.render', md);
+  } catch {
+    return `<pre>${escapeHtml(md)}</pre>`;
+  }
+}
+
+/** The single problem-statement panel, reused as the student moves between challenges. */
+export class ChallengePanel {
+  private panel: vscode.WebviewPanel | undefined;
+  private challenge: Challenge | undefined;
+  private ready = false;
+  private queue: unknown[] = [];
+
+  constructor(
+    private readonly extensionUri: vscode.Uri,
+    private readonly progress: Progress,
+    private readonly onAction: (action: PanelAction, challenge: Challenge) => void,
+  ) {}
+
+  get current(): Challenge | undefined {
+    return this.challenge;
+  }
+
+  async show(challenge: Challenge): Promise<void> {
+    if (!this.panel) {
+      this.panel = vscode.window.createWebviewPanel(
+        'javaChallenge',
+        challenge.title,
+        { viewColumn: vscode.ViewColumn.One, preserveFocus: true },
+        {
+          enableScripts: true,
+          retainContextWhenHidden: true,
+          localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, 'media')],
+        },
+      );
+      this.panel.iconPath = vscode.Uri.joinPath(this.extensionUri, 'media', 'icon.svg');
+      this.panel.onDidDispose(() => {
+        this.panel = undefined;
+        this.challenge = undefined;
+      });
+      this.panel.webview.onDidReceiveMessage((msg) => {
+        if (msg?.type === 'ready') {
+          this.ready = true;
+          this.queue.forEach((m) => this.panel?.webview.postMessage(m));
+          this.queue = [];
+        } else if (this.challenge && ACTIONS.has(msg?.type)) {
+          this.onAction(msg as PanelAction, this.challenge);
+        }
+      });
+    } else {
+      this.panel.reveal(undefined, true);
+    }
+
+    if (this.challenge?.id === challenge.id) {
+      return;
+    }
+    this.challenge = challenge;
+    this.ready = false;
+    this.queue = [];
+    this.panel.title = challenge.title;
+    this.panel.webview.html = await this.render(challenge);
+  }
+
+  post(message: unknown): void {
+    if (!this.panel) {
+      return;
+    }
+    if (this.ready) {
+      this.panel.webview.postMessage(message);
+    } else {
+      this.queue.push(message);
+    }
+  }
+
+  dispose(): void {
+    this.panel?.dispose();
+  }
+
+  private async render(c: Challenge): Promise<string> {
+    const webview = this.panel!.webview;
+    const media = (file: string) => webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', file));
+    const n = nonce();
+    // description.md starts with its own "# Title"; the header above already shows it.
+    const description = await renderMarkdown(c.description.replace(/^#\s+.*\n+/, ''));
+
+    const examples = c.tests
+      .filter((t) => !t.hidden)
+      .map(
+        (t, i) => `
+        <div class="example">
+          <h4>Example ${i + 1}</h4>
+          <div class="io">
+            <div><div class="label">Input</div><pre>${t.input.trim() ? escapeHtml(t.input.replace(/\n$/, '')) : '<em>(no input)</em>'}</pre></div>
+            <div><div class="label">Expected output</div><pre>${escapeHtml(t.output.replace(/\n$/, ''))}</pre></div>
+          </div>
+        </div>`,
+      )
+      .join('');
+
+    const hiddenCount = c.tests.filter((t) => t.hidden).length;
+    const requirements = c.mustContain.length + c.mustNotContain.length > 0
+      ? `<h3>Requirements</h3><ul class="requirements">${[...c.mustContain, ...c.mustNotContain]
+          .map((r) => `<li>${escapeHtml(r.message)}</li>`)
+          .join('')}</ul>`
+      : '';
+
+    const hints = c.hints.length
+      ? `<h3>Hints</h3>
+         ${c.hints.map((h, i) => `<div class="hint" hidden><strong>Hint ${i + 1}:</strong> ${escapeHtml(h)}</div>`).join('')}
+         <button class="secondary" id="show-hint">Show a hint (${c.hints.length})</button>`
+      : '';
+
+    const solved = this.progress.isSolved(c.id);
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https: data:; script-src 'nonce-${n}';">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="${media('panel.css')}">
+  <title>${escapeHtml(c.title)}</title>
+</head>
+<body>
+  <header>
+    <div class="title-row">
+      <h1>${escapeHtml(c.title)}</h1>
+      <span id="solved-badge" class="badge solved" ${solved ? '' : 'hidden'}>✓ Solved</span>
+    </div>
+    <div class="meta">
+      <span class="badge topic">${escapeHtml(c.topic)}</span>
+      <span class="badge difficulty ${escapeHtml(c.difficulty.toLowerCase())}">${escapeHtml(c.difficulty)}</span>
+    </div>
+    <div class="toolbar">
+      <button data-action="run" title="Compile and run the sample tests (Cmd/Ctrl+Alt+R)">▶ Run</button>
+      <button data-action="submit" class="primary" title="Run all tests, including hidden ones (Cmd/Ctrl+Alt+Enter)">✔ Submit</button>
+      <span class="spacer"></span>
+      <button data-action="openCode" class="secondary">Open code</button>
+      <button data-action="reset" class="secondary">Reset code</button>
+    </div>
+  </header>
+
+  <section id="results" aria-live="polite"></section>
+
+  <main>
+    <section class="description">${description}</section>
+    ${requirements}
+    <h3>Examples</h3>
+    ${examples}
+    ${hiddenCount ? `<p class="muted">+ ${hiddenCount} hidden test${hiddenCount > 1 ? 's' : ''} run when you submit.</p>` : ''}
+    ${hints}
+  </main>
+
+  <script nonce="${n}" src="${media('panel.js')}"></script>
+</body>
+</html>`;
+  }
+}

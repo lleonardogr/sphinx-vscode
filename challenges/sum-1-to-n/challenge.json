@@ -1,0 +1,41 @@
+{
+  "title": "Sum from 1 to N",
+  "topic": "Loops",
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "This pattern is called an accumulator: start sum at 0 and add to it inside the loop.",
+    "sum += i; is short for sum = sum + i;"
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop (for or while)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n",
+      "output": "15\n"
+    },
+    {
+      "input": "10\n",
+      "output": "55\n"
+    },
+    {
+      "input": "1\n",
+      "output": "1\n",
+      "hidden": true
+    },
+    {
+      "input": "100\n",
+      "output": "5050\n",
+      "hidden": true
+    },
+    {
+      "input": "10000\n",
+      "output": "50005000\n",
+      "hidden": true
+    }
+  ]
+}

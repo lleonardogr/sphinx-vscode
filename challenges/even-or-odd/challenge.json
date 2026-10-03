@@ -1,0 +1,46 @@
+{
+  "title": "Even or Odd",
+  "topic": "Conditionals",
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "A number is even when the remainder of dividing it by 2 is 0: n % 2 == 0.",
+    "In Java, -3 % 2 is -1 (not 1), so checking n % 2 == 1 fails for negative numbers."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bif\\b",
+      "message": "Use an if / else statement."
+    }
+  ],
+  "tests": [
+    {
+      "input": "4\n",
+      "output": "Even\n"
+    },
+    {
+      "input": "7\n",
+      "output": "Odd\n"
+    },
+    {
+      "input": "0\n",
+      "output": "Even\n",
+      "hidden": true
+    },
+    {
+      "input": "-3\n",
+      "output": "Odd\n",
+      "hidden": true
+    },
+    {
+      "input": "-10\n",
+      "output": "Even\n",
+      "hidden": true
+    },
+    {
+      "input": "2147483647\n",
+      "output": "Odd\n",
+      "hidden": true
+    }
+  ]
+}

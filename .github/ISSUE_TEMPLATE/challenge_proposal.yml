@@ -1,0 +1,42 @@
+name: Challenge proposal
+description: Suggest a new challenge (or report a problem with an existing one)
+labels: [challenge]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      placeholder: e.g. Sum of Even Numbers
+    validations:
+      required: true
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      options: [Variables, Conditionals, Loops, Arrays, Strings, Methods, Other]
+    validations:
+      required: true
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Difficulty
+      options: [Easy, Medium, Hard]
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem statement
+      description: What should the student's program do? Describe the input and output formats.
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example tests
+      description: A few inputs with their expected outputs, including edge cases.
+  - type: textarea
+    id: concept
+    attributes:
+      label: Concept practised
+      description: Which syntax or idea should the student learn? Should any construct be required or forbidden?

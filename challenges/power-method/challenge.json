@@ -1,0 +1,57 @@
+{
+  "title": "Power (Method)",
+  "topic": "Methods",
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "A method has a return type, a name and parameters: static long power(int base, int exponent) { ... }",
+    "Start with long result = 1; and multiply it by base, exponent times.",
+    "Don't forget to return result; at the end of the method."
+  ],
+  "mustContain": [
+    {
+      "pattern": "static\\s+long\\s+power\\s*\\(\\s*int\\s+\\w+\\s*,\\s*int\\s+\\w+\\s*\\)",
+      "message": "Write the method with this signature: static long power(int base, int exponent)."
+    },
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop (for or while)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "Math\\s*\\.\\s*pow",
+      "message": "Use a loop: Math.pow is not allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2 10\n",
+      "output": "2^10 = 1024\n"
+    },
+    {
+      "input": "3 4\n",
+      "output": "3^4 = 81\n"
+    },
+    {
+      "input": "5 0\n",
+      "output": "5^0 = 1\n",
+      "hidden": true
+    },
+    {
+      "input": "-2 3\n",
+      "output": "-2^3 = -8\n",
+      "hidden": true
+    },
+    {
+      "input": "10 18\n",
+      "output": "10^18 = 1000000000000000000\n",
+      "hidden": true
+    },
+    {
+      "input": "7 1\n",
+      "output": "7^1 = 7\n",
+      "hidden": true
+    }
+  ]
+}

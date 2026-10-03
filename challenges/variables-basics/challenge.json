@@ -1,0 +1,37 @@
+{
+  "title": "Greeting with Variables",
+  "topic": "Variables",
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "scanner.nextInt() reads the next whole number.",
+    "Use + to join text and variables: \"Hello, \" + name + \"!\"",
+    "Careful: \"be \" + age + 1 gives \"be 361\". Put the math in parentheses: (age + 1)."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bint\\s+\\w+\\s*=",
+      "message": "Store the age in an int variable."
+    }
+  ],
+  "tests": [
+    {
+      "input": "Ada\n36\n",
+      "output": "Hello, Ada!\nNext year you will be 37 years old.\n"
+    },
+    {
+      "input": "Linus\n20\n",
+      "output": "Hello, Linus!\nNext year you will be 21 years old.\n"
+    },
+    {
+      "input": "Grace\n0\n",
+      "output": "Hello, Grace!\nNext year you will be 1 years old.\n",
+      "hidden": true
+    },
+    {
+      "input": "Alan\n99\n",
+      "output": "Hello, Alan!\nNext year you will be 100 years old.\n",
+      "hidden": true
+    }
+  ]
+}

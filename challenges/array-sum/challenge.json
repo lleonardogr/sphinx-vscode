@@ -1,0 +1,46 @@
+{
+  "title": "Array Sum",
+  "topic": "Arrays",
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Reading: for (int i = 0; i < n; i++) { numbers[i] = scanner.nextInt(); }",
+    "Summing: loop again over the array and add numbers[i] to a sum variable.",
+    "Bonus: the enhanced for loop for (int x : numbers) visits each element."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\[\\s*\\]",
+      "message": "Store the numbers in an array (for example int[] numbers)."
+    },
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop (for or while)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n1 2 3 4 5\n",
+      "output": "15\n"
+    },
+    {
+      "input": "3\n10 -4 6\n",
+      "output": "12\n"
+    },
+    {
+      "input": "1\n42\n",
+      "output": "42\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n0 0 0 0 0 0\n",
+      "output": "0\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n-1 -2 -3 -4\n",
+      "output": "-10\n",
+      "hidden": true
+    }
+  ]
+}

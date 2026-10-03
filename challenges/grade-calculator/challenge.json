@@ -1,0 +1,62 @@
+{
+  "title": "Grade Calculator",
+  "topic": "Conditionals",
+  "difficulty": "Easy",
+  "order": 3,
+  "hints": [
+    "Use an if / else if / else chain.",
+    "Check from the highest grade down: if the score is >= 90 it's an A; otherwise, if it's >= 80 it's a B, and so on.",
+    "Test the boundaries: 90, 89, 60 and 59."
+  ],
+  "mustContain": [
+    {
+      "pattern": "else\\s+if",
+      "message": "Use an if / else if / else chain."
+    }
+  ],
+  "tests": [
+    {
+      "input": "95\n",
+      "output": "A\n"
+    },
+    {
+      "input": "82\n",
+      "output": "B\n"
+    },
+    {
+      "input": "90\n",
+      "output": "A\n",
+      "hidden": true
+    },
+    {
+      "input": "89\n",
+      "output": "B\n",
+      "hidden": true
+    },
+    {
+      "input": "70\n",
+      "output": "C\n",
+      "hidden": true
+    },
+    {
+      "input": "60\n",
+      "output": "D\n",
+      "hidden": true
+    },
+    {
+      "input": "59\n",
+      "output": "F\n",
+      "hidden": true
+    },
+    {
+      "input": "0\n",
+      "output": "F\n",
+      "hidden": true
+    },
+    {
+      "input": "100\n",
+      "output": "A\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "title": "Factorial",
+  "topic": "Loops",
+  "difficulty": "Medium",
+  "order": 4,
+  "hints": [
+    "Like a sum, but start at 1 and multiply instead of add.",
+    "Factorials grow fast! An int can only hold up to 2,147,483,647, and 13! is already bigger. Use a long."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop (for or while)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n",
+      "output": "120\n"
+    },
+    {
+      "input": "0\n",
+      "output": "1\n"
+    },
+    {
+      "input": "1\n",
+      "output": "1\n",
+      "hidden": true
+    },
+    {
+      "input": "10\n",
+      "output": "3628800\n",
+      "hidden": true
+    },
+    {
+      "input": "13\n",
+      "output": "6227020800\n",
+      "hidden": true
+    },
+    {
+      "input": "20\n",
+      "output": "2432902008176640000\n",
+      "hidden": true
+    }
+  ]
+}

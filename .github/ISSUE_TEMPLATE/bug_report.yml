@@ -1,0 +1,51 @@
+name: Bug report
+description: Something in the extension doesn't work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: challenge
+    attributes:
+      label: Challenge
+      description: Which challenge were you working on (if any)?
+      placeholder: e.g. fizzbuzz
+  - type: textarea
+    id: code
+    attributes:
+      label: Your code
+      description: Paste the code that triggered the problem, if relevant.
+      render: java
+  - type: input
+    id: extension-version
+    attributes:
+      label: Extension version
+      placeholder: e.g. 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: vscode-version
+    attributes:
+      label: VS Code version
+      description: Help → About
+    validations:
+      required: true
+  - type: input
+    id: java-version
+    attributes:
+      label: Java version
+      description: Output of `javac -version`
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options: [Windows, macOS, Linux]
+    validations:
+      required: true

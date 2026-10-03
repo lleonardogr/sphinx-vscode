@@ -1,0 +1,176 @@
+{
+  "name": "java-challenges",
+  "displayName": "Java Challenges",
+  "description": "HackerRank/LeetCode-style Java practice inside VS Code: variables, conditionals, loops, arrays, strings and methods.",
+  "version": "0.1.0",
+  "publisher": "class-plugin",
+  "license": "MIT",
+  "author": "lleonardogr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lleonardogr/tech-challenges-vscode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lleonardogr/tech-challenges-vscode/issues"
+  },
+  "homepage": "https://github.com/lleonardogr/tech-challenges-vscode#readme",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Education"
+  ],
+  "keywords": [
+    "java",
+    "exercises",
+    "challenges",
+    "students",
+    "practice"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "javaChallenges",
+          "title": "Java Challenges",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "javaChallenges": [
+        {
+          "id": "javaChallenges.list",
+          "name": "Challenges"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "javaChallenges.open",
+        "title": "Open Challenge",
+        "category": "Java Challenges",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "javaChallenges.run",
+        "title": "Run Sample Tests",
+        "category": "Java Challenges",
+        "icon": "$(play)"
+      },
+      {
+        "command": "javaChallenges.submit",
+        "title": "Submit (Run All Tests)",
+        "category": "Java Challenges",
+        "icon": "$(check-all)"
+      },
+      {
+        "command": "javaChallenges.resetCode",
+        "title": "Reset Code to Starter",
+        "category": "Java Challenges",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "javaChallenges.refresh",
+        "title": "Reload Challenges",
+        "category": "Java Challenges",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "javaChallenges.resetProgress",
+        "title": "Reset All Progress",
+        "category": "Java Challenges",
+        "icon": "$(clear-all)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "javaChallenges.refresh",
+          "when": "view == javaChallenges.list",
+          "group": "navigation"
+        },
+        {
+          "command": "javaChallenges.resetProgress",
+          "when": "view == javaChallenges.list"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "javaChallenges.resetCode",
+          "when": "view == javaChallenges.list && viewItem == challenge"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "javaChallenges.run",
+          "when": "javaChallenges.isChallengeFile",
+          "group": "navigation@1"
+        },
+        {
+          "command": "javaChallenges.submit",
+          "when": "javaChallenges.isChallengeFile",
+          "group": "navigation@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "javaChallenges.resetCode",
+          "when": "javaChallenges.isChallengeFile"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "javaChallenges.run",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "javaChallenges.isChallengeFile"
+      },
+      {
+        "command": "javaChallenges.submit",
+        "key": "ctrl+alt+enter",
+        "mac": "cmd+alt+enter",
+        "when": "javaChallenges.isChallengeFile"
+      }
+    ],
+    "configuration": {
+      "title": "Java Challenges",
+      "properties": {
+        "javaChallenges.javaHome": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to a JDK installation (the folder that contains `bin/javac`). Leave empty to use `javac`/`java` from your PATH."
+        },
+        "javaChallenges.codeFolder": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Folder where your solutions are saved (one sub-folder per challenge). Leave empty to use `java-challenges/` inside the open workspace, or the extension's private storage when no folder is open."
+        },
+        "javaChallenges.extraChallengePaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "markdownDescription": "Extra folders containing challenges (same format as the built-in ones). Teachers can use this to hand out new challenges without rebuilding the extension."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run compile",
+    "validate": "npm run compile && node scripts/validate-challenges.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.0",
+    "typescript": "^5.4.0"
+  }
+}

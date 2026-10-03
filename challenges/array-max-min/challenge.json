@@ -1,0 +1,56 @@
+{
+  "title": "Largest and Smallest",
+  "topic": "Arrays",
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "Start with max = numbers[0] and min = numbers[0], then compare with the other elements.",
+    "Why not start with max = 0? Think about an array where every number is negative."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\[\\s*\\]",
+      "message": "Store the numbers in an array (for example int[] numbers)."
+    },
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop (for or while)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "Arrays\\s*\\.\\s*sort|Math\\s*\\.\\s*(max|min)|Collections",
+      "message": "Find them with a loop: no sorting, Math.max/min or Collections."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n3 9 1 7 5\n",
+      "output": "Max: 9\nMin: 1\n"
+    },
+    {
+      "input": "4\n10 20 30 40\n",
+      "output": "Max: 40\nMin: 10\n"
+    },
+    {
+      "input": "3\n-5 -1 -9\n",
+      "output": "Max: -1\nMin: -9\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n7\n",
+      "output": "Max: 7\nMin: 7\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n4 4 4 4 4\n",
+      "output": "Max: 4\nMin: 4\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n0 -100 100 50 -50 1\n",
+      "output": "Max: 100\nMin: -100\n",
+      "hidden": true
+    }
+  ]
+}

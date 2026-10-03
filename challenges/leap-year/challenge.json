@@ -1,0 +1,52 @@
+{
+  "title": "Leap Year",
+  "topic": "Conditionals",
+  "difficulty": "Medium",
+  "order": 4,
+  "hints": [
+    "\"Divisible by 4\" means year % 4 == 0.",
+    "Combine conditions with && (and), || (or) and != (not equal).",
+    "You can store the result in a boolean variable: boolean leap = ...;"
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bif\\b",
+      "message": "Use an if / else statement."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2024\n",
+      "output": "Leap year\n"
+    },
+    {
+      "input": "2023\n",
+      "output": "Not a leap year\n"
+    },
+    {
+      "input": "1900\n",
+      "output": "Not a leap year\n",
+      "hidden": true
+    },
+    {
+      "input": "2000\n",
+      "output": "Leap year\n",
+      "hidden": true
+    },
+    {
+      "input": "2100\n",
+      "output": "Not a leap year\n",
+      "hidden": true
+    },
+    {
+      "input": "2400\n",
+      "output": "Leap year\n",
+      "hidden": true
+    },
+    {
+      "input": "1996\n",
+      "output": "Leap year\n",
+      "hidden": true
+    }
+  ]
+}

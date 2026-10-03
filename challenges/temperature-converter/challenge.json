@@ -1,0 +1,35 @@
+{
+  "title": "Celsius to Fahrenheit",
+  "topic": "Variables",
+  "difficulty": "Easy",
+  "order": 5,
+  "hints": [
+    "Watch out: 9 / 5 in Java is 1, because both numbers are int! Use 9.0 / 5, or multiply by the double first: celsius * 9 / 5.",
+    "You can print two values with one printf: System.out.printf(\"%.1f C = %.1f F%n\", c, f);"
+  ],
+  "tests": [
+    {
+      "input": "25\n",
+      "output": "25.0 C = 77.0 F\n"
+    },
+    {
+      "input": "100\n",
+      "output": "100.0 C = 212.0 F\n"
+    },
+    {
+      "input": "-40\n",
+      "output": "-40.0 C = -40.0 F\n",
+      "hidden": true
+    },
+    {
+      "input": "36.6\n",
+      "output": "36.6 C = 97.9 F\n",
+      "hidden": true
+    },
+    {
+      "input": "0\n",
+      "output": "0.0 C = 32.0 F\n",
+      "hidden": true
+    }
+  ]
+}

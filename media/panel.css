@@ -1,0 +1,284 @@
+:root {
+  --pass: var(--vscode-testing-iconPassed, #3fb950);
+  --fail: var(--vscode-testing-iconFailed, #f85149);
+  --warn: var(--vscode-editorWarning-foreground, #d29922);
+  --border: var(--vscode-panel-border, rgba(128, 128, 128, 0.35));
+  --code-bg: var(--vscode-textCodeBlock-background, rgba(128, 128, 128, 0.12));
+}
+
+body {
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  color: var(--vscode-foreground);
+  background: var(--vscode-editor-background);
+  padding: 0 20px 40px;
+  line-height: 1.55;
+  max-width: 900px;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--vscode-editor-background);
+  padding: 16px 0 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h1 {
+  font-size: 1.5em;
+  margin: 0;
+}
+
+h3 {
+  margin-top: 1.6em;
+  font-size: 1.05em;
+}
+
+h4 {
+  margin: 0 0 6px;
+  font-size: 0.95em;
+}
+
+.meta {
+  margin: 6px 0 10px;
+  display: flex;
+  gap: 6px;
+}
+
+.badge {
+  font-size: 0.8em;
+  padding: 1px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.badge.solved {
+  color: var(--pass);
+  border-color: var(--pass);
+  font-weight: 600;
+}
+
+.badge.easy { color: var(--pass); border-color: var(--pass); }
+.badge.medium { color: var(--warn); border-color: var(--warn); }
+.badge.hard { color: var(--fail); border-color: var(--fail); }
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.spacer {
+  flex: 1;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 5px 14px;
+  border: 1px solid var(--vscode-button-border, transparent);
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--vscode-button-secondaryForeground);
+  background: var(--vscode-button-secondaryBackground);
+}
+
+button:hover {
+  background: var(--vscode-button-secondaryHoverBackground);
+}
+
+button.primary,
+button[data-action='run'] {
+  color: var(--vscode-button-foreground);
+  background: var(--vscode-button-background);
+}
+
+button.primary:hover,
+button[data-action='run']:hover {
+  background: var(--vscode-button-hoverBackground);
+}
+
+button.primary {
+  background: var(--pass);
+  color: #fff;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+pre {
+  background: var(--code-bg);
+  font-family: var(--vscode-editor-font-family);
+  font-size: var(--vscode-editor-font-size);
+  padding: 8px 10px;
+  border-radius: 4px;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+code {
+  font-family: var(--vscode-editor-font-family);
+  background: var(--code-bg);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+.description table {
+  border-collapse: collapse;
+}
+
+.description th,
+.description td {
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+}
+
+.example {
+  margin-bottom: 12px;
+}
+
+.io {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.label {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+  margin: 4px 0 3px;
+}
+
+.muted {
+  opacity: 0.75;
+  font-size: 0.92em;
+}
+
+.requirements li {
+  margin: 2px 0;
+}
+
+.hint {
+  border-left: 3px solid var(--vscode-textLink-foreground);
+  padding: 4px 10px;
+  margin: 8px 0;
+  background: var(--code-bg);
+}
+
+#results:empty {
+  display: none;
+}
+
+#results {
+  margin-bottom: 16px;
+}
+
+.banner {
+  padding: 10px 14px;
+  border-radius: 4px;
+  border-left: 4px solid var(--border);
+  background: var(--code-bg);
+  margin-bottom: 10px;
+}
+
+.banner ul {
+  margin: 6px 0 0;
+  padding-left: 20px;
+}
+
+.banner p {
+  margin: 6px 0 0;
+}
+
+.banner details {
+  margin-top: 8px;
+}
+
+.banner.success { border-left-color: var(--pass); }
+.banner.error { border-left-color: var(--fail); }
+.banner.warning { border-left-color: var(--warn); }
+.banner.info { border-left-color: var(--vscode-textLink-foreground); }
+
+.errors span {
+  white-space: pre-wrap;
+}
+
+a {
+  color: var(--vscode-textLink-foreground);
+}
+
+.test {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.test summary {
+  display: flex;
+  gap: 12px;
+  padding: 6px 10px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.test summary::-webkit-details-marker {
+  display: none;
+}
+
+.test summary .name {
+  flex: 1;
+}
+
+.test.pass .status { color: var(--pass); }
+.test.fail .status { color: var(--fail); }
+
+.test .time {
+  opacity: 0.6;
+  font-size: 0.9em;
+}
+
+.test-body {
+  padding: 4px 10px 10px;
+}
+
+.diff {
+  color: var(--fail);
+  margin: 8px 0 0;
+}
+
+.stderr {
+  color: var(--fail);
+}
+
+.spinner {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 8px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

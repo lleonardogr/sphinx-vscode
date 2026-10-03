@@ -1,0 +1,53 @@
+{
+  "title": "Largest of Three",
+  "topic": "Conditionals",
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "Start by assuming a is the largest, then compare it with b and with c.",
+    "Some numbers can be equal. Should you use > or >=? Does it matter?",
+    "The logical AND operator is &&: if (a >= b && a >= c) { ... }"
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bif\\b",
+      "message": "Use an if / else statement."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "Math\\s*\\.\\s*max",
+      "message": "Solve it with if / else: Math.max is not allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3 9 5\n",
+      "output": "9\n"
+    },
+    {
+      "input": "10 2 7\n",
+      "output": "10\n"
+    },
+    {
+      "input": "4 4 1\n",
+      "output": "4\n",
+      "hidden": true
+    },
+    {
+      "input": "-5 -2 -9\n",
+      "output": "-2\n",
+      "hidden": true
+    },
+    {
+      "input": "1 2 2\n",
+      "output": "2\n",
+      "hidden": true
+    },
+    {
+      "input": "0 0 0\n",
+      "output": "0\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "title": "Hello, World!",
+  "topic": "Variables",
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Use System.out.println(\"...\");",
+    "Check every character: capital H and W, a comma after Hello, and an exclamation mark at the end."
+  ],
+  "mustContain": [
+    {
+      "pattern": "System\\.out\\.print",
+      "message": "Use System.out.println to print."
+    }
+  ],
+  "tests": [
+    {
+      "input": "",
+      "output": "Hello, World!\n"
+    }
+  ]
+}

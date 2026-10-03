@@ -1,0 +1,52 @@
+{
+  "title": "Palindrome Check",
+  "topic": "Strings",
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Convert the word with toLowerCase() first.",
+    "Compare the first character with the last, the second with the second-to-last, and so on.",
+    "Comparing Strings: use a.equals(b), never a == b."
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\.reverse\\s*\\(",
+      "message": "Solve it with a loop or by building the reversed word yourself: the built-in reverse() is not allowed."
+    }
+  ],
+  "tests": [
+    {
+      "input": "Racecar\n",
+      "output": "Palindrome\n"
+    },
+    {
+      "input": "Java\n",
+      "output": "Not a palindrome\n"
+    },
+    {
+      "input": "a\n",
+      "output": "Palindrome\n",
+      "hidden": true
+    },
+    {
+      "input": "Noon\n",
+      "output": "Palindrome\n",
+      "hidden": true
+    },
+    {
+      "input": "ab\n",
+      "output": "Not a palindrome\n",
+      "hidden": true
+    },
+    {
+      "input": "abcba\n",
+      "output": "Palindrome\n",
+      "hidden": true
+    },
+    {
+      "input": "abca\n",
+      "output": "Not a palindrome\n",
+      "hidden": true
+    }
+  ]
+}

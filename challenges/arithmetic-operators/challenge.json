@@ -1,0 +1,41 @@
+{
+  "title": "Arithmetic Operators",
+  "topic": "Variables",
+  "difficulty": "Easy",
+  "order": 3,
+  "hints": [
+    "Integer division drops the decimal part: 7 / 3 is 2.",
+    "Remainder: 7 % 3 is 1, because 7 = 2 * 3 + 1.",
+    "Wrap each calculation in parentheses when joining it with text: \" = \" + (a + b)."
+  ],
+  "tests": [
+    {
+      "input": "7 3\n",
+      "output": "7 + 3 = 10\n7 - 3 = 4\n7 * 3 = 21\n7 / 3 = 2\n7 % 3 = 1\n"
+    },
+    {
+      "input": "10 5\n",
+      "output": "10 + 5 = 15\n10 - 5 = 5\n10 * 5 = 50\n10 / 5 = 2\n10 % 5 = 0\n"
+    },
+    {
+      "input": "-7 2\n",
+      "output": "-7 + 2 = -5\n-7 - 2 = -9\n-7 * 2 = -14\n-7 / 2 = -3\n-7 % 2 = -1\n",
+      "hidden": true
+    },
+    {
+      "input": "0 9\n",
+      "output": "0 + 9 = 9\n0 - 9 = -9\n0 * 9 = 0\n0 / 9 = 0\n0 % 9 = 0\n",
+      "hidden": true
+    },
+    {
+      "input": "100 7\n",
+      "output": "100 + 7 = 107\n100 - 7 = 93\n100 * 7 = 700\n100 / 7 = 14\n100 % 7 = 2\n",
+      "hidden": true
+    },
+    {
+      "input": "1000 -3\n",
+      "output": "1000 + -3 = 997\n1000 - -3 = 1003\n1000 * -3 = -3000\n1000 / -3 = -333\n1000 % -3 = 1\n",
+      "hidden": true
+    }
+  ]
+}

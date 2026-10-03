@@ -1,0 +1,47 @@
+{
+  "title": "Sum of Digits",
+  "topic": "Loops",
+  "difficulty": "Medium",
+  "order": 6,
+  "hints": [
+    "Keep going while n > 0: add n % 10 to the sum, then do n = n / 10.",
+    "A while loop is a good fit when you don't know in advance how many times to repeat."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bwhile\\b",
+      "message": "Use a while loop."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "charAt|toCharArray|String\\.valueOf|Integer\\.toString|\\.split\\s*\\(|\\.length\\s*\\(\\)",
+      "message": "Solve it with math (% and /), without converting the number to a String."
+    }
+  ],
+  "tests": [
+    {
+      "input": "1234\n",
+      "output": "10\n"
+    },
+    {
+      "input": "9\n",
+      "output": "9\n"
+    },
+    {
+      "input": "0\n",
+      "output": "0\n",
+      "hidden": true
+    },
+    {
+      "input": "1000000\n",
+      "output": "1\n",
+      "hidden": true
+    },
+    {
+      "input": "987654321\n",
+      "output": "45\n",
+      "hidden": true
+    }
+  ]
+}

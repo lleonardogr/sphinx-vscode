@@ -1,0 +1,52 @@
+{
+  "title": "Day of the Week",
+  "topic": "Conditionals",
+  "difficulty": "Easy",
+  "order": 5,
+  "hints": [
+    "switch (day) { case 1: ...; break; case 2: ...; break; default: ... }",
+    "Don't forget break; at the end of each case, or execution falls through to the next one!",
+    "The default case runs when no other case matches."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bswitch\\b",
+      "message": "Use a switch statement."
+    }
+  ],
+  "tests": [
+    {
+      "input": "1\n",
+      "output": "Monday\n"
+    },
+    {
+      "input": "5\n",
+      "output": "Friday\n"
+    },
+    {
+      "input": "7\n",
+      "output": "Sunday\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n",
+      "output": "Wednesday\n",
+      "hidden": true
+    },
+    {
+      "input": "0\n",
+      "output": "Invalid day\n",
+      "hidden": true
+    },
+    {
+      "input": "8\n",
+      "output": "Invalid day\n",
+      "hidden": true
+    },
+    {
+      "input": "-1\n",
+      "output": "Invalid day\n",
+      "hidden": true
+    }
+  ]
+}

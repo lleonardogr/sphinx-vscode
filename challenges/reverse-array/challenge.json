@@ -1,0 +1,52 @@
+{
+  "title": "Reverse an Array",
+  "topic": "Arrays",
+  "difficulty": "Easy",
+  "order": 3,
+  "hints": [
+    "The last element is at index numbers.length - 1.",
+    "A loop can count down: for (int i = n - 1; i >= 0; i--)",
+    "System.out.print (without ln) does not move to a new line."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\[\\s*\\]",
+      "message": "Store the numbers in an array (for example int[] numbers)."
+    },
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop (for or while)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "Collections\\s*\\.\\s*reverse|\\.reverse\\s*\\(",
+      "message": "Reverse it with a loop: no built-in reverse()."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n1 2 3 4 5\n",
+      "output": "5 4 3 2 1\n"
+    },
+    {
+      "input": "3\n9 8 7\n",
+      "output": "7 8 9\n"
+    },
+    {
+      "input": "1\n42\n",
+      "output": "42\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n-1 0 1 0\n",
+      "output": "0 1 0 -1\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n10 20 30 40 50 60\n",
+      "output": "60 50 40 30 20 10\n",
+      "hidden": true
+    }
+  ]
+}

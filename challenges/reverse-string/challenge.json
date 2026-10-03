@@ -1,0 +1,47 @@
+{
+  "title": "Reverse a String",
+  "topic": "Strings",
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Loop from the last index (text.length() - 1) down to 0.",
+    "Start with an empty String reversed = \"\"; and add one character at a time: reversed += text.charAt(i);"
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop (for or while)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\.reverse\\s*\\(",
+      "message": "Build the reversed text with a loop: the built-in reverse() is not allowed."
+    }
+  ],
+  "tests": [
+    {
+      "input": "hello\n",
+      "output": "olleh\n"
+    },
+    {
+      "input": "Java is fun\n",
+      "output": "nuf si avaJ\n"
+    },
+    {
+      "input": "a\n",
+      "output": "a\n",
+      "hidden": true
+    },
+    {
+      "input": "racecar\n",
+      "output": "racecar\n",
+      "hidden": true
+    },
+    {
+      "input": "12345 !?\n",
+      "output": "?! 54321\n",
+      "hidden": true
+    }
+  ]
+}
