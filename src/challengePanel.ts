@@ -6,13 +6,14 @@ export type PanelAction =
   | { type: 'run' }
   | { type: 'submit' }
   | { type: 'terminal' }
+  | { type: 'custom'; input: string }
   | { type: 'aiHint' }
   | { type: 'aiSetup' }
   | { type: 'reset' }
   | { type: 'openCode' }
   | { type: 'goto'; line: number; column: number };
 
-const ACTIONS = new Set(['run', 'submit', 'terminal', 'aiHint', 'aiSetup', 'reset', 'openCode', 'goto']);
+const ACTIONS = new Set(['run', 'submit', 'terminal', 'custom', 'aiHint', 'aiSetup', 'reset', 'openCode', 'goto']);
 
 function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -70,6 +71,8 @@ export class ChallengePanel {
           this.ready = true;
           this.queue.forEach((m) => this.panel?.webview.postMessage(m));
           this.queue = [];
+        } else if (msg?.type === 'custom' && (typeof msg.input !== 'string' || msg.input.length > 100_000)) {
+          vscode.window.showWarningMessage('The custom input is too large (limit: 100,000 characters).');
         } else if (this.challenge && ACTIONS.has(msg?.type)) {
           this.onAction(msg as PanelAction, this.challenge);
         }
@@ -124,6 +127,17 @@ export class ChallengePanel {
       )
       .join('');
 
+    const visible = c.tests.filter((t) => !t.hidden);
+    const customInput = `
+    <h3>Try your own input</h3>
+    <p class="muted">Run your program with any input you like and see what it prints. Rules and hidden tests are not checked here and it doesn't count as an attempt. Use <strong>Run</strong> and <strong>Submit</strong> for the real tests, or <strong>⌨ Run in Terminal</strong> to type the input while the program runs.</p>
+    <textarea id="custom-input" rows="4" spellcheck="false" aria-label="Custom input">${escapeHtml(visible[0]?.input ?? '')}</textarea>
+    <div class="custom-buttons">
+      <button class="secondary" id="run-custom">▶ Run with this input</button>
+      ${visible.map((_, i) => `<button class="link" data-example="${i}">Example ${i + 1}</button>`).join('')}
+    </div>
+    <script type="application/json" id="example-inputs">${JSON.stringify(visible.map((t) => t.input)).replace(/</g, '\\u003c')}</script>
+    <div id="custom-result" aria-live="polite"></div>`;
     const hiddenCount = c.tests.filter((t) => t.hidden).length;
     const requirements = c.mustContain.length + c.mustNotContain.length > 0
       ? `<h3>Requirements</h3><ul class="requirements">${[...c.mustContain, ...c.mustNotContain]
@@ -154,7 +168,7 @@ export class ChallengePanel {
   <link rel="stylesheet" href="${media('panel.css')}">
   <title>${escapeHtml(c.title)}</title>
 </head>
-<body>
+<body data-challenge="${escapeHtml(c.id)}">
   <header>
     <div class="title-row">
       <h1>${escapeHtml(c.title)}</h1>
@@ -182,6 +196,7 @@ export class ChallengePanel {
     <h3>Examples</h3>
     ${examples}
     ${hiddenCount ? `<p class="muted">+ ${hiddenCount} hidden test${hiddenCount > 1 ? 's' : ''} run when you submit.</p>` : ''}
+    ${customInput}
     ${hints}
     <p class="muted style-note">
       Both Java styles are accepted, because only your program's output is checked. You can write modern Java 25+ with

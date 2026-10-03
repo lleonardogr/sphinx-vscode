@@ -332,3 +332,32 @@ button.link {
   color: var(--fail);
   margin: 0;
 }
+
+#custom-input {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--vscode-editor-font-family);
+  font-size: var(--vscode-editor-font-size);
+  color: var(--vscode-input-foreground);
+  background: var(--vscode-input-background);
+  border: 1px solid var(--vscode-input-border, var(--border));
+  border-radius: 3px;
+  padding: 6px 8px;
+  resize: vertical;
+}
+
+#custom-input:focus {
+  outline: 1px solid var(--vscode-focusBorder);
+}
+
+.custom-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+
+.io.one {
+  grid-template-columns: 1fr;
+}

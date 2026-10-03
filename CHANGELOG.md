@@ -14,6 +14,7 @@ First release of **Tech Challenges**, starting with Java.
 - Problem panel with the description, examples, requirements and hints revealed one at a time.
 - Local compile-and-test runner (`javac`/`java`) with sample tests (Run) and hidden tests (Submit).
 - **Run in Terminal**: run the program in an interactive terminal and type the input yourself.
+- **Try your own input**: a custom-input box in the problem panel runs the program once with any input and shows its output, and compares it with the expected output when the input matches an example. Rules aren't checked and it doesn't count as an attempt. The input is remembered per challenge.
 - Modern Java 25+ starter code by default (compact source files, `IO.println`), with a `techChallenges.java.style` setting for classic `public class Main` starter code. Both styles are always accepted, because only the output is checked.
 - A JDK version check that offers to switch to classic style on JDK < 25, and a friendly compile hint when modern syntax is used on an older JDK.
 - Feedback for compile errors (shown as editor diagnostics), wrong answers (expected vs. actual output), runtime exceptions and time limits.
