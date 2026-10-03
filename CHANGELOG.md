@@ -26,6 +26,7 @@ First release of **Tech Challenges**, starting with Java.
 - Guides: [Creating your own challenges](docs/creating-challenges.md) and [AI hints](docs/ai-hints.md).
 - `scripts/validate-challenges.js` to check every starter and reference solution (modern and classic) and to generate expected outputs.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
+- Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
 [Unreleased]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/lleonardogr/tech-challenges-vscode/releases/tag/v0.1.0

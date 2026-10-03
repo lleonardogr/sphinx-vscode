@@ -36,12 +36,41 @@ Students pick a challenge from the **Tech Challenges** sidebar. The problem stat
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
 - **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/31 solved` counter in the status bar.
 
-## For students
+## Getting started (students)
 
-1. Install a **JDK 25 or newer**, for example [Eclipse Temurin](https://adoptium.net/temurin/releases/). Check it in a terminal with `javac -version`. If you only have JDK 17–24, the extension offers to switch to classic Java.
-2. Download the latest `tech-challenges-x.y.z.vsix` from the [Releases page](https://github.com/lleonardogr/tech-challenges-vscode/releases/latest). Then install it: **Extensions view → `...` menu → Install from VSIX…** From a terminal you can also run `code --install-extension tech-challenges-0.1.0.vsix`.
-3. (Recommended) Open a folder (**File → Open Folder…**). Your solutions are saved in `tech-challenges/<challenge>/Main.java` inside it.
-4. Click the **Tech Challenges** icon in the Activity Bar and start with **Hello, World!**
+### 1. Install Java
+
+Install a **JDK 25 or newer**, for example [Eclipse Temurin](https://adoptium.net/temurin/releases/). Then open a terminal and check it:
+
+```bash
+javac -version   # should print javac 25 or newer
+```
+
+If you can only use JDK 17–24, that works too: the extension offers to switch to classic Java.
+
+### 2. Install the extension
+
+1. Open the [latest release](https://github.com/lleonardogr/tech-challenges-vscode/releases/latest) and download **`tech-challenges-x.y.z.vsix`**.
+2. In VS Code, open the **Extensions** view, click the **`...`** menu at the top, and choose **Install from VSIX…**. Then select the downloaded file.
+
+   Or, in a terminal: `code --install-extension tech-challenges-x.y.z.vsix`
+3. Open a folder for your work (**File → Open Folder…**). Your code is saved in `tech-challenges/<challenge>/Main.java` inside it.
+
+### 3. Solve your first challenge
+
+1. Click the **Tech Challenges** icon in the Activity Bar (left side) and choose **Hello, World!** The problem opens on the left and your `Main.java` on the right.
+2. Read the description and examples, then write your code.
+3. Check your work, in whichever way suits you:
+
+   | Button | What it does |
+   |--------|--------------|
+   | **▶ Run** (`Cmd/Ctrl+Alt+R`) | Runs the sample tests and shows expected vs. your output. |
+   | **Try your own input → Run with this input** | Runs your program once with any input you type, and shows what it prints. |
+   | **⌨ Run in Terminal** | Runs your program in a terminal, so you can type the input while it runs. |
+   | **✔ Submit** (`Cmd/Ctrl+Alt+Enter`) | Runs all tests, including hidden edge cases. Pass them all to solve the challenge ✓. |
+
+4. Stuck? Click **Show a hint**, or **✨ Ask AI for a hint** if your teacher or you set up [AI hints](docs/ai-hints.md).
+5. Made a mess? **Reset code** brings back the starter code.
 
 Your program reads its input and prints the answer, exactly like HackerRank. Both styles work:
 
@@ -69,7 +98,7 @@ public class Main {
 
 The file is always `Main.java`. In classic Java, the public class must be named `Main`. Other classes (OOP challenges) go in the same file, without `public`.
 
-**Settings**
+### Settings
 
 | Setting | Default | Description |
 | ------- | ------- | ----------- |
@@ -81,17 +110,19 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 
 ## For teachers
 
-### Build and share the extension
+### Share the extension with your class
+
+Point students to the [latest release](https://github.com/lleonardogr/tech-challenges-vscode/releases/latest) and the [Getting started](#getting-started-students) steps above. Reference solutions (`Solution*.java`) are **never** included in the `.vsix`, but they are visible in this public repository.
+
+To build the `.vsix` yourself:
 
 ```bash
 npm install
 npm run validate   # compiles the extension and checks every challenge against its reference solutions
-npm run package    # creates tech-challenges-0.1.0.vsix
+npm run package    # creates tech-challenges-<version>.vsix
 ```
 
-Send the `.vsix` file to your students, or point them to the [Releases page](https://github.com/lleonardogr/tech-challenges-vscode/releases/latest). Pushing a `v*` tag publishes a release automatically. Reference solutions (`Solution*.java`) are **not** included in the package, but they are visible in this public repository.
-
-To develop, open this folder in VS Code and press **F5** to launch a test window with the extension loaded.
+For a classroom without internet access, AI hints can use a model running on each computer, or on a school server. See [AI hints → For teachers](docs/ai-hints.md#for-teachers).
 
 ### Create your own challenges
 
@@ -108,9 +139,26 @@ In short: run **Tech Challenges: Create New Challenge…**, edit the generated f
 - [ ] AI help for writing new challenges
 - [ ] Publish to the VS Code Marketplace
 
+## Development
+
+```bash
+git clone https://github.com/lleonardogr/tech-challenges-vscode.git
+cd tech-challenges-vscode
+npm install        # dependencies + the commit-message hook
+npm run compile    # type-check and build to out/
+```
+
+Open the folder in VS Code and press **F5** to launch a window with the extension loaded. Then `npm run validate` checks every challenge, and `npm run package` builds the `.vsix`.
+
+- `main` is protected. Work on a branch, open a pull request, and wait for CI (Linux, macOS and Windows; JDK 17 and 25) before merging.
+- Commits and PR titles follow [Conventional Commits](https://www.conventionalcommits.org): `feat(panel): …`, `fix(terminal): …`, `docs: …`.
+- Releases are created by tagging `main` **after** merging: `git tag vX.Y.Z && git push origin vX.Y.Z`.
+
+All the details (workflow, commit types, releasing) are in [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Contributing
 
-Contributions are welcome, especially new challenges! See [CONTRIBUTING.md](CONTRIBUTING.md).
+Contributions are welcome, especially new challenges! Start with [Creating your own challenges](docs/creating-challenges.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
