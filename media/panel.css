@@ -293,3 +293,42 @@ a {
   border-top: 1px solid var(--border);
   padding-top: 10px;
 }
+
+.hint-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+button.link {
+  background: none;
+  border: none;
+  padding: 0 4px;
+  color: var(--vscode-textLink-foreground);
+  text-decoration: underline;
+}
+
+.ai-hint {
+  border: 1px solid var(--vscode-textLink-foreground);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin: 10px 0;
+}
+
+.ai-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.ai-footer {
+  margin-top: 8px;
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+
+.ai-error {
+  color: var(--fail);
+  margin: 0;
+}

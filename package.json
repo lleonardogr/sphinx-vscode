@@ -1,7 +1,7 @@
 {
   "name": "tech-challenges",
   "displayName": "Tech Challenges",
-  "description": "LeetCode/HackerRank-style coding challenges inside VS Code. Starts with Java: variables, conditionals, loops, arrays, strings, methods and OOP.",
+  "description": "LeetCode/HackerRank-style coding challenges inside VS Code, with optional AI hints from a local model or your own API key. Starts with Java: variables, conditionals, loops, arrays, strings, methods and OOP.",
   "version": "0.1.0",
   "publisher": "class-plugin",
   "license": "MIT",
@@ -15,19 +15,21 @@
   },
   "homepage": "https://github.com/lleonardogr/tech-challenges-vscode#readme",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.95.0"
   },
   "categories": [
     "Education"
   ],
   "keywords": [
-    "java",
-    "exercises",
+    "ai",
     "challenges",
-    "students",
-    "practice",
     "education",
-    "oop"
+    "exercises",
+    "java",
+    "oop",
+    "practice",
+    "students",
+    "tutor"
   ],
   "main": "./out/extension.js",
   "activationEvents": [],
@@ -91,18 +93,63 @@
         "title": "Reset All Progress",
         "category": "Tech Challenges",
         "icon": "$(clear-all)"
+      },
+      {
+        "command": "techChallenges.askAiHint",
+        "title": "Ask AI for a Hint",
+        "category": "Tech Challenges",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "techChallenges.setupAi",
+        "title": "Set Up AI Hints (Local Model or API Key)",
+        "category": "Tech Challenges",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "techChallenges.clearAiKeys",
+        "title": "Remove Saved AI API Keys",
+        "category": "Tech Challenges",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "techChallenges.createChallenge",
+        "title": "Create New Challenge…",
+        "category": "Tech Challenges",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "techChallenges.validateChallenges",
+        "title": "Validate Challenges in a Folder…",
+        "category": "Tech Challenges",
+        "icon": "$(checklist)"
       }
     ],
     "menus": {
       "view/title": [
         {
+          "command": "techChallenges.createChallenge",
+          "when": "view == techChallenges.list",
+          "group": "navigation@0"
+        },
+        {
           "command": "techChallenges.refresh",
           "when": "view == techChallenges.list",
-          "group": "navigation"
+          "group": "navigation@1"
         },
         {
           "command": "techChallenges.resetProgress",
           "when": "view == techChallenges.list"
+        },
+        {
+          "command": "techChallenges.validateChallenges",
+          "when": "view == techChallenges.list",
+          "group": "authoring"
+        },
+        {
+          "command": "techChallenges.setupAi",
+          "when": "view == techChallenges.list",
+          "group": "ai"
         }
       ],
       "view/item/context": [
@@ -131,6 +178,10 @@
       "commandPalette": [
         {
           "command": "techChallenges.resetCode",
+          "when": "techChallenges.isChallengeFile"
+        },
+        {
+          "command": "techChallenges.askAiHint",
           "when": "techChallenges.isChallengeFile"
         }
       ]
@@ -182,21 +233,68 @@
           },
           "default": [],
           "markdownDescription": "Extra folders containing challenges (same format as the built-in ones). Teachers can use this to hand out new challenges without rebuilding the extension."
+        },
+        "techChallenges.ai.provider": {
+          "type": "string",
+          "default": "off",
+          "enum": [
+            "off",
+            "ollama",
+            "lmstudio",
+            "anthropic",
+            "openai-compatible",
+            "vscode"
+          ],
+          "enumDescriptions": [
+            "AI hints are disabled (default). Nothing is sent anywhere.",
+            "Ollama running on this computer (free, private). https://ollama.com",
+            "LM Studio's local server on this computer (free, private). https://lmstudio.ai",
+            "Anthropic's Claude API with your own API key.",
+            "Any OpenAI-compatible API (OpenAI, OpenRouter, Groq, a school server…) with your own key.",
+            "A model already available in VS Code, such as GitHub Copilot."
+          ],
+          "markdownDescription": "Where **AI hints** come from. Run **Tech Challenges: Set Up AI Hints** for a guided setup. API keys are stored in VS Code's encrypted secret storage, not in settings."
+        },
+        "techChallenges.ai.model": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Model to use for AI hints. Leave empty for the default: `claude-opus-5-5` for Anthropic, the first installed model for Ollama/LM Studio, any available model for VS Code. Required for `openai-compatible`."
+        },
+        "techChallenges.ai.baseUrl": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "API base URL for AI hints. Required for `openai-compatible` (e.g. `https://api.openai.com/v1`). Optional for the others (defaults: Ollama `http://localhost:11434/v1`, LM Studio `http://localhost:1234/v1`)."
+        },
+        "techChallenges.ai.responseLanguage": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Language for AI hints, e.g. `Português` or `English`. Leave empty to use VS Code's display language."
         }
       }
-    }
+    },
+    "jsonValidation": [
+      {
+        "fileMatch": "challenge.json",
+        "url": "./schemas/challenge.schema.json"
+      }
+    ]
   },
   "scripts": {
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run compile && npm run bundle",
     "validate": "npm run compile && node scripts/validate-challenges.js",
-    "package": "vsce package"
+    "package": "vsce package",
+    "bundle": "esbuild src/extension.ts --bundle --platform=node --format=cjs --target=node20 --external:vscode --outfile=out/extension.js --minify"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
-    "@types/vscode": "^1.85.0",
+    "@types/vscode": "1.95.0",
     "@vscode/vsce": "^3.2.0",
+    "esbuild": "^0.28.2",
     "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0"
   }
 }

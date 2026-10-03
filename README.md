@@ -4,7 +4,9 @@
 [![Release](https://img.shields.io/github/v/release/lleonardogr/tech-challenges-vscode)](https://github.com/lleonardogr/tech-challenges-vscode/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-HackerRank / LeetCode-style coding challenges right inside VS Code, running fully offline on the student's machine. It starts with **Java**: from the basic syntax up to object-oriented programming.
+HackerRank / LeetCode-style coding challenges right inside VS Code, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. It starts with **Java**: from the basic syntax up to object-oriented programming.
+
+📘 **Guides:** [Creating your own challenges](docs/creating-challenges.md) · [AI hints](docs/ai-hints.md)
 
 Students pick a challenge from the **Tech Challenges** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run in Terminal** lets them type their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
 
@@ -29,6 +31,8 @@ Students pick a challenge from the **Tech Challenges** sidebar. The problem stat
 - **Hidden tests** catch edge cases like negative numbers, zero and overflow, without revealing their input.
 - **Modern Java by default, classic on request**: starter code uses Java 25+ compact source files (`void main()`, `IO.println`). Set `techChallenges.java.style` to `classic` for `public class Main` starter code. Either style is **always accepted**, because only the output is checked.
 - **Syntax requirements**: a challenge can require constructs (for example "use a `switch`", "create `class Square extends Shape`" or "keep `balance` private") or forbid shortcuts (`Math.max`, `reverse()`, `Math.pow`).
+- **AI hints (optional, off by default)**: an AI tutor gives one hint at a time about your current code, without writing the solution. It works with a **local model** (Ollama, LM Studio: free and private), **your own API key** (Anthropic Claude or any OpenAI-compatible API), or VS Code's language models (GitHub Copilot). API keys are stored in VS Code's encrypted secret storage. See [AI hints](docs/ai-hints.md).
+- **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
 - **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/31 solved` counter in the status bar.
 
 ## For students
@@ -72,6 +76,7 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 | `techChallenges.java.home` | (empty) | The JDK folder, if `javac` is not on your PATH. |
 | `techChallenges.codeFolder` | (empty) | Where solutions are saved. |
 | `techChallenges.extraChallengePaths` | `[]` | Extra challenge folders provided by your teacher. |
+| `techChallenges.ai.provider` | `off` | AI hints provider: `ollama`, `lmstudio`, `anthropic`, `openai-compatible` or `vscode`. Run **Set Up AI Hints** for a guided setup. |
 
 ## For teachers
 
@@ -87,56 +92,19 @@ Send the `.vsix` file to your students, or point them to the [Releases page](htt
 
 To develop, open this folder in VS Code and press **F5** to launch a test window with the extension loaded.
 
-### Add a challenge
+### Create your own challenges
 
-Create a folder in `challenges/` (the folder name is the challenge id):
+Everything you need is in **[docs/creating-challenges.md](docs/creating-challenges.md)**: a 5-minute quick start, the file format, writing tests, the rules cookbook, validating, and sharing challenges with your class without rebuilding the extension.
 
-```
-challenges/my-challenge/
-  challenge.json         metadata, rules and tests
-  description.md         problem statement (Markdown, starts with "# Title")
-  Starter.java           modern starter code (Java 25+ compact source file)
-  Starter.classic.java   classic starter code (public class Main)
-  Solution.java          modern reference solution    (used by `npm run validate`,
-  Solution.classic.java  classic reference solution    never shipped to students)
-```
-
-`npm run validate` compiles every starter and checks **every** `Solution*.java` against the same tests, which proves the challenge accepts both styles. Write rules that work for both: for example `boolean\s+isPrime` rather than `static\s+boolean\s+isPrime`, and `(System\.out|\bIO)\s*\.\s*print` rather than `System\.out\.print`. On a JDK older than 25, only the `*.classic.java` files are checked.
-
-`challenge.json`:
-
-```json
-{
-  "title": "Sum of Two Numbers",
-  "topic": "Variables",
-  "difficulty": "Easy",
-  "order": 6,
-  "hints": ["scanner.nextInt() reads an integer."],
-  "mustContain": [{ "pattern": "\\bint\\b", "message": "Use int variables." }],
-  "mustNotContain": [{ "pattern": "Math\\.", "message": "Don't use the Math class." }],
-  "timeLimitMs": 5000,
-  "tests": [
-    { "input": "3 4\n", "output": "" },
-    { "input": "-1 1\n", "output": "", "hidden": true }
-  ]
-}
-```
-
-- `topic` can be any name. The known topics (Variables, Conditionals, Loops, Arrays, Strings, Methods, OOP) are listed first, in that order.
-- `pattern`s are regular expressions checked against the code with comments removed.
-- Leave `output` empty and run `node scripts/validate-challenges.js --generate` to fill in each expected output from your reference solution. Then review the outputs.
-- Output comparison ignores trailing spaces and trailing blank lines. Programs always run with a US locale, so decimals print as `3.14` on every machine.
-
-### Hand out challenges without rebuilding
-
-Put challenge folders anywhere, for example a shared drive or a git repo, and have students add that folder to the `techChallenges.extraChallengePaths` setting. If a challenge has the same id as a built-in one, it replaces the built-in one.
+In short: run **Tech Challenges: Create New Challenge…**, edit the generated files, then run **Tech Challenges: Validate Challenges in a Folder…** to check everything and fill in the expected outputs.
 
 ## Roadmap
 
 - [x] Object-oriented programming challenges
 - [ ] Support more languages (Python, JavaScript, C, …) through a pluggable runner per language
 - [ ] More topics (collections, recursion, exceptions, algorithms)
-- [ ] AI assistance: hints tailored to the student's code, explanations of errors, and help writing new challenges
+- [x] AI hints tailored to the student's code (local model or your own API key)
+- [ ] AI help for writing new challenges
 - [ ] Publish to the VS Code Marketplace
 
 ## Contributing

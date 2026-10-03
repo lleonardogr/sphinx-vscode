@@ -15,9 +15,11 @@ Open the folder in VS Code and press **F5** to launch an Extension Development H
 
 ## Adding a challenge
 
+The full guide is **[docs/creating-challenges.md](docs/creating-challenges.md)**. The short version for this repository:
+
 1. Create `challenges/<challenge-id>/`, using a short kebab-case id such as `sum-of-evens`.
 2. Add the following files:
-   - `challenge.json`: title, topic, difficulty, order, hints, rules and tests. The [README](README.md#add-a-challenge) documents the format.
+   - `challenge.json`: title, topic, difficulty, order, hints, rules and tests. [The guide](docs/creating-challenges.md#challengejson) documents every field.
    - `description.md`: the problem statement, starting with `# Title`. Describe the **Input** and **Output** formats precisely.
    - `Starter.java`: modern starter code, a Java 25+ compact source file (`void main()`, `IO.println`) that compiles but does not solve the problem.
    - `Starter.classic.java`: the same starter as a classic `public class Main`.

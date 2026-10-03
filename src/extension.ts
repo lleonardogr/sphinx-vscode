@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { AiHints } from './ai/hints';
+import { createChallenge, validateFolder } from './authoring';
 import { ChallengePanel, PanelAction } from './challengePanel';
 import { Challenge, loadChallenges } from './challenges';
 import { Progress } from './progress';
@@ -16,6 +18,9 @@ export function activate(context: vscode.ExtensionContext): void {
   const diagnostics = vscode.languages.createDiagnosticCollection('techChallenges');
   let challenges: Challenge[] = [];
   const running = new Set<string>();
+  /** Last (redacted) Run/Submit result per challenge, used as context for AI hints. */
+  const lastOutcome = new Map<string, RunOutcome>();
+  const ai = new AiHints(context);
 
   const tree = new ChallengeTreeProvider(() => challenges, progress);
   const treeView = vscode.window.createTreeView('techChallenges.list', { treeDataProvider: tree });
@@ -218,6 +223,7 @@ export function activate(context: vscode.ExtensionContext): void {
       );
 
       updateDiagnostics(file, outcome);
+      lastOutcome.set(c.id, redact(outcome));
       panel.post({ type: 'result', mode, outcome: redact(outcome) });
 
       if (outcome.kind === 'toolMissing') {
@@ -292,6 +298,23 @@ export function activate(context: vscode.ExtensionContext): void {
     });
   }
 
+  async function askAiHint(c: Challenge): Promise<void> {
+    if (!c.aiHints) {
+      vscode.window.showInformationMessage('AI hints are disabled for this challenge.');
+      return;
+    }
+    await panel.show(c);
+    const file = ensureCodeFile(c);
+    const doc = vscode.workspace.textDocuments.find((d) => d.uri.fsPath === file);
+    const code = doc ? doc.getText() : fs.readFileSync(file, 'utf8');
+    await ai.requestHint(c, code, lastOutcome.get(c.id), {
+      onStart: (label) => panel.post({ type: 'aiStart', label }),
+      onText: (text) => panel.post({ type: 'aiText', text }),
+      onDone: () => panel.post({ type: 'aiDone' }),
+      onError: (message) => panel.post({ type: 'aiError', message }),
+    });
+  }
+
   function handlePanelAction(action: PanelAction, c: Challenge): void {
     switch (action.type) {
       case 'run':
@@ -300,6 +323,12 @@ export function activate(context: vscode.ExtensionContext): void {
         break;
       case 'terminal':
         runChallengeInTerminal(c);
+        break;
+      case 'aiHint':
+        askAiHint(c);
+        break;
+      case 'aiSetup':
+        ai.setup();
         break;
       case 'reset':
         resetCode(c);
@@ -319,6 +348,14 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.executeCommand('setContext', 'techChallenges.isChallengeFile', isChallenge);
   }
 
+  const authoringDeps = {
+    extensionPath: context.extensionPath,
+    output,
+    challenges: () => challenges,
+    javaHome,
+    reload,
+  };
+
   const withChallenge = (fn: (c: Challenge) => unknown) => async (arg?: unknown) => {
     const c = await resolveChallenge(arg);
     if (c) {
@@ -332,7 +369,12 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('techChallenges.submit', withChallenge((c) => runChallenge(c, 'submit'))),
     vscode.commands.registerCommand('techChallenges.runInTerminal', withChallenge(runChallengeInTerminal)),
     vscode.commands.registerCommand('techChallenges.resetCode', withChallenge(resetCode)),
+    vscode.commands.registerCommand('techChallenges.askAiHint', withChallenge(askAiHint)),
+    vscode.commands.registerCommand('techChallenges.setupAi', () => ai.setup()),
+    vscode.commands.registerCommand('techChallenges.clearAiKeys', () => ai.clearApiKeys()),
     vscode.commands.registerCommand('techChallenges.refresh', reload),
+    vscode.commands.registerCommand('techChallenges.createChallenge', () => createChallenge(authoringDeps)),
+    vscode.commands.registerCommand('techChallenges.validateChallenges', () => validateFolder(authoringDeps)),
     vscode.commands.registerCommand('techChallenges.resetProgress', async () => {
       const answer = await vscode.window.showWarningMessage(
         'Reset progress for all challenges? Your code files are kept.',
