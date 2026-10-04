@@ -20,8 +20,8 @@ const CODE_FILE = 'Main.java';
 
 export function activate(context: vscode.ExtensionContext): void {
   const progress = new Progress(context.globalState);
-  const output = vscode.window.createOutputChannel('Tech Challenges');
-  const diagnostics = vscode.languages.createDiagnosticCollection('techChallenges');
+  const output = vscode.window.createOutputChannel('Sphynx');
+  const diagnostics = vscode.languages.createDiagnosticCollection('sphynx');
   let challenges: Challenge[] = [];
   let exams: ExamDefinition[] = [];
   let quizzes: QuizDefinition[] = [];
@@ -34,17 +34,18 @@ export function activate(context: vscode.ExtensionContext): void {
   const examManager = new ExamManager(context, (examId) => examCodeDir(examId), (exam, q) => gradeExamQuestion(exam, q));
   const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams, examManager, () => quizzes, quizProgress);
   const quizController = new QuizController(context.extensionUri, quizProgress, examManager, () => quizzes, () => exams);
-  const treeView = vscode.window.createTreeView('techChallenges.list', { treeDataProvider: tree });
+  const treeView = vscode.window.createTreeView('sphynx.list', { treeDataProvider: tree });
   const panel = new ChallengePanel(context.extensionUri, progress, (action, c) => handlePanelAction(action, c));
   const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-  status.command = 'techChallenges.list.focus';
-  status.tooltip = 'Tech Challenges: open the challenge list';
+  status.command = 'sphynx.list.focus';
+  status.tooltip = 'Sphynx: open the challenge list';
   status.show();
 
   panel.examInfo = (c) => panelExamInfo(c);
   context.subscriptions.push(output, diagnostics, treeView, status, examManager, quizController, { dispose: () => panel.dispose() });
 
-  const config = () => vscode.workspace.getConfiguration('techChallenges');
+  const config = () => vscode.workspace.getConfiguration('sphynx');
+  void migrateLegacySettings();
   const javaHome = () => config().get<string>('java.home', '').trim() || undefined;
   const javaStyle = () => config().get<'modern' | 'classic'>('java.style', 'modern');
   const starterFor = (c: Challenge) => (javaStyle() === 'classic' ? c.starterCodeClassic : c.starterCode);
@@ -88,7 +89,7 @@ export function activate(context: vscode.ExtensionContext): void {
     const errors = [...result.errors.filter((e) => !e.endsWith('folder not found')), ...quizResult.errors, ...examResult.errors];
     if (errors.length) {
       errors.forEach((e) => output.appendLine(`[challenges] ${e}`));
-      vscode.window.showWarningMessage('Some challenges, quizzes or exams could not be loaded. See the "Tech Challenges" output for details.');
+      vscode.window.showWarningMessage('Some challenges, quizzes or exams could not be loaded. See the "Sphynx" output for details.');
     }
     examManager.setExams(exams);
     tree.refresh();
@@ -109,7 +110,10 @@ export function activate(context: vscode.ExtensionContext): void {
     }
     const ws = vscode.workspace.workspaceFolders?.[0];
     if (ws) {
-      return path.join(ws.uri.fsPath, 'tech-challenges');
+      // Before the rename to Sphynx, code was saved in tech-challenges/. Keep using it if it exists.
+      const legacy = path.join(ws.uri.fsPath, 'tech-challenges');
+      const current = path.join(ws.uri.fsPath, 'sphynx');
+      return !fs.existsSync(current) && fs.existsSync(legacy) ? legacy : current;
     }
     return path.join(context.globalStorageUri.fsPath, 'solutions');
   }
@@ -393,7 +397,7 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     } catch (e) {
       output.appendLine(`[run] ${(e as Error).stack ?? e}`);
-      vscode.window.showErrorMessage(`Tech Challenges: ${(e as Error).message}`);
+      vscode.window.showErrorMessage(`Sphynx: ${(e as Error).message}`);
     } finally {
       running.delete(c.id);
     }
@@ -404,7 +408,7 @@ export function activate(context: vscode.ExtensionContext): void {
     if (choice === 'Download JDK') {
       vscode.env.openExternal(vscode.Uri.parse('https://adoptium.net/temurin/releases/'));
     } else if (choice === 'Open Settings') {
-      vscode.commands.executeCommand('workbench.action.openSettings', 'techChallenges.java.home');
+      vscode.commands.executeCommand('workbench.action.openSettings', 'sphynx.java.home');
     }
   }
 
@@ -437,7 +441,7 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     } catch (e) {
       output.appendLine(`[custom] ${(e as Error).stack ?? e}`);
-      vscode.window.showErrorMessage(`Tech Challenges: ${(e as Error).message}`);
+      vscode.window.showErrorMessage(`Sphynx: ${(e as Error).message}`);
     } finally {
       running.delete(c.id);
     }
@@ -530,7 +534,7 @@ export function activate(context: vscode.ExtensionContext): void {
   function updateContextKey(): void {
     const editor = vscode.window.activeTextEditor;
     const isChallenge = !!editor && !!challengeForFile(editor.document.uri.fsPath);
-    vscode.commands.executeCommand('setContext', 'techChallenges.isChallengeFile', isChallenge);
+    vscode.commands.executeCommand('setContext', 'sphynx.isChallengeFile', isChallenge);
   }
 
   const authoringDeps = {
@@ -605,7 +609,7 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     });
     const ok = files.length - mismatches - failed;
-    const summary = `Verified ${files.length} results file(s): ${ok} OK${mismatches ? `, ${mismatches} with a score that doesn't match the code` : ''}${failed ? `, ${failed} unreadable` : ''}. See the "Tech Challenges" output.`;
+    const summary = `Verified ${files.length} results file(s): ${ok} OK${mismatches ? `, ${mismatches} with a score that doesn't match the code` : ''}${failed ? `, ${failed} unreadable` : ''}. See the "Sphynx" output.`;
     (mismatches || failed ? vscode.window.showWarningMessage : vscode.window.showInformationMessage)(summary);
   }
 
@@ -617,47 +621,47 @@ export function activate(context: vscode.ExtensionContext): void {
   };
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('techChallenges.open', withChallenge(openChallenge)),
-    vscode.commands.registerCommand('techChallenges.openQuiz', (arg?: unknown) => quizController.open(arg)),
-    vscode.commands.registerCommand('techChallenges.run', withChallenge((c) => runChallenge(c, 'run'))),
-    vscode.commands.registerCommand('techChallenges.submit', withChallenge((c) => runChallenge(c, 'submit'))),
-    vscode.commands.registerCommand('techChallenges.runInTerminal', withChallenge(runChallengeInTerminal)),
-    vscode.commands.registerCommand('techChallenges.resetCode', withChallenge(resetCode)),
-    vscode.commands.registerCommand('techChallenges.askAiHint', withChallenge(askAiHint)),
-    vscode.commands.registerCommand('techChallenges.setupAi', () => ai.setup()),
-    vscode.commands.registerCommand('techChallenges.clearAiKeys', () => ai.clearApiKeys()),
-    vscode.commands.registerCommand('techChallenges.refresh', reload),
-    vscode.commands.registerCommand('techChallenges.startExam', async (arg?: unknown) => {
+    vscode.commands.registerCommand('sphynx.open', withChallenge(openChallenge)),
+    vscode.commands.registerCommand('sphynx.openQuiz', (arg?: unknown) => quizController.open(arg)),
+    vscode.commands.registerCommand('sphynx.run', withChallenge((c) => runChallenge(c, 'run'))),
+    vscode.commands.registerCommand('sphynx.submit', withChallenge((c) => runChallenge(c, 'submit'))),
+    vscode.commands.registerCommand('sphynx.runInTerminal', withChallenge(runChallengeInTerminal)),
+    vscode.commands.registerCommand('sphynx.resetCode', withChallenge(resetCode)),
+    vscode.commands.registerCommand('sphynx.askAiHint', withChallenge(askAiHint)),
+    vscode.commands.registerCommand('sphynx.setupAi', () => ai.setup()),
+    vscode.commands.registerCommand('sphynx.clearAiKeys', () => ai.clearApiKeys()),
+    vscode.commands.registerCommand('sphynx.refresh', reload),
+    vscode.commands.registerCommand('sphynx.startExam', async (arg?: unknown) => {
       const exam = await resolveExam(arg, 'Which exam do you want to start?', (t) => !examManager.state(t.id));
       if (exam && (await examManager.start(exam))) {
         const first = exam.questions[0];
         await (first.kind === 'quiz' ? quizController.open(first.quiz.id) : openChallenge(first.challenge));
       }
     }),
-    vscode.commands.registerCommand('techChallenges.finishExam', async (arg?: unknown) => {
+    vscode.commands.registerCommand('sphynx.finishExam', async (arg?: unknown) => {
       const exam = await resolveExam(arg, 'Which exam do you want to finish?', (t) => examManager.isActive(t.id));
       if (exam) {
         await examManager.confirmFinish(exam);
       }
     }),
-    vscode.commands.registerCommand('techChallenges.openExamResults', async (arg?: unknown) => {
+    vscode.commands.registerCommand('sphynx.openExamResults', async (arg?: unknown) => {
       const exam = await resolveExam(arg, 'Results of which exam?', (t) => !!examManager.state(t.id)?.finishedAt);
       if (exam) {
         await examManager.openResults(exam);
       }
     }),
-    vscode.commands.registerCommand('techChallenges.saveExamResults', async (arg?: unknown) => {
+    vscode.commands.registerCommand('sphynx.saveExamResults', async (arg?: unknown) => {
       const exam = await resolveExam(arg, 'Results of which exam?', (t) => !!examManager.state(t.id)?.finishedAt);
       if (exam) {
         await examManager.saveResultsCopy(exam);
       }
     }),
-    vscode.commands.registerCommand('techChallenges.verifyExamResults', verifyExamResultsCommand),
-    vscode.commands.registerCommand('techChallenges.createChallenge', () => createChallenge(authoringDeps)),
-    vscode.commands.registerCommand('techChallenges.importContent', () => importContent(importDeps)),
-    vscode.commands.registerCommand('techChallenges.removeImported', () => removeImported(importDeps)),
-    vscode.commands.registerCommand('techChallenges.validateChallenges', () => validateFolder(authoringDeps)),
-    vscode.commands.registerCommand('techChallenges.resetProgress', async () => {
+    vscode.commands.registerCommand('sphynx.verifyExamResults', verifyExamResultsCommand),
+    vscode.commands.registerCommand('sphynx.createChallenge', () => createChallenge(authoringDeps)),
+    vscode.commands.registerCommand('sphynx.importContent', () => importContent(importDeps)),
+    vscode.commands.registerCommand('sphynx.removeImported', () => removeImported(importDeps)),
+    vscode.commands.registerCommand('sphynx.validateChallenges', () => validateFolder(authoringDeps)),
+    vscode.commands.registerCommand('sphynx.resetProgress', async () => {
       const answer = await vscode.window.showWarningMessage(
         'Reset progress for all challenges and quizzes? Your code files are kept.',
         { modal: true },
@@ -677,7 +681,7 @@ export function activate(context: vscode.ExtensionContext): void {
       quizController.refreshExamStatus();
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {
-      if (e.affectsConfiguration('techChallenges')) {
+      if (e.affectsConfiguration('sphynx')) {
         reload();
         updateContextKey();
       }
@@ -689,3 +693,29 @@ export function activate(context: vscode.ExtensionContext): void {
 }
 
 export function deactivate(): void {}
+
+/** Settings that were called techChallenges.* before the rename to Sphynx. */
+const LEGACY_SETTINGS = ['java.home', 'java.style', 'codeFolder', 'extraChallengePaths', 'ai.provider', 'ai.model', 'ai.baseUrl', 'ai.responseLanguage'];
+
+/** Copies old techChallenges.* settings to sphynx.* once, where the new setting isn't set yet. */
+async function migrateLegacySettings(): Promise<void> {
+  const legacy = vscode.workspace.getConfiguration('techChallenges');
+  const current = vscode.workspace.getConfiguration('sphynx');
+  const targets: [keyof NonNullable<ReturnType<typeof legacy.inspect>>, vscode.ConfigurationTarget][] = [
+    ['globalValue', vscode.ConfigurationTarget.Global],
+    ['workspaceValue', vscode.ConfigurationTarget.Workspace],
+  ];
+  for (const key of LEGACY_SETTINGS) {
+    const old = legacy.inspect(key);
+    const now = current.inspect(key);
+    for (const [scope, target] of targets) {
+      if (old?.[scope] !== undefined && now?.[scope] === undefined) {
+        try {
+          await current.update(key, old[scope], target);
+        } catch {
+          // No workspace open, or the setting can't be written there.
+        }
+      }
+    }
+  }
+}

@@ -6,8 +6,8 @@ import { RunOutcome } from '../runner';
 import { buildHintPrompt } from './prompt';
 import { AiError, DEFAULT_ANTHROPIC_MODEL, PROVIDERS, ProviderId, createProvider, defaultBaseUrl, listOpenAiModels } from './providers';
 
-const secretKey = (id: ProviderId) => `techChallenges.ai.apiKey.${id}`;
-const CONSENT_KEY = 'techChallenges.ai.consent';
+const secretKey = (id: ProviderId) => `sphynx.ai.apiKey.${id}`;
+const CONSENT_KEY = 'sphynx.ai.consent';
 
 export interface HintCallbacks {
   onStart(label: string): void;
@@ -23,7 +23,7 @@ export class AiHints {
   constructor(private readonly context: vscode.ExtensionContext) {}
 
   private config() {
-    return vscode.workspace.getConfiguration('techChallenges.ai');
+    return vscode.workspace.getConfiguration('sphynx.ai');
   }
 
   get providerId(): ProviderId {
@@ -122,7 +122,7 @@ export class AiHints {
         ...PROVIDERS.map((p) => ({ label: p.label, detail: p.detail, id: p.id, description: p.id === current ? '(current)' : '' })),
         { label: 'Turn AI hints off', detail: 'Hide AI hints. Nothing is sent anywhere.', id: 'off' as ProviderId, description: current === 'off' ? '(current)' : '' },
       ],
-      { title: 'Tech Challenges: AI hints provider', placeHolder: 'Where should AI hints come from?', ignoreFocusOut: true },
+      { title: 'Sphynx: AI hints provider', placeHolder: 'Where should AI hints come from?', ignoreFocusOut: true },
     );
     if (!pick) {
       return;

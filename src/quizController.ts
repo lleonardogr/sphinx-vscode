@@ -8,7 +8,7 @@ import { ExamDefinition, ExamQuestion, parseExamChallengeId } from './exams';
 import { QuizExamInfo, QuizMessage, QuizPanel, examQuizStatus, renderMarkdown } from './quizPanel';
 import { QuizAnswer, QuizDefinition, describeAnswer, gradeQuiz, isCorrect, parseAnswers, scaleQuizGrade } from './quizzes';
 
-const KEY = 'techChallenges.quizzes';
+const KEY = 'sphynx.quizzes';
 
 export interface QuizScore {
   best: number;

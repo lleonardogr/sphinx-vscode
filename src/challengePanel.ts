@@ -238,7 +238,7 @@ export class ChallengePanel {
     <p class="muted style-note">
       Both Java styles are accepted, because only your program's output is checked. You can write modern Java 25+ with
       <code>void main()</code> and <code>IO.println</code>, or classic Java with <code>public class Main</code> and
-      <code>System.out.println</code>. To get classic starter code, set <code>techChallenges.java.style</code> to <code>classic</code>.
+      <code>System.out.println</code>. To get classic starter code, set <code>sphynx.java.style</code> to <code>classic</code>.
     </p>
   </main>
 

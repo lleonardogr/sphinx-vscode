@@ -230,7 +230,7 @@ function toolMissing(cmd: string): RunOutcome {
     kind: 'toolMissing',
     message:
       `Could not run "${cmd}". Install a Java JDK (version 17 or newer; 25+ for modern syntax like IO.println), e.g. from https://adoptium.net, ` +
-      `then restart VS Code, or set "techChallenges.java.home" in Settings to your JDK folder.`,
+      `then restart VS Code, or set "sphynx.java.home" in Settings to your JDK folder.`,
   };
 }
 
@@ -240,7 +240,7 @@ export type CompileResult =
 
 /** Compiles `file` into a fresh temp folder. On success the caller must delete `outDir`. */
 export async function compileJava(file: string, javaHome?: string): Promise<CompileResult> {
-  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tech-challenge-'));
+  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-'));
   const javac = javaBinary(javaHome, 'javac');
   const compile = await exec(
     javac,

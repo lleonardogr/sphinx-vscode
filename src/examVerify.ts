@@ -34,12 +34,13 @@ export interface VerificationReport {
 
 export async function verifyResults(resultsPath: string, exams: ExamDefinition[], javaHome?: string): Promise<VerificationReport> {
   const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8')) as ExamResultsFile;
-  if (results.format !== 'tech-challenges-exam-results') {
-    throw new Error('This is not a Tech Challenges exam results file.');
+  // Files written before the rename to Sphynx use the old format name.
+  if ((results.format as string) !== 'sphynx-exam-results' && (results.format as string) !== 'tech-challenges-exam-results') {
+    throw new Error('This is not a Sphynx exam results file.');
   }
   const exam = exams.find((t) => t.id === results.exam?.id);
   if (!exam) {
-    throw new Error(`The exam "${results.exam?.id}" is not available. Add the folder that contains it to techChallenges.extraChallengePaths.`);
+    throw new Error(`The exam "${results.exam?.id}" is not available. Add the folder that contains it to sphynx.extraChallengePaths.`);
   }
 
   const questions: VerifiedQuestion[] = [];
@@ -57,7 +58,7 @@ export async function verifyResults(resultsPath: string, exams: ExamDefinition[]
       questions.push({ id: q.id, points: q.points, claimed, recomputed: score.earned, passed: score.passed, total: score.total, note: 'quiz' });
       continue;
     }
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tech-challenge-verify-'));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-verify-'));
     try {
       const file = path.join(dir, 'Main.java');
       fs.writeFileSync(file, saved.code);

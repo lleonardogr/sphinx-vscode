@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- **Tech Challenges is now Sphynx**, with a new logo: a geometric sphinx between code brackets. Like the sphinx of the legend, it asks questions you have to answer right.
+  - The extension id is now `class-plugin.sphynx`, so VS Code installs it as a new extension. Uninstall Tech Challenges after installing Sphynx.
+  - Settings are now `sphynx.*` (for example `sphynx.java.style`). Existing `techChallenges.*` settings are copied over automatically on first start.
+  - Commands are under **Sphynx:** in the Command Palette, the sidebar is called Sphynx, and the release file is `sphynx-X.Y.Z.vsix`.
+  - Student code is saved in `sphynx/`. An existing `tech-challenges/` folder keeps being used, so no code is lost.
+  - Exam results files use the format `sphynx-exam-results`, and **Verify** still accepts files from Tech Challenges.
+  - Solved-challenge progress, exam state and saved AI keys belong to the old extension id, so they start fresh.
+  - The repository moved to [lleonardogr/sphynx-vscode](https://github.com/lleonardogr/sphynx-vscode). Old links redirect.
+
 ### Added
 
 - **Quizzes**: question sets defined by a `quiz.json` (with a JSON schema), with four question types: multiple choice (one or several right answers), true or false, short answer, and "what does this code print?" (typed, or picked from options).
@@ -98,10 +109,10 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.5.0...HEAD
-[0.5.0]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.4.0...v0.5.0
-[0.4.0]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.3.0...v0.4.0
-[0.3.0]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.2.1...v0.3.0
-[0.2.1]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/lleonardogr/tech-challenges-vscode/releases/tag/v0.1.0
+[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.2.1...v0.3.0
+[0.2.1]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/lleonardogr/sphynx-vscode/releases/tag/v0.1.0

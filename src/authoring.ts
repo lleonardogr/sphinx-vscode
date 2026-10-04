@@ -14,7 +14,7 @@ interface AuthoringDeps {
   reload: () => void;
 }
 
-const config = () => vscode.workspace.getConfiguration('techChallenges');
+const config = () => vscode.workspace.getConfiguration('sphynx');
 
 export function slugify(title: string): string {
   return title
@@ -72,7 +72,7 @@ async function ensureRegistered(folder: string, deps: AuthoringDeps): Promise<vo
   // Inside a repository checkout the built-in folder is loaded only when running the dev build,
   // so register it anyway; duplicates by id are harmless (last one wins).
   await config().update('extraChallengePaths', [...paths, folder], vscode.ConfigurationTarget.Global);
-  vscode.window.showInformationMessage(`Added ${folder} to techChallenges.extraChallengePaths so its challenges appear in the sidebar.`);
+  vscode.window.showInformationMessage(`Added ${folder} to sphynx.extraChallengePaths so its challenges appear in the sidebar.`);
 }
 
 /** `topic` undefined writes no "topic", so the challenge appears under Custom. */
@@ -228,7 +228,7 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
     'Open Guide',
   );
   if (choice) {
-    vscode.env.openExternal(vscode.Uri.parse('https://github.com/lleonardogr/tech-challenges-vscode/blob/main/docs/creating-challenges.md'));
+    vscode.env.openExternal(vscode.Uri.parse('https://github.com/lleonardogr/sphynx-vscode/blob/main/docs/creating-challenges.md'));
   }
 }
 
@@ -270,6 +270,6 @@ export async function validateFolder(deps: AuthoringDeps): Promise<void> {
   } else if (reportPassed(report)) {
     vscode.window.showInformationMessage(`✓ All ${ok} challenges are valid${mode.generate ? ' and their expected outputs were saved' : ''}.`);
   } else {
-    vscode.window.showErrorMessage(`${report.challenges.length - ok + report.loadErrors.length} challenge(s) have problems. See the "Tech Challenges" output for details.`);
+    vscode.window.showErrorMessage(`${report.challenges.length - ok + report.loadErrors.length} challenge(s) have problems. See the "Sphynx" output for details.`);
   }
 }

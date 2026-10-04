@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve Tech Challenges! You can contribute in two main ways: new challenges and code changes.
+Thanks for helping improve Sphynx! You can contribute in two main ways: new challenges and code changes.
 
 ## Setup
 
@@ -109,7 +109,7 @@ Releases are published by pushing a version tag **on `main`, after the release c
    git push origin vX.Y.Z
    ```
 
-4. The **Release** workflow checks that the tag matches `package.json`, validates every challenge, builds `tech-challenges-X.Y.Z.vsix` and attaches it to a GitHub Release.
-5. Open the release page and check that the attached file is `tech-challenges-X.Y.Z.vsix`.
+4. The **Release** workflow checks that the tag matches `package.json`, validates every challenge, builds `sphynx-X.Y.Z.vsix` and attaches it to a GitHub Release.
+5. Open the release page and check that the attached file is `sphynx-X.Y.Z.vsix`.
 
 If a release was published from the wrong commit, delete it together with its tag (`gh release delete vX.Y.Z --yes --cleanup-tag`), fix `main`, and tag again.

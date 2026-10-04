@@ -95,7 +95,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
         const item = new vscode.TreeItem('Start exam…', vscode.TreeItemCollapsibleState.None);
         item.id = `exam-start:${node.exam.id}`;
         item.iconPath = new vscode.ThemeIcon('play');
-        item.command = { command: 'techChallenges.startExam', title: 'Start Exam', arguments: [node.exam.id] };
+        item.command = { command: 'sphynx.startExam', title: 'Start Exam', arguments: [node.exam.id] };
         return item;
       }
       case 'examQuestion':
@@ -134,7 +134,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     item.id = `challenge:${c.id}`;
     item.description = c.difficulty;
     item.contextValue = 'challenge';
-    item.command = { command: 'techChallenges.open', title: 'Open Challenge', arguments: [c.id] };
+    item.command = { command: 'sphynx.open', title: 'Open Challenge', arguments: [c.id] };
     if (p?.status === 'solved') {
       item.iconPath = new vscode.ThemeIcon('pass-filled', new vscode.ThemeColor('testing.iconPassed'));
     } else if (p?.status === 'attempted') {
@@ -188,7 +188,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     item.id = `quiz:${quiz.id}`;
     item.contextValue = 'quiz';
     item.description = score ? `best ${score.best}/${score.total}` : `${quiz.questions.length} questions`;
-    item.command = { command: 'techChallenges.openQuiz', title: 'Open Quiz', arguments: [quiz.id] };
+    item.command = { command: 'sphynx.openQuiz', title: 'Open Quiz', arguments: [quiz.id] };
     item.iconPath = !score
       ? new vscode.ThemeIcon('circle-large-outline')
       : this.perfect(quiz)
@@ -208,8 +208,8 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     const left = this.exams.submissionsLeft(exam, q.id);
     item.description = `${qs?.bestEarned ?? 0}/${q.points} pts · ${left} submission${left === 1 ? '' : 's'} left`;
     item.command = q.kind === 'quiz'
-      ? { command: 'techChallenges.openQuiz', title: 'Open Quiz', arguments: [questionKey(q)] }
-      : { command: 'techChallenges.open', title: 'Open Question', arguments: [questionKey(q)] };
+      ? { command: 'sphynx.openQuiz', title: 'Open Quiz', arguments: [questionKey(q)] }
+      : { command: 'sphynx.open', title: 'Open Question', arguments: [questionKey(q)] };
     if (!qs?.submissions) {
       item.iconPath = new vscode.ThemeIcon('circle-large-outline');
     } else if (qs.bestEarned >= q.points) {

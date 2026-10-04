@@ -55,7 +55,7 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     return;
   }
 
-  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'tech-challenges-import-'));
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-import-'));
   try {
     let root = source;
     if (fs.statSync(source).isFile()) {
@@ -81,7 +81,7 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     if (ok.length === 0) {
       vscode.window.showWarningMessage(
         errors.length
-          ? `Nothing could be imported from ${path.basename(source)}. See the "Tech Challenges" output for the problems.`
+          ? `Nothing could be imported from ${path.basename(source)}. See the "Sphynx" output for the problems.`
           : `No challenges or exams found in ${path.basename(source)}. Each one needs a folder with a challenge.json, quiz.json or exam.json.`,
       );
       return;
@@ -158,14 +158,14 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     }
     const notes = [
       clashes.length ? `Renamed to avoid clashing with existing ids: ${clashes.join(', ')}.` : '',
-      errors.length ? `${errors.length} item(s) could not be imported; see the "Tech Challenges" output.` : '',
+      errors.length ? `${errors.length} item(s) could not be imported; see the "Sphynx" output.` : '',
     ].filter(Boolean);
     const choice = await vscode.window.showInformationMessage(
       `Imported ${describe(imported)}${removeSolutions ? ' (solutions removed)' : ''}. ${notes.join(' ')}`.trim(),
       'Show in Sidebar',
     );
     if (choice) {
-      await vscode.commands.executeCommand('techChallenges.list.focus');
+      await vscode.commands.executeCommand('sphynx.list.focus');
     }
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });
@@ -188,7 +188,7 @@ export async function removeImported(deps: ImportDeps): Promise<void> {
   }
   const answer = await vscode.window.showWarningMessage(
     `Remove ${picks.length} imported item${picks.length > 1 ? 's' : ''}?`,
-    { modal: true, detail: 'They disappear from the sidebar. Your own code files in tech-challenges/ are kept, and you can import them again later.' },
+    { modal: true, detail: 'They disappear from the sidebar. Your own code files are kept, and you can import them again later.' },
     'Remove',
   );
   if (answer !== 'Remove') {

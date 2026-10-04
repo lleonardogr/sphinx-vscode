@@ -12,7 +12,7 @@ A **quiz** is a set of short questions about Java: multiple choice, true or fals
 
 ## Taking a quiz (students)
 
-1. Open the **Quizzes** group in the Tech Challenges sidebar and click a quiz.
+1. Open the **Quizzes** group in the Sphynx sidebar and click a quiz.
 2. Answer the questions. Click **Check** under a question to see right away whether it's correct, with the right answer and an explanation.
 3. Click **Check all answers** at the end to get your score. Your best score is shown in the sidebar, and a quiz turns green when you get everything right.
 4. **Start over** clears your answers so you can try again.
@@ -79,7 +79,7 @@ Every question can also have:
 | `explanation` | | Shown after a practice check (Markdown). **Never shown during an exam.** |
 | `points` | `1` | Points for the question. Each question is all or nothing. |
 
-To share quizzes, put them next to your challenges and use [Import](creating-challenges.md#sharing-challenges-with-students) or `techChallenges.extraChallengePaths`, exactly like challenges. The built-in examples are in [`quizzes/`](../quizzes).
+To share quizzes, put them next to your challenges and use [Import](creating-challenges.md#sharing-challenges-with-students) or `sphynx.extraChallengePaths`, exactly like challenges. The built-in examples are in [`quizzes/`](../quizzes).
 
 ---
 
@@ -98,7 +98,7 @@ For `output` questions, the code can be a **snippet**, which is run inside `void
 
 ## Checking a quiz
 
-Run **Tech Challenges: Validate Challenges in a Folder…** on the folder that contains your quizzes. It checks that every quiz loads, and it **compiles and runs every `output` question**:
+Run **Sphynx: Validate Challenges in a Folder…** on the folder that contains your quizzes. It checks that every quiz loads, and it **compiles and runs every `output` question**:
 
 - If the `answer` doesn't match what the code really prints, it says so: `question 3: the answer is "3.5" but the code prints "3"`.
 - With **Validate and fill in expected outputs**, empty answers (`""`) are filled in from the real output, so you never have to work them out by hand.

@@ -37,7 +37,7 @@ export interface SessionState {
 }
 
 export interface ExamResultsFile {
-  format: 'tech-challenges-exam-results';
+  format: 'sphynx-exam-results';
   version: 1;
   extensionVersion: string;
   exam: { id: string; title: string; mode: string; durationMinutes: number; maxSubmissions: number };
@@ -62,7 +62,7 @@ export interface ExamResultsFile {
   warnings: IntegrityWarning[];
 }
 
-const STATE_KEY = 'techChallenges.exams';
+const STATE_KEY = 'sphynx.exams';
 const LARGE_INSERTION = 80; // characters inserted in a single edit
 const AWAY_THRESHOLD_MS = 15_000;
 
@@ -95,7 +95,7 @@ export class ExamManager implements vscode.Disposable {
     /** Runs every test of a question against the student's current code (used for auto-submit). */
     private readonly gradeQuestion: (exam: ExamDefinition, q: ExamQuestion) => Promise<RunOutcome | undefined>,
   ) {
-    this.timerItem.command = 'techChallenges.list.focus';
+    this.timerItem.command = 'sphynx.list.focus';
     this.disposables.push(
       this.timerItem,
       this.changed,
@@ -203,7 +203,7 @@ export class ExamManager implements vscode.Disposable {
     if (ok !== 'Start Exam') {
       return false;
     }
-    const previousName = this.context.globalState.get<string>('techChallenges.studentName', '');
+    const previousName = this.context.globalState.get<string>('sphynx.studentName', '');
     const student = (
       await vscode.window.showInputBox({
         title: exam.title,
@@ -216,7 +216,7 @@ export class ExamManager implements vscode.Disposable {
     if (!student) {
       return false;
     }
-    await this.context.globalState.update('techChallenges.studentName', student);
+    await this.context.globalState.update('sphynx.studentName', student);
 
     const now = Date.now();
     const state: SessionState = { student, startedAt: now, endsAt: now + exam.durationMinutes * 60_000, questions: {}, warnings: [] };
@@ -441,7 +441,7 @@ export class ExamManager implements vscode.Disposable {
     const s = this.state(exam.id)!;
     const finishedAt = s.finishedAt ?? Date.now();
     return {
-      format: 'tech-challenges-exam-results',
+      format: 'sphynx-exam-results',
       version: 1,
       extensionVersion: String(this.context.extension.packageJSON.version ?? ''),
       exam: { id: exam.id, title: exam.title, mode: exam.mode, durationMinutes: exam.durationMinutes, maxSubmissions: exam.maxSubmissions },
