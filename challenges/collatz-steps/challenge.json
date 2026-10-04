@@ -8,6 +8,22 @@
     "Inside the loop, update n (even: n / 2, odd: 3 * n + 1), then add 1 to steps.",
     "The values can grow far beyond the starting number, past what an int can hold. That's why n is a long."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Passos de Collatz (while)",
+      "hints": [
+        "A condição do laço é simplesmente n != 1.",
+        "Dentro do laço, atualize n (par: n / 2, ímpar: 3 * n + 1) e some 1 em steps.",
+        "Os valores podem crescer muito além do número inicial, mais do que um int consegue guardar. Por isso n é um long."
+      ],
+      "mustContain": [
+        "Use um laço while."
+      ],
+      "mustNotContain": [
+        "Use um laço while aqui (não for): o número de passos não é conhecido antes."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bwhile\\b",

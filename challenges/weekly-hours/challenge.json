@@ -8,6 +8,19 @@
     "To add hours: map.put(day, map.get(day) + hours).",
     "Iterating over an EnumMap goes Monday → Sunday. Only replace the busiest day when a total is strictly greater."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Horas de estudo na semana (EnumMap)",
+      "hints": [
+        "Percorra Day.values() uma vez colocando 0 em cada dia, para os sete dias serem impressos.",
+        "Para somar horas: map.put(day, map.get(day) + hours).",
+        "Percorrer um EnumMap vai de segunda a domingo. Só troque o dia mais cheio quando um total for estritamente maior."
+      ],
+      "mustContain": [
+        "Guarde as horas em um EnumMap<Day, Integer>."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bEnumMap\\b",

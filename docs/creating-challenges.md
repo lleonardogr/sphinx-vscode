@@ -400,8 +400,9 @@ Challenges in this repository's `challenges/` folder ship with the extension. To
 
 1. Fork the repository and run `npm install`.
 2. Create the challenge in `challenges/<id>/`, with the `topic` of its [unit](../README.md#the-learning-path-52-challenges) and an `order` that keeps the unit going from easy to hard. **Create New Challenge** offers this folder when you have the repository open.
-3. Run `npm run validate`. It is **strict** for the built-in content: besides compiling and running everything, it fails on the content standard in the checklist below (a "Things to know" section, at least 3 hidden tests and 2 hints, a description of 40 words or more). CI also validates on Linux, macOS and Windows, with JDK 17 and JDK 25.
-4. Add a line to `CHANGELOG.md` and open a pull request. See [CONTRIBUTING.md](../CONTRIBUTING.md).
+3. Add the Portuguese translation (see [Translating content](#translating-content)): built-in content ships in both languages.
+4. Run `npm run validate`. It is **strict** for the built-in content: besides compiling and running everything, it fails on the content standard in the checklist below (a "Things to know" section, at least 3 hidden tests and 2 hints, a description of 40 words or more) and on missing Portuguese translations. CI also validates on Linux, macOS and Windows, with JDK 17 and JDK 25.
+5. Add a line to `CHANGELOG.md` and open a pull request. See [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 Not sure if your idea fits? Open a **Challenge proposal** issue first.
 
@@ -418,6 +419,7 @@ Not sure if your idea fits? Open a **Challenge proposal** issue first.
 - [ ] Rules work in both Java styles.
 - [ ] 2 to 4 hints that go from gentle to specific, without giving away the answer.
 - [ ] Validation passes (in VS Code, check for ⚠ lines too), and you've reviewed the generated outputs.
+- [ ] Built-in content: the Portuguese translation is complete (`description.pt-br.md`, the `translations` block, and `Starter.pt-br.java` when the starter has comments).
 - [ ] You've solved it yourself from the sidebar, the way a student would.
 
 ---

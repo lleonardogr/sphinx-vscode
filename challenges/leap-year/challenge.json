@@ -8,6 +8,19 @@
     "Combine conditions with && (and), || (or) and != (not equal).",
     "You can store the result in a boolean variable: boolean leap = ...;"
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Ano bissexto",
+      "hints": [
+        "\"Divisível por 4\" quer dizer year % 4 == 0.",
+        "Combine condições com && (e), || (ou) e != (diferente).",
+        "Você pode guardar o resultado em uma variável boolean: boolean leap = ...;"
+      ],
+      "mustContain": [
+        "Use um if / else."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bif\\b",

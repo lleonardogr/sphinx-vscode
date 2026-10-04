@@ -7,6 +7,16 @@
     "Add the shift to the position, then use % 26 to wrap around after z.",
     "Turn the position back into a letter with (char) ('a' + position)."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Cifra de César",
+      "hints": [
+        "Caracteres são números: 'c' - 'a' é 2, a posição da letra no alfabeto.",
+        "Some o deslocamento à posição e use % 26 para voltar ao começo depois do z.",
+        "Transforme a posição de volta em letra com (char) ('a' + posição)."
+      ]
+    }
+  },
   "aiHints": false,
   "tests": [
     {

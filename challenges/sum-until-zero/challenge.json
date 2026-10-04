@@ -8,6 +8,19 @@
     "The condition at the end is while (number != 0);. Don't forget the semicolon.",
     "Make sure the final 0 isn't counted."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Somar até o zero (do-while)",
+      "hints": [
+        "Leia o número dentro do bloco do { }, para ele ser lido antes de a condição ser testada.",
+        "A condição no final é while (number != 0);. Não esqueça o ponto e vírgula.",
+        "Garanta que o 0 final não seja contado."
+      ],
+      "mustContain": [
+        "Use um laço do-while: do { ... } while (condição);"
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bdo\\s*\\{",

@@ -7,6 +7,21 @@
     "Loop from the last index (text.length() - 1) down to 0.",
     "Start with an empty String reversed = \"\"; and add one character at a time: reversed += text.charAt(i);"
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Inverter uma String",
+      "hints": [
+        "Faça um laço do último índice (text.length() - 1) até 0.",
+        "Comece com uma String vazia, reversed = \"\";, e acrescente um caractere de cada vez: reversed += text.charAt(i);"
+      ],
+      "mustContain": [
+        "Use um laço (for ou while)."
+      ],
+      "mustNotContain": [
+        "Monte o texto invertido com um laço: o reverse() pronto não é permitido."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(for|while)\\b",

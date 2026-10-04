@@ -8,6 +8,23 @@
     "groupingBy keeps the words of each group in the order they appear in the stream.",
     "Use TreeMap::new as the second argument to get the lengths sorted."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Agrupar palavras por tamanho",
+      "hints": [
+        "String::length é uma referência de método: é o mesmo que word -> word.length().",
+        "O groupingBy mantém as palavras de cada grupo na ordem em que aparecem no stream.",
+        "Use TreeMap::new como segundo argumento para os tamanhos ficarem ordenados."
+      ],
+      "mustContain": [
+        "Use a Stream API, por exemplo Arrays.stream(...) ou list.stream().",
+        "Agrupe as palavras com Collectors.groupingBy."
+      ],
+      "mustNotContain": [
+        "Resolva sem laços for ou while: use operações de stream."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.|\\bIntStream\\b|Arrays\\s*\\.\\s*stream",

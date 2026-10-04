@@ -15,6 +15,21 @@
     "Declare int operations = 0; before the loop, and add 1 only when a result was printed (not for a division by zero).",
     "Use break (in a while (true) loop) or a do … while (!option.equals(\"0\")) loop to stop at 0."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Menu da calculadora",
+      "hints": [
+        "Imprima o menu antes do laço, para ele aparecer uma vez só.",
+        "Leia a opção primeiro. Só leia a linha com dois números nas opções 1 a 4, porque o 0 e as opções inválidas não têm números depois.",
+        "Declare int operations = 0; antes do laço e some 1 só quando um resultado for impresso (não numa divisão por zero).",
+        "Use break (num laço while (true)) ou um do … while (!option.equals(\"0\")) para parar no 0."
+      ],
+      "mustContain": [
+        "Use um laço para manter o menu rodando.",
+        "Use um switch ou if/else para tratar as opções."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(while|for)\\b",

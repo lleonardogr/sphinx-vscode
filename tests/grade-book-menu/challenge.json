@@ -18,6 +18,23 @@
     "Check the letter from the top: if (grade >= 90) return \"A\"; else if (grade >= 80) …",
     "For the average, (double) sum / grades.size() keeps the decimals."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Menu do diário de notas",
+      "hints": [
+        "Crie a List<Integer> antes do laço. Se criar dentro, ela começa vazia toda vez.",
+        "Só a opção 1 lê uma linha extra (a nota). As opções 2, 3 e 4 não leem nada.",
+        "Para as opções 2, 3 e 4, teste grades.isEmpty() primeiro e imprima \"No grades yet\".",
+        "Confira o conceito de cima para baixo: if (grade >= 90) return \"A\"; else if (grade >= 80) …",
+        "Para a média, (double) sum / grades.size() mantém os decimais."
+      ],
+      "mustContain": [
+        "Guarde as notas em uma List<Integer> (por exemplo um ArrayList).",
+        "Use um laço para manter o menu rodando.",
+        "Mantenha o método String letter(int grade) e use-o para os conceitos."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(List|ArrayList)\\s*<\\s*Integer\\s*>",

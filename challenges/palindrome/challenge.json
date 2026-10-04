@@ -8,6 +8,19 @@
     "Compare the first character with the last, the second with the second-to-last, and so on.",
     "Comparing Strings: use a.equals(b), never a == b."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "É palíndromo?",
+      "hints": [
+        "Primeiro converta a palavra com toLowerCase().",
+        "Compare o primeiro caractere com o último, o segundo com o penúltimo, e assim por diante.",
+        "Para comparar Strings, use a.equals(b), nunca a == b."
+      ],
+      "mustNotContain": [
+        "Resolva com um laço ou montando a palavra invertida você mesmo: o reverse() pronto não é permitido."
+      ]
+    }
+  },
   "mustNotContain": [
     {
       "pattern": "\\.reverse\\s*\\(",

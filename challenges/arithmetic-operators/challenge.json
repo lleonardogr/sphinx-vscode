@@ -8,6 +8,16 @@
     "Remainder: 7 % 3 is 1, because 7 = 2 * 3 + 1.",
     "Wrap each calculation in parentheses when joining it with text: \" = \" + (a + b)."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Operadores aritméticos",
+      "hints": [
+        "A divisão inteira descarta a parte decimal: 7 / 3 é 2.",
+        "Resto: 7 % 3 é 1, porque 7 = 2 * 3 + 1.",
+        "Coloque cada conta entre parênteses quando juntar com texto: \" = \" + (a + b)."
+      ]
+    }
+  },
   "tests": [
     {
       "input": "7 3\n",

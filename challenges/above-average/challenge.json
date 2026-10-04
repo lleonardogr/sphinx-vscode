@@ -8,6 +8,19 @@
     "Divide as a double, or you lose the decimals: (double) sum / n.",
     "Second loop: count the numbers where number > average (strictly greater)."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Acima da média (for-each)",
+      "hints": [
+        "Primeiro laço: for (int number : numbers) { sum += number; }",
+        "Divida como double, senão você perde os decimais: (double) sum / n.",
+        "Segundo laço: conte os números em que number > average (estritamente maior)."
+      ],
+      "mustContain": [
+        "Use um for melhorado (for-each): for (int number : numbers)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bfor\\s*\\(\\s*(final\\s+)?[\\w<>\\[\\]]+\\s+\\w+\\s*:",

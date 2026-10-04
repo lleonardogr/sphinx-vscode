@@ -8,6 +8,21 @@
     "Create the object inside the loop: Person p = new Person(name, age);",
     "Then print the method's result: IO.println(p.introduce());"
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Sua primeira classe",
+      "hints": [
+        "Um construtor tem o mesmo nome da classe e nenhum tipo de retorno: Person(String name, int age) { ... }",
+        "Crie o objeto dentro do laço: Person p = new Person(name, age);",
+        "Depois imprima o resultado do método: IO.println(p.introduce());"
+      ],
+      "mustContain": [
+        "Crie uma classe chamada Person.",
+        "Dê à Person um método String introduce().",
+        "Crie objetos Person com new Person(...)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bclass\\s+Person\\b",

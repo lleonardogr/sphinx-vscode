@@ -8,6 +8,20 @@
     "add() tells you whether the word is new: it returns false for a repeat.",
     "Remember only the first repeat: save it when your variable is still null."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Palavras únicas (HashSet)",
+      "hints": [
+        "Adicione cada palavra ao conjunto. O tamanho dele no final é o número de palavras diferentes.",
+        "add() diz se a palavra é nova: ele retorna false para uma repetida.",
+        "Guarde só a primeira repetida: salve-a quando a sua variável ainda for null."
+      ],
+      "mustContain": [
+        "Use um HashSet para lembrar as palavras que já apareceram.",
+        "Use um laço (for ou while)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bHashSet\\b",

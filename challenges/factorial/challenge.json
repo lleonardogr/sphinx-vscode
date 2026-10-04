@@ -7,6 +7,18 @@
     "Like a sum, but start at 1 and multiply instead of add.",
     "Factorials grow fast! An int can only hold up to 2,147,483,647, and 13! is already bigger. Use a long."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Fatorial",
+      "hints": [
+        "É como uma soma, mas comece em 1 e multiplique em vez de somar.",
+        "Fatoriais crescem rápido! Um int só guarda até 2.147.483.647, e 13! já é maior. Use um long."
+      ],
+      "mustContain": [
+        "Use um laço (for ou while)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(for|while)\\b",

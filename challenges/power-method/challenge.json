@@ -8,6 +8,23 @@
     "Start with long result = 1; and multiply it by base, exponent times.",
     "Don't forget to return result; at the end of the method."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Potência (método)",
+      "hints": [
+        "Um método tem tipo de retorno, nome e parâmetros: long power(int base, int exponent) { ... } (o Java clássico coloca static na frente)",
+        "Comece com long result = 1; e multiplique por base, exponent vezes.",
+        "Não esqueça do return result; no fim do método."
+      ],
+      "mustContain": [
+        "Escreva o método com esta assinatura: long power(int base, int exponent).",
+        "Use um laço (for ou while)."
+      ],
+      "mustNotContain": [
+        "Use um laço: Math.pow não é permitido aqui."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\blong\\s+power\\s*\\(\\s*int\\s+\\w+\\s*,\\s*int\\s+\\w+\\s*\\)",

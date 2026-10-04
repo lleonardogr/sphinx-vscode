@@ -8,6 +8,19 @@
     "A char is written with single quotes: 'a'. Compare with ==.",
     "text.toLowerCase() turns the whole text into lowercase, so you only need to check lowercase vowels."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Contar vogais",
+      "hints": [
+        "Percorra cada caractere com text.charAt(i).",
+        "Um char é escrito com aspas simples: 'a'. Compare com ==.",
+        "text.toLowerCase() deixa o texto todo em minúsculas, então você só precisa testar as vogais minúsculas."
+      ],
+      "mustContain": [
+        "Use um laço (for ou while)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(for|while)\\b",

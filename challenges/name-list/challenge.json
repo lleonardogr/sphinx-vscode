@@ -8,6 +8,22 @@
     "Capitalize inside map with a lambda: name -> name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase()",
     "Then .distinct().sorted().collect(Collectors.joining(\", \"))."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Arrumar uma lista de nomes",
+      "hints": [
+        "Comece com Arrays.stream(line.split(\" \")): um Stream<String> de nomes.",
+        "Coloque a primeira letra em maiúscula dentro do map com uma lambda: name -> name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase()",
+        "Depois .distinct().sorted().collect(Collectors.joining(\", \"))."
+      ],
+      "mustContain": [
+        "Use a Stream API, por exemplo Arrays.stream(...) ou list.stream()."
+      ],
+      "mustNotContain": [
+        "Resolva sem laços for ou while: use operações de stream."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.|\\bIntStream\\b|Arrays\\s*\\.\\s*stream",

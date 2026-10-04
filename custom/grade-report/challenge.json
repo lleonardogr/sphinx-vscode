@@ -7,6 +7,19 @@
     "sum / n with two ints drops the decimals. Cast first: (double) sum / n.",
     "Print two decimals with \"Average: %.2f\".formatted(average), or System.out.printf in classic Java."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Relatório de notas",
+      "hints": [
+        "Percorra as notas uma vez, acumulando a soma, a maior e a menor até agora, e um contador de aprovados.",
+        "sum / n com dois int descarta os decimais. Converta antes: (double) sum / n.",
+        "Imprima duas casas decimais com \"Average: %.2f\".formatted(average), ou System.out.printf no Java clássico."
+      ],
+      "mustContain": [
+        "Use um laço para percorrer as notas."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(for|while)\\b",

@@ -8,6 +8,19 @@
     "Don't forget break; at the end of each case, or execution falls through to the next one!",
     "The default case runs when no other case matches."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Dia da semana",
+      "hints": [
+        "switch (dia) { case 1: ...; break; case 2: ...; break; default: ... }",
+        "Não esqueça o break; no fim de cada case, senão a execução continua no próximo!",
+        "O default é executado quando nenhum outro case combina."
+      ],
+      "mustContain": [
+        "Use um switch."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bswitch\\b",

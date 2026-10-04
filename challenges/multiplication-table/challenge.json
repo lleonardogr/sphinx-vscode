@@ -7,6 +7,18 @@
     "Loop with i from 1 to 10 and print one line each time.",
     "Use a lowercase x with spaces around it: n + \" x \" + i + \" = \" + (n * i)"
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Tabuada",
+      "hints": [
+        "Faça um laço com i de 1 a 10 e imprima uma linha a cada vez.",
+        "Use um x minúsculo com espaços em volta: n + \" x \" + i + \" = \" + (n * i)"
+      ],
+      "mustContain": [
+        "Use um laço (for ou while)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(for|while)\\b",

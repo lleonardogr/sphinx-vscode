@@ -8,6 +8,19 @@
     "A closing bracket with an empty stack means the text is not balanced.",
     "At the end, the stack must be empty: anything left was never closed."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Colchetes balanceados (pilha)",
+      "hints": [
+        "Empilhe todo símbolo de abertura. Quando aparecer um de fechamento, o topo da pilha precisa ser o de abertura correspondente.",
+        "Um símbolo de fechamento com a pilha vazia quer dizer que o texto não está balanceado.",
+        "No final, a pilha precisa estar vazia: o que sobrar nunca foi fechado."
+      ],
+      "mustContain": [
+        "Use uma pilha (ArrayDeque ou Stack) para casar os símbolos."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(ArrayDeque|Deque|Stack)\\b",

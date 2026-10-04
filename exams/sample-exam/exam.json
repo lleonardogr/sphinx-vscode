@@ -1,6 +1,12 @@
 {
   "title": "Sample Exam: Java Basics",
   "description": "An example closed exam with a quiz, two built-in challenges and one private question. Copy this folder to create your own.",
+  "translations": {
+    "pt-br": {
+      "title": "Prova de exemplo: fundamentos do Java",
+      "description": "Um exemplo de prova fechada com um quiz, dois desafios incluídos e uma questão particular. Copie esta pasta para criar a sua."
+    }
+  },
   "durationMinutes": 30,
   "mode": "closed",
   "maxSubmissions": 3,

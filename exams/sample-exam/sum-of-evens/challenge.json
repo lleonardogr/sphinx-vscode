@@ -12,6 +12,19 @@
     "Add a number to the total only when number % 2 == 0.",
     "Negative even numbers count too: -4 % 2 is 0."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Soma dos pares",
+      "hints": [
+        "Mantenha um total acumulado que começa em 0.",
+        "Some um número ao total só quando number % 2 == 0.",
+        "Pares negativos também contam: -4 % 2 é 0."
+      ],
+      "mustContain": [
+        "Use um laço (for ou while)."
+      ]
+    }
+  },
   "tests": [
     {
       "input": "5\n1 2 3 4 5\n",

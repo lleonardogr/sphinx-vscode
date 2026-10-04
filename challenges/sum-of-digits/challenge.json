@@ -7,6 +7,21 @@
     "Keep going while n > 0: add n % 10 to the sum, then do n = n / 10.",
     "A while loop is a good fit when you don't know in advance how many times to repeat."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Soma dos dígitos",
+      "hints": [
+        "Continue enquanto n > 0: some n % 10 ao total e faça n = n / 10.",
+        "Um laço while é uma boa escolha quando você não sabe antes quantas vezes vai repetir."
+      ],
+      "mustContain": [
+        "Use um laço while."
+      ],
+      "mustNotContain": [
+        "Resolva com matemática (% e /), sem transformar o número em String."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bwhile\\b",

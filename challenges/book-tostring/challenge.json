@@ -8,6 +8,20 @@
     "Put @Override on the line above it. The compiler will then check that you really are overriding a method.",
     "To put a double quote inside a String, escape it: \"\\\"\" is a String containing one \" character."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Livro com toString()",
+      "hints": [
+        "A assinatura do método precisa ser exatamente: public String toString()",
+        "Coloque @Override na linha de cima. Assim o compilador confere se você está mesmo sobrescrevendo um método.",
+        "Para colocar aspas duplas dentro de uma String, use a barra: \"\\\"\" é uma String com um caractere \"."
+      ],
+      "mustContain": [
+        "Crie uma classe chamada Book.",
+        "Sobrescreva public String toString() em Book."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bclass\\s+Book\\b",

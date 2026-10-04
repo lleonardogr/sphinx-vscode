@@ -7,6 +7,22 @@
     "Start with max = numbers[0] and min = numbers[0], then compare with the other elements.",
     "Why not start with max = 0? Think about an array where every number is negative."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Maior e menor",
+      "hints": [
+        "Comece com max = numbers[0] e min = numbers[0] e compare com os outros elementos.",
+        "Por que não começar com max = 0? Pense em um array em que todos os números são negativos."
+      ],
+      "mustContain": [
+        "Guarde os números em um array (por exemplo int[] numbers).",
+        "Use um laço (for ou while)."
+      ],
+      "mustNotContain": [
+        "Encontre com um laço: sem ordenar, sem Math.max/min e sem Collections."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\[\\s*\\]",

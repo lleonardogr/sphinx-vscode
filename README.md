@@ -10,7 +10,7 @@
 
 > *Like the sphinx of the legend, Sphynx asks you questions, and you only pass if you answer them right.*
 
-HackerRank / LeetCode-style coding challenges right inside VS Code, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. It starts with **Java**: from the basic syntax to data structures, object-oriented programming and the Stream API.
+HackerRank / LeetCode-style coding challenges right inside VS Code, in **English or Portuguese**, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. It starts with **Java**: from the basic syntax to data structures, object-oriented programming and the Stream API.
 
 📘 **Guides:** [Creating your own challenges](docs/creating-challenges.md) · [Tests](docs/creating-challenges.md#tests-mixed-challenges) · [Quizzes](docs/quizzes.md) · [Exams](docs/exams.md) · [AI hints](docs/ai-hints.md)
 

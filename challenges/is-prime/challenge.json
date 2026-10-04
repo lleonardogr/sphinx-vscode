@@ -8,6 +8,19 @@
     "Try every divisor d from 2 up to n - 1. If n % d == 0, it's not prime.",
     "Faster: you only need to try divisors while d * d <= n."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Números primos (método)",
+      "hints": [
+        "Números menores que 2 nunca são primos: retorne false logo de cara.",
+        "Teste cada divisor d de 2 até n - 1. Se n % d == 0, não é primo.",
+        "Mais rápido: basta testar os divisores enquanto d * d <= n."
+      ],
+      "mustContain": [
+        "Mantenha a assinatura do método: boolean isPrime(int n)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bboolean\\s+isPrime\\s*\\(\\s*int\\s+\\w+\\s*\\)",
