@@ -4,6 +4,7 @@
 (function () {
   // @ts-ignore acquireVsCodeApi is injected by VS Code
   const vscode = acquireVsCodeApi();
+  const tr = (en, pt) => (document.body.dataset.lang === 'pt-br' ? pt : en);
   const practice = document.body.dataset.mode === 'practice';
   const questions = /** @type {HTMLElement[]} */ (Array.from(document.querySelectorAll('.quiz-question')));
 
@@ -42,8 +43,8 @@
     if (!el || !q) return;
     q.classList.toggle('correct', r.correct);
     q.classList.toggle('wrong', !r.correct);
-    el.innerHTML = `<div class="banner ${r.correct ? 'success' : 'error'}"><strong>${r.correct ? '✓ Correct' : '✗ Not quite'}</strong>
-      ${!r.correct && r.answer !== undefined ? `<p>Correct answer: <code class="quiz-pre">${escapeHtml(r.answer)}</code></p>` : ''}
+    el.innerHTML = `<div class="banner ${r.correct ? 'success' : 'error'}"><strong>${r.correct ? tr('✓ Correct', '✓ Certo') : tr('✗ Not quite', '✗ Não exatamente')}</strong>
+      ${!r.correct && r.answer !== undefined ? `<p>${tr('Correct answer', 'Resposta certa')}: <code class="quiz-pre">${escapeHtml(r.answer)}</code></p>` : ''}
       ${r.explanation ? `<div class="quiz-explanation">${r.explanation}</div>` : ''}</div>`;
   }
 
@@ -90,8 +91,8 @@
       const score = document.getElementById('quiz-score');
       if (score) {
         const all = msg.correct === msg.results.length;
-        score.innerHTML = `<div class="banner ${all ? 'success' : msg.correct ? 'warning' : 'error'}"><strong>${all ? '🎉 ' : ''}${msg.correct} of ${msg.results.length} correct · ${msg.earned} / ${msg.total} points</strong>
-          ${all ? '' : '<p>Read the explanations, then click Start over to try again.</p>'}</div>`;
+        score.innerHTML = `<div class="banner ${all ? 'success' : msg.correct ? 'warning' : 'error'}"><strong>${all ? '🎉 ' : ''}${tr(`${msg.correct} of ${msg.results.length} correct · ${msg.earned} / ${msg.total} points`, `${msg.correct} de ${msg.results.length} certas · ${msg.earned} / ${msg.total} pontos`)}</strong>
+          ${all ? '' : `<p>${tr('Read the explanations, then click Start over to try again.', 'Leia as explicações e clique em Recomeçar para tentar de novo.')}</p>`}</div>`;
         score.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     } else if (msg.type === 'examStatus') {
@@ -102,7 +103,7 @@
       if (banner && msg.locked) banner.className = 'banner success';
       if (msg.score) {
         const score = document.getElementById('quiz-score');
-        if (score) score.innerHTML = `<div class="banner info"><strong>Quiz submitted: ${msg.score}</strong></div>`;
+        if (score) score.innerHTML = `<div class="banner info"><strong>${tr('Quiz submitted', 'Quiz enviado')}: ${msg.score}</strong></div>`;
       }
     }
   });

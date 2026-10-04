@@ -9,6 +9,8 @@ import { slugify } from './authoring';
 import { Challenge } from './challenges';
 import { ExamDefinition } from './exams';
 import { QuizDefinition } from './quizzes';
+import { plural, tr } from './i18n';
+import { unitName } from './path';
 import { Importable, checkImportables, extractZip, findImportables, findSolutions } from './importCore';
 
 export interface ImportDeps {
@@ -33,18 +35,18 @@ function describe(items: Importable[]): string {
   const exams = items.filter((i) => i.kind === 'exam').length;
   const quizzes = items.filter((i) => i.kind === 'quiz').length;
   const parts = [
-    challenges && `${challenges} challenge${challenges > 1 ? 's' : ''}`,
-    tests && `${tests} test${tests > 1 ? 's' : ''}`,
-    quizzes && `${quizzes} quiz${quizzes > 1 ? 'zes' : ''}`,
-    exams && `${exams} exam${exams > 1 ? 's' : ''}`,
+    challenges && plural(challenges, ['challenge', 'challenges'], ['desafio', 'desafios']),
+    tests && plural(tests, ['test', 'tests'], ['teste', 'testes']),
+    quizzes && plural(quizzes, ['quiz', 'quizzes'], ['quiz', 'quizzes']),
+    exams && plural(exams, ['exam', 'exams'], ['prova', 'provas']),
   ].filter(Boolean);
-  return parts.length > 1 ? `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}` : String(parts[0] ?? 'nothing');
+  return parts.length > 1 ? `${parts.slice(0, -1).join(', ')} ${tr('and', 'e')} ${parts[parts.length - 1]}` : String(parts[0] ?? tr('nothing', 'nada'));
 }
 
 export async function importContent(deps: ImportDeps): Promise<void> {
   const picked = await vscode.window.showOpenDialog({
-    title: 'Import challenges, quizzes, tests or exams',
-    openLabel: 'Import',
+    title: tr('Import challenges, quizzes, tests or exams', 'Importar desafios, quizzes, testes ou provas'),
+    openLabel: tr('Import', 'Importar'),
     canSelectFiles: true,
     canSelectFolders: true,
     canSelectMany: false,
@@ -60,13 +62,13 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     let root = source;
     if (fs.statSync(source).isFile()) {
       if (!source.toLowerCase().endsWith('.zip')) {
-        vscode.window.showErrorMessage('Choose a folder, or a .zip file.');
+        vscode.window.showErrorMessage(tr('Choose a folder, or a .zip file.', 'Escolha uma pasta ou um arquivo .zip.'));
         return;
       }
       try {
         extractZip(source, temp);
       } catch (e) {
-        vscode.window.showErrorMessage(`Could not open ${path.basename(source)}: ${(e as Error).message}`);
+        vscode.window.showErrorMessage(tr(`Could not open ${path.basename(source)}: ${(e as Error).message}`, `Não foi possível abrir ${path.basename(source)}: ${(e as Error).message}`));
         return;
       }
       root = temp;
@@ -81,8 +83,11 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     if (ok.length === 0) {
       vscode.window.showWarningMessage(
         errors.length
-          ? `Nothing could be imported from ${path.basename(source)}. See the "Sphynx" output for the problems.`
-          : `No challenges or exams found in ${path.basename(source)}. Each one needs a folder with a challenge.json, quiz.json or exam.json.`,
+          ? tr(`Nothing could be imported from ${path.basename(source)}. See the "Sphynx" output for the problems.`, `Nada pôde ser importado de ${path.basename(source)}. Veja os problemas na saída "Sphynx".`)
+          : tr(
+              `No challenges or exams found in ${path.basename(source)}. Each one needs a folder with a challenge.json, quiz.json or exam.json.`,
+              `Nenhum desafio ou prova encontrado em ${path.basename(source)}. Cada um precisa de uma pasta com challenge.json, quiz.json ou exam.json.`,
+            ),
       );
       return;
     }
@@ -93,10 +98,20 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     if (solutions.length) {
       const choice = await vscode.window.showQuickPick(
         [
-          { label: 'Remove the solutions', detail: 'For students: the challenges work without them.', remove: true },
-          { label: 'Keep the solutions', detail: 'For teachers: needed to validate the challenges or fill in expected outputs.', remove: false },
+          { label: tr('Remove the solutions', 'Remover as soluções'), detail: tr('For students: the challenges work without them.', 'Para alunos: os desafios funcionam sem elas.'), remove: true },
+          {
+            label: tr('Keep the solutions', 'Manter as soluções'),
+            detail: tr('For teachers: needed to validate the challenges or fill in expected outputs.', 'Para professores: necessárias para validar os desafios ou gerar as saídas esperadas.'),
+            remove: false,
+          },
         ],
-        { title: `This import contains ${solutions.length} reference solution file${solutions.length > 1 ? 's' : ''} (Solution*.java)`, ignoreFocusOut: true },
+        {
+          title: tr(
+            `This import contains ${solutions.length} reference solution file${solutions.length > 1 ? 's' : ''} (Solution*.java)`,
+            `Esta importação tem ${solutions.length} arquivo${solutions.length > 1 ? 's' : ''} de solução (Solution*.java)`,
+          ),
+          ignoreFocusOut: true,
+        },
       );
       if (!choice) {
         return;
@@ -124,16 +139,20 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     const existing = plan.filter((p) => fs.existsSync(p.dest));
     let replace = true;
     if (existing.length) {
+      const replaceLabel = tr('Replace', 'Substituir');
       const answer = await vscode.window.showWarningMessage(
-        `${existing.length} of these ${existing.length > 1 ? 'are' : 'is'} already imported: ${existing.map((p) => p.item.title).join(', ')}.`,
-        { modal: true, detail: 'Replace them with this version? Progress and exam results are kept.' },
-        'Replace',
-        'Skip Them',
+        tr(
+          `${existing.length} of these ${existing.length > 1 ? 'are' : 'is'} already imported: ${existing.map((p) => p.item.title).join(', ')}.`,
+          `${existing.length} ${existing.length > 1 ? 'destes já foram importados' : 'destes já foi importado'}: ${existing.map((p) => p.item.title).join(', ')}.`,
+        ),
+        { modal: true, detail: tr('Replace them with this version? Progress and exam results are kept.', 'Substituir pela versão nova? O progresso e os resultados de provas são mantidos.') },
+        replaceLabel,
+        tr('Skip Them', 'Pular'),
       );
       if (!answer) {
         return;
       }
-      replace = answer === 'Replace';
+      replace = answer === replaceLabel;
     }
 
     const imported: Importable[] = [];
@@ -153,16 +172,16 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     deps.reload();
 
     if (imported.length === 0) {
-      vscode.window.showInformationMessage('Nothing new was imported.');
+      vscode.window.showInformationMessage(tr('Nothing new was imported.', 'Nada novo foi importado.'));
       return;
     }
     const notes = [
-      clashes.length ? `Renamed to avoid clashing with existing ids: ${clashes.join(', ')}.` : '',
-      errors.length ? `${errors.length} item(s) could not be imported; see the "Sphynx" output.` : '',
+      clashes.length ? tr(`Renamed to avoid clashing with existing ids: ${clashes.join(', ')}.`, `Renomeados para não conflitar com ids existentes: ${clashes.join(', ')}.`) : '',
+      errors.length ? tr(`${errors.length} item(s) could not be imported; see the "Sphynx" output.`, `${errors.length} item(ns) não puderam ser importados; veja a saída "Sphynx".`) : '',
     ].filter(Boolean);
     const choice = await vscode.window.showInformationMessage(
-      `Imported ${describe(imported)}${removeSolutions ? ' (solutions removed)' : ''}. ${notes.join(' ')}`.trim(),
-      'Show in Sidebar',
+      `${tr('Imported', 'Importados')}: ${describe(imported)}${removeSolutions ? tr(' (solutions removed)', ' (soluções removidas)') : ''}. ${notes.join(' ')}`.trim(),
+      tr('Show in Sidebar', 'Mostrar na barra lateral'),
     );
     if (choice) {
       await vscode.commands.executeCommand('sphynx.list.focus');
@@ -174,24 +193,31 @@ export async function importContent(deps: ImportDeps): Promise<void> {
 
 export async function removeImported(deps: ImportDeps): Promise<void> {
   const items = [
-    ...deps.exams().filter((e) => isInside(e.dir, deps.libraryDir)).map((e) => ({ label: `$(checklist) ${e.title}`, description: `exam · ${e.questions.length} questions`, dir: e.dir })),
-    ...deps.quizzes().filter((q) => isInside(q.dir, deps.libraryDir)).map((q) => ({ label: `$(question) ${q.title}`, description: `quiz · ${q.questions.length} questions`, dir: q.dir })),
-    ...deps.challenges().filter((c) => isInside(c.dir, deps.libraryDir)).map((c) => ({ label: `$(symbol-event) ${c.title}`, description: `${c.topic} · ${c.difficulty}`, dir: c.dir })),
+    ...deps.exams().filter((e) => isInside(e.dir, deps.libraryDir)).map((e) => ({ label: `$(checklist) ${e.title}`, description: `${tr('exam', 'prova')} · ${plural(e.questions.length, ['question', 'questions'], ['questão', 'questões'])}`, dir: e.dir })),
+    ...deps.quizzes().filter((q) => isInside(q.dir, deps.libraryDir)).map((q) => ({ label: `$(question) ${q.title}`, description: `quiz · ${plural(q.questions.length, ['question', 'questions'], ['questão', 'questões'])}`, dir: q.dir })),
+    ...deps.challenges().filter((c) => isInside(c.dir, deps.libraryDir)).map((c) => ({ label: `$(symbol-event) ${c.title}`, description: `${unitName(c.topic)} · ${c.difficulty}`, dir: c.dir })),
   ];
   if (items.length === 0) {
-    vscode.window.showInformationMessage('Nothing has been imported yet. Use "Import Challenges, Quizzes, Tests or Exams…" to add some.');
+    vscode.window.showInformationMessage(tr('Nothing has been imported yet. Use "Import Challenges, Quizzes, Tests or Exams…" to add some.', 'Nada foi importado ainda. Use "Importar desafios, quizzes, testes ou provas…" para adicionar.'));
     return;
   }
-  const picks = await vscode.window.showQuickPick(items, { title: 'Remove imported challenges, quizzes, tests or exams', canPickMany: true, ignoreFocusOut: true });
+  const picks = await vscode.window.showQuickPick(items, { title: tr('Remove imported challenges, quizzes, tests or exams', 'Remover desafios, quizzes, testes ou provas importados'), canPickMany: true, ignoreFocusOut: true });
   if (!picks?.length) {
     return;
   }
+  const removeLabel = tr('Remove', 'Remover');
   const answer = await vscode.window.showWarningMessage(
-    `Remove ${picks.length} imported item${picks.length > 1 ? 's' : ''}?`,
-    { modal: true, detail: 'They disappear from the sidebar. Your own code files are kept, and you can import them again later.' },
-    'Remove',
+    tr(`Remove ${picks.length} imported item${picks.length > 1 ? 's' : ''}?`, `Remover ${picks.length} ${picks.length > 1 ? 'itens importados' : 'item importado'}?`),
+    {
+      modal: true,
+      detail: tr(
+        'They disappear from the sidebar. Your own code files are kept, and you can import them again later.',
+        'Eles somem da barra lateral. Seus arquivos de código são mantidos, e você pode importá-los de novo depois.',
+      ),
+    },
+    removeLabel,
   );
-  if (answer !== 'Remove') {
+  if (answer !== removeLabel) {
     return;
   }
   for (const p of picks) {

@@ -15,6 +15,8 @@ async function main() {
   const generate = args.includes('--generate');
   // --strict: content-standard warnings fail the run (used in CI for the built-in content).
   const strict = args.includes('--strict');
+  // --lang=pt-br: also report missing translations in that language (repeatable).
+  const languages = args.filter((a) => a.startsWith('--lang=')).map((a) => a.slice('--lang='.length));
   const roots = args.filter((a) => !a.startsWith('--'));
   if (roots.length === 0) roots.push(...['challenges', 'custom', 'tests', 'exams', 'quizzes'].map((dir) => path.join(__dirname, '..', dir)));
 
@@ -22,6 +24,7 @@ async function main() {
   const report = await validateChallenges(roots, {
     generate,
     strict,
+    languages,
     referenceRoots: builtIn,
     onChallenge: (c) => process.stdout.write(c.ok ? '.' : 'x'),
   });

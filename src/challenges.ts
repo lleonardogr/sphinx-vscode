@@ -6,6 +6,7 @@
 //   Solution*.java        reference solutions (not shipped; used by `npm run validate`)
 import * as fs from 'fs';
 import * as path from 'path';
+import { Lang, language } from './i18n';
 import { CUSTOM_TOPIC, UNITS, unitKey } from './path';
 import { Rule, TestCase } from './runner';
 
@@ -50,23 +51,44 @@ function readOptional(dir: string, file: string): string {
   return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : '';
 }
 
-export function loadChallenge(dir: string): Challenge {
+/** Translated texts for one language: { "translations": { "pt-br": { title, hints, mustContain, mustNotContain } } }. */
+interface ChallengeTranslation {
+  title?: string;
+  hints?: string[];
+  /** Rule messages, in the same order as the rules. */
+  mustContain?: string[];
+  mustNotContain?: string[];
+}
+
+function translateRules(rules: Rule[] | undefined, messages: string[] | undefined): Rule[] {
+  return (rules ?? []).map((r, i) => (typeof messages?.[i] === 'string' && messages[i].trim() ? { ...r, message: messages[i] } : r));
+}
+
+/**
+ * Loads a challenge in `lang`. Translations live next to the original: description.<lang>.md,
+ * Starter.<lang>.java, Starter.classic.<lang>.java and the "translations" block of challenge.json.
+ * Anything not translated falls back to English. Tests and solutions are shared by every language.
+ */
+export function loadChallenge(dir: string, lang: Lang = language()): Challenge {
   const meta = JSON.parse(fs.readFileSync(path.join(dir, 'challenge.json'), 'utf8'));
   if (!meta.title || !Array.isArray(meta.tests) || meta.tests.length === 0) {
     throw new Error('challenge.json needs a "title" and at least one entry in "tests"');
   }
+  const t: ChallengeTranslation = (lang !== 'en' && meta.translations?.[lang]) || {};
+  const local = (file: string) => (lang !== 'en' ? readOptional(dir, file.replace(/\.(md|java)$/, `.${lang}.$1`)) : '');
+  const starter = local('Starter.java') || readOptional(dir, 'Starter.java');
   return {
     id: meta.id ?? path.basename(dir),
-    title: meta.title,
+    title: (typeof t.title === 'string' && t.title.trim()) || meta.title,
     topic: typeof meta.topic === 'string' && meta.topic.trim() ? meta.topic.trim() : CUSTOM_TOPIC,
     difficulty: meta.difficulty ?? 'Easy',
     order: meta.order ?? 0,
-    description: readOptional(dir, 'description.md'),
-    starterCode: readOptional(dir, 'Starter.java'),
-    starterCodeClassic: readOptional(dir, 'Starter.classic.java') || readOptional(dir, 'Starter.java'),
-    hints: meta.hints ?? [],
-    mustContain: meta.mustContain ?? [],
-    mustNotContain: meta.mustNotContain ?? [],
+    description: local('description.md') || readOptional(dir, 'description.md'),
+    starterCode: starter,
+    starterCodeClassic: local('Starter.classic.java') || readOptional(dir, 'Starter.classic.java') || starter,
+    hints: Array.isArray(t.hints) && t.hints.length ? t.hints : meta.hints ?? [],
+    mustContain: translateRules(meta.mustContain, t.mustContain),
+    mustNotContain: translateRules(meta.mustNotContain, t.mustNotContain),
     tests: meta.tests,
     skills: Array.isArray(meta.skills) ? meta.skills.filter((s: unknown) => typeof s === 'string') : [],
     unit: typeof meta.unit === 'string' && meta.unit.trim() ? meta.unit.trim() : undefined,

@@ -4,6 +4,7 @@
 // validator and the exam verifier can reuse it.
 import * as fs from 'fs';
 import * as path from 'path';
+import { Lang, language, tr } from './i18n';
 import { normalizeOutput } from './runner';
 
 export type QuizQuestion =
@@ -33,7 +34,6 @@ export interface QuizGrade {
   results: { correct: boolean; earned: number }[];
 }
 
-const DEFAULT_PROMPT_OUTPUT = 'What does this code print?';
 
 function fail(i: number, message: string): never {
   throw new Error(`question ${i + 1}: ${message}`);
@@ -75,24 +75,58 @@ function parseQuestion(raw: Record<string, unknown>, i: number): QuizQuestion {
         if (typeof raw.answer !== 'string') fail(i, 'an "output" question needs "answer": the exact output');
         answer = raw.answer;
       }
-      return { type: 'output', prompt: prompt || DEFAULT_PROMPT_OUTPUT, code, answer, options, explanation, points };
+      return { type: 'output', prompt: prompt || tr('What does this code print?', 'O que este código imprime?'), code, answer, options, explanation, points };
     }
     default:
       fail(i, '"type" must be "choice", "truefalse", "short" or "output"');
   }
 }
 
-export function loadQuiz(dir: string): QuizDefinition {
+/** One question's translation: prompt, explanation, options (choice questions only) and extra accepted short answers. */
+interface QuestionTranslation {
+  prompt?: string;
+  explanation?: string;
+  options?: string[];
+  answer?: string | string[];
+}
+
+interface QuizTranslation {
+  title?: string;
+  description?: string;
+  /** By question index. */
+  questions?: QuestionTranslation[];
+}
+
+/** Applies a translation to one raw question. Output options and answers are program output and stay as they are. */
+function translateQuestion(raw: Record<string, unknown>, t: QuestionTranslation | undefined): Record<string, unknown> {
+  if (!t) {
+    return raw;
+  }
+  const out = { ...raw };
+  if (typeof t.prompt === 'string' && t.prompt.trim()) out.prompt = t.prompt;
+  if (typeof t.explanation === 'string' && t.explanation.trim()) out.explanation = t.explanation;
+  if (raw.type === 'choice' && Array.isArray(t.options) && Array.isArray(raw.options) && t.options.length === raw.options.length) out.options = t.options;
+  if (raw.type === 'short' && t.answer !== undefined) {
+    // Accept the answers of both languages.
+    const list = (v: unknown) => (Array.isArray(v) ? v : [v]).filter((a): a is string => typeof a === 'string');
+    out.answer = [...new Set([...list(raw.answer), ...list(t.answer)])];
+  }
+  return out;
+}
+
+/** Loads a quiz in `lang`, using its "translations" block; anything not translated stays in English. */
+export function loadQuiz(dir: string, lang: Lang = language()): QuizDefinition {
   const meta = JSON.parse(fs.readFileSync(path.join(dir, 'quiz.json'), 'utf8'));
   if (!meta.title || !Array.isArray(meta.questions) || meta.questions.length === 0) {
     throw new Error('quiz.json needs a "title" and at least one entry in "questions"');
   }
+  const t: QuizTranslation = (lang !== 'en' && meta.translations?.[lang]) || {};
   return {
     id: meta.id ?? path.basename(dir),
-    title: meta.title,
-    description: meta.description ?? '',
+    title: (typeof t.title === 'string' && t.title.trim()) || meta.title,
+    description: (typeof t.description === 'string' && t.description.trim()) || (meta.description ?? ''),
     topic: typeof meta.topic === 'string' ? meta.topic : '',
-    questions: meta.questions.map((q: Record<string, unknown>, i: number) => parseQuestion(q ?? {}, i)),
+    questions: meta.questions.map((q: Record<string, unknown>, i: number) => parseQuestion(translateQuestion(q ?? {}, t.questions?.[i]), i)),
     dir,
   };
 }
@@ -177,7 +211,7 @@ export function describeAnswer(q: QuizQuestion): string {
     case 'choice':
       return q.answer.map((i) => q.options[i]).join(', ');
     case 'truefalse':
-      return q.answer ? 'True' : 'False';
+      return q.answer ? tr('True', 'Verdadeiro') : tr('False', 'Falso');
     case 'short':
       return q.answer.join(' / ');
     case 'output':

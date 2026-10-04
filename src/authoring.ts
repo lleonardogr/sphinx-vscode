@@ -5,6 +5,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { CUSTOM_TOPIC, Challenge, TOPIC_ORDER } from './challenges';
 import { formatReport, reportPassed, validateChallenges } from './validator';
+import { tr } from './i18n';
 
 interface AuthoringDeps {
   extensionPath: string;
@@ -36,29 +37,29 @@ function candidateFolders(deps: AuthoringDeps): { label: string; description?: s
     }
   };
   for (const p of config().get<string[]>('extraChallengePaths', [])) {
-    add(p, 'from extraChallengePaths');
+    add(p, tr('from extraChallengePaths', 'de extraChallengePaths'));
   }
   for (const ws of vscode.workspace.workspaceFolders ?? []) {
     const builtIn = path.join(ws.uri.fsPath, 'challenges');
     // Working on this repository itself: offer its challenges/ folder.
     if (fs.existsSync(path.join(builtIn, 'hello-world', 'challenge.json'))) {
-      add(builtIn, 'built-in challenges (this repository)');
+      add(builtIn, tr('built-in challenges (this repository)', 'desafios incluídos (este repositório)'));
     }
-    add(path.join(ws.uri.fsPath, 'my-challenges'), 'new folder in this workspace');
+    add(path.join(ws.uri.fsPath, 'my-challenges'), tr('new folder in this workspace', 'nova pasta neste workspace'));
   }
-  items.push({ label: '$(folder-opened) Choose a folder…' });
+  items.push({ label: `$(folder-opened) ${tr('Choose a folder…', 'Escolher uma pasta…')}` });
   return items;
 }
 
 async function pickFolder(deps: AuthoringDeps, title: string): Promise<string | undefined> {
-  const pick = await vscode.window.showQuickPick(candidateFolders(deps), { title, placeHolder: 'Where are your challenges stored?', ignoreFocusOut: true });
+  const pick = await vscode.window.showQuickPick(candidateFolders(deps), { title, placeHolder: tr('Where are your challenges stored?', 'Onde ficam os seus desafios?'), ignoreFocusOut: true });
   if (!pick) {
     return undefined;
   }
   if (pick.folder) {
     return pick.folder;
   }
-  const chosen = await vscode.window.showOpenDialog({ canSelectFolders: true, canSelectFiles: false, openLabel: 'Use this folder' });
+  const chosen = await vscode.window.showOpenDialog({ canSelectFolders: true, canSelectFiles: false, openLabel: tr('Use this folder', 'Usar esta pasta') });
   return chosen?.[0]?.fsPath;
 }
 
@@ -72,7 +73,7 @@ async function ensureRegistered(folder: string, deps: AuthoringDeps): Promise<vo
   // Inside a repository checkout the built-in folder is loaded only when running the dev build,
   // so register it anyway; duplicates by id are harmless (last one wins).
   await config().update('extraChallengePaths', [...paths, folder], vscode.ConfigurationTarget.Global);
-  vscode.window.showInformationMessage(`Added ${folder} to sphynx.extraChallengePaths so its challenges appear in the sidebar.`);
+  vscode.window.showInformationMessage(tr(`Added ${folder} to sphynx.extraChallengePaths so its challenges appear in the sidebar.`, `${folder} foi adicionada a sphynx.extraChallengePaths para os desafios aparecerem na barra lateral.`));
 }
 
 /** `topic` undefined writes no "topic", so the challenge appears under Custom. */
@@ -167,21 +168,21 @@ export function writeChallengeTemplate(dir: string, title: string, topic: string
 }
 
 export async function createChallenge(deps: AuthoringDeps): Promise<void> {
-  const folder = await pickFolder(deps, 'New challenge (1/4): folder');
+  const folder = await pickFolder(deps, tr('New challenge (1/4): folder', 'Novo desafio (1/4): pasta'));
   if (!folder) {
     return;
   }
 
   const title = await vscode.window.showInputBox({
-    title: 'New challenge (2/4): title',
-    prompt: 'The name students see, e.g. "Sum of Even Numbers"',
+    title: tr('New challenge (2/4): title', 'Novo desafio (2/4): título'),
+    prompt: tr('The name students see, e.g. "Sum of Even Numbers"', 'O nome que os alunos veem, por exemplo "Soma dos pares"'),
     ignoreFocusOut: true,
     validateInput: (v) => {
       const id = slugify(v);
       if (!id) {
-        return 'Type a title';
+        return tr('Type a title', 'Digite um título');
       }
-      return fs.existsSync(path.join(folder, id)) ? `A folder named "${id}" already exists` : undefined;
+      return fs.existsSync(path.join(folder, id)) ? tr(`A folder named "${id}" already exists`, `Já existe uma pasta chamada "${id}"`) : undefined;
     },
   });
   if (!title) {
@@ -189,19 +190,20 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
   }
   const id = slugify(title);
 
-  const NO_TOPIC = `$(star-empty) ${CUSTOM_TOPIC} (no topic)`;
+  const NO_TOPIC = `$(star-empty) ${tr('Custom (no topic)', 'Personalizado (sem unidade)')}`;
   const existingTopics = [...new Set([...TOPIC_ORDER, ...deps.challenges().map((c) => c.topic)])].filter((t) => t !== CUSTOM_TOPIC);
-  const topicPick = await vscode.window.showQuickPick([NO_TOPIC, ...existingTopics, '$(add) New topic…'], {
-    title: 'New challenge (3/4): topic',
-    placeHolder: 'Challenges without a topic appear in the Custom folder',
+  const NEW_TOPIC = `$(add) ${tr('New topic…', 'Nova unidade…')}`;
+  const topicPick = await vscode.window.showQuickPick([NO_TOPIC, ...existingTopics, NEW_TOPIC], {
+    title: tr('New challenge (3/4): unit', 'Novo desafio (3/4): unidade'),
+    placeHolder: tr('Challenges without a unit appear in the Custom section', 'Desafios sem unidade aparecem na seção Personalizados'),
     ignoreFocusOut: true,
   });
   if (!topicPick) {
     return;
   }
   let topic: string | undefined;
-  if (topicPick.startsWith('$(add)')) {
-    topic = (await vscode.window.showInputBox({ title: 'Topic name', prompt: 'e.g. Recursion, Collections, Exceptions', ignoreFocusOut: true }))?.trim();
+  if (topicPick === NEW_TOPIC) {
+    topic = (await vscode.window.showInputBox({ title: tr('Topic name', 'Nome da unidade'), prompt: tr('e.g. Graphs, Files, Dates', 'por exemplo Grafos, Arquivos, Datas'), ignoreFocusOut: true }))?.trim();
     if (!topic) {
       return;
     }
@@ -209,7 +211,7 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
     topic = topicPick;
   }
 
-  const difficulty = await vscode.window.showQuickPick(['Easy', 'Medium', 'Hard'], { title: 'New challenge (4/4): difficulty', ignoreFocusOut: true });
+  const difficulty = await vscode.window.showQuickPick(['Easy', 'Medium', 'Hard'], { title: tr('New challenge (4/4): difficulty', 'Novo desafio (4/4): dificuldade'), ignoreFocusOut: true });
   if (!difficulty) {
     return;
   }
@@ -224,8 +226,11 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
   await vscode.window.showTextDocument(vscode.Uri.file(path.join(dir, 'description.md')), { viewColumn: vscode.ViewColumn.One, preview: false });
   await vscode.window.showTextDocument(vscode.Uri.file(path.join(dir, 'challenge.json')), { viewColumn: vscode.ViewColumn.Two, preview: false });
   const choice = await vscode.window.showInformationMessage(
-    `Created "${title}" with example content. Edit the files, then run "Validate Challenges" to fill in the expected outputs.`,
-    'Open Guide',
+    tr(
+      `Created "${title}" with example content. Edit the files, then run "Validate Challenges" to fill in the expected outputs.`,
+      `"${title}" foi criado com um conteúdo de exemplo. Edite os arquivos e rode "Validar desafios" para gerar as saídas esperadas.`,
+    ),
+    tr('Open Guide', 'Abrir o guia'),
   );
   if (choice) {
     vscode.env.openExternal(vscode.Uri.parse('https://github.com/lleonardogr/sphynx-vscode/blob/main/docs/creating-challenges.md'));
@@ -233,16 +238,23 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
 }
 
 export async function validateFolder(deps: AuthoringDeps): Promise<void> {
-  const folder = await pickFolder(deps, 'Validate challenges: folder');
+  const folder = await pickFolder(deps, tr('Validate challenges: folder', 'Validar desafios: pasta'));
   if (!folder) {
     return;
   }
   const mode = await vscode.window.showQuickPick(
     [
-      { label: 'Validate', detail: 'Check that starters compile and reference solutions pass every test.', generate: false },
-      { label: 'Validate and fill in expected outputs', detail: 'Run Solution.java on every test input and save its output into challenge.json, then check the other solutions.', generate: true },
+      { label: tr('Validate', 'Validar'), detail: tr('Check that starters compile and reference solutions pass every test.', 'Confere se os códigos iniciais compilam e se as soluções passam em todos os testes.'), generate: false },
+      {
+        label: tr('Validate and fill in expected outputs', 'Validar e gerar as saídas esperadas'),
+        detail: tr(
+          'Run Solution.java on every test input and save its output into challenge.json, then check the other solutions.',
+          'Roda o Solution.java em cada entrada de teste, salva a saída no challenge.json e confere as outras soluções.',
+        ),
+        generate: true,
+      },
     ],
-    { title: 'Validate challenges', ignoreFocusOut: true },
+    { title: tr('Validate challenges', 'Validar desafios'), ignoreFocusOut: true },
   );
   if (!mode) {
     return;
@@ -250,9 +262,9 @@ export async function validateFolder(deps: AuthoringDeps): Promise<void> {
 
   deps.output.clear();
   deps.output.show(true);
-  deps.output.appendLine(`Validating ${folder}…`);
+  deps.output.appendLine(tr(`Validating ${folder}…`, `Validando ${folder}…`));
   const report = await vscode.window.withProgress(
-    { location: vscode.ProgressLocation.Notification, title: 'Validating challenges', cancellable: false },
+    { location: vscode.ProgressLocation.Notification, title: tr('Validating challenges', 'Validando desafios'), cancellable: false },
     (progress) =>
       validateChallenges([folder], {
         generate: mode.generate,
@@ -266,10 +278,17 @@ export async function validateFolder(deps: AuthoringDeps): Promise<void> {
 
   const ok = report.challenges.filter((c) => c.ok).length;
   if (report.challenges.length === 0 && report.loadErrors.length === 0) {
-    vscode.window.showWarningMessage(`No challenges found in ${folder}. Each challenge needs its own sub-folder with a challenge.json.`);
+    vscode.window.showWarningMessage(tr(`No challenges found in ${folder}. Each challenge needs its own sub-folder with a challenge.json.`, `Nenhum desafio encontrado em ${folder}. Cada desafio precisa da sua própria subpasta com um challenge.json.`));
   } else if (reportPassed(report)) {
-    vscode.window.showInformationMessage(`✓ All ${ok} challenges are valid${mode.generate ? ' and their expected outputs were saved' : ''}.`);
+    vscode.window.showInformationMessage(
+      tr(`✓ All ${ok} challenges are valid${mode.generate ? ' and their expected outputs were saved' : ''}.`, `✓ Os ${ok} desafios são válidos${mode.generate ? ' e as saídas esperadas foram salvas' : ''}.`),
+    );
   } else {
-    vscode.window.showErrorMessage(`${report.challenges.length - ok + report.loadErrors.length} challenge(s) have problems. See the "Sphynx" output for details.`);
+    vscode.window.showErrorMessage(
+      tr(
+        `${report.challenges.length - ok + report.loadErrors.length} challenge(s) have problems. See the "Sphynx" output for details.`,
+        `${report.challenges.length - ok + report.loadErrors.length} desafio(s) com problemas. Veja os detalhes na saída "Sphynx".`,
+      ),
+    );
   }
 }

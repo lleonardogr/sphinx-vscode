@@ -5,6 +5,7 @@ A **quiz** is a set of short questions about Java: multiple choice, true or fals
 - [Taking a quiz (students)](#taking-a-quiz-students)
 - [Writing a quiz (teachers)](#writing-a-quiz-teachers)
 - [Question types](#question-types)
+- [Translating a quiz](#translating-a-quiz)
 - [Checking a quiz](#checking-a-quiz)
 - [Quizzes in exams](#quizzes-in-exams)
 
@@ -93,6 +94,31 @@ To share quizzes, put them next to your challenges and use [Import](creating-cha
 | `output` | reads `code` and types what it prints | The exact output. Leave it `""` and let the validator fill it in (see below). Add `options` to let the student pick instead of typing; `answer` is then the index of the right option. |
 
 For `output` questions, the code can be a **snippet**, which is run inside `void main() { … }`, or a **whole program**, in modern or classic style. When the student types the output, spaces at the start and at the end are ignored, and spaces inside the lines must match.
+
+---
+
+## Translating a quiz
+
+Add a `translations` block with one entry per question, in the same order:
+
+```json
+"translations": {
+  "pt-br": {
+    "title": "Quiz de Strings",
+    "description": "Métodos da classe String.",
+    "questions": [
+      { "prompt": "Qual método devolve o número de caracteres de uma String?", "options": ["size()", "length()", "count()", "chars()"], "explanation": "…" },
+      { "explanation": "…" },
+      { "prompt": "Strings em Java podem ser alteradas depois de criadas.", "explanation": "…" },
+      { "prompt": "Qual método compara o conteúdo de duas Strings?" }
+    ]
+  }
+}
+```
+
+- Translate `options` only for `choice` questions, in the same order. The options of `output` questions are program output and stay as they are.
+- For `short` questions, `answer` adds accepted answers in that language; the original answers are still accepted.
+- Anything not translated falls back to English.
 
 ---
 

@@ -132,6 +132,62 @@
         },
         "additionalProperties": false
       }
+    },
+    "translations": {
+      "type": "object",
+      "description": "Translations, by language (for example \"pt-br\"). Answers stay the same; for short answers you can add accepted answers in the other language.",
+      "patternProperties": {
+        "^[a-z]{2}(-[a-z]{2})?$": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "questions": {
+              "type": "array",
+              "description": "One entry per question, in the same order.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "prompt": {
+                    "type": "string"
+                  },
+                  "explanation": {
+                    "type": "string"
+                  },
+                  "options": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "For \"choice\" questions: the options in the same order. Options of \"output\" questions are program output and are never translated."
+                  },
+                  "answer": {
+                    "description": "For \"short\" questions: extra accepted answers in this language.",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

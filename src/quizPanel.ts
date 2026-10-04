@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 import { QuizAnswer, QuizDefinition, QuizQuestion } from './quizzes';
+import { language, plural, tr } from './i18n';
+import { unitName } from './path';
 
 /** Shown when the quiz is a question of an exam: answers are saved as you go and submitted once, without feedback. */
 export interface QuizExamInfo {
@@ -42,22 +44,25 @@ export async function renderMarkdown(md: string): Promise<string> {
 
 export function examQuizStatus(e: QuizExamInfo): string {
   if (!e.started) {
-    return 'Start the exam from the Exams group in the sidebar to answer this quiz.';
+    return tr('Start the exam from the Exams group in the sidebar to answer this quiz.', 'Comece a prova no grupo Provas da barra lateral para responder este quiz.');
   }
   if (e.submitted) {
-    return `Submitted: ${e.earned} / ${e.points} points. Your answers are locked.`;
+    return tr(`Submitted: ${e.earned} / ${e.points} points. Your answers are locked.`, `Enviado: ${e.earned} / ${e.points} pontos. Suas respostas estão bloqueadas.`);
   }
   if (e.finished) {
-    return 'The exam is finished. Your answers are locked.';
+    return tr('The exam is finished. Your answers are locked.', 'A prova terminou. Suas respostas estão bloqueadas.');
   }
-  return `Worth ${e.points} points. Your answers are saved as you go. You can submit the quiz once, and you won't see which answers are right.`;
+  return tr(
+    `Worth ${e.points} points. Your answers are saved as you go. You can submit the quiz once, and you won't see which answers are right.`,
+    `Vale ${e.points} pontos. Suas respostas são salvas enquanto você responde. Você pode enviar o quiz uma vez, e não verá quais respostas estão certas.`,
+  );
 }
 
-const TYPE_LABEL: Record<QuizQuestion['type'], string> = {
-  choice: 'Multiple choice',
-  truefalse: 'True or false',
-  short: 'Short answer',
-  output: 'What does it print?',
+const TYPE_LABEL: Record<QuizQuestion['type'], [string, string]> = {
+  choice: ['Multiple choice', 'Múltipla escolha'],
+  truefalse: ['True or false', 'Verdadeiro ou falso'],
+  short: ['Short answer', 'Resposta curta'],
+  output: ['What does it print?', 'O que ele imprime?'],
 };
 
 /** The single quiz panel, reused as the student moves between quizzes. */
@@ -132,7 +137,7 @@ export class QuizPanel {
       const options = q.type === 'choice' ? q.options : q.options!;
       const multiple = q.type === 'choice' && q.multiple;
       const picked = Array.isArray(answer) ? answer : [];
-      input = `${multiple ? '<p class="muted">Choose all that apply.</p>' : ''}<div class="quiz-options">${options
+      input = `${multiple ? `<p class="muted">${tr('Choose all that apply.', 'Marque todas as corretas.')}</p>` : ''}<div class="quiz-options">${options
         .map(
           (o, k) => `<label class="quiz-option"><input type="${multiple ? 'checkbox' : 'radio'}" name="${name}" value="${k}"${checked(picked.includes(k))}>
             ${q.type === 'output' ? `<code class="quiz-pre">${escapeHtml(o)}</code>` : `<span>${escapeHtml(o)}</span>`}</label>`,
@@ -140,20 +145,20 @@ export class QuizPanel {
         .join('')}</div>`;
     } else if (q.type === 'truefalse') {
       input = `<div class="quiz-options quiz-inline">
-        <label class="quiz-option"><input type="radio" name="${name}" value="true"${checked(answer === true)}><span>True</span></label>
-        <label class="quiz-option"><input type="radio" name="${name}" value="false"${checked(answer === false)}><span>False</span></label></div>`;
+        <label class="quiz-option"><input type="radio" name="${name}" value="true"${checked(answer === true)}><span>${tr('True', 'Verdadeiro')}</span></label>
+        <label class="quiz-option"><input type="radio" name="${name}" value="false"${checked(answer === false)}><span>${tr('False', 'Falso')}</span></label></div>`;
     } else if (q.type === 'short') {
-      input = `<input class="quiz-text" type="text" name="${name}" spellcheck="false" autocomplete="off" aria-label="Your answer" value="${escapeHtml(typeof answer === 'string' ? answer : '')}">`;
+      input = `<input class="quiz-text" type="text" name="${name}" spellcheck="false" autocomplete="off" aria-label="${tr('Your answer', 'Sua resposta')}" value="${escapeHtml(typeof answer === 'string' ? answer : '')}">`;
     } else {
-      input = `<textarea class="quiz-text quiz-pre" name="${name}" rows="3" spellcheck="false" aria-label="The exact output" placeholder="Type exactly what it prints">${escapeHtml(typeof answer === 'string' ? answer : '')}</textarea>`;
+      input = `<textarea class="quiz-text quiz-pre" name="${name}" rows="3" spellcheck="false" aria-label="${tr('The exact output', 'A saída exata')}" placeholder="${tr('Type exactly what it prints', 'Digite exatamente o que ele imprime')}">${escapeHtml(typeof answer === 'string' ? answer : '')}</textarea>`;
     }
     const kind = q.type === 'choice' || (q.type === 'output' && q.options) ? (q.type === 'choice' && q.multiple ? 'many' : 'one') : q.type === 'truefalse' ? 'bool' : 'text';
     return `<section class="quiz-question" data-index="${i}" data-kind="${kind}">
-      <div class="quiz-head"><strong>Question ${i + 1}</strong><span class="muted">${TYPE_LABEL[q.type]} · ${q.points} point${q.points === 1 ? '' : 's'}</span></div>
+      <div class="quiz-head"><strong>${tr('Question', 'Questão')} ${i + 1}</strong><span class="muted">${tr(...TYPE_LABEL[q.type])} · ${plural(q.points, ['point', 'points'], ['ponto', 'pontos'])}</span></div>
       <div class="quiz-prompt">${prompt}</div>
       ${code}
       ${input}
-      ${practice ? `<div class="quiz-actions"><button class="secondary" data-check="${i}">Check</button></div>` : ''}
+      ${practice ? `<div class="quiz-actions"><button class="secondary" data-check="${i}">${tr('Check', 'Verificar')}</button></div>` : ''}
       <div class="quiz-feedback" id="feedback-${i}" aria-live="polite"></div>
     </section>`;
   }
@@ -168,16 +173,16 @@ export class QuizPanel {
     const questions = (await Promise.all(quiz.questions.map((q, i) => this.renderQuestion(q, i, opts.answers?.[i] ?? null, practice)))).join('');
     const total = quiz.questions.reduce((s, q) => s + q.points, 0);
     const banner = exam
-      ? `<div id="exam-banner" class="banner ${exam.submitted || exam.finished ? 'success' : 'info'}"><strong>📝 ${escapeHtml(exam.examTitle)}</strong> · ${exam.mode === 'closed' ? 'Closed exam' : 'Open exam'}
+      ? `<div id="exam-banner" class="banner ${exam.submitted || exam.finished ? 'success' : 'info'}"><strong>📝 ${escapeHtml(exam.examTitle)}</strong> · ${exam.mode === 'closed' ? tr('Closed exam', 'Prova fechada') : tr('Open exam', 'Prova aberta')}
            <p id="exam-status">${escapeHtml(examQuizStatus(exam))}</p></div>`
       : '';
     const footer = practice
-      ? `<div class="quiz-footer"><button class="primary" id="check-all">✔ Check all answers</button><button class="secondary" id="start-over">Start over</button>
-           <span class="muted">${opts.best ? `Best score: ${escapeHtml(opts.best)}` : ''}</span></div><div id="quiz-score" aria-live="polite"></div>`
-      : `<div class="quiz-footer"><button class="primary" id="submit-quiz"${locked ? ' disabled' : ''}>✔ Submit quiz</button></div><div id="quiz-score" aria-live="polite"></div>`;
+      ? `<div class="quiz-footer"><button class="primary" id="check-all">${tr('✔ Check all answers', '✔ Verificar todas')}</button><button class="secondary" id="start-over">${tr('Start over', 'Recomeçar')}</button>
+           <span class="muted">${opts.best ? `${tr('Best score', 'Melhor nota')}: ${escapeHtml(opts.best)}` : ''}</span></div><div id="quiz-score" aria-live="polite"></div>`
+      : `<div class="quiz-footer"><button class="primary" id="submit-quiz"${locked ? ' disabled' : ''}>${tr('✔ Submit quiz', '✔ Enviar quiz')}</button></div><div id="quiz-score" aria-live="polite"></div>`;
 
     return `<!DOCTYPE html>
-<html lang="en">
+<html lang="${language() === 'pt-br' ? 'pt-BR' : 'en'}">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https: data:; script-src 'nonce-${n}';">
@@ -185,12 +190,12 @@ export class QuizPanel {
   <link rel="stylesheet" href="${media('panel.css')}">
   <title>${escapeHtml(quiz.title)}</title>
 </head>
-<body data-mode="${practice ? 'practice' : 'exam'}"${locked ? ' data-locked="1"' : ''}>
+<body data-mode="${practice ? 'practice' : 'exam'}" data-lang="${language()}"${locked ? ' data-locked="1"' : ''}>
   <header>
     <div class="title-row"><h1>${escapeHtml(quiz.title)}</h1></div>
     <div class="meta">
-      <span class="badge topic">Quiz</span>${quiz.topic ? `<span class="badge">${escapeHtml(quiz.topic)}</span>` : ''}
-      <span class="badge">${quiz.questions.length} question${quiz.questions.length === 1 ? '' : 's'} · ${total} point${total === 1 ? '' : 's'}</span>
+      <span class="badge topic">Quiz</span>${quiz.topic ? `<span class="badge">${escapeHtml(unitName(quiz.topic))}</span>` : ''}
+      <span class="badge">${plural(quiz.questions.length, ['question', 'questions'], ['questão', 'questões'])} · ${plural(total, ['point', 'points'], ['ponto', 'pontos'])}</span>
     </div>
   </header>
   ${banner}

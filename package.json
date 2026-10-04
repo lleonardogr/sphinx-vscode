@@ -43,7 +43,7 @@
       "activitybar": [
         {
           "id": "sphynx",
-          "title": "Sphynx",
+          "title": "%viewContainer.title%",
           "icon": "media/icon.svg"
         }
       ]
@@ -52,126 +52,126 @@
       "sphynx": [
         {
           "id": "sphynx.list",
-          "name": "Challenges"
+          "name": "%view.name%"
         }
       ]
     },
     "commands": [
       {
         "command": "sphynx.open",
-        "title": "Open Challenge",
+        "title": "%command.open%",
         "category": "Sphynx",
         "icon": "$(go-to-file)"
       },
       {
         "command": "sphynx.run",
-        "title": "Run Sample Tests",
+        "title": "%command.run%",
         "category": "Sphynx",
         "icon": "$(play)"
       },
       {
         "command": "sphynx.submit",
-        "title": "Submit (Run All Tests)",
+        "title": "%command.submit%",
         "category": "Sphynx",
         "icon": "$(check-all)"
       },
       {
         "command": "sphynx.runInTerminal",
-        "title": "Run in Terminal (Type Input Yourself)",
+        "title": "%command.runInTerminal%",
         "category": "Sphynx",
         "icon": "$(terminal)"
       },
       {
         "command": "sphynx.resetCode",
-        "title": "Reset Code to Starter",
+        "title": "%command.resetCode%",
         "category": "Sphynx",
         "icon": "$(discard)"
       },
       {
         "command": "sphynx.refresh",
-        "title": "Reload Challenges",
+        "title": "%command.refresh%",
         "category": "Sphynx",
         "icon": "$(refresh)"
       },
       {
         "command": "sphynx.resetProgress",
-        "title": "Reset All Progress",
+        "title": "%command.resetProgress%",
         "category": "Sphynx",
         "icon": "$(clear-all)"
       },
       {
         "command": "sphynx.askAiHint",
-        "title": "Ask AI for a Hint",
+        "title": "%command.askAiHint%",
         "category": "Sphynx",
         "icon": "$(sparkle)"
       },
       {
         "command": "sphynx.setupAi",
-        "title": "Set Up AI Hints (Local Model or API Key)",
+        "title": "%command.setupAi%",
         "category": "Sphynx",
         "icon": "$(settings-gear)"
       },
       {
         "command": "sphynx.clearAiKeys",
-        "title": "Remove Saved AI API Keys",
+        "title": "%command.clearAiKeys%",
         "category": "Sphynx",
         "icon": "$(trash)"
       },
       {
         "command": "sphynx.createChallenge",
-        "title": "Create New Challenge…",
+        "title": "%command.createChallenge%",
         "category": "Sphynx",
         "icon": "$(new-file)"
       },
       {
         "command": "sphynx.openQuiz",
-        "title": "Open Quiz…",
+        "title": "%command.openQuiz%",
         "category": "Sphynx"
       },
       {
         "command": "sphynx.importContent",
-        "title": "Import Challenges, Quizzes, Tests or Exams…",
+        "title": "%command.importContent%",
         "category": "Sphynx",
         "icon": "$(desktop-download)"
       },
       {
         "command": "sphynx.removeImported",
-        "title": "Remove Imported Challenges, Quizzes, Tests or Exams…",
+        "title": "%command.removeImported%",
         "category": "Sphynx"
       },
       {
         "command": "sphynx.validateChallenges",
-        "title": "Validate Challenges in a Folder…",
+        "title": "%command.validateChallenges%",
         "category": "Sphynx",
         "icon": "$(checklist)"
       },
       {
         "command": "sphynx.startExam",
-        "title": "Start Exam…",
+        "title": "%command.startExam%",
         "category": "Sphynx",
         "icon": "$(play)"
       },
       {
         "command": "sphynx.finishExam",
-        "title": "Finish Exam…",
+        "title": "%command.finishExam%",
         "category": "Sphynx",
         "icon": "$(debug-stop)"
       },
       {
         "command": "sphynx.openExamResults",
-        "title": "Open Exam Results",
+        "title": "%command.openExamResults%",
         "category": "Sphynx",
         "icon": "$(output)"
       },
       {
         "command": "sphynx.saveExamResults",
-        "title": "Save a Copy of Exam Results…",
+        "title": "%command.saveExamResults%",
         "category": "Sphynx",
         "icon": "$(save-as)"
       },
       {
         "command": "sphynx.verifyExamResults",
-        "title": "Verify Students' Exam Results… (Teachers)",
+        "title": "%command.verifyExamResults%",
         "category": "Sphynx",
         "icon": "$(verified)"
       }
@@ -298,12 +298,26 @@
       }
     ],
     "configuration": {
-      "title": "Sphynx",
+      "title": "%config.title%",
       "properties": {
+        "sphynx.language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "pt-br"
+          ],
+          "enumDescriptions": [
+            "%config.language.en%",
+            "%config.language.ptbr%"
+          ],
+          "default": "en",
+          "markdownDescription": "%config.language%",
+          "order": 0
+        },
         "sphynx.java.home": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Path to a JDK installation (the folder that contains `bin/javac`). Leave empty to use `javac`/`java` from your PATH."
+          "markdownDescription": "%config.java.home.description%"
         },
         "sphynx.java.style": {
           "type": "string",
@@ -313,15 +327,15 @@
           ],
           "default": "modern",
           "enumDescriptions": [
-            "Java 25+ compact source files: void main() and IO.println (requires JDK 25 or newer)",
-            "Classic public class Main with public static void main(String[] args) and System.out.println (JDK 17+)"
+            "%config.java.style.enum0%",
+            "%config.java.style.enum1%"
           ],
-          "markdownDescription": "Style of the starter code for new challenges. Both styles are always accepted when you run or submit, because only the output is checked. Use **Reset Code to Starter** to switch a challenge you already opened."
+          "markdownDescription": "%config.java.style.description%"
         },
         "sphynx.codeFolder": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Folder where your solutions are saved (one sub-folder per challenge). Leave empty to use `sphynx/` inside the open workspace, or the extension's private storage when no folder is open."
+          "markdownDescription": "%config.codeFolder.description%"
         },
         "sphynx.extraChallengePaths": {
           "type": "array",
@@ -329,7 +343,7 @@
             "type": "string"
           },
           "default": [],
-          "markdownDescription": "Extra folders containing challenges (same format as the built-in ones). Teachers can use this to hand out new challenges without rebuilding the extension."
+          "markdownDescription": "%config.extraChallengePaths.description%"
         },
         "sphynx.ai.provider": {
           "type": "string",
@@ -343,29 +357,29 @@
             "vscode"
           ],
           "enumDescriptions": [
-            "AI hints are disabled (default). Nothing is sent anywhere.",
-            "Ollama running on this computer (free, private). https://ollama.com",
-            "LM Studio's local server on this computer (free, private). https://lmstudio.ai",
-            "Anthropic's Claude API with your own API key.",
-            "Any OpenAI-compatible API (OpenAI, OpenRouter, Groq, a school server…) with your own key.",
-            "A model already available in VS Code, such as GitHub Copilot."
+            "%config.ai.provider.enum0%",
+            "%config.ai.provider.enum1%",
+            "%config.ai.provider.enum2%",
+            "%config.ai.provider.enum3%",
+            "%config.ai.provider.enum4%",
+            "%config.ai.provider.enum5%"
           ],
-          "markdownDescription": "Where **AI hints** come from. Run **Sphynx: Set Up AI Hints** for a guided setup. API keys are stored in VS Code's encrypted secret storage, not in settings."
+          "markdownDescription": "%config.ai.provider.description%"
         },
         "sphynx.ai.model": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Model to use for AI hints. Leave empty for the default: `claude-opus-5-5` for Anthropic, the first installed model for Ollama/LM Studio, any available model for VS Code. Required for `openai-compatible`."
+          "markdownDescription": "%config.ai.model.description%"
         },
         "sphynx.ai.baseUrl": {
           "type": "string",
           "default": "",
-          "markdownDescription": "API base URL for AI hints. Required for `openai-compatible` (e.g. `https://api.openai.com/v1`). Optional for the others (defaults: Ollama `http://localhost:11434/v1`, LM Studio `http://localhost:1234/v1`)."
+          "markdownDescription": "%config.ai.baseUrl.description%"
         },
         "sphynx.ai.responseLanguage": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Language for AI hints, e.g. `Português` or `English`. Leave empty to use VS Code's display language."
+          "markdownDescription": "%config.ai.responseLanguage.description%"
         }
       }
     },

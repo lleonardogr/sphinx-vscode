@@ -1,6 +1,7 @@
 // Runs a student's program in an interactive VS Code terminal, so they can type input themselves
 // and see exactly what it prints. Implemented as a Pseudoterminal so it behaves the same with any
 // shell and OS, and uses the same compiler flags and locale as the tests.
+import { tr } from './i18n';
 import { ChildProcess, spawn } from 'child_process';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
@@ -37,7 +38,7 @@ export class ProgramTerminal implements vscode.Pseudoterminal {
   private finish(message: string): void {
     this.finished = true;
     this.cleanup();
-    this.write(`\r\n${DIM}${message} Press any key to close this terminal.${RESET}\r\n`);
+    this.write(`\r\n${DIM}${message} ${tr('Press any key to close this terminal.', 'Aperte qualquer tecla para fechar este terminal.')}${RESET}\r\n`);
   }
 
   private cleanup(): void {
@@ -48,7 +49,7 @@ export class ProgramTerminal implements vscode.Pseudoterminal {
   }
 
   async open(): Promise<void> {
-    this.write(`${DIM}Compiling Main.java…${RESET}\r\n`);
+    this.write(`${DIM}${tr('Compiling Main.java…', 'Compilando Main.java…')}${RESET}\r\n`);
     const compiled = await compileJava(this.file, this.javaHome);
     if (!compiled.ok) {
       this.onCompiled(compiled.outcome);
@@ -57,13 +58,13 @@ export class ProgramTerminal implements vscode.Pseudoterminal {
       if (o.kind === 'compileError' && o.hint) {
         this.write(`\r\n${crlf(o.hint)}\r\n`);
       }
-      this.finish('Fix the errors above and run again.');
+      this.finish(tr('Fix the errors above and run again.', 'Corrija os erros acima e rode de novo.'));
       return;
     }
     this.onCompiled(undefined);
     this.outDir = compiled.outDir;
 
-    this.write(`${DIM}Running. Type your input and press Enter. Ctrl+D ends the input, Ctrl+C stops the program.${RESET}\r\n\r\n`);
+    this.write(`${DIM}${tr('Running. Type your input and press Enter. Ctrl+D ends the input, Ctrl+C stops the program.', 'Rodando. Digite a entrada e aperte Enter. Ctrl+D encerra a entrada, Ctrl+C para o programa.')}${RESET}\r\n\r\n`);
     const { command, args } = javaCommand(compiled.outDir, this.javaHome);
     const child = spawn(command, args, { cwd: compiled.outDir, windowsHide: true });
     this.child = child;
@@ -72,10 +73,10 @@ export class ProgramTerminal implements vscode.Pseudoterminal {
     child.stdout.on('data', (d: string) => this.write(crlf(d)));
     child.stderr.on('data', (d: string) => this.write(RED + crlf(d) + RESET));
     child.stdin.on('error', () => undefined);
-    child.on('error', (e) => this.finish(`Could not start java: ${e.message}.`));
+    child.on('error', (e) => this.finish(tr(`Could not start java: ${e.message}.`, `Não foi possível iniciar o java: ${e.message}.`)));
     child.on('close', (code, signal) => {
       if (!this.finished) {
-        this.finish(signal || this.stopped ? 'Program stopped.' : `Program exited with code ${code}.`);
+        this.finish(signal || this.stopped ? tr('Program stopped.', 'Programa parado.') : tr(`Program exited with code ${code}.`, `O programa terminou com código ${code}.`));
       }
     });
   }

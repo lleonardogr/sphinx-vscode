@@ -13,6 +13,7 @@ import { importContent, libraryRoots, removeImported } from './importer';
 import { QuizController, QuizProgress } from './quizController';
 import { QuizDefinition, loadQuizzes } from './quizzes';
 import { PathItem, buildPath, nextInPath } from './path';
+import { plural, setLanguage, tr } from './i18n';
 import { formatVerification, verifyResults } from './examVerify';
 import { ExamDefinition, ExamQuestion, loadExams, parseExamChallengeId } from './exams';
 import { ChallengeNode, ChallengeTreeProvider } from './treeView';
@@ -39,7 +40,7 @@ export function activate(context: vscode.ExtensionContext): void {
   const panel = new ChallengePanel(context.extensionUri, progress, (action, c) => handlePanelAction(action, c));
   const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
   status.command = 'sphynx.list.focus';
-  status.tooltip = 'Sphynx: open the challenge list';
+  status.tooltip = tr('Sphynx: open the challenge list', 'Sphynx: abrir a lista de desafios');
   status.show();
 
   panel.examInfo = (c) => panelExamInfo(c);
@@ -62,15 +63,25 @@ export function activate(context: vscode.ExtensionContext): void {
     if (major === undefined || major >= 25) {
       return;
     }
+    const classicLabel = tr('Use Classic Java', 'Usar Java clássico');
+    const downloadLabel = tr('Download JDK 25+', 'Baixar o JDK 25+');
     const choice = await vscode.window.showWarningMessage(
-      `Your JDK is version ${major}, but the modern Java starter code (void main(), IO.println) needs JDK 25 or newer.`,
-      'Use Classic Java',
-      'Download JDK 25+',
+      tr(
+        `Your JDK is version ${major}, but the modern Java starter code (void main(), IO.println) needs JDK 25 or newer.`,
+        `Seu JDK é a versão ${major}, mas o código inicial em Java moderno (void main(), IO.println) precisa do JDK 25 ou mais novo.`,
+      ),
+      classicLabel,
+      downloadLabel,
     );
-    if (choice === 'Use Classic Java') {
+    if (choice === classicLabel) {
       await config().update('java.style', 'classic', vscode.ConfigurationTarget.Global);
-      vscode.window.showInformationMessage('Classic Java starter code will be used for new challenges. Use "Reset Code to Starter" to switch a challenge you already opened.');
-    } else if (choice === 'Download JDK 25+') {
+      vscode.window.showInformationMessage(
+        tr(
+          'Classic Java starter code will be used for new challenges. Use "Reset Code to Starter" to switch a challenge you already opened.',
+          'O código inicial em Java clássico será usado nos novos desafios. Use "Restaurar código" para trocar um desafio que você já abriu.',
+        ),
+      );
+    } else if (choice === downloadLabel) {
       vscode.env.openExternal(vscode.Uri.parse('https://adoptium.net/temurin/releases/'));
     }
   }
@@ -90,7 +101,9 @@ export function activate(context: vscode.ExtensionContext): void {
     const errors = [...result.errors.filter((e) => !e.endsWith('folder not found')), ...quizResult.errors, ...examResult.errors];
     if (errors.length) {
       errors.forEach((e) => output.appendLine(`[challenges] ${e}`));
-      vscode.window.showWarningMessage('Some challenges, quizzes or exams could not be loaded. See the "Sphynx" output for details.');
+      vscode.window.showWarningMessage(
+        tr('Some challenges, quizzes or exams could not be loaded. See the "Sphynx" output for details.', 'Alguns desafios, quizzes ou provas não puderam ser carregados. Veja os detalhes na saída "Sphynx".'),
+      );
     }
     examManager.setExams(exams);
     tree.refresh();
@@ -99,7 +112,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   function updateStatus(): void {
     const solved = progress.solvedCount(challenges.map((c) => c.id));
-    status.text = `$(mortar-board) ${solved}/${challenges.length} solved`;
+    status.text = `$(mortar-board) ${solved}/${challenges.length} ${tr('solved', 'resolvidos')}`;
     treeView.message = challenges.length ? undefined : 'No challenges found.';
   }
 
@@ -245,7 +258,7 @@ export function activate(context: vscode.ExtensionContext): void {
         description: `${c.topic} · ${c.difficulty}`,
         challenge: c,
       })),
-      { placeHolder: 'Choose a challenge' },
+      { placeHolder: tr('Choose a challenge', 'Escolha um desafio') },
     );
     return pick?.challenge;
   }
@@ -319,25 +332,32 @@ export function activate(context: vscode.ExtensionContext): void {
     if (tq) {
       const s = examManager.state(tq.exam.id);
       if (!s) {
-        vscode.window.showInformationMessage(`Start "${tq.exam.title}" from the Exams group in the sidebar first.`);
+        vscode.window.showInformationMessage(tr(`Start "${tq.exam.title}" from the Exams group in the sidebar first.`, `Primeiro comece "${tq.exam.title}" no grupo Provas da barra lateral.`));
         return;
       }
       if (s.finishedAt) {
-        vscode.window.showInformationMessage(`"${tq.exam.title}" is finished. Your answers are locked.`);
+        vscode.window.showInformationMessage(tr(`"${tq.exam.title}" is finished. Your answers are locked.`, `"${tq.exam.title}" terminou. Suas respostas estão bloqueadas.`));
         return;
       }
       if (mode === 'submit') {
         const left = examManager.submissionsLeft(tq.exam, tq.question.id);
         if (left === 0) {
-          vscode.window.showWarningMessage('You have no submissions left for this question.');
+          vscode.window.showWarningMessage(tr('You have no submissions left for this question.', 'Você não tem mais envios para esta questão.'));
           return;
         }
+        const submitLabel = tr('Submit', 'Enviar');
         const ok = await vscode.window.showWarningMessage(
-          `Submit your answer to "${c.title}"?`,
-          { modal: true, detail: `This uses 1 of your ${left} remaining submission${left === 1 ? '' : 's'} for this question. Your best submission counts.` },
-          'Submit',
+          tr(`Submit your answer to "${c.title}"?`, `Enviar sua resposta para "${c.title}"?`),
+          {
+            modal: true,
+            detail: tr(
+              `This uses 1 of your ${left} remaining submission${left === 1 ? '' : 's'} for this question. Your best submission counts.`,
+              `Isso usa 1 dos seus ${left} envio${left === 1 ? '' : 's'} restante${left === 1 ? '' : 's'} para esta questão. Vale o seu melhor envio.`,
+            ),
+          },
+          submitLabel,
         );
-        if (ok !== 'Submit') {
+        if (ok !== submitLabel) {
           return;
         }
       }
@@ -398,7 +418,10 @@ export function activate(context: vscode.ExtensionContext): void {
         const solved = progress.solvedCount(challenges.map((x) => x.id));
         // Not awaited: the notification can stay open indefinitely and must not block further runs.
         vscode.window
-          .showInformationMessage(`🎉 "${c.title}" solved! (${solved}/${challenges.length})`, ...(next ? [`Next: ${itemTitle(next)}`] : []))
+          .showInformationMessage(
+            tr(`🎉 "${c.title}" solved! (${solved}/${challenges.length})`, `🎉 "${c.title}" resolvido! (${solved}/${challenges.length})`),
+            ...(next ? [tr(`Next: ${itemTitle(next)}`, `Próximo: ${itemTitle(next)}`)] : []),
+          )
           .then((choice) => (choice && next ? openPathItem(next) : undefined));
       }
     } catch (e) {
@@ -410,10 +433,12 @@ export function activate(context: vscode.ExtensionContext): void {
   }
 
   async function showToolMissing(message: string): Promise<void> {
-    const choice = await vscode.window.showErrorMessage(message, 'Download JDK', 'Open Settings');
-    if (choice === 'Download JDK') {
+    const downloadLabel = tr('Download JDK', 'Baixar o JDK');
+    const settingsLabel = tr('Open Settings', 'Abrir configurações');
+    const choice = await vscode.window.showErrorMessage(message, downloadLabel, settingsLabel);
+    if (choice === downloadLabel) {
       vscode.env.openExternal(vscode.Uri.parse('https://adoptium.net/temurin/releases/'));
-    } else if (choice === 'Open Settings') {
+    } else if (choice === settingsLabel) {
       vscode.commands.executeCommand('workbench.action.openSettings', 'sphynx.java.home');
     }
   }
@@ -435,7 +460,7 @@ export function activate(context: vscode.ExtensionContext): void {
       }
       panel.post({ type: 'running', mode: 'custom' });
       const outcome = await vscode.window.withProgress(
-        { location: vscode.ProgressLocation.Window, title: 'Running with your input…' },
+        { location: vscode.ProgressLocation.Window, title: tr('Running with your input…', 'Executando com a sua entrada…') },
         () => runChallengeCode({ file, tests: [{ input, output: '' }], timeLimitMs: c.timeLimitMs, javaHome: javaHome() }),
       );
       updateDiagnostics(file, outcome);
@@ -454,12 +479,13 @@ export function activate(context: vscode.ExtensionContext): void {
   }
 
   async function resetCode(c: Challenge): Promise<void> {
+    const resetLabel = tr('Reset', 'Restaurar');
     const answer = await vscode.window.showWarningMessage(
-      `Reset "${c.title}" to the starter code? Your current code will be lost.`,
+      tr(`Reset "${c.title}" to the starter code? Your current code will be lost.`, `Restaurar "${c.title}" para o código inicial? Seu código atual será perdido.`),
       { modal: true },
-      'Reset',
+      resetLabel,
     );
-    if (answer !== 'Reset') {
+    if (answer !== resetLabel) {
       return;
     }
     const file = ensureCodeFile(c);
@@ -492,7 +518,11 @@ export function activate(context: vscode.ExtensionContext): void {
 
   async function askAiHint(c: Challenge): Promise<void> {
     if (!c.aiHints) {
-      vscode.window.showInformationMessage(examFor(c) ? 'AI hints are turned off during this closed exam.' : 'AI hints are disabled for this challenge.');
+      vscode.window.showInformationMessage(
+        examFor(c)
+          ? tr('AI hints are turned off during this closed exam.', 'As dicas de IA ficam desativadas nesta prova fechada.')
+          : tr('AI hints are disabled for this challenge.', 'As dicas de IA estão desativadas neste desafio.'),
+      );
       return;
     }
     await panel.show(c);
@@ -576,7 +606,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }
     const candidates = exams.filter(filter);
     if (candidates.length === 0) {
-      vscode.window.showInformationMessage('No matching exam.');
+      vscode.window.showInformationMessage(tr('No matching exam.', 'Nenhuma prova encontrada.'));
       return undefined;
     }
     if (candidates.length === 1) {
@@ -593,9 +623,9 @@ export function activate(context: vscode.ExtensionContext): void {
   async function verifyExamResultsCommand(): Promise<void> {
     const files = await vscode.window.showOpenDialog({
       canSelectMany: true,
-      filters: { 'Exam results': ['json'] },
-      openLabel: 'Verify',
-      title: 'Choose the results files your students handed in',
+      filters: { [tr('Exam results', 'Resultado da prova')]: ['json'] },
+      openLabel: tr('Verify', 'Verificar'),
+      title: tr('Choose the results files your students handed in', 'Escolha os arquivos de resultado que seus alunos entregaram'),
     });
     if (!files?.length) {
       return;
@@ -604,7 +634,7 @@ export function activate(context: vscode.ExtensionContext): void {
     output.show(true);
     let mismatches = 0;
     let failed = 0;
-    await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: 'Verifying exam results', cancellable: false }, async (progress) => {
+    await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: tr('Verifying exam results', 'Verificando resultados'), cancellable: false }, async (progress) => {
       for (const f of files) {
         progress.report({ message: path.basename(f.fsPath) });
         try {
@@ -622,7 +652,10 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     });
     const ok = files.length - mismatches - failed;
-    const summary = `Verified ${files.length} results file(s): ${ok} OK${mismatches ? `, ${mismatches} with a score that doesn't match the code` : ''}${failed ? `, ${failed} unreadable` : ''}. See the "Sphynx" output.`;
+    const summary = tr(
+      `Verified ${files.length} results file(s): ${ok} OK${mismatches ? `, ${mismatches} with a score that doesn't match the code` : ''}${failed ? `, ${failed} unreadable` : ''}. See the "Sphynx" output.`,
+      `${files.length} arquivo(s) verificado(s): ${ok} OK${mismatches ? `, ${mismatches} com nota que não confere com o código` : ''}${failed ? `, ${failed} ilegível(is)` : ''}. Veja a saída "Sphynx".`,
+    );
     (mismatches || failed ? vscode.window.showWarningMessage : vscode.window.showInformationMessage)(summary);
   }
 
@@ -645,26 +678,26 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('sphynx.clearAiKeys', () => ai.clearApiKeys()),
     vscode.commands.registerCommand('sphynx.refresh', reload),
     vscode.commands.registerCommand('sphynx.startExam', async (arg?: unknown) => {
-      const exam = await resolveExam(arg, 'Which exam do you want to start?', (t) => !examManager.state(t.id));
+      const exam = await resolveExam(arg, tr('Which exam do you want to start?', 'Qual prova você quer começar?'), (t) => !examManager.state(t.id));
       if (exam && (await examManager.start(exam))) {
         const first = exam.questions[0];
         await (first.kind === 'quiz' ? quizController.open(first.quiz.id) : openChallenge(first.challenge));
       }
     }),
     vscode.commands.registerCommand('sphynx.finishExam', async (arg?: unknown) => {
-      const exam = await resolveExam(arg, 'Which exam do you want to finish?', (t) => examManager.isActive(t.id));
+      const exam = await resolveExam(arg, tr('Which exam do you want to finish?', 'Qual prova você quer terminar?'), (t) => examManager.isActive(t.id));
       if (exam) {
         await examManager.confirmFinish(exam);
       }
     }),
     vscode.commands.registerCommand('sphynx.openExamResults', async (arg?: unknown) => {
-      const exam = await resolveExam(arg, 'Results of which exam?', (t) => !!examManager.state(t.id)?.finishedAt);
+      const exam = await resolveExam(arg, tr('Results of which exam?', 'Resultado de qual prova?'), (t) => !!examManager.state(t.id)?.finishedAt);
       if (exam) {
         await examManager.openResults(exam);
       }
     }),
     vscode.commands.registerCommand('sphynx.saveExamResults', async (arg?: unknown) => {
-      const exam = await resolveExam(arg, 'Results of which exam?', (t) => !!examManager.state(t.id)?.finishedAt);
+      const exam = await resolveExam(arg, tr('Results of which exam?', 'Resultado de qual prova?'), (t) => !!examManager.state(t.id)?.finishedAt);
       if (exam) {
         await examManager.saveResultsCopy(exam);
       }
@@ -675,12 +708,13 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('sphynx.removeImported', () => removeImported(importDeps)),
     vscode.commands.registerCommand('sphynx.validateChallenges', () => validateFolder(authoringDeps)),
     vscode.commands.registerCommand('sphynx.resetProgress', async () => {
+      const resetLabel = tr('Reset Progress', 'Zerar progresso');
       const answer = await vscode.window.showWarningMessage(
-        'Reset progress for all challenges and quizzes? Your code files are kept.',
+        tr('Reset progress for all challenges and quizzes? Your code files are kept.', 'Zerar o progresso de todos os desafios e quizzes? Seus arquivos de código são mantidos.'),
         { modal: true },
-        'Reset Progress',
+        resetLabel,
       );
-      if (answer === 'Reset Progress') {
+      if (answer === resetLabel) {
         await progress.reset();
         await quizProgress.reset();
         updateStatus();
@@ -695,12 +729,23 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('sphynx')) {
+        const languageChanged = e.affectsConfiguration('sphynx.language');
+        setLanguage(config().get<string>('language'));
         reload();
         updateContextKey();
+        if (languageChanged) {
+          // Show the open challenge and quiz in the new language.
+          const current = panel.current && findChallenge(panel.current.id);
+          if (current) {
+            void panel.show(current).then(() => postExamStatus(current));
+          }
+          void quizController.refresh();
+        }
       }
     }),
   );
 
+  setLanguage(config().get<string>('language'));
   reload();
   updateContextKey();
 }

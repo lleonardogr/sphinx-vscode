@@ -4,34 +4,92 @@
   "title": "Sphynx exam",
   "description": "A timed, graded set of challenges. Lives in <exams folder>/<exam-id>/exam.json; question folders can sit next to it. Guide: docs/exams.md",
   "type": "object",
-  "required": ["title", "questions"],
+  "required": [
+    "title",
+    "questions"
+  ],
   "additionalProperties": false,
   "properties": {
-    "$schema": { "type": "string" },
-    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Unique id. Defaults to the folder name (recommended: leave it out)." },
-    "title": { "type": "string", "minLength": 1, "description": "Name shown in the Exams group and in the results file." },
-    "description": { "type": "string", "description": "Short text shown in the tooltip, e.g. what the exam covers." },
-    "durationMinutes": { "type": "number", "minimum": 1, "default": 60, "description": "Time limit. When it runs out, answers are submitted automatically and the exam is locked." },
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Unique id. Defaults to the folder name (recommended: leave it out)."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Name shown in the Exams group and in the results file."
+    },
+    "description": {
+      "type": "string",
+      "description": "Short text shown in the tooltip, e.g. what the exam covers."
+    },
+    "translations": {
+      "type": "object",
+      "description": "Translations of the title and description, by language (for example \"pt-br\").",
+      "patternProperties": {
+        "^[a-z]{2}(-[a-z]{2})?$": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "durationMinutes": {
+      "type": "number",
+      "minimum": 1,
+      "default": 60,
+      "description": "Time limit. When it runs out, answers are submitted automatically and the exam is locked."
+    },
     "mode": {
       "type": "string",
-      "enum": ["closed", "open"],
+      "enum": [
+        "closed",
+        "open"
+      ],
       "default": "closed",
       "enumDescriptions": [
         "Closed book: hints and AI hints are off; large pastes/AI completions, time outside VS Code and an enabled GitHub Copilot are recorded as warnings in the results.",
         "Open book: hints, AI hints and the internet are allowed."
       ]
     },
-    "maxSubmissions": { "type": "integer", "minimum": 1, "default": 3, "description": "Submissions allowed per question. The best one counts. Run (sample tests) is unlimited." },
+    "maxSubmissions": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 3,
+      "description": "Submissions allowed per question. The best one counts. Run (sample tests) is unlimited."
+    },
     "questions": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id"],
+        "required": [
+          "id"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string", "description": "A challenge or quiz folder inside this exam folder, or the id of any loaded challenge or quiz (e.g. \"even-or-odd\", \"java-basics-quiz\"). Quizzes are submitted once." },
-          "points": { "type": "number", "exclusiveMinimum": 0, "default": 10, "description": "Points for this question. Partial credit = points × tests passed / total tests (for a quiz: points × quiz points earned / quiz total)." }
+          "id": {
+            "type": "string",
+            "description": "A challenge or quiz folder inside this exam folder, or the id of any loaded challenge or quiz (e.g. \"even-or-odd\", \"java-basics-quiz\"). Quizzes are submitted once."
+          },
+          "points": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "default": 10,
+            "description": "Points for this question. Partial credit = points × tests passed / total tests (for a quiz: points × quiz points earned / quiz total)."
+          }
         }
       }
     }
