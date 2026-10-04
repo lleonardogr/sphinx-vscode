@@ -7,6 +7,7 @@ import { ExamManager } from './examSession';
 import { ExamDefinition, ExamQuestion, parseExamChallengeId } from './exams';
 import { QuizExamInfo, QuizMessage, QuizPanel, examQuizStatus, renderMarkdown } from './quizPanel';
 import { QuizAnswer, QuizDefinition, describeAnswer, gradeQuiz, isCorrect, parseAnswers, scaleQuizGrade } from './quizzes';
+import { plural, tr } from './i18n';
 
 const KEY = 'sphynx.quizzes';
 
@@ -93,8 +94,8 @@ export class QuizController implements vscode.Disposable {
     }
     if (!id) {
       const pick = await vscode.window.showQuickPick(
-        this.quizzes().map((q) => ({ label: q.title, description: `${q.questions.length} questions`, id: q.id })),
-        { placeHolder: 'Choose a quiz' },
+        this.quizzes().map((q) => ({ label: q.title, description: plural(q.questions.length, ['question', 'questions'], ['questão', 'questões']), id: q.id })),
+        { placeHolder: tr('Choose a quiz', 'Escolha um quiz') },
       );
       id = pick?.id;
     }
@@ -114,11 +115,19 @@ export class QuizController implements vscode.Disposable {
     }
     const quiz = this.quizzes().find((q) => q.id === id);
     if (!quiz) {
-      vscode.window.showWarningMessage(`Quiz "${id}" was not found.`);
+      vscode.window.showWarningMessage(tr(`Quiz "${id}" was not found.`, `O quiz "${id}" não foi encontrado.`));
       return;
     }
     const score = this.progress.get(quiz.id);
     await this.panel.show(quiz, { best: score ? `${score.best} / ${score.total}` : undefined });
+  }
+
+  /** Re-opens the current quiz, e.g. after the language changed. */
+  async refresh(): Promise<void> {
+    const current = this.panel.current;
+    if (current) {
+      await this.open(current.id);
+    }
   }
 
   /** Called when exam state changes (e.g. the time ran out), to lock an open exam quiz. */
@@ -166,22 +175,26 @@ export class QuizController implements vscode.Disposable {
       save(msg.answers);
     } else if (msg.type === 'submit') {
       const unanswered = msg.answers.filter((a) => a === null).length + Math.max(0, eq.question.quiz.questions.length - msg.answers.length);
+      const submitLabel = tr('Submit Quiz', 'Enviar quiz');
       const ok = await vscode.window.showWarningMessage(
-        `Submit "${eq.question.quiz.title}"?`,
+        tr(`Submit "${eq.question.quiz.title}"?`, `Enviar "${eq.question.quiz.title}"?`),
         {
           modal: true,
-          detail: `${unanswered ? `${unanswered} question(s) have no answer. ` : ''}A quiz can be submitted only once, and you won't see which answers are right.`,
+          detail: tr(
+            `${unanswered ? `${unanswered} question(s) have no answer. ` : ''}A quiz can be submitted only once, and you won't see which answers are right.`,
+            `${unanswered ? `${unanswered} questão(ões) sem resposta. ` : ''}Um quiz só pode ser enviado uma vez, e você não verá quais respostas estão certas.`,
+          ),
         },
-        'Submit Quiz',
+        submitLabel,
       );
-      if (ok !== 'Submit Quiz') {
+      if (ok !== submitLabel) {
         return;
       }
       save(msg.answers);
       const text = fs.readFileSync(file, 'utf8');
       const score = scaleQuizGrade(gradeQuiz(eq.question.quiz, parseAnswers(text)), eq.question.points);
       await this.examManager.recordScore(eq.exam, eq.question, score, text);
-      this.panel.post({ type: 'examStatus', text: examQuizStatus(this.examInfo(eq)), locked: true, score: `${score.earned} / ${eq.question.points} points` });
+      this.panel.post({ type: 'examStatus', text: examQuizStatus(this.examInfo(eq)), locked: true, score: tr(`${score.earned} / ${eq.question.points} points`, `${score.earned} / ${eq.question.points} pontos`) });
     }
   }
 }

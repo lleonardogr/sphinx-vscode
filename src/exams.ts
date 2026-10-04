@@ -16,6 +16,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Challenge, loadChallenge } from './challenges';
 import { QuizDefinition, loadQuiz } from './quizzes';
+import { language } from './i18n';
 import { RunOutcome } from './runner';
 
 export type ExamMode = 'open' | 'closed';
@@ -76,6 +77,7 @@ export function scoreOutcome(outcome: RunOutcome, points: number): { earned: num
 }
 
 function loadExam(dir: string, challenges: Challenge[], quizzes: QuizDefinition[]): ExamDefinition {
+  const lang = language();
   const meta = JSON.parse(fs.readFileSync(path.join(dir, 'exam.json'), 'utf8'));
   const id = meta.id ?? path.basename(dir);
   if (!meta.title || !Array.isArray(meta.questions) || meta.questions.length === 0) {
@@ -123,8 +125,8 @@ function loadExam(dir: string, challenges: Challenge[], quizzes: QuizDefinition[
   }
   return {
     id,
-    title: meta.title,
-    description: meta.description ?? '',
+    title: (lang !== 'en' && meta.translations?.[lang]?.title) || meta.title,
+    description: (lang !== 'en' && meta.translations?.[lang]?.description) || (meta.description ?? ''),
     durationMinutes: typeof meta.durationMinutes === 'number' && meta.durationMinutes > 0 ? meta.durationMinutes : 60,
     mode,
     maxSubmissions: typeof meta.maxSubmissions === 'number' && meta.maxSubmissions > 0 ? Math.floor(meta.maxSubmissions) : 3,

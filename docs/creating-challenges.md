@@ -7,6 +7,7 @@ This guide is for anyone who wants to write challenges for Sphynx: teachers prep
 - [The files](#the-files)
 - [Writing tests](#writing-tests)
 - [Tests: mixed challenges](#tests-mixed-challenges)
+- [Translating content](#translating-content)
 - [Rules: requiring or forbidding code](#rules-requiring-or-forbidding-code)
 - [Validating](#validating)
 - [Sharing challenges with students](#sharing-challenges-with-students)
@@ -293,6 +294,41 @@ Students can write modern or classic Java, so a rule must not depend on one styl
 **OOP and `private`:** in a compact source file, all classes are nested inside one implicit class, so `main` can still read another class's `private` fields. If a challenge is about encapsulation, add a rule that forbids reading the field directly, such as `"\\baccount\\s*\\.\\s*balance\\b"`. See the built-in `bank-account` challenge.
 
 Validation also checks that your own solutions follow your rules, so a broken regex shows up immediately.
+
+---
+
+## Translating content
+
+Sphynx speaks **English** (the default) and **Portuguese (Brazil)**: students choose with the `sphynx.language` setting. A challenge carries its translation next to the original, and anything not translated yet falls back to English.
+
+```
+fizzbuzz/
+├── challenge.json          ← add a "translations" block
+├── description.md
+├── description.pt-br.md    ← the translated description
+├── Starter.java
+├── Starter.pt-br.java      ← optional: the starter with translated comments
+├── Starter.classic.java
+└── Starter.classic.pt-br.java  ← optional
+```
+
+```json
+"translations": {
+  "pt-br": {
+    "title": "FizzBuzz",
+    "hints": ["Combine um laço com uma cadeia de if / else if.", "…"],
+    "mustContain": ["Use um laço (for ou while).", "Use um if / else."]
+  }
+}
+```
+
+- `hints` and the rule messages are translated **in the same order** as the originals.
+- **Don't translate the program's output.** Tests and solutions are shared by both languages, so the program prints the same messages (for example `Even`, `Invalid option`) whatever language the student reads. The Portuguese description must still name the exact English output.
+- Translate the comments in `Starter.pt-br.java`, not the code: names and output stay the same as in `Starter.java`.
+
+Quizzes and exams have a `translations` block too. See [Quizzes → Translating a quiz](quizzes.md#translating-a-quiz).
+
+To check that nothing is missing, run the validator with `--lang=pt-br`: `node scripts/validate-challenges.js --lang=pt-br path/to/folder`. It lists every challenge without a translated description, title, hint or rule message.
 
 ---
 

@@ -3,6 +3,7 @@
 // teacher or imported) go to a Custom section at the end. No vscode dependency.
 import type { Challenge } from './challenges';
 import type { QuizDefinition } from './quizzes';
+import { language, tr } from './i18n';
 
 /** Unit keys, in teaching order. They are the "topic" values in challenge.json and quiz.json. */
 export const UNITS = ['Basics', 'Conditionals', 'Loops', 'Strings', 'Methods', 'Arrays', 'Collections', 'OOP', 'Exceptions', 'Recursion', 'Streams'] as const;
@@ -16,18 +17,18 @@ export const TESTS_TOPIC = 'Tests';
 /** Topic names used before the 0.7 restructure, still accepted in custom content. */
 const ALIASES: Record<string, string> = { Variables: 'Basics' };
 
-const UNIT_NAMES: Record<string, string> = {
-  Basics: 'Basics',
-  Conditionals: 'Conditionals',
-  Loops: 'Loops',
-  Strings: 'Strings & Characters',
-  Methods: 'Methods',
-  Arrays: 'Arrays',
-  Collections: 'Collections',
-  OOP: 'Object-Oriented Programming',
-  Exceptions: 'Exceptions',
-  Recursion: 'Recursion',
-  Streams: 'Lambdas & Streams',
+const UNIT_NAMES: Record<string, [string, string]> = {
+  Basics: ['Basics', 'Fundamentos'],
+  Conditionals: ['Conditionals', 'Condicionais'],
+  Loops: ['Loops', 'Laços de repetição'],
+  Strings: ['Strings & Characters', 'Strings e caracteres'],
+  Methods: ['Methods', 'Métodos'],
+  Arrays: ['Arrays', 'Arrays'],
+  Collections: ['Collections', 'Coleções'],
+  OOP: ['Object-Oriented Programming', 'Orientação a objetos'],
+  Exceptions: ['Exceptions', 'Exceções'],
+  Recursion: ['Recursion', 'Recursão'],
+  Streams: ['Lambdas & Streams', 'Lambdas e streams'],
 };
 
 export function unitKey(topic: string | undefined): string | undefined {
@@ -41,13 +42,15 @@ export function unitKey(topic: string | undefined): string | undefined {
 /** "3 · Loops" for a unit; other topics are shown as they are written. */
 export function groupLabel(group: PathGroup): string {
   if (group.kind === 'unit') {
-    return `${group.number} · ${UNIT_NAMES[group.key] ?? group.key}`;
+    return `${group.number} · ${unitName(group.key)}`;
   }
-  return group.key;
+  return group.kind === 'custom' ? tr('Custom', 'Personalizados') : group.key;
 }
 
+/** The unit's name in the current language; other topics are returned as they are. */
 export function unitName(key: string): string {
-  return UNIT_NAMES[key] ?? key;
+  const names = UNIT_NAMES[unitKey(key) ?? key];
+  return names ? names[language() === 'pt-br' ? 1 : 0] : key;
 }
 
 export interface PathGroup {

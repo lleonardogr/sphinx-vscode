@@ -1,5 +1,6 @@
 // Compiles and tests a student's Main.java. Has no dependency on the vscode API so the
 // challenge validator script (scripts/validate-challenges.js) can reuse it.
+import { tr } from './i18n';
 import { spawn } from 'child_process';
 import * as fs from 'fs';
 import * as os from 'os';
@@ -218,19 +219,25 @@ async function modernSyntaxHint(raw: string, javaHome?: string): Promise<string 
   if (major === undefined || major >= 25) {
     return undefined;
   }
-  return (
+  return tr(
     `If you are using modern Java syntax (void main() without a class, or IO.println / IO.readln), ` +
-    `it needs JDK 25 or newer, but you have JDK ${major}. Install a newer JDK, ` +
-    `or use the classic form: public class Main { public static void main(String[] args) { ... } } with System.out.println.`
+      `it needs JDK 25 or newer, but you have JDK ${major}. Install a newer JDK, ` +
+      `or use the classic form: public class Main { public static void main(String[] args) { ... } } with System.out.println.`,
+    `Se você está usando a sintaxe moderna do Java (void main() sem classe, ou IO.println / IO.readln), ` +
+      `ela precisa do JDK 25 ou mais novo, mas você tem o JDK ${major}. Instale um JDK mais novo, ` +
+      `ou use a forma clássica: public class Main { public static void main(String[] args) { ... } } com System.out.println.`,
   );
 }
 
 function toolMissing(cmd: string): RunOutcome {
   return {
     kind: 'toolMissing',
-    message:
+    message: tr(
       `Could not run "${cmd}". Install a Java JDK (version 17 or newer; 25+ for modern syntax like IO.println), e.g. from https://adoptium.net, ` +
-      `then restart VS Code, or set "sphynx.java.home" in Settings to your JDK folder.`,
+        `then restart VS Code, or set "sphynx.java.home" in Settings to your JDK folder.`,
+      `Não foi possível rodar "${cmd}". Instale um JDK do Java (versão 17 ou mais nova; 25+ para a sintaxe moderna como IO.println), por exemplo em https://adoptium.net, ` +
+        `e reinicie o VS Code, ou defina "sphynx.java.home" nas configurações com a pasta do seu JDK.`,
+    ),
   };
 }
 

@@ -97,6 +97,43 @@
       },
       "description": "Hints revealed one at a time, from gentle to specific. Plain text."
     },
+    "translations": {
+      "type": "object",
+      "description": "Translations of the texts, by language (for example \"pt-br\"). The description goes in description.<lang>.md and translated starters in Starter.<lang>.java / Starter.classic.<lang>.java. Tests and solutions are shared: the program prints the same output in every language.",
+      "patternProperties": {
+        "^[a-z]{2}(-[a-z]{2})?$": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "hints": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Same number of hints as the original."
+            },
+            "mustContain": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The rule messages, in the same order as mustContain."
+            },
+            "mustNotContain": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The rule messages, in the same order as mustNotContain."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "mustContain": {
       "type": "array",
       "items": {

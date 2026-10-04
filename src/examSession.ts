@@ -7,6 +7,7 @@ import * as vscode from 'vscode';
 import { RunOutcome } from './runner';
 import { ExamDefinition, ExamQuestion, maxScore, questionTitle, scoreOutcome } from './exams';
 import { gradeQuiz, parseAnswers, scaleQuizGrade } from './quizzes';
+import { tr } from './i18n';
 
 export interface QuestionState {
   submissions: number;
@@ -177,7 +178,7 @@ export class ExamManager implements vscode.Disposable {
 
   async start(exam: ExamDefinition): Promise<boolean> {
     if (this.state(exam.id)?.finishedAt) {
-      vscode.window.showInformationMessage(`You already finished "${exam.title}". Score: ${this.formatScore(exam)}.`);
+      vscode.window.showInformationMessage(tr(`You already finished "${exam.title}". Score: ${this.formatScore(exam)}.`, `Você já terminou "${exam.title}". Nota: ${this.formatScore(exam)}.`));
       return false;
     }
     if (this.isActive(exam.id)) {
@@ -185,32 +186,41 @@ export class ExamManager implements vscode.Disposable {
     }
     const other = this.activeExam();
     if (other) {
-      vscode.window.showWarningMessage(`Finish "${other.title}" before starting another exam.`);
+      vscode.window.showWarningMessage(tr(`Finish "${other.title}" before starting another exam.`, `Termine "${other.title}" antes de começar outra prova.`));
       return false;
     }
 
     const rules = [
-      `Time limit: ${exam.durationMinutes} minutes, starting now.`,
-      `${exam.questions.length} question(s), ${maxScore(exam)} points in total.`,
-      `Each question can be submitted ${exam.maxSubmissions} time(s). Your best submission counts, with partial credit for the tests it passes. Run (sample tests) is unlimited.`,
-      ...(exam.questions.some((q) => q.kind === 'quiz') ? ['Quizzes are submitted once, and you won\'t see which answers are right. Your answers are saved as you go.'] : []),
+      tr(`Time limit: ${exam.durationMinutes} minutes, starting now.`, `Tempo limite: ${exam.durationMinutes} minutos, a partir de agora.`),
+      tr(`${exam.questions.length} question(s), ${maxScore(exam)} points in total.`, `${exam.questions.length} questão(ões), ${maxScore(exam)} pontos no total.`),
+      tr(
+        `Each question can be submitted ${exam.maxSubmissions} time(s). Your best submission counts, with partial credit for the tests it passes. Run (sample tests) is unlimited.`,
+        `Cada questão pode ser enviada ${exam.maxSubmissions} vez(es). Vale o seu melhor envio, com nota parcial pelos testes que ele passa. Executar (testes de exemplo) é ilimitado.`,
+      ),
+      ...(exam.questions.some((q) => q.kind === 'quiz')
+        ? [tr("Quizzes are submitted once, and you won't see which answers are right. Your answers are saved as you go.", 'Quizzes são enviados uma vez, e você não verá quais respostas estão certas. Suas respostas são salvas enquanto você responde.')]
+        : []),
       exam.mode === 'closed'
-        ? 'Closed exam: hints and AI hints are turned off. Large pastes, AI completions and time spent outside VS Code are recorded in your results.'
-        : 'Open exam: hints, AI hints and the internet are allowed.',
-      'When the time is up, your answers are submitted automatically and the exam is locked.',
+        ? tr(
+            'Closed exam: hints and AI hints are turned off. Large pastes, AI completions and time spent outside VS Code are recorded in your results.',
+            'Prova fechada: as dicas e as dicas de IA ficam desativadas. Colagens grandes, sugestões de IA e o tempo fora do VS Code ficam registrados no seu resultado.',
+          )
+        : tr('Open exam: hints, AI hints and the internet are allowed.', 'Prova aberta: dicas, dicas de IA e internet são permitidas.'),
+      tr('When the time is up, your answers are submitted automatically and the exam is locked.', 'Quando o tempo acabar, suas respostas são enviadas automaticamente e a prova é bloqueada.'),
     ];
-    const ok = await vscode.window.showWarningMessage(`Start "${exam.title}"?`, { modal: true, detail: rules.join('\n\n') }, 'Start Exam');
-    if (ok !== 'Start Exam') {
+    const startLabel = tr('Start Exam', 'Começar prova');
+    const ok = await vscode.window.showWarningMessage(tr(`Start "${exam.title}"?`, `Começar "${exam.title}"?`), { modal: true, detail: rules.join('\n\n') }, startLabel);
+    if (ok !== startLabel) {
       return false;
     }
     const previousName = this.context.globalState.get<string>('sphynx.studentName', '');
     const student = (
       await vscode.window.showInputBox({
         title: exam.title,
-        prompt: 'Your full name (it goes into the results file you hand in)',
+        prompt: tr('Your full name (it goes into the results file you hand in)', 'Seu nome completo (ele vai no arquivo de resultado que você entrega)'),
         value: previousName,
         ignoreFocusOut: true,
-        validateInput: (v) => (v.trim().length < 2 ? 'Please type your name' : undefined),
+        validateInput: (v) => (v.trim().length < 2 ? tr('Please type your name', 'Digite o seu nome') : undefined),
       })
     )?.trim();
     if (!student) {
@@ -238,15 +248,19 @@ export class ExamManager implements vscode.Disposable {
     }
     const s = this.state(exam.id)!;
     const unanswered = exam.questions.filter((q) => !s.questions[q.id]?.submissions).length;
+    const finishLabel = tr('Finish Exam', 'Terminar prova');
     const answer = await vscode.window.showWarningMessage(
-      `Finish "${exam.title}" now?`,
+      tr(`Finish "${exam.title}" now?`, `Terminar "${exam.title}" agora?`),
       {
         modal: true,
-        detail: `${unanswered ? `${unanswered} question(s) have no submission yet; they will be submitted automatically. ` : ''}You can't change your answers afterwards.`,
+        detail: tr(
+          `${unanswered ? `${unanswered} question(s) have no submission yet; they will be submitted automatically. ` : ''}You can't change your answers afterwards.`,
+          `${unanswered ? `${unanswered} questão(ões) ainda sem envio; elas serão enviadas automaticamente. ` : ''}Depois disso, você não pode mudar suas respostas.`,
+        ),
       },
-      'Finish Exam',
+      finishLabel,
     );
-    if (answer === 'Finish Exam') {
+    if (answer === finishLabel) {
       await this.finish(exam, 'student');
     }
   }
@@ -259,9 +273,9 @@ export class ExamManager implements vscode.Disposable {
     this.finishing.add(exam.id);
     try {
       if (by === 'time') {
-        vscode.window.showWarningMessage(`⏰ Time is up for "${exam.title}". Submitting your answers…`);
+        vscode.window.showWarningMessage(tr(`⏰ Time is up for "${exam.title}". Submitting your answers…`, `⏰ O tempo de "${exam.title}" acabou. Enviando suas respostas…`));
       }
-      await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: `Finishing "${exam.title}"…` }, async () => {
+      await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: tr(`Finishing "${exam.title}"…`, `Terminando "${exam.title}"…`) }, async () => {
         await vscode.workspace.saveAll(false);
         for (const q of exam.questions) {
           const file = this.answerFile(exam, q);
@@ -287,14 +301,16 @@ export class ExamManager implements vscode.Disposable {
       const file = this.writeResults(exam);
       await this.save(exam.id, { ...this.state(exam.id)!, resultsFile: file });
       this.ensureTimer();
+      const openLabel = tr('Open Results', 'Abrir resultado');
+      const copyLabel = tr('Save a Copy…', 'Salvar uma cópia…');
       const choice = await vscode.window.showInformationMessage(
-        `"${exam.title}" finished: ${this.formatScore(exam)}. Your results file is ready to hand in.`,
-        'Open Results',
-        'Save a Copy…',
+        tr(`"${exam.title}" finished: ${this.formatScore(exam)}. Your results file is ready to hand in.`, `"${exam.title}" terminou: ${this.formatScore(exam)}. Seu arquivo de resultado está pronto para entregar.`),
+        openLabel,
+        copyLabel,
       );
-      if (choice === 'Open Results') {
+      if (choice === openLabel) {
         await this.openResults(exam);
-      } else if (choice === 'Save a Copy…') {
+      } else if (choice === copyLabel) {
         await this.saveResultsCopy(exam);
       }
     } finally {
@@ -304,7 +320,7 @@ export class ExamManager implements vscode.Disposable {
 
   formatScore(exam: ExamDefinition): string {
     const { earned, max } = this.score(exam);
-    return `${earned} / ${max} points`;
+    return tr(`${earned} / ${max} points`, `${earned} / ${max} pontos`);
   }
 
   // ------------------------------------------------------------------ submissions
@@ -354,13 +370,13 @@ export class ExamManager implements vscode.Disposable {
         return;
       }
       const left = s.endsAt - Date.now();
-      this.timerItem.text = `$(watch) ${active.title}: ${formatDuration(left)} left`;
-      this.timerItem.tooltip = `${active.title}: ${this.formatScore(active)} so far. Click to see the questions.`;
+      this.timerItem.text = `$(watch) ${active.title}: ${tr(`${formatDuration(left)} left`, `faltam ${formatDuration(left)}`)}`;
+      this.timerItem.tooltip = tr(`${active.title}: ${this.formatScore(active)} so far. Click to see the questions.`, `${active.title}: ${this.formatScore(active)} até agora. Clique para ver as questões.`);
       this.timerItem.backgroundColor = left < 5 * 60_000 ? new vscode.ThemeColor('statusBarItem.warningBackground') : undefined;
       for (const minutes of [5, 1]) {
         if (left <= minutes * 60_000 && left > (minutes * 60_000 - 2000) && !warned.has(minutes)) {
           warned.add(minutes);
-          vscode.window.showWarningMessage(`⏰ ${minutes} minute${minutes > 1 ? 's' : ''} left in "${active.title}".`);
+          vscode.window.showWarningMessage(tr(`⏰ ${minutes} minute${minutes > 1 ? 's' : ''} left in "${active.title}".`, `⏰ ${minutes > 1 ? `Faltam ${minutes} minutos` : 'Falta 1 minuto'} para terminar "${active.title}".`));
         }
       }
       if (left <= 0) {
@@ -482,7 +498,7 @@ export class ExamManager implements vscode.Disposable {
   async openResults(exam: ExamDefinition): Promise<void> {
     const file = this.state(exam.id)?.resultsFile;
     if (!file || !fs.existsSync(file)) {
-      vscode.window.showWarningMessage('No results file found for this exam.');
+      vscode.window.showWarningMessage(tr('No results file found for this exam.', 'Nenhum arquivo de resultado encontrado para esta prova.'));
       return;
     }
     await vscode.window.showTextDocument(vscode.Uri.file(file), { preview: false });
@@ -495,11 +511,11 @@ export class ExamManager implements vscode.Disposable {
     }
     const target = await vscode.window.showSaveDialog({
       defaultUri: vscode.Uri.file(path.join(require('os').homedir(), path.basename(file))),
-      filters: { 'Exam results': ['json'] },
+      filters: { [tr('Exam results', 'Resultado da prova')]: ['json'] },
     });
     if (target) {
       fs.copyFileSync(file, target.fsPath);
-      vscode.window.showInformationMessage(`Saved ${path.basename(target.fsPath)}. Hand this file in to your teacher.`);
+      vscode.window.showInformationMessage(tr(`Saved ${path.basename(target.fsPath)}. Hand this file in to your teacher.`, `${path.basename(target.fsPath)} salvo. Entregue este arquivo ao seu professor.`));
     }
   }
 

@@ -39,6 +39,8 @@ export interface ValidateOptions {
   referenceRoots?: string[];
   /** Treat content-standard warnings as failures (used in CI for the built-in content). */
   strict?: boolean;
+  /** Also warn about missing translations in these languages (e.g. ["pt-br"]). */
+  languages?: string[];
   /** Called after each challenge, e.g. to print progress. */
   onChallenge?: (report: ChallengeReport) => void;
 }
@@ -226,6 +228,9 @@ export async function validateChallenges(roots: string[], opts: ValidateOptions 
   const reports: ChallengeReport[] = [];
   for (const c of challenges) {
     const report = await validateOne(c, javacVersion, opts, counters);
+    for (const lang of opts.languages ?? []) {
+      report.warnings = [...(report.warnings ?? []), ...translationProblems(c.dir, lang).map((p) => `${lang}: ${p}`)];
+    }
     if (opts.strict && report.warnings?.length) {
       report.ok = false;
     }
@@ -235,6 +240,12 @@ export async function validateChallenges(roots: string[], opts: ValidateOptions 
   const broken = new Set(quizLoad.errors.map((e) => e.slice(0, e.indexOf(': '))));
   for (const dir of quizDirs.filter((d) => !broken.has(d))) {
     const report = await validateQuiz(dir, javacVersion, opts, counters);
+    for (const lang of opts.languages ?? []) {
+      report.warnings = [...(report.warnings ?? []), ...translationProblems(dir, lang).map((p) => `${lang}: ${p}`)];
+    }
+    if (opts.strict && report.warnings?.length) {
+      report.ok = false;
+    }
     reports.push(report);
     opts.onChallenge?.(report);
   }
@@ -266,4 +277,39 @@ export function formatReport(report: ValidationReport, generate = false): string
 
 export function reportPassed(report: ValidationReport): boolean {
   return report.loadErrors.length === 0 && report.challenges.every((c) => c.ok);
+}
+
+/**
+ * What a challenge, quiz or exam folder is missing in `lang`: the translated description, title,
+ * hints, rule messages, and quiz texts. Counts must match the original so nothing is left untranslated.
+ */
+export function translationProblems(dir: string, lang: string): string[] {
+  const problems: string[] = [];
+  const read = (file: string) => JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
+  const count = (a: unknown) => (Array.isArray(a) ? a.length : 0);
+  if (fs.existsSync(path.join(dir, 'challenge.json'))) {
+    const meta = read('challenge.json');
+    const t = meta.translations?.[lang] ?? {};
+    if (!fs.existsSync(path.join(dir, `description.${lang}.md`))) problems.push(`no description.${lang}.md`);
+    if (!t.title) problems.push(`no ${lang} title`);
+    if (count(meta.hints) && count(t.hints) !== count(meta.hints)) problems.push(`${count(t.hints)} of ${count(meta.hints)} hints translated`);
+    for (const rules of ['mustContain', 'mustNotContain'] as const) {
+      if (count(meta[rules]) && count(t[rules]) !== count(meta[rules])) problems.push(`${count(t[rules])} of ${count(meta[rules])} ${rules} messages translated`);
+    }
+  } else if (fs.existsSync(path.join(dir, 'quiz.json'))) {
+    const meta = read('quiz.json');
+    const t = meta.translations?.[lang] ?? {};
+    if (!t.title) problems.push(`no ${lang} title`);
+    if (meta.description && !t.description) problems.push(`no ${lang} description`);
+    (meta.questions as Record<string, unknown>[]).forEach((q, i) => {
+      const tq = t.questions?.[i] ?? {};
+      if (q.prompt && !tq.prompt) problems.push(`question ${i + 1}: no ${lang} prompt`);
+      if (q.explanation && !tq.explanation) problems.push(`question ${i + 1}: no ${lang} explanation`);
+      if (q.type === 'choice' && count(tq.options) !== count(q.options)) problems.push(`question ${i + 1}: options not translated`);
+    });
+  } else if (fs.existsSync(path.join(dir, 'exam.json'))) {
+    const meta = read('exam.json');
+    if (!meta.translations?.[lang]?.title) problems.push(`no ${lang} title`);
+  }
+  return problems;
 }
