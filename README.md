@@ -8,7 +8,7 @@ HackerRank / LeetCode-style coding challenges right inside VS Code, running full
 
 📘 **Guides:** [Creating your own challenges](docs/creating-challenges.md) · [AI hints](docs/ai-hints.md)
 
-Students pick a challenge from the **Tech Challenges** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run in Terminal** lets them type their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
+Students pick a challenge from the **Tech Challenges** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
 
 ## Topics included (31 challenges)
 
@@ -26,7 +26,8 @@ Students pick a challenge from the **Tech Challenges** sidebar. The problem stat
 
 - **Problem panel** with the description, examples, requirements and hints that are revealed one at a time.
 - **Run / Submit** buttons in the panel and in the editor title bar (`Cmd/Ctrl+Alt+R` runs, `Cmd/Ctrl+Alt+Enter` submits).
-- **Run in Terminal** compiles the program and runs it in an interactive terminal, so students can type input themselves and see exactly what it prints.
+- **Try your own input**: type any input in the problem panel and click **Run with this input** to see what your program prints. If the input matches an example, the expected output and the first differing line are shown too. It doesn't check rules and doesn't count as an attempt.
+- **Run in Terminal** compiles the program and runs it in an interactive terminal, so students can type input while it runs and see exactly what it prints.
 - **Clear feedback**: compiler errors show as red squiggles and link to the line, each test shows Expected vs. Your output with the first differing line, and the panel reports runtime exceptions and time-limit (infinite loop) failures.
 - **Hidden tests** catch edge cases like negative numbers, zero and overflow, without revealing their input.
 - **Modern Java by default, classic on request**: starter code uses Java 25+ compact source files (`void main()`, `IO.println`). Set `techChallenges.java.style` to `classic` for `public class Main` starter code. Either style is **always accepted**, because only the output is checked.

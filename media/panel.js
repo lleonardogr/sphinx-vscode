@@ -36,6 +36,63 @@
     actionButtons.forEach((b) => {
       if (b.dataset.action === 'run' || b.dataset.action === 'submit') b.disabled = busy;
     });
+    const custom = document.getElementById('run-custom');
+    if (custom) /** @type {HTMLButtonElement} */ (custom).disabled = busy;
+  }
+
+  // ---- Custom input: remembered per challenge across panel reloads.
+  const challengeId = document.body.dataset.challenge || '';
+  const customBox = /** @type {HTMLTextAreaElement | null} */ (document.getElementById('custom-input'));
+  const customResult = /** @type {HTMLElement | null} */ (document.getElementById('custom-result'));
+  const state = vscode.getState() || {};
+  const saved = state.customInputs || {};
+  if (customBox && typeof saved[challengeId] === 'string') customBox.value = saved[challengeId];
+  if (customBox) {
+    customBox.addEventListener('input', () => {
+      saved[challengeId] = customBox.value;
+      vscode.setState({ ...state, customInputs: saved });
+    });
+  }
+  const exampleInputs = JSON.parse(document.getElementById('example-inputs')?.textContent || '[]');
+  document.querySelectorAll('button[data-example]').forEach((b) =>
+    b.addEventListener('click', () => {
+      if (!customBox) return;
+      customBox.value = exampleInputs[Number(/** @type {HTMLElement} */ (b).dataset.example)] || '';
+      customBox.dispatchEvent(new Event('input'));
+    }),
+  );
+  document.getElementById('run-custom')?.addEventListener('click', () => {
+    if (!customBox) return;
+    let input = customBox.value;
+    if (input && !input.endsWith('\n')) input += '\n';
+    vscode.postMessage({ type: 'custom', input });
+  });
+
+  function renderCustom(o, expected) {
+    if (o.kind !== 'tests') return renderOutcome('custom', o);
+    const r = o.results[0];
+    let status;
+    let kind = 'info';
+    if (r.timedOut) {
+      status = '⏱ Time limit exceeded. Is there an infinite loop, or is the program waiting for more input?';
+      kind = 'error';
+    } else if (r.exitCode !== 0) {
+      status = `✗ Your program crashed (exit code ${r.exitCode}).`;
+      kind = 'error';
+    } else if (expected !== undefined) {
+      const same = normalize(r.actual) === normalize(expected);
+      status = same ? '✓ Same output as the example.' : '✗ Different from the example\'s expected output.';
+      kind = same ? 'success' : 'error';
+    } else {
+      status = `Finished in ${r.timeMs} ms.`;
+    }
+    let body = `<div class="io${expected !== undefined ? '' : ' one'}">${pre('Your output', r.actual, '(no output)')}${expected !== undefined ? pre('Expected output (example)', expected, '(nothing)') : ''}</div>`;
+    if (expected !== undefined && !r.timedOut && r.exitCode === 0) {
+      const diff = firstDifference(expected, r.actual);
+      if (diff) body += `<p class="diff">${diff}</p>`;
+    }
+    if (r.stderr && r.stderr.trim()) body += `<div class="label">Error output</div><pre class="stderr">${esc(r.stderr.trim())}</pre>`;
+    return banner(kind, status, body);
   }
 
   function banner(kind, title, body) {
@@ -185,6 +242,19 @@
         aiButton.textContent = '✨ Ask AI for another hint';
       }
       renderAi(msg.type === 'aiDone' ? 'done' : 'error', msg.message);
+      return;
+    }
+    if (msg.type === 'running' && msg.mode === 'custom') {
+      setBusy(true);
+      if (customResult) customResult.innerHTML = banner('info', '<span class="spinner"></span>Compiling and running with your input…', '');
+      return;
+    }
+    if (msg.type === 'customResult') {
+      setBusy(false);
+      if (customResult) {
+        customResult.innerHTML = renderCustom(msg.outcome, msg.expected);
+        customResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
       return;
     }
     if (msg.type === 'running') {

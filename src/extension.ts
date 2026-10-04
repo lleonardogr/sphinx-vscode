@@ -6,7 +6,7 @@ import { createChallenge, validateFolder } from './authoring';
 import { ChallengePanel, PanelAction } from './challengePanel';
 import { Challenge, loadChallenges } from './challenges';
 import { Progress } from './progress';
-import { RunOutcome, javacMajorVersion, runChallengeCode } from './runner';
+import { RunOutcome, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
 import { runInTerminal } from './terminalRunner';
 import { ChallengeNode, ChallengeTreeProvider } from './treeView';
 
@@ -227,12 +227,7 @@ export function activate(context: vscode.ExtensionContext): void {
       panel.post({ type: 'result', mode, outcome: redact(outcome) });
 
       if (outcome.kind === 'toolMissing') {
-        const choice = await vscode.window.showErrorMessage(outcome.message, 'Download JDK', 'Open Settings');
-        if (choice === 'Download JDK') {
-          vscode.env.openExternal(vscode.Uri.parse('https://adoptium.net/temurin/releases/'));
-        } else if (choice === 'Open Settings') {
-          vscode.commands.executeCommand('workbench.action.openSettings', 'techChallenges.java.home');
-        }
+        await showToolMissing(outcome.message);
         return;
       }
 
@@ -255,6 +250,50 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     } catch (e) {
       output.appendLine(`[run] ${(e as Error).stack ?? e}`);
+      vscode.window.showErrorMessage(`Tech Challenges: ${(e as Error).message}`);
+    } finally {
+      running.delete(c.id);
+    }
+  }
+
+  async function showToolMissing(message: string): Promise<void> {
+    const choice = await vscode.window.showErrorMessage(message, 'Download JDK', 'Open Settings');
+    if (choice === 'Download JDK') {
+      vscode.env.openExternal(vscode.Uri.parse('https://adoptium.net/temurin/releases/'));
+    } else if (choice === 'Open Settings') {
+      vscode.commands.executeCommand('workbench.action.openSettings', 'techChallenges.java.home');
+    }
+  }
+
+  /**
+   * Runs the student's code once with input they typed in the panel. For experimenting: rules
+   * are not checked and it does not count as an attempt.
+   */
+  async function runCustomInput(c: Challenge, input: string): Promise<void> {
+    if (running.has(c.id)) {
+      return;
+    }
+    running.add(c.id);
+    try {
+      const file = ensureCodeFile(c);
+      const doc = vscode.workspace.textDocuments.find((d) => d.uri.fsPath === file);
+      if (doc?.isDirty) {
+        await doc.save();
+      }
+      panel.post({ type: 'running', mode: 'custom' });
+      const outcome = await vscode.window.withProgress(
+        { location: vscode.ProgressLocation.Window, title: 'Running with your input…' },
+        () => runChallengeCode({ file, tests: [{ input, output: '' }], timeLimitMs: c.timeLimitMs, javaHome: javaHome() }),
+      );
+      updateDiagnostics(file, outcome);
+      // When the input is one of the visible examples, we know what the output should be.
+      const example = c.tests.find((t) => !t.hidden && normalizeOutput(t.input) === normalizeOutput(input));
+      panel.post({ type: 'customResult', outcome, expected: example?.output });
+      if (outcome.kind === 'toolMissing') {
+        await showToolMissing(outcome.message);
+      }
+    } catch (e) {
+      output.appendLine(`[custom] ${(e as Error).stack ?? e}`);
       vscode.window.showErrorMessage(`Tech Challenges: ${(e as Error).message}`);
     } finally {
       running.delete(c.id);
@@ -323,6 +362,9 @@ export function activate(context: vscode.ExtensionContext): void {
         break;
       case 'terminal':
         runChallengeInTerminal(c);
+        break;
+      case 'custom':
+        runCustomInput(c, action.input);
         break;
       case 'aiHint':
         askAiHint(c);
