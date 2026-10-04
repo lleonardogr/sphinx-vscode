@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="media/logo/icon-256.png" alt="Tech Challenges logo" width="128">
+</p>
+
 # Tech Challenges for VS Code
 
 [![CI](https://github.com/lleonardogr/tech-challenges-vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/lleonardogr/tech-challenges-vscode/actions/workflows/ci.yml)

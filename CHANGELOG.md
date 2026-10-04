@@ -10,6 +10,7 @@ First release of **Tech Challenges**, starting with Java.
 
 ### Added
 
+- Extension icon for the Extensions view and the Marketplace (the sidebar keeps the coffee-cup icon).
 - Tech Challenges sidebar with 31 challenges across Variables, Conditionals, Loops, Arrays, Strings, Methods and OOP (classes, `toString`, encapsulation, inheritance, interfaces).
 - Problem panel with the description, examples, requirements and hints revealed one at a time.
 - Local compile-and-test runner (`javac`/`java`) with sample tests (Run) and hidden tests (Submit).

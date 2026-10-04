@@ -14,3 +14,5 @@ java-challenges/**
 out/**
 !out/extension.js
 schemas/*.md
+media/logo/icon-128.png
+media/logo/*.svg

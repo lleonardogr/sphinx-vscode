@@ -5,6 +5,11 @@
   "version": "0.1.0",
   "publisher": "class-plugin",
   "license": "MIT",
+  "icon": "media/logo/icon-256.png",
+  "galleryBanner": {
+    "color": "#1f1f1f",
+    "theme": "dark"
+  },
   "author": "lleonardogr",
   "repository": {
     "type": "git",
