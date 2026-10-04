@@ -1,0 +1,47 @@
+{
+  "title": "Balanced Brackets (Stack)",
+  "topic": "Data Structures",
+  "difficulty": "Medium",
+  "order": 9,
+  "hints": [
+    "Push every opening bracket. When you see a closing bracket, the top of the stack must be its matching opening bracket.",
+    "A closing bracket with an empty stack means the text is not balanced.",
+    "At the end, the stack must be empty: anything left was never closed."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\b(ArrayDeque|Deque|Stack)\\b",
+      "message": "Use a stack (ArrayDeque or Stack) to match the brackets."
+    }
+  ],
+  "tests": [
+    {
+      "input": "([]{})\n",
+      "output": "Balanced\n"
+    },
+    {
+      "input": "([)]\n",
+      "output": "Not balanced\n"
+    },
+    {
+      "input": "((\n",
+      "output": "Not balanced\n",
+      "hidden": true
+    },
+    {
+      "input": "))\n",
+      "output": "Not balanced\n",
+      "hidden": true
+    },
+    {
+      "input": "a(b[c]{d}e)f\n",
+      "output": "Balanced\n",
+      "hidden": true
+    },
+    {
+      "input": "no brackets here\n",
+      "output": "Balanced\n",
+      "hidden": true
+    }
+  ]
+}

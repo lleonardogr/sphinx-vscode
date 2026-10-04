@@ -1,0 +1,48 @@
+{
+  "title": "Clean Up a Name List",
+  "topic": "Streams",
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Start with Arrays.stream(line.split(\" \")): a Stream<String> of names.",
+    "Capitalize inside map with a lambda: name -> name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase()",
+    "Then .distinct().sorted().collect(Collectors.joining(\", \"))."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.|\\bIntStream\\b|Arrays\\s*\\.\\s*stream",
+      "message": "Use the Stream API, for example Arrays.stream(...) or list.stream()."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it without for or while loops: use stream operations instead."
+    }
+  ],
+  "tests": [
+    {
+      "input": "bob alice Bob carol alice\n",
+      "output": "Alice, Bob, Carol\n"
+    },
+    {
+      "input": "ZOE adam\n",
+      "output": "Adam, Zoe\n"
+    },
+    {
+      "input": "anna\n",
+      "output": "Anna\n",
+      "hidden": true
+    },
+    {
+      "input": "x X x\n",
+      "output": "X\n",
+      "hidden": true
+    },
+    {
+      "input": "beth Ann ann BETH cy\n",
+      "output": "Ann, Beth, Cy\n",
+      "hidden": true
+    }
+  ]
+}

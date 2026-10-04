@@ -1,0 +1,48 @@
+{
+  "title": "Top 3 Scorers",
+  "topic": "Streams",
+  "difficulty": "Hard",
+  "order": 5,
+  "hints": [
+    "First map each entry to a Player: split on \":\" and parse the score.",
+    "Comparator.comparingInt(Player::score).reversed().thenComparing(Player::name) gives the right order.",
+    "For the numbering, stream the indexes: IntStream.range(0, top.size()).mapToObj(i -> (i + 1) + \". \" + ...)."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.|\\bIntStream\\b|Arrays\\s*\\.\\s*stream",
+      "message": "Use the Stream API, for example Arrays.stream(...) or list.stream()."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it without for or while loops: use stream operations instead."
+    }
+  ],
+  "tests": [
+    {
+      "input": "ana:90 bruno:75 carla:95 davi:88\n",
+      "output": "1. carla (95)\n2. ana (90)\n3. davi (88)\n"
+    },
+    {
+      "input": "solo:10\n",
+      "output": "1. solo (10)\n"
+    },
+    {
+      "input": "a:5 b:5 c:5 d:5\n",
+      "output": "1. a (5)\n2. b (5)\n3. c (5)\n",
+      "hidden": true
+    },
+    {
+      "input": "x:1 y:2\n",
+      "output": "1. y (2)\n2. x (1)\n",
+      "hidden": true
+    },
+    {
+      "input": "max:100 lia:100 ben:99 eva:98 tom:100\n",
+      "output": "1. lia (100)\n2. max (100)\n3. tom (100)\n",
+      "hidden": true
+    }
+  ]
+}

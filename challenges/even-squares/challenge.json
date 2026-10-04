@@ -1,0 +1,48 @@
+{
+  "title": "Even Squares",
+  "topic": "Streams",
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Build the pipeline step by step: first print the stream of numbers, then add filter, then map.",
+    "n -> n % 2 == 0 is a lambda: a small function that receives n and returns true or false.",
+    "Collectors.joining(\" \") returns an empty String when nothing passed the filter."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.|\\bIntStream\\b|Arrays\\s*\\.\\s*stream",
+      "message": "Use the Stream API, for example Arrays.stream(...) or list.stream()."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it without for or while loops: use stream operations instead."
+    }
+  ],
+  "tests": [
+    {
+      "input": "1 2 3 4 5 6\n",
+      "output": "4 16 36\n"
+    },
+    {
+      "input": "7 9\n",
+      "output": "(none)\n"
+    },
+    {
+      "input": "-2 0 3\n",
+      "output": "4 0\n",
+      "hidden": true
+    },
+    {
+      "input": "10\n",
+      "output": "100\n",
+      "hidden": true
+    },
+    {
+      "input": "2 2 2\n",
+      "output": "4 4 4\n",
+      "hidden": true
+    }
+  ]
+}

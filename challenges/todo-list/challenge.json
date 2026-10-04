@@ -1,0 +1,37 @@
+{
+  "title": "To-Do List (ArrayList)",
+  "topic": "Data Structures",
+  "difficulty": "Easy",
+  "order": 5,
+  "hints": [
+    "Create the list once, before the loop, so it keeps its items between commands.",
+    "remove(item) returns true when the item was in the list. Use that to choose the message.",
+    "String.join(\", \", items) builds \"milk, eggs\" for you."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bArrayList\\b",
+      "message": "Store the items in an ArrayList."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\nadd milk\nadd eggs\nprint\nremove milk\ncount\nprint\n",
+      "output": "milk, eggs\nRemoved milk\nItems: 1\neggs\n"
+    },
+    {
+      "input": "3\nprint\nremove bread\ncount\n",
+      "output": "(empty)\nbread not found\nItems: 0\n"
+    },
+    {
+      "input": "5\nadd a\nadd a\nremove a\nprint\ncount\n",
+      "output": "Removed a\na\nItems: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "4\nadd x\nremove x\nremove x\nprint\n",
+      "output": "Removed x\nx not found\n(empty)\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "title": "Weekly Study Hours (EnumMap)",
+  "topic": "Data Structures",
+  "difficulty": "Medium",
+  "order": 8,
+  "hints": [
+    "Loop over Day.values() once to put 0 for every day, so all seven days are printed.",
+    "To add hours: map.put(day, map.get(day) + hours).",
+    "Iterating over an EnumMap goes Monday → Sunday. Only replace the busiest day when a total is strictly greater."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bEnumMap\\b",
+      "message": "Store the hours in an EnumMap<Day, Integer>."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\nMONDAY 2\nWEDNESDAY 5\nMONDAY 1\n",
+      "output": "MONDAY: 3\nTUESDAY: 0\nWEDNESDAY: 5\nTHURSDAY: 0\nFRIDAY: 0\nSATURDAY: 0\nSUNDAY: 0\nBusiest: WEDNESDAY\n"
+    },
+    {
+      "input": "1\nSUNDAY 8\n",
+      "output": "MONDAY: 0\nTUESDAY: 0\nWEDNESDAY: 0\nTHURSDAY: 0\nFRIDAY: 0\nSATURDAY: 0\nSUNDAY: 8\nBusiest: SUNDAY\n"
+    },
+    {
+      "input": "4\nFRIDAY 3\nTUESDAY 3\nFRIDAY 1\nTUESDAY 1\n",
+      "output": "MONDAY: 0\nTUESDAY: 4\nWEDNESDAY: 0\nTHURSDAY: 0\nFRIDAY: 4\nSATURDAY: 0\nSUNDAY: 0\nBusiest: TUESDAY\n",
+      "hidden": true
+    },
+    {
+      "input": "7\nSUNDAY 1\nSATURDAY 2\nFRIDAY 3\nTHURSDAY 4\nWEDNESDAY 5\nTUESDAY 6\nMONDAY 7\n",
+      "output": "MONDAY: 7\nTUESDAY: 6\nWEDNESDAY: 5\nTHURSDAY: 4\nFRIDAY: 3\nSATURDAY: 2\nSUNDAY: 1\nBusiest: MONDAY\n",
+      "hidden": true
+    }
+  ]
+}

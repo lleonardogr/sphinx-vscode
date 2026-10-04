@@ -1,0 +1,46 @@
+{
+  "title": "Unique Words (HashSet)",
+  "topic": "Data Structures",
+  "difficulty": "Easy",
+  "order": 6,
+  "hints": [
+    "Add every word to the set. Its size at the end is the number of unique words.",
+    "add() tells you whether the word is new: it returns false for a repeat.",
+    "Remember only the first repeat: save it when your variable is still null."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bHashSet\\b",
+      "message": "Use a HashSet to remember the words you have seen."
+    },
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop (for or while)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "the cat and the dog\n",
+      "output": "Unique words: 4\nFirst repeat: the\n"
+    },
+    {
+      "input": "Java is fun\n",
+      "output": "Unique words: 3\nNo repeats\n"
+    },
+    {
+      "input": "A a A\n",
+      "output": "Unique words: 1\nFirst repeat: a\n",
+      "hidden": true
+    },
+    {
+      "input": "one two three two one\n",
+      "output": "Unique words: 3\nFirst repeat: two\n",
+      "hidden": true
+    },
+    {
+      "input": "x\n",
+      "output": "Unique words: 1\nNo repeats\n",
+      "hidden": true
+    }
+  ]
+}

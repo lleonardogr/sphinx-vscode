@@ -1,0 +1,52 @@
+{
+  "title": "Group Words by Length",
+  "topic": "Streams",
+  "difficulty": "Medium",
+  "order": 4,
+  "hints": [
+    "String::length is a method reference: it's the same as word -> word.length().",
+    "groupingBy keeps the words of each group in the order they appear in the stream.",
+    "Use TreeMap::new as the second argument to get the lengths sorted."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.|\\bIntStream\\b|Arrays\\s*\\.\\s*stream",
+      "message": "Use the Stream API, for example Arrays.stream(...) or list.stream()."
+    },
+    {
+      "pattern": "groupingBy",
+      "message": "Group the words with Collectors.groupingBy."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it without for or while loops: use stream operations instead."
+    }
+  ],
+  "tests": [
+    {
+      "input": "cat dog house a mouse\n",
+      "output": "1: a\n3: cat, dog\n5: house, mouse\n"
+    },
+    {
+      "input": "hi\n",
+      "output": "2: hi\n"
+    },
+    {
+      "input": "aa b cc d\n",
+      "output": "1: b, d\n2: aa, cc\n",
+      "hidden": true
+    },
+    {
+      "input": "elephant\n",
+      "output": "8: elephant\n",
+      "hidden": true
+    },
+    {
+      "input": "one two three four five six\n",
+      "output": "3: one, two, six\n4: four, five\n5: three\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "title": "Word Frequency (HashMap)",
+  "topic": "Data Structures",
+  "difficulty": "Medium",
+  "order": 7,
+  "hints": [
+    "For each word: read its current count (0 if it's new), add 1, and store it back.",
+    "counts.put(word, counts.getOrDefault(word, 0) + 1) does all of that in one line.",
+    "new TreeMap<>() instead of new HashMap<>() keeps the words in alphabetical order."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\b(HashMap|TreeMap|LinkedHashMap)\\b",
+      "message": "Count the words with a Map (HashMap or TreeMap)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "the cat and the hat\n",
+      "output": "and: 1\ncat: 1\nhat: 1\nthe: 2\n"
+    },
+    {
+      "input": "b a b a c\n",
+      "output": "a: 2\nb: 2\nc: 1\n"
+    },
+    {
+      "input": "Hello hello HELLO\n",
+      "output": "hello: 3\n",
+      "hidden": true
+    },
+    {
+      "input": "one\n",
+      "output": "one: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "z y x z y z\n",
+      "output": "x: 1\ny: 2\nz: 3\n",
+      "hidden": true
+    }
+  ]
+}
