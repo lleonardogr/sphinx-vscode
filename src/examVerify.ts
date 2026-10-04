@@ -6,6 +6,7 @@ import * as os from 'os';
 import * as path from 'path';
 import { runChallengeCode } from './runner';
 import { ExamDefinition, scoreOutcome } from './exams';
+import { gradeQuiz, parseAnswers, scaleQuizGrade } from './quizzes';
 import type { ExamResultsFile } from './examSession';
 
 export interface VerifiedQuestion {
@@ -46,7 +47,14 @@ export async function verifyResults(resultsPath: string, exams: ExamDefinition[]
     const saved = results.questions.find((x) => x.id === q.id);
     const claimed = saved?.earned ?? 0;
     if (!saved || !saved.code.trim() || !saved.submissions) {
-      questions.push({ id: q.id, points: q.points, claimed, recomputed: 0, passed: 0, total: q.challenge.tests.length, note: 'no submission' });
+      const total = q.kind === 'quiz' ? q.quiz.questions.length : q.challenge.tests.length;
+      questions.push({ id: q.id, points: q.points, claimed, recomputed: 0, passed: 0, total, note: 'no submission' });
+      continue;
+    }
+    if (q.kind === 'quiz') {
+      // Quizzes are re-graded from the saved answers; no Java needed.
+      const score = scaleQuizGrade(gradeQuiz(q.quiz, parseAnswers(saved.code)), q.points);
+      questions.push({ id: q.id, points: q.points, claimed, recomputed: score.earned, passed: score.passed, total: score.total, note: 'quiz' });
       continue;
     }
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tech-challenge-verify-'));
@@ -102,7 +110,9 @@ export function formatVerification(r: VerificationReport): string[] {
   ];
   for (const q of r.questions) {
     const mismatch = Math.abs(q.claimed - q.recomputed) >= 0.01 ? `  ⚠ claimed ${q.claimed}` : '';
-    lines.push(`  - ${q.id}: ${q.recomputed} / ${q.points} (${q.passed}/${q.total} tests)${q.note ? ` [${q.note}]` : ''}${mismatch}`);
+    const unit = q.note === 'quiz' ? 'correct answers' : 'tests';
+    const note = q.note && q.note !== 'quiz' ? ` [${q.note}]` : '';
+    lines.push(`  - ${q.id}: ${q.recomputed} / ${q.points} (${q.passed}/${q.total} ${unit})${note}${mismatch}`);
   }
   if (r.warnings.length) {
     lines.push(`  Integrity warnings (${r.warnings.length}):`);

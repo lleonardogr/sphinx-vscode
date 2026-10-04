@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Quizzes**: question sets defined by a `quiz.json` (with a JSON schema), with four question types: multiple choice (one or several right answers), true or false, short answer, and "what does this code print?" (typed, or picked from options).
+  - A **Quizzes** group in the sidebar for practice: check one answer or all of them, see the right answer and an explanation, and keep your best score.
+  - **In exams**: a quiz can be an exam question (a built-in id or a private quiz folder). Answers are saved as you go and auto-submitted when time runs out. A quiz is submitted once without feedback, scored as points × quiz points earned ÷ total, and re-graded by **Verify Students' Exam Results**.
+  - The validator compiles and runs every "what does this code print?" question, flags answers that don't match the real output, and can fill in empty answers.
+  - Two built-in quizzes (Java Basics, Loops and Conditionals), and a warm-up quiz in the sample exam.
+  - **Import** also imports quizzes.
+  - Guide: [Quizzes](docs/quizzes.md).
+
 ## [0.5.0] - 2026-10-04
 
 ### Added

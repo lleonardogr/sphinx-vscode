@@ -1,0 +1,34 @@
+{
+  "title": "Warm-up Quiz",
+  "description": "Four quick questions before the coding questions.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "Which method prints text and then moves to the next line in modern Java?",
+      "options": [
+        "IO.print",
+        "IO.println",
+        "IO.readln",
+        "System.exit"
+      ],
+      "answer": 1
+    },
+    {
+      "type": "output",
+      "code": "IO.println(5 + 3 + \"!\");",
+      "answer": "8!"
+    },
+    {
+      "type": "truefalse",
+      "prompt": "`==` is the right way to compare the contents of two Strings.",
+      "answer": false
+    },
+    {
+      "type": "short",
+      "prompt": "What is the index of the first element of an array?",
+      "answer": [
+        "0"
+      ]
+    }
+  ]
+}

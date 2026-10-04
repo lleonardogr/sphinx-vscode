@@ -1,0 +1,69 @@
+{
+  "title": "Loops and Conditionals Quiz",
+  "topic": "Loops",
+  "description": "Read each piece of code carefully and work out what it does.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "for (int i = 0; i < 3; i++) {\n    IO.print(i + \" \");\n}",
+      "answer": "0 1 2",
+      "explanation": "`i` starts at 0 and the loop stops when `i < 3` is false, so it prints 0, 1 and 2."
+    },
+    {
+      "type": "output",
+      "code": "int n = 10;\nint count = 0;\nwhile (n > 0) {\n    n /= 2;\n    count++;\n}\nIO.println(count);",
+      "answer": "4",
+      "explanation": "`n` goes 10 → 5 → 2 → 1 → 0, so the loop body runs 4 times."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which loop always runs its body **at least once**?",
+      "options": [
+        "for",
+        "while",
+        "do-while",
+        "for-each"
+      ],
+      "answer": 2,
+      "explanation": "A `do { … } while (condition);` loop checks the condition **after** the body."
+    },
+    {
+      "type": "output",
+      "code": "int x = 5;\nIO.println(x > 3 ? \"big\" : \"small\");",
+      "options": [
+        "big",
+        "small",
+        "true",
+        "5"
+      ],
+      "answer": 0,
+      "explanation": "The ternary operator `condition ? a : b` picks `a` when the condition is true."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "`break` skips the rest of the current iteration and continues with the next one.",
+      "answer": false,
+      "explanation": "That is `continue`. `break` leaves the loop completely."
+    },
+    {
+      "type": "short",
+      "prompt": "Which keyword skips to the next iteration of a loop?",
+      "answer": [
+        "continue"
+      ],
+      "explanation": "`continue` jumps to the next iteration; `break` ends the loop."
+    },
+    {
+      "type": "output",
+      "code": "int day = 3;\nString name = switch (day) {\n    case 1 -> \"Mon\";\n    case 2 -> \"Tue\";\n    case 3 -> \"Wed\";\n    default -> \"?\";\n};\nIO.println(name);",
+      "answer": "Wed",
+      "explanation": "A switch expression returns the value of the matching case."
+    },
+    {
+      "type": "output",
+      "code": "int sum = 0;\nfor (int i = 1; i <= 4; i++) {\n    if (i % 2 == 0) continue;\n    sum += i;\n}\nIO.println(sum);",
+      "answer": "4",
+      "explanation": "Even numbers are skipped with `continue`, so only 1 and 3 are added."
+    }
+  ]
+}

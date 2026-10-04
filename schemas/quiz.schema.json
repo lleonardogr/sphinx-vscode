@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/lleonardogr/tech-challenges-vscode/blob/main/schemas/quiz.schema.json",
+  "title": "Tech Challenges quiz",
+  "description": "A set of questions about Java. Lives in <folder>/<quiz-id>/quiz.json. Guide: docs/quizzes.md",
+  "type": "object",
+  "required": ["title", "questions"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Unique id. Defaults to the folder name (recommended: leave it out)." },
+    "title": { "type": "string", "minLength": 1, "description": "Name shown in the Quizzes group and at the top of the quiz." },
+    "description": { "type": "string", "description": "Shown above the questions (Markdown)." },
+    "topic": { "type": "string", "description": "Optional label, e.g. \"Loops\"." },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type", "answer"],
+        "properties": {
+          "type": {
+            "enum": ["choice", "truefalse", "short", "output"],
+            "enumDescriptions": [
+              "Multiple choice. \"answer\" is the index of the right option (0 = first), or a list of indexes when several are right.",
+              "True or false. \"answer\" is true or false.",
+              "Short answer typed by the student. \"answer\" is an accepted answer or a list of them.",
+              "What does this code print? \"answer\" is the exact output (leave it \"\" and run Validate → fill in expected outputs), or an option index when \"options\" is given."
+            ]
+          },
+          "prompt": { "type": "string", "description": "The question (Markdown). Optional for \"output\" (defaults to \"What does this code print?\")." },
+          "code": { "type": "string", "description": "Java code shown with the question. For \"output\" it is compiled and run by the validator; a snippet is wrapped in void main() { … }." },
+          "options": { "type": "array", "items": { "type": "string" }, "minItems": 2, "description": "Choices for \"choice\", or for \"output\" when the student picks instead of typing." },
+          "answer": {
+            "description": "The right answer; its form depends on \"type\".",
+            "anyOf": [
+              { "type": "integer", "minimum": 0 },
+              { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 1 },
+              { "type": "boolean" },
+              { "type": "string" },
+              { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+            ]
+          },
+          "caseSensitive": { "type": "boolean", "default": false, "description": "\"short\" only: compare letter case too." },
+          "explanation": { "type": "string", "description": "Shown after a practice check (Markdown). Never shown during an exam." },
+          "points": { "type": "number", "exclusiveMinimum": 0, "default": 1, "description": "Points for this question (all or nothing)." }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

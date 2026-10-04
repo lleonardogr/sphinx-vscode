@@ -5,9 +5,10 @@ import * as path from 'path';
 import { unzipSync } from 'fflate';
 import { Challenge, loadChallenge } from './challenges';
 import { loadExams } from './exams';
+import { QuizDefinition, loadQuiz } from './quizzes';
 
 export interface Importable {
-  kind: 'challenge' | 'exam';
+  kind: 'challenge' | 'exam' | 'quiz';
   /** Folder to copy. */
   dir: string;
   /** Folder name in the library, which is also the id. */
@@ -44,7 +45,7 @@ export function extractZip(zipFile: string, dest: string): void {
 const skip = (name: string) => name.startsWith('.') || name === '__MACOSX' || name === 'node_modules';
 
 /**
- * Finds every challenge folder (challenge.json) and exam folder (exam.json) under `root`.
+ * Finds every challenge (challenge.json), quiz (quiz.json) and exam (exam.json) folder under `root`.
  * An exam's private questions belong to the exam and are not listed on their own.
  * `rootName` names a challenge or exam whose files sit directly in `root` (e.g. a zip of the files).
  */
@@ -58,6 +59,10 @@ export function findImportables(root: string, rootName: string): Importable[] {
     }
     if (fs.existsSync(path.join(dir, 'challenge.json'))) {
       found.push({ kind: 'challenge', dir, name, title: name });
+      return;
+    }
+    if (fs.existsSync(path.join(dir, 'quiz.json'))) {
+      found.push({ kind: 'quiz', dir, name, title: name });
       return;
     }
     if (depth >= MAX_DEPTH) {
@@ -77,10 +82,20 @@ export function findImportables(root: string, rootName: string): Importable[] {
  * Loads each importable to make sure it works, filling in its title. Exams may use built-in
  * challenges as questions, so `known` lists the challenges already available.
  */
-export function checkImportables(items: Importable[], known: Challenge[]): { ok: Importable[]; errors: string[] } {
+export function checkImportables(items: Importable[], known: Challenge[], knownQuizzes: QuizDefinition[] = []): { ok: Importable[]; errors: string[] } {
   const ok: Importable[] = [];
   const errors: string[] = [];
   const imported: Challenge[] = [];
+  const importedQuizzes: QuizDefinition[] = [];
+  for (const item of items.filter((i) => i.kind === 'quiz')) {
+    try {
+      const quiz = loadQuiz(item.dir);
+      importedQuizzes.push(quiz);
+      ok.push({ ...item, title: quiz.title, questions: quiz.questions.length });
+    } catch (e) {
+      errors.push(`${item.name}: ${(e as Error).message}`);
+    }
+  }
   for (const item of items.filter((i) => i.kind === 'challenge')) {
     try {
       const c = loadChallenge(item.dir);
@@ -92,7 +107,7 @@ export function checkImportables(items: Importable[], known: Challenge[]): { ok:
   }
   for (const item of items.filter((i) => i.kind === 'exam')) {
     // loadExams scans a parent folder; keep only the result for this exam.
-    const result = loadExams([path.dirname(item.dir)], [...known, ...imported]);
+    const result = loadExams([path.dirname(item.dir)], [...known, ...imported], [...knownQuizzes, ...importedQuizzes]);
     const exam = result.exams.find((e) => path.resolve(e.dir) === path.resolve(item.dir));
     const error = result.errors.find((e) => e.startsWith(item.dir));
     if (exam && !error) {

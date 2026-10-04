@@ -1,0 +1,89 @@
+{
+  "title": "Java Basics Quiz",
+  "topic": "Variables",
+  "description": "Types, operators and Strings. Check each answer as you go, or all at the end.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "Which type is the best choice to store a price like `19.99`?",
+      "options": [
+        "int",
+        "double",
+        "char",
+        "boolean"
+      ],
+      "answer": 1,
+      "explanation": "`double` stores numbers with decimals. `int` only stores whole numbers."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "An `int` variable can hold a value such as `2.5`.",
+      "answer": false,
+      "explanation": "`int` holds whole numbers only. Use `double` for decimals."
+    },
+    {
+      "type": "output",
+      "code": "int a = 7;\nint b = 2;\nIO.println(a / b);",
+      "answer": "3",
+      "explanation": "Dividing two `int`s drops the decimals: `7 / 2` is `3`. Write `7.0 / 2` or `(double) a / b` to get `3.5`."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(7 % 3);",
+      "options": [
+        "2",
+        "1",
+        "0",
+        "2.33"
+      ],
+      "answer": 1,
+      "explanation": "`%` gives the remainder of a division: 7 = 2 × 3 + **1**."
+    },
+    {
+      "type": "short",
+      "prompt": "Which keyword makes a variable's value impossible to change after it is assigned?",
+      "answer": [
+        "final"
+      ],
+      "explanation": "`final int MAX = 10;` cannot be reassigned."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which of these are **primitive** types?",
+      "options": [
+        "int",
+        "String",
+        "boolean",
+        "double",
+        "Scanner"
+      ],
+      "answer": [
+        0,
+        2,
+        3
+      ],
+      "explanation": "`int`, `boolean` and `double` are primitives. `String` and `Scanner` are classes (reference types)."
+    },
+    {
+      "type": "output",
+      "code": "String s = \"Java\";\nIO.println(s.length() + s.toUpperCase());",
+      "answer": "4JAVA",
+      "explanation": "`s.length()` is `4`, and `+` with a String joins them: `\"4\" + \"JAVA\"`."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "This code prints `true`.",
+      "code": "String a = \"hi\";\nString b = \"hi\";\nIO.println(a.equals(b));",
+      "answer": true,
+      "explanation": "`equals` compares the contents of two Strings, so it is `true`."
+    },
+    {
+      "type": "short",
+      "prompt": "What is the value of `10 + 2 * 3`?",
+      "answer": [
+        "16"
+      ],
+      "explanation": "Multiplication happens before addition: `2 * 3 = 6`, then `10 + 6 = 16`."
+    }
+  ]
+}

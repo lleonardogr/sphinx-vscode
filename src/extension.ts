@@ -10,6 +10,8 @@ import { RunOutcome, javacMajorVersion, normalizeOutput, runChallengeCode } from
 import { runInTerminal } from './terminalRunner';
 import { ExamManager } from './examSession';
 import { importContent, libraryRoots, removeImported } from './importer';
+import { QuizController, QuizProgress } from './quizController';
+import { QuizDefinition, loadQuizzes } from './quizzes';
 import { formatVerification, verifyResults } from './examVerify';
 import { ExamDefinition, ExamQuestion, loadExams, parseExamChallengeId } from './exams';
 import { ChallengeNode, ChallengeTreeProvider } from './treeView';
@@ -22,13 +24,16 @@ export function activate(context: vscode.ExtensionContext): void {
   const diagnostics = vscode.languages.createDiagnosticCollection('techChallenges');
   let challenges: Challenge[] = [];
   let exams: ExamDefinition[] = [];
+  let quizzes: QuizDefinition[] = [];
+  const quizProgress = new QuizProgress(context.globalState);
   const running = new Set<string>();
   /** Last (redacted) Run/Submit result per challenge, used as context for AI hints. */
   const lastOutcome = new Map<string, RunOutcome>();
   const ai = new AiHints(context);
 
   const examManager = new ExamManager(context, (examId) => examCodeDir(examId), (exam, q) => gradeExamQuestion(exam, q));
-  const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams, examManager);
+  const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams, examManager, () => quizzes, quizProgress);
+  const quizController = new QuizController(context.extensionUri, quizProgress, examManager, () => quizzes, () => exams);
   const treeView = vscode.window.createTreeView('techChallenges.list', { treeDataProvider: tree });
   const panel = new ChallengePanel(context.extensionUri, progress, (action, c) => handlePanelAction(action, c));
   const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
@@ -37,7 +42,7 @@ export function activate(context: vscode.ExtensionContext): void {
   status.show();
 
   panel.examInfo = (c) => panelExamInfo(c);
-  context.subscriptions.push(output, diagnostics, treeView, status, examManager, { dispose: () => panel.dispose() });
+  context.subscriptions.push(output, diagnostics, treeView, status, examManager, quizController, { dispose: () => panel.dispose() });
 
   const config = () => vscode.workspace.getConfiguration('techChallenges');
   const javaHome = () => config().get<string>('java.home', '').trim() || undefined;
@@ -71,17 +76,19 @@ export function activate(context: vscode.ExtensionContext): void {
   function reload(): void {
     const extra = config().get<string[]>('extraChallengePaths', []);
     const builtIn = [
-      ...['challenges', 'custom', 'tests', 'exams'].map((dir) => path.join(context.extensionPath, dir)),
+      ...['challenges', 'custom', 'tests', 'exams', 'quizzes'].map((dir) => path.join(context.extensionPath, dir)),
       ...libraryRoots(libraryDir()),
     ];
     const result = loadChallenges([...builtIn, ...extra]);
     challenges = result.challenges;
-    const examResult = loadExams([...builtIn, ...extra], challenges);
+    const quizResult = loadQuizzes([...builtIn, ...extra]);
+    quizzes = quizResult.quizzes;
+    const examResult = loadExams([...builtIn, ...extra], challenges, quizzes);
     exams = examResult.exams;
-    const errors = [...result.errors.filter((e) => !e.endsWith('folder not found')), ...examResult.errors];
+    const errors = [...result.errors.filter((e) => !e.endsWith('folder not found')), ...quizResult.errors, ...examResult.errors];
     if (errors.length) {
       errors.forEach((e) => output.appendLine(`[challenges] ${e}`));
-      vscode.window.showWarningMessage('Some challenges or exams could not be loaded. See the "Tech Challenges" output for details.');
+      vscode.window.showWarningMessage('Some challenges, quizzes or exams could not be loaded. See the "Tech Challenges" output for details.');
     }
     examManager.setExams(exams);
     tree.refresh();
@@ -123,7 +130,12 @@ export function activate(context: vscode.ExtensionContext): void {
 
   /** Practice challenges plus every exam question. */
   function findChallenge(id: string): Challenge | undefined {
-    return challenges.find((c) => c.id === id) ?? exams.flatMap((t) => t.questions).find((q) => q.challenge.id === id)?.challenge;
+    for (const q of exams.flatMap((t) => t.questions)) {
+      if (q.kind === 'challenge' && q.challenge.id === id) {
+        return q.challenge;
+      }
+    }
+    return challenges.find((c) => c.id === id);
   }
 
   function examFor(c: Challenge): { exam: ExamDefinition; question: ExamQuestion } | undefined {
@@ -175,6 +187,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
   /** Grades an exam question's current code against all its tests (used when an exam is finished). */
   async function gradeExamQuestion(_exam: ExamDefinition, q: ExamQuestion): Promise<RunOutcome | undefined> {
+    if (q.kind !== 'challenge') {
+      return undefined;
+    }
     const file = codePath(q.challenge);
     if (!fs.existsSync(file)) {
       return undefined;
@@ -205,7 +220,8 @@ export function activate(context: vscode.ExtensionContext): void {
       return findChallenge(arg);
     }
     if (arg && typeof arg === 'object' && (arg as ChallengeNode).kind === 'examQuestion') {
-      return (arg as { question: ExamQuestion }).question.challenge;
+      const q = (arg as { question: ExamQuestion }).question;
+      return q.kind === 'challenge' ? q.challenge : undefined;
     }
     if (arg && typeof arg === 'object' && (arg as ChallengeNode).kind === 'challenge') {
       return (arg as { challenge: Challenge }).challenge;
@@ -530,6 +546,7 @@ export function activate(context: vscode.ExtensionContext): void {
     output,
     challenges: () => challenges,
     exams: () => exams,
+    quizzes: () => quizzes,
     reload,
   };
 
@@ -601,6 +618,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     vscode.commands.registerCommand('techChallenges.open', withChallenge(openChallenge)),
+    vscode.commands.registerCommand('techChallenges.openQuiz', (arg?: unknown) => quizController.open(arg)),
     vscode.commands.registerCommand('techChallenges.run', withChallenge((c) => runChallenge(c, 'run'))),
     vscode.commands.registerCommand('techChallenges.submit', withChallenge((c) => runChallenge(c, 'submit'))),
     vscode.commands.registerCommand('techChallenges.runInTerminal', withChallenge(runChallengeInTerminal)),
@@ -612,7 +630,8 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('techChallenges.startExam', async (arg?: unknown) => {
       const exam = await resolveExam(arg, 'Which exam do you want to start?', (t) => !examManager.state(t.id));
       if (exam && (await examManager.start(exam))) {
-        await openChallenge(exam.questions[0].challenge);
+        const first = exam.questions[0];
+        await (first.kind === 'quiz' ? quizController.open(first.quiz.id) : openChallenge(first.challenge));
       }
     }),
     vscode.commands.registerCommand('techChallenges.finishExam', async (arg?: unknown) => {
@@ -640,12 +659,13 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('techChallenges.validateChallenges', () => validateFolder(authoringDeps)),
     vscode.commands.registerCommand('techChallenges.resetProgress', async () => {
       const answer = await vscode.window.showWarningMessage(
-        'Reset progress for all challenges? Your code files are kept.',
+        'Reset progress for all challenges and quizzes? Your code files are kept.',
         { modal: true },
         'Reset Progress',
       );
       if (answer === 'Reset Progress') {
         await progress.reset();
+        await quizProgress.reset();
         updateStatus();
       }
     }),
@@ -654,6 +674,7 @@ export function activate(context: vscode.ExtensionContext): void {
       if (panel.current) {
         postExamStatus(panel.current);
       }
+      quizController.refreshExamStatus();
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('techChallenges')) {
