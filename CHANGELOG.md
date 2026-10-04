@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Generate with AI**: a new command (and a ✨ button in the sidebar) that drafts a **challenge**, a mixed **test** or a whole **exam** with the AI provider from the settings, local or remote.
+  - The AI writes the description, hints, rules, test inputs, starters and both solutions. The expected outputs always come from running its `Solution.java`, and the classic solution must agree.
+  - Problems found by compiling and running the draft are sent back to the AI to fix, up to 3 attempts. A challenge that still fails can be saved as a draft.
+  - Exams are planned first, then each question is generated and validated as a private question. Questions that fail are left out.
+  - Descriptions and hints follow `techChallenges.ai.responseLanguage`.
+
 ## [0.4.0] - 2026-10-04
 
 ### Added

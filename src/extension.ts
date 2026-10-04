@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { AiHints } from './ai/hints';
+import { generateWithAi } from './aiAuthoring';
 import { createChallenge, validateFolder } from './authoring';
 import { ChallengePanel, PanelAction, PanelExamInfo, examStatusText } from './challengePanel';
 import { Challenge, loadChallenges } from './challenges';
@@ -618,6 +619,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     vscode.commands.registerCommand('techChallenges.verifyExamResults', verifyExamResultsCommand),
     vscode.commands.registerCommand('techChallenges.createChallenge', () => createChallenge(authoringDeps)),
+    vscode.commands.registerCommand('techChallenges.generateWithAi', () => generateWithAi(authoringDeps, ai)),
     vscode.commands.registerCommand('techChallenges.validateChallenges', () => validateFolder(authoringDeps)),
     vscode.commands.registerCommand('techChallenges.resetProgress', async () => {
       const answer = await vscode.window.showWarningMessage(

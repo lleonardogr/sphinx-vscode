@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { Challenge } from '../challenges';
 import { RunOutcome } from '../runner';
 import { buildHintPrompt } from './prompt';
-import { AiError, DEFAULT_ANTHROPIC_MODEL, PROVIDERS, ProviderId, createProvider, defaultBaseUrl, listOpenAiModels } from './providers';
+import { AiError, DEFAULT_ANTHROPIC_MODEL, HintProvider, PROVIDERS, ProviderId, createProvider, defaultBaseUrl, listOpenAiModels } from './providers';
 
 const secretKey = (id: ProviderId) => `techChallenges.ai.apiKey.${id}`;
 const CONSENT_KEY = 'techChallenges.ai.consent';
@@ -30,8 +30,19 @@ export class AiHints {
     return this.config().get<ProviderId>('provider', 'off');
   }
 
-  private responseLanguage(): string {
+  responseLanguage(): string {
     return this.config().get<string>('responseLanguage', '').trim() || vscode.env.language;
+  }
+
+  /** Builds the provider chosen in the settings. Throws AiError when it is missing or misconfigured. */
+  async createProvider(): Promise<HintProvider> {
+    const id = this.providerId;
+    return createProvider({
+      id,
+      model: this.config().get<string>('model', '').trim(),
+      baseUrl: this.config().get<string>('baseUrl', '').trim(),
+      apiKey: await this.context.secrets.get(secretKey(id)),
+    });
   }
 
   cancel(): void {
@@ -57,12 +68,7 @@ export class AiHints {
     const controller = new AbortController();
     this.current = controller;
     try {
-      const provider = await createProvider({
-        id,
-        model: this.config().get<string>('model', '').trim(),
-        baseUrl: this.config().get<string>('baseUrl', '').trim(),
-        apiKey: await this.context.secrets.get(secretKey(id)),
-      });
+      const provider = await this.createProvider();
       if (provider.remote && !(await this.confirmRemote(provider.label))) {
         return;
       }

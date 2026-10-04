@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import { CUSTOM_TOPIC, Challenge, TOPIC_ORDER } from './challenges';
 import { formatReport, reportPassed, validateChallenges } from './validator';
 
-interface AuthoringDeps {
+export interface AuthoringDeps {
   extensionPath: string;
   output: vscode.OutputChannel;
   challenges: () => Challenge[];
@@ -16,7 +16,7 @@ interface AuthoringDeps {
 
 const config = () => vscode.workspace.getConfiguration('techChallenges');
 
-function slugify(title: string): string {
+export function slugify(title: string): string {
   return title
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
@@ -50,7 +50,7 @@ function candidateFolders(deps: AuthoringDeps): { label: string; description?: s
   return items;
 }
 
-async function pickFolder(deps: AuthoringDeps, title: string): Promise<string | undefined> {
+export async function pickFolder(deps: AuthoringDeps, title: string): Promise<string | undefined> {
   const pick = await vscode.window.showQuickPick(candidateFolders(deps), { title, placeHolder: 'Where are your challenges stored?', ignoreFocusOut: true });
   if (!pick) {
     return undefined;
@@ -63,7 +63,7 @@ async function pickFolder(deps: AuthoringDeps, title: string): Promise<string | 
 }
 
 /** Makes sure a challenge folder shows up in the sidebar. */
-async function ensureRegistered(folder: string, deps: AuthoringDeps): Promise<void> {
+export async function ensureRegistered(folder: string, deps: AuthoringDeps): Promise<void> {
   const builtIn = path.join(deps.extensionPath, 'challenges');
   const paths = config().get<string[]>('extraChallengePaths', []);
   if (path.resolve(folder) === path.resolve(builtIn) || paths.some((p) => path.resolve(p) === path.resolve(folder))) {

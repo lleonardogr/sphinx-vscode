@@ -52,6 +52,8 @@ These are **signals for the teacher, not proof**. A student might paste their ow
 
 An exam is a folder containing an `exam.json`. VS Code gives you autocomplete and checking for this file.
 
+> **Tip:** **Tech Challenges: Generate with AI… → Exam** plans an exam and writes new, private questions for it with your AI provider. Each question is compiled and checked before it's saved. See [Generate with AI](creating-challenges.md#generate-with-ai).
+
 ```
 week-3-exam/
 ├── exam.json
