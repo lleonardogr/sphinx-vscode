@@ -16,21 +16,24 @@ HackerRank / LeetCode-style coding challenges right inside VS Code, running full
 
 Students pick a challenge from the **Sphynx** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
 
-## Topics included (52 challenges)
+## The learning path (52 challenges)
 
-| Topic        | Challenges |
-|--------------|------------|
-| Variables    | Hello World · Greeting with Variables · Arithmetic Operators · Rectangle Area · Celsius to Fahrenheit |
-| Conditionals | Even or Odd · Largest of Three · Grade Calculator (`if`/`else if`) · Leap Year · Day of the Week (`switch` statement) · Weather Label (ternary `? :`) · Days in a Month (switch expression) |
-| Loops        | Count to N (`for`) · Sum 1..N · Multiplication Table · Factorial · FizzBuzz · Sum of Digits (`while`) · Collatz Steps (`while`) · Sum Until Zero (`do-while`) · Above Average (for-each) |
-| Data Structures | Array Sum · Largest and Smallest · Reverse an Array · Count Occurrences · To-Do List (`ArrayList`) · Unique Words (`HashSet`) · Word Frequency (`HashMap`) · Weekly Hours (`EnumMap`) · Balanced Brackets (stack) |
-| Strings      | Reverse a String · Count Vowels · Palindrome |
-| Methods      | Prime Numbers · Power |
-| OOP          | Your First Class · Rectangle Class · Book with `toString()` · Bank Account (encapsulation) · Shapes (inheritance) · Animals (interfaces) |
-| Streams      | Even Squares (`filter`/`map`) · Stream Statistics · Clean Up a Name List (`distinct`/`sorted`) · Group Words by Length (`groupingBy`) · Top 3 Scorers (comparators, `limit`). Solved without loops. |
-| Tests        | Calculator Menu · Grade Book Menu · Inventory Menu: bigger **menu-driven console apps** that mix variables, conditionals, loops, data structures, strings and methods in one program |
-| Quizzes      | Java Basics Quiz · Loops and Conditionals Quiz: multiple choice, true or false, short answer and "what does this code print?" |
-| Custom       | Word Counter · Grade Report · Caesar Cipher: [example custom challenges](custom/) to copy when writing your own |
+The sidebar lists numbered **units** in teaching order. Each unit runs from easy to harder challenges, ends with its quiz, and the last unit of a stage ends with a bigger **test** that mixes everything so far.
+
+| Unit | Challenges | Quiz and tests |
+|------|------------|----------------|
+| 1 · Basics | Hello World · Greeting with Variables · Arithmetic Operators · Rectangle Area · Celsius to Fahrenheit | Java Basics Quiz |
+| 2 · Conditionals | Even or Odd · Largest of Three · Grade Calculator (`if`/`else if`) · Day of the Week (`switch` statement) · Weather Label (ternary `? :`) · Leap Year · Days in a Month (switch expression) | |
+| 3 · Loops | Count to N (`for`) · Sum 1..N · Multiplication Table · Sum Until Zero (`do-while`) · Factorial · FizzBuzz · Sum of Digits (`while`) · Collatz Steps (`while`) | Loops and Conditionals Quiz · Test: Calculator Menu |
+| 4 · Strings & Characters | Reverse a String · Count Vowels · Palindrome | |
+| 5 · Methods | Prime Numbers · Power | |
+| 6 · Arrays | Array Sum · Largest and Smallest · Reverse an Array · Count Occurrences · Above Average (for-each) | |
+| 7 · Collections | To-Do List (`ArrayList`) · Unique Words (`HashSet`) · Word Frequency (`HashMap`) · Weekly Hours (`EnumMap`) · Balanced Brackets (stack) | Tests: Grade Book Menu · Inventory Menu |
+| 8 · Object-Oriented Programming | Your First Class · Rectangle Class · Book with `toString()` · Bank Account (encapsulation) · Shapes (inheritance) · Animals (interfaces) | |
+| 11 · Lambdas & Streams | Even Squares (`filter`/`map`) · Stream Statistics · Clean Up a Name List (`distinct`/`sorted`) · Group Words by Length (`groupingBy`) · Top 3 Scorers (comparators, `limit`). Solved without loops. | |
+| Custom | Word Counter · Grade Report · Caesar Cipher: [example custom challenges](custom/) to copy when writing your own | |
+
+On the way to 1.0: a quiz for every unit, more challenges in each unit (up to Hard), and the **9 · Exceptions** and **10 · Recursion** units.
 
 ## Features
 
@@ -43,12 +46,12 @@ Students pick a challenge from the **Sphynx** sidebar. The problem statement ope
 - **Modern Java by default, classic on request**: starter code uses Java 25+ compact source files (`void main()`, `IO.println`). Set `sphynx.java.style` to `classic` for `public class Main` starter code. Either style is **always accepted**, because only the output is checked.
 - **Syntax requirements**: a challenge can require constructs (for example "use a `switch`", "create `class Square extends Shape`" or "keep `balance` private") or forbid shortcuts (`Math.max`, `reverse()`, `Math.pow`).
 - **AI hints (optional, off by default)**: an AI tutor gives one hint at a time about your current code, without writing the solution. It works with a **local model** (Ollama, LM Studio: free and private), **your own API key** (Anthropic Claude or any OpenAI-compatible API), or VS Code's language models (GitHub Copilot). API keys are stored in VS Code's encrypted secret storage. See [AI hints](docs/ai-hints.md).
-- **Tests**: bigger challenges that **mix several topics** in one program, such as a console app with a menu (`1. Add`, `2. List`, `0. Exit`). Each one shows the skills it combines, and is graded by feeding it whole sequences of menu choices.
+- **Tests**: bigger challenges that **mix several units** in one program, listed at the end of the unit they close, such as a console app with a menu (`1. Add`, `2. List`, `0. Exit`). Each one shows the skills it combines, and is graded by feeding it whole sequences of menu choices.
 - **Quizzes**: short question sets about Java (multiple choice, true or false, short answer, and "what does this code print?"), with instant feedback and explanations in practice. Exams can include them as graded questions, and the validator runs every code question to make sure its answer is right. See [Quizzes](docs/quizzes.md).
 - **Exams**: timed, graded sets of questions with a countdown, limited submissions, partial credit and a results file to hand in. An exam can be **open** (hints, AI and the internet allowed) or **closed** (hints and AI off; pastes and time outside VS Code are recorded). Teachers re-grade the results files with **Verify Exam Results**. See [Exams](docs/exams.md).
 - **Import**: one button in the sidebar imports the challenges, tests and exams a teacher shared, as a `.zip` or a folder. They're copied into the extension's library, solutions can be stripped for students, and **Remove Imported…** takes them out again. See [Sharing challenges with students](docs/creating-challenges.md#sharing-challenges-with-students).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
-- **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/52 solved` counter in the status bar.
+- **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/52 solved` counter in the status bar.
 
 > **Upgrading from Tech Challenges?** Sphynx is the same extension with a new name. Install Sphynx and uninstall Tech Challenges. Your settings (`techChallenges.*` → `sphynx.*`) are copied over automatically, and your code in `tech-challenges/` keeps being used. Solved-challenge progress and saved AI keys start fresh.
 

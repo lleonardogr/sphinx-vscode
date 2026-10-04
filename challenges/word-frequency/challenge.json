@@ -1,8 +1,8 @@
 {
   "title": "Word Frequency (HashMap)",
-  "topic": "Data Structures",
+  "topic": "Collections",
   "difficulty": "Medium",
-  "order": 7,
+  "order": 4,
   "hints": [
     "For each word: read its current count (0 if it's new), add 1, and store it back.",
     "counts.put(word, counts.getOrDefault(word, 0) + 1) does all of that in one line.",

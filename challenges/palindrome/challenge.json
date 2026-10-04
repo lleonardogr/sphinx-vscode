@@ -2,7 +2,7 @@
   "title": "Palindrome Check",
   "topic": "Strings",
   "difficulty": "Medium",
-  "order": 3,
+  "order": 5,
   "hints": [
     "Convert the word with toLowerCase() first.",
     "Compare the first character with the last, the second with the second-to-last, and so on.",

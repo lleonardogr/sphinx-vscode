@@ -2,7 +2,7 @@
   "title": "Animals (Interfaces)",
   "topic": "OOP",
   "difficulty": "Medium",
-  "order": 6,
+  "order": 9,
   "hints": [
     "interface Animal { String name(); String sound(); }",
     "Methods that implement an interface must be public: public String sound() { return \"Woof\"; }",

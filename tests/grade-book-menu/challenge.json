@@ -2,12 +2,13 @@
   "title": "Grade Book Menu",
   "topic": "Tests",
   "skills": [
-    "Variables",
+    "Basics",
     "Conditionals",
     "Loops",
-    "Data Structures",
+    "Collections",
     "Methods"
   ],
+  "unit": "Collections",
   "difficulty": "Medium",
   "order": 2,
   "hints": [

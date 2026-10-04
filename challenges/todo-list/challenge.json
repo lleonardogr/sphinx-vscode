@@ -1,8 +1,8 @@
 {
   "title": "To-Do List (ArrayList)",
-  "topic": "Data Structures",
+  "topic": "Collections",
   "difficulty": "Easy",
-  "order": 5,
+  "order": 1,
   "hints": [
     "Create the list once, before the loop, so it keeps its items between commands.",
     "remove(item) returns true when the item was in the list. Use that to choose the message.",

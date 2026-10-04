@@ -1,8 +1,8 @@
 {
   "title": "Weekly Study Hours (EnumMap)",
-  "topic": "Data Structures",
+  "topic": "Collections",
   "difficulty": "Medium",
-  "order": 8,
+  "order": 7,
   "hints": [
     "Loop over Day.values() once to put 0 for every day, so all seven days are printed.",
     "To add hours: map.put(day, map.get(day) + hours).",

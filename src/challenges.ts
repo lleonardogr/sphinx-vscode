@@ -6,6 +6,7 @@
 //   Solution*.java        reference solutions (not shipped; used by `npm run validate`)
 import * as fs from 'fs';
 import * as path from 'path';
+import { CUSTOM_TOPIC, UNITS, unitKey } from './path';
 import { Rule, TestCase } from './runner';
 
 export interface Challenge {
@@ -23,22 +24,24 @@ export interface Challenge {
   tests: TestCase[];
   /** Topics a mixed "Tests" challenge combines, shown as badges (optional). */
   skills: string[];
+  /** For "Tests": the unit it closes; it is listed at the end of that unit. */
+  unit?: string;
   timeLimitMs: number;
   /** Teachers can set "aiHints": false to disable AI hints for a challenge. */
   aiHints: boolean;
   dir: string;
 }
 
-export const TOPIC_ORDER = ['Variables', 'Conditionals', 'Loops', 'Data Structures', 'Strings', 'Methods', 'OOP', 'Streams', 'Tests'];
+/** The built-in units in teaching order (see path.ts). */
+export const TOPIC_ORDER: readonly string[] = UNITS;
 
-/** Group for challenges whose challenge.json has no "topic". Always listed last. */
-export const CUSTOM_TOPIC = 'Custom';
+export { CUSTOM_TOPIC };
 
 export function topicRank(topic: string): number {
   if (topic === CUSTOM_TOPIC) {
     return TOPIC_ORDER.length + 1;
   }
-  const i = TOPIC_ORDER.indexOf(topic);
+  const i = TOPIC_ORDER.indexOf(unitKey(topic) ?? topic);
   return i === -1 ? TOPIC_ORDER.length : i;
 }
 
@@ -66,6 +69,7 @@ export function loadChallenge(dir: string): Challenge {
     mustNotContain: meta.mustNotContain ?? [],
     tests: meta.tests,
     skills: Array.isArray(meta.skills) ? meta.skills.filter((s: unknown) => typeof s === 'string') : [],
+    unit: typeof meta.unit === 'string' && meta.unit.trim() ? meta.unit.trim() : undefined,
     timeLimitMs: meta.timeLimitMs ?? 5000,
     aiHints: meta.aiHints !== false,
     dir,

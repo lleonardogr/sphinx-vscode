@@ -291,6 +291,15 @@
     } else if (msg.type === 'solved') {
       const badge = document.getElementById('solved-badge');
       if (badge) badge.hidden = false;
+      // Offer the next step of the learning path right in the success banner.
+      const success = results.querySelector('.banner.success');
+      if (msg.next && success && !success.querySelector('.next-step')) {
+        const button = document.createElement('button');
+        button.className = 'primary next-step';
+        button.textContent = msg.next.quiz ? `Next: quiz · ${msg.next.title} →` : `Next: ${msg.next.title} →`;
+        button.addEventListener('click', () => vscode.postMessage({ type: 'next' }));
+        success.appendChild(button);
+      }
     }
   });
 

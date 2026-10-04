@@ -2,7 +2,7 @@
   "title": "Power (Method)",
   "topic": "Methods",
   "difficulty": "Medium",
-  "order": 2,
+  "order": 4,
   "hints": [
     "A method has a return type, a name and parameters: long power(int base, int exponent) { ... } (classic Java adds static in front)",
     "Start with long result = 1; and multiply it by base, exponent times.",

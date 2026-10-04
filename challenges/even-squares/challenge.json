@@ -2,7 +2,7 @@
   "title": "Even Squares",
   "topic": "Streams",
   "difficulty": "Easy",
-  "order": 1,
+  "order": 2,
   "hints": [
     "Build the pipeline step by step: first print the stream of numbers, then add filter, then map.",
     "n -> n % 2 == 0 is a lambda: a small function that receives n and returns true or false.",

@@ -2,7 +2,7 @@
   "title": "Shapes (Inheritance)",
   "topic": "OOP",
   "difficulty": "Medium",
-  "order": 5,
+  "order": 8,
   "hints": [
     "Copy the structure of Circle: fields, a constructor, name() and area().",
     "extends Shape means a Square IS a Shape, so you can write: Shape shape = new Square(3);",

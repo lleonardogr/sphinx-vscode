@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { Challenge } from './challenges';
 import { Progress } from './progress';
+import { TESTS_TOPIC, unitName } from './path';
 
 export type PanelAction =
   | { type: 'run' }
@@ -11,6 +12,7 @@ export type PanelAction =
   | { type: 'aiSetup' }
   | { type: 'reset' }
   | { type: 'openCode' }
+  | { type: 'next' }
   | { type: 'goto'; line: number; column: number };
 
 /** Extra information shown when the challenge is a question of an exam. */
@@ -25,7 +27,7 @@ export interface PanelExamInfo {
   finished: boolean;
 }
 
-const ACTIONS = new Set(['run', 'submit', 'terminal', 'custom', 'aiHint', 'aiSetup', 'reset', 'openCode', 'goto']);
+const ACTIONS = new Set(['run', 'submit', 'terminal', 'custom', 'aiHint', 'aiSetup', 'reset', 'openCode', 'goto', 'next']);
 
 function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -209,7 +211,7 @@ export class ChallengePanel {
       <span id="solved-badge" class="badge solved" ${solved ? '' : 'hidden'}>✓ Solved</span>
     </div>
     <div class="meta">
-      <span class="badge topic">${escapeHtml(c.topic)}</span>${t ? `
+      <span class="badge topic">${escapeHtml(c.topic === TESTS_TOPIC ? 'Test' : unitName(c.topic))}</span>${t ? `
       <span class="badge">${t.points} points</span>` : ''}
       <span class="badge difficulty ${escapeHtml(c.difficulty.toLowerCase())}">${escapeHtml(c.difficulty)}</span>${c.skills.length ? `
       <span class="skills" title="Topics this challenge combines">Mixes: ${c.skills.map((s) => `<span class="badge skill">${escapeHtml(s)}</span>`).join('')}</span>` : ''}

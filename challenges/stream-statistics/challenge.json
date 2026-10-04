@@ -2,7 +2,7 @@
   "title": "Stream Statistics",
   "topic": "Streams",
   "difficulty": "Easy",
-  "order": 2,
+  "order": 3,
   "hints": [
     "Turn the line into an IntStream with Arrays.stream(...).mapToInt(Integer::parseInt).",
     "Call .summaryStatistics() on it and keep the result in a variable.",

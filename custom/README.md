@@ -1,6 +1,6 @@
 # Custom challenge examples
 
-These challenges show what a **custom challenge** looks like: one written by a teacher or student instead of being part of the main course. Their `challenge.json` files have **no `topic`**, so they appear in the **Custom** folder at the bottom of the Sphynx sidebar.
+These challenges show what a **custom challenge** looks like: one written by a teacher or student instead of being part of the main course. Their `challenge.json` files have **no `topic`**, so they appear in the **Custom** section at the bottom of the Sphynx sidebar, together with any quizzes and tests that belong to no unit.
 
 | Challenge | Shows |
 |-----------|-------|
