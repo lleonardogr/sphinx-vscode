@@ -42,6 +42,7 @@ Students pick a challenge from the **Tech Challenges** sidebar. The problem stat
 - **AI hints (optional, off by default)**: an AI tutor gives one hint at a time about your current code, without writing the solution. It works with a **local model** (Ollama, LM Studio: free and private), **your own API key** (Anthropic Claude or any OpenAI-compatible API), or VS Code's language models (GitHub Copilot). API keys are stored in VS Code's encrypted secret storage. See [AI hints](docs/ai-hints.md).
 - **Tests**: bigger challenges that **mix several topics** in one program, such as a console app with a menu (`1. Add`, `2. List`, `0. Exit`). Each one shows the skills it combines, and is graded by feeding it whole sequences of menu choices.
 - **Exams**: timed, graded sets of questions with a countdown, limited submissions, partial credit and a results file to hand in. An exam can be **open** (hints, AI and the internet allowed) or **closed** (hints and AI off; pastes and time outside VS Code are recorded). Teachers re-grade the results files with **Verify Exam Results**. See [Exams](docs/exams.md).
+- **Generate with AI**: draft a new challenge, a mixed test or a whole exam with the same local or remote AI provider. Every draft is checked before it's saved: the expected outputs come from running the AI's reference solution, the two solutions must agree, and errors go back to the AI to fix. See [Generate with AI](docs/creating-challenges.md#generate-with-ai).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
 - **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/52 solved` counter in the status bar.
 
@@ -138,6 +139,8 @@ For a classroom without internet access, AI hints can use a model running on eac
 
 Everything you need is in **[docs/creating-challenges.md](docs/creating-challenges.md)**: a 5-minute quick start, the file format, writing tests, the rules cookbook, validating, and sharing challenges with your class without rebuilding the extension.
 
+Or let AI draft one: **Tech Challenges: Generate with AI…** writes a challenge, test or exam and validates it before saving.
+
 In short: run **Tech Challenges: Create New Challenge…**, edit the generated files, then run **Tech Challenges: Validate Challenges in a Folder…** to check everything and fill in the expected outputs. Challenges without a `topic` appear in the **Custom** group. The [`custom/`](custom/) folder has three examples you can copy.
 
 ### Give an exam
@@ -150,7 +153,7 @@ Write an `exam.json` (title, duration, open or closed, submissions per question,
 - [ ] Support more languages (Python, JavaScript, C, …) through a pluggable runner per language
 - [ ] More topics (collections, recursion, exceptions, algorithms)
 - [x] AI hints tailored to the student's code (local model or your own API key)
-- [ ] AI help for writing new challenges
+- [x] AI help for writing new challenges, tests and exams
 - [ ] Publish to the VS Code Marketplace
 
 ## Development

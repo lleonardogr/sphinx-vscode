@@ -124,6 +124,12 @@
         "icon": "$(new-file)"
       },
       {
+        "command": "techChallenges.generateWithAi",
+        "title": "Generate with AI (Challenge, Test or Exam)…",
+        "category": "Tech Challenges",
+        "icon": "$(sparkle)"
+      },
+      {
         "command": "techChallenges.validateChallenges",
         "title": "Validate Challenges in a Folder…",
         "category": "Tech Challenges",
@@ -164,6 +170,11 @@
       "view/title": [
         {
           "command": "techChallenges.createChallenge",
+          "when": "view == techChallenges.list",
+          "group": "navigation@0"
+        },
+        {
+          "command": "techChallenges.generateWithAi",
           "when": "view == techChallenges.list",
           "group": "navigation@0"
         },

@@ -55,6 +55,8 @@ For each hint, the extension sends:
 
 **Hidden test inputs are never sent**, so the AI can't reveal them. Nothing else from your computer is sent.
 
+The same provider is used by **Generate with AI**, which drafts new challenges, tests and exams for teachers. For that, it sends only what you type in the request, the topic and difficulty, and the titles of the challenges you already have, so it picks something new. See [Generate with AI](creating-challenges.md#generate-with-ai).
+
 ## Settings
 
 | Setting | Description |

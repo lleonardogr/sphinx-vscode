@@ -3,6 +3,7 @@
 This guide is for anyone who wants to write challenges for Tech Challenges: teachers preparing a class, students practising, or contributors to this repository. You don't need to know TypeScript or build the extension. A JDK and VS Code are enough.
 
 - [Quick start: your first challenge in 5 minutes](#quick-start-your-first-challenge-in-5-minutes)
+- [Generate with AI](#generate-with-ai)
 - [How a challenge works](#how-a-challenge-works)
 - [The files](#the-files)
 - [Writing tests](#writing-tests)
@@ -34,7 +35,37 @@ You need VS Code with the Tech Challenges extension and a **JDK 25+** (`javac -v
 6. **Generate the expected outputs.** Run **Tech Challenges: Validate Challenges in a Folder…** and choose **Validate and fill in expected outputs**. Your `Solution.java` runs on each input, and its output is saved into `challenge.json`.
 7. **Check the generated outputs**, then try the challenge yourself from the sidebar, the way a student would.
 
-That's it. The rest of this guide explains each part in detail.
+That's it. The rest of this guide explains each part in detail. Prefer a first draft from AI? See [Generate with AI](#generate-with-ai).
+
+---
+
+## Generate with AI
+
+If you have set up an AI provider in [AI hints](ai-hints.md), it can draft a **challenge**, a **test** (a bigger mixed challenge) or a whole **exam** for you. A local model (Ollama, LM Studio) keeps everything on your computer. A remote one (Anthropic, an OpenAI-compatible API, VS Code's language models) usually writes better exercises.
+
+1. Run **Tech Challenges: Generate with AI (Challenge, Test or Exam)…**, or click the ✨ button at the top of the Tech Challenges sidebar.
+2. Choose what to create, then answer a few questions:
+   - **Challenge**: topic, difficulty, and what it should practise ("a `while` loop that counts the digits of a number, including negatives").
+   - **Test**: what the menu app should do ("a library app to add, borrow and return books") and the difficulty.
+   - **Exam**: what it covers, the number of questions (2–5), the time limit and the mode (open or closed). The AI plans the exam, then writes each question as a **new, private question** inside the exam folder.
+3. Choose the folder to save it in. It's added to `techChallenges.extraChallengePaths` so it appears in the sidebar.
+
+The descriptions and hints are written in the language of `techChallenges.ai.responseLanguage` (or VS Code's language).
+
+**You don't have to trust the AI's answers**, because every draft is checked before it's saved:
+
+- The starters must compile.
+- The **expected outputs are never written by the AI**: they come from running its `Solution.java` on each test input.
+- `Solution.classic.java` must print exactly the same output, and both solutions must follow the challenge's rules.
+- When something fails, the errors are sent back to the AI to fix, up to 3 attempts. The "Tech Challenges" output shows each step.
+
+- It also rejects a solution that prints nothing or the same output for every input (it ignores the input), and starters that already pass every test (they give the solution away).
+
+If a challenge still has problems after 3 attempts, you can save it as a draft and fix it yourself. Exam questions that fail are left out of the exam.
+
+**Model size matters.** Writing a working exercise, with two solutions that agree, is much harder than giving a hint. Very small local models (around 1B parameters, such as `gemma3:1b`) follow the format but usually write programs that ignore the input, so their drafts fail the checks. Use at least a 3B–7B model, preferably one trained for code (for example `qwen2.5-coder:3b` or `qwen2.5-coder:7b` in Ollama), or a remote provider. Avoid "thinking" models such as `qwen3` for generation on a laptop: they reason at length before answering, which can take many minutes and fill Ollama's context window before any answer. Small models are still fine for AI hints.
+
+**Always review what it writes** before giving it to students. Validation proves that the solutions agree with each other, not that the task is well explained or at the right level. Generating needs a JDK, the same as **Validate Challenges**.
 
 ---
 
