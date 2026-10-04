@@ -1,0 +1,53 @@
+{
+  "title": "Collatz Steps (while)",
+  "topic": "Loops",
+  "difficulty": "Medium",
+  "order": 7,
+  "hints": [
+    "The loop condition is simply n != 1.",
+    "Inside the loop, update n (even: n / 2, odd: 3 * n + 1), then add 1 to steps.",
+    "The values can grow far beyond the starting number, past what an int can hold. That's why n is a long."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bwhile\\b",
+      "message": "Use a while loop."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\bfor\\b",
+      "message": "Use a while loop here (not for): the number of steps isn't known in advance."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\n",
+      "output": "8\n"
+    },
+    {
+      "input": "1\n",
+      "output": "0\n"
+    },
+    {
+      "input": "27\n",
+      "output": "111\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n",
+      "output": "1\n",
+      "hidden": true
+    },
+    {
+      "input": "837799\n",
+      "output": "524\n",
+      "hidden": true
+    },
+    {
+      "input": "1000000\n",
+      "output": "152\n",
+      "hidden": true
+    }
+  ]
+}

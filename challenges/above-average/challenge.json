@@ -1,0 +1,42 @@
+{
+  "title": "Above Average (for-each)",
+  "topic": "Loops",
+  "difficulty": "Easy",
+  "order": 9,
+  "hints": [
+    "First loop: for (int number : numbers) { sum += number; }",
+    "Divide as a double, or you lose the decimals: (double) sum / n.",
+    "Second loop: count the numbers where number > average (strictly greater)."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bfor\\s*\\(\\s*(final\\s+)?[\\w<>\\[\\]]+\\s+\\w+\\s*:",
+      "message": "Use an enhanced for loop (for-each): for (int number : numbers)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n1 2 3 4 5\n",
+      "output": "Average: 3.00\nAbove average: 2\n"
+    },
+    {
+      "input": "4\n10 10 10 10\n",
+      "output": "Average: 10.00\nAbove average: 0\n"
+    },
+    {
+      "input": "1\n7\n",
+      "output": "Average: 7.00\nAbove average: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n-5 0 5\n",
+      "output": "Average: 0.00\nAbove average: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n1 1 1 1 1 100\n",
+      "output": "Average: 17.50\nAbove average: 1\n",
+      "hidden": true
+    }
+  ]
+}

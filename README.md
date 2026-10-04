@@ -14,13 +14,13 @@ HackerRank / LeetCode-style coding challenges right inside VS Code, running full
 
 Students pick a challenge from the **Tech Challenges** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
 
-## Topics included (44 challenges)
+## Topics included (49 challenges)
 
 | Topic        | Challenges |
 |--------------|------------|
 | Variables    | Hello World · Greeting with Variables · Arithmetic Operators · Rectangle Area · Celsius to Fahrenheit |
-| Conditionals | Even or Odd · Largest of Three · Grade Calculator · Leap Year · Day of the Week (`switch`) |
-| Loops        | Count to N · Sum 1..N · Multiplication Table · Factorial · FizzBuzz · Sum of Digits (`while`) |
+| Conditionals | Even or Odd · Largest of Three · Grade Calculator (`if`/`else if`) · Leap Year · Day of the Week (`switch` statement) · Weather Label (ternary `? :`) · Days in a Month (switch expression) |
+| Loops        | Count to N (`for`) · Sum 1..N · Multiplication Table · Factorial · FizzBuzz · Sum of Digits (`while`) · Collatz Steps (`while`) · Sum Until Zero (`do-while`) · Above Average (for-each) |
 | Data Structures | Array Sum · Largest and Smallest · Reverse an Array · Count Occurrences · To-Do List (`ArrayList`) · Unique Words (`HashSet`) · Word Frequency (`HashMap`) · Weekly Hours (`EnumMap`) · Balanced Brackets (stack) |
 | Strings      | Reverse a String · Count Vowels · Palindrome |
 | Methods      | Prime Numbers · Power |
@@ -40,7 +40,7 @@ Students pick a challenge from the **Tech Challenges** sidebar. The problem stat
 - **Syntax requirements**: a challenge can require constructs (for example "use a `switch`", "create `class Square extends Shape`" or "keep `balance` private") or forbid shortcuts (`Math.max`, `reverse()`, `Math.pow`).
 - **AI hints (optional, off by default)**: an AI tutor gives one hint at a time about your current code, without writing the solution. It works with a **local model** (Ollama, LM Studio: free and private), **your own API key** (Anthropic Claude or any OpenAI-compatible API), or VS Code's language models (GitHub Copilot). API keys are stored in VS Code's encrypted secret storage. See [AI hints](docs/ai-hints.md).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
-- **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/44 solved` counter in the status bar.
+- **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/49 solved` counter in the status bar.
 
 ## Getting started (students)
 
@@ -81,10 +81,9 @@ If you can only use JDK 17–24, that works too: the extension offers to switch 
 Your program reads its input and prints the answer, exactly like HackerRank. Both styles work:
 
 ```java
-// Modern Java (JDK 25+), the default starter code
+// Modern Java (JDK 25+)
 void main() {
-    Scanner scanner = new Scanner(System.in);   // no import needed in compact source files
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln());      // IO.readln() reads one line
     IO.println(n * 2);
 }
 ```
@@ -101,6 +100,8 @@ public class Main {
     }
 }
 ```
+
+In modern Java, `IO.readln()` reads a whole line. For several numbers on one line, split it (`IO.readln().split(" ")`) or use `new Scanner(System.in)`, which compact source files can use without an import.
 
 The file is always `Main.java`. In classic Java, the public class must be named `Main`. Other classes (OOP challenges) go in the same file, without `public`.
 
