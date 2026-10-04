@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-03
+
 ### Added
 
 - One challenge per language construct, each enforced by a rule:
@@ -59,7 +61,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/lleonardogr/tech-challenges-vscode/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/lleonardogr/tech-challenges-vscode/releases/tag/v0.1.0
