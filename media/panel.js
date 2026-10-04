@@ -268,6 +268,26 @@
     } else if (msg.type === 'result') {
       setBusy(false);
       results.innerHTML = renderOutcome(msg.mode, msg.outcome);
+    } else if (msg.type === 'examScore') {
+      results.insertAdjacentHTML(
+        'afterbegin',
+        banner(msg.earned >= msg.points ? 'success' : 'warning', `This submission: ${msg.earned} / ${msg.points} points`, `<p>${msg.passed} of ${msg.total} tests passed.</p>`),
+      );
+    } else if (msg.type === 'examStatus') {
+      const status = document.getElementById('exam-status');
+      if (status) status.textContent = msg.text;
+      const submit = /** @type {HTMLButtonElement | null} */ (document.querySelector('button[data-action="submit"]'));
+      if (submit) {
+        submit.textContent = `✔ Submit (${msg.submissionsLeft} left)`;
+        submit.disabled = msg.submissionsLeft === 0 || msg.finished || !msg.started;
+      }
+      if (msg.finished) {
+        document.querySelectorAll('button[data-action="run"], button[data-action="terminal"], #run-custom').forEach((b) => {
+          /** @type {HTMLButtonElement} */ (b).disabled = true;
+        });
+        const bannerEl = document.getElementById('exam-banner');
+        if (bannerEl) bannerEl.className = 'banner success';
+      }
     } else if (msg.type === 'solved') {
       const badge = document.getElementById('solved-badge');
       if (badge) badge.hidden = false;

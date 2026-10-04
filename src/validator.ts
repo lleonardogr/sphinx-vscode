@@ -7,6 +7,7 @@ import * as os from 'os';
 import * as path from 'path';
 import { Challenge, loadChallenges } from './challenges';
 import { RunOutcome, RunRequest, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
+import { findExamDirs, loadExams } from './exams';
 
 export interface ChallengeReport {
   id: string;
@@ -29,6 +30,8 @@ export interface ValidateOptions {
   /** Fill every test's "output" from the reference solution and save challenge.json. */
   generate?: boolean;
   javaHome?: string;
+  /** Extra challenge folders used only to resolve test questions that reference a challenge by id (e.g. the built-in ones). */
+  referenceRoots?: string[];
   /** Called after each challenge, e.g. to print progress. */
   onChallenge?: (report: ChallengeReport) => void;
 }
@@ -123,7 +126,13 @@ async function validateOne(c: Challenge, javacVersion: number | undefined, opts:
 }
 
 export async function validateChallenges(roots: string[], opts: ValidateOptions = {}): Promise<ValidationReport> {
-  const { challenges, errors } = loadChallenges(roots);
+  const practice = loadChallenges(roots);
+  // Private questions live in folders next to an exam.json; validate them too, plus the exam files themselves.
+  const examDirs = findExamDirs(roots);
+  const questions = examDirs.length ? loadChallenges(examDirs) : { challenges: [], errors: [] };
+  const challenges = [...practice.challenges, ...questions.challenges];
+  const references = opts.referenceRoots?.length ? loadChallenges(opts.referenceRoots).challenges : [];
+  const errors = [...practice.errors, ...questions.errors, ...loadExams(roots, [...references, ...practice.challenges]).errors];
   const javacVersion = await javacMajorVersion(opts.javaHome);
   const counters = { checked: 0, skipped: 0 };
   const reports: ChallengeReport[] = [];

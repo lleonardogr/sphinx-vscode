@@ -1,0 +1,12 @@
+{
+  "title": "Sample Exam: Java Basics",
+  "description": "An example closed exam with two built-in challenges and one private question. Copy this folder to create your own.",
+  "durationMinutes": 30,
+  "mode": "closed",
+  "maxSubmissions": 3,
+  "questions": [
+    { "id": "even-or-odd", "points": 20 },
+    { "id": "fizzbuzz", "points": 30 },
+    { "id": "sum-of-evens", "points": 50 }
+  ]
+}

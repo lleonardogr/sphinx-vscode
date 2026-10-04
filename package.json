@@ -1,7 +1,7 @@
 {
   "name": "tech-challenges",
   "displayName": "Tech Challenges",
-  "description": "LeetCode/HackerRank-style coding challenges inside VS Code, with optional AI hints from a local model or your own API key. Starts with Java: variables, conditionals, loops, arrays, strings, methods and OOP.",
+  "description": "LeetCode/HackerRank-style coding challenges inside VS Code, with mixed-skill tests, timed exams and optional AI hints from a local model or your own API key. Starts with Java: variables, conditionals, loops, arrays, strings, methods and OOP.",
   "version": "0.3.0",
   "publisher": "class-plugin",
   "license": "MIT",
@@ -128,6 +128,36 @@
         "title": "Validate Challenges in a Folder…",
         "category": "Tech Challenges",
         "icon": "$(checklist)"
+      },
+      {
+        "command": "techChallenges.startExam",
+        "title": "Start Exam…",
+        "category": "Tech Challenges",
+        "icon": "$(play)"
+      },
+      {
+        "command": "techChallenges.finishExam",
+        "title": "Finish Exam…",
+        "category": "Tech Challenges",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "techChallenges.openExamResults",
+        "title": "Open Exam Results",
+        "category": "Tech Challenges",
+        "icon": "$(output)"
+      },
+      {
+        "command": "techChallenges.saveExamResults",
+        "title": "Save a Copy of Exam Results…",
+        "category": "Tech Challenges",
+        "icon": "$(save-as)"
+      },
+      {
+        "command": "techChallenges.verifyExamResults",
+        "title": "Verify Students' Exam Results… (Teachers)",
+        "category": "Tech Challenges",
+        "icon": "$(verified)"
       }
     ],
     "menus": {
@@ -155,12 +185,48 @@
           "command": "techChallenges.setupAi",
           "when": "view == techChallenges.list",
           "group": "ai"
+        },
+        {
+          "command": "techChallenges.verifyExamResults",
+          "when": "view == techChallenges.list",
+          "group": "authoring"
         }
       ],
       "view/item/context": [
         {
           "command": "techChallenges.resetCode",
           "when": "view == techChallenges.list && viewItem == challenge"
+        },
+        {
+          "command": "techChallenges.startExam",
+          "when": "view == techChallenges.list && viewItem == exam-notStarted",
+          "group": "inline"
+        },
+        {
+          "command": "techChallenges.startExam",
+          "when": "view == techChallenges.list && viewItem == exam-notStarted"
+        },
+        {
+          "command": "techChallenges.finishExam",
+          "when": "view == techChallenges.list && viewItem == exam-active",
+          "group": "inline"
+        },
+        {
+          "command": "techChallenges.finishExam",
+          "when": "view == techChallenges.list && viewItem == exam-active"
+        },
+        {
+          "command": "techChallenges.openExamResults",
+          "when": "view == techChallenges.list && viewItem == exam-finished",
+          "group": "inline"
+        },
+        {
+          "command": "techChallenges.openExamResults",
+          "when": "view == techChallenges.list && viewItem == exam-finished"
+        },
+        {
+          "command": "techChallenges.saveExamResults",
+          "when": "view == techChallenges.list && viewItem == exam-finished"
         }
       ],
       "editor/title": [
@@ -281,6 +347,10 @@
       {
         "fileMatch": "challenge.json",
         "url": "./schemas/challenge.schema.json"
+      },
+      {
+        "fileMatch": "exam.json",
+        "url": "./schemas/exam.schema.json"
       }
     ]
   },

@@ -51,6 +51,8 @@ h4 {
   margin: 6px 0 10px;
   display: flex;
   gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .badge {
@@ -69,6 +71,18 @@ h4 {
 .badge.easy { color: var(--pass); border-color: var(--pass); }
 .badge.medium { color: var(--warn); border-color: var(--warn); }
 .badge.hard { color: var(--fail); border-color: var(--fail); }
+
+.skills {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  font-size: 0.8em;
+  opacity: 0.85;
+  margin-left: 6px;
+}
+
+.skills .badge { font-size: 1em; opacity: 1; }
 
 .toolbar {
   display: flex;
