@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-05
+
 ### Changed
 
 - **The learning path**: the sidebar now lists numbered **units** in teaching order (1 · Basics, 2 · Conditionals, 3 · Loops, 4 · Strings & Characters, 5 · Methods, 6 · Arrays, 7 · Collections, 8 · Object-Oriented Programming, 11 · Lambdas & Streams), so every challenge only uses what earlier units taught.
@@ -139,7 +141,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.3.0...v0.4.0
