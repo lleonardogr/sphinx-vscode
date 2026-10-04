@@ -99,6 +99,10 @@ Copy the built-in example from the repository's [`exams/sample-exam`](../exams/s
 
 ## Giving the exam to your class
 
+The simplest way is to **zip the exam folder** and send it. **Remove the `Solution*.java` files** first. Students click **Import** (⤓) at the top of the Tech Challenges sidebar and choose the zip. If they forget, the import offers to remove any solutions it finds. See [Sharing challenges with students](creating-challenges.md#sharing-challenges-with-students).
+
+To share a live folder instead:
+
 1. Put your exam folder inside a folder you share with the class, for example `java-exams/week-3-exam/`.
 2. **Remove the `Solution*.java` files** from the copy you share.
 3. Students add the parent folder to their settings (or you pre-configure it):
@@ -107,7 +111,7 @@ Copy the built-in example from the repository's [`exams/sample-exam`](../exams/s
    "techChallenges.extraChallengePaths": ["/path/to/java-exams"]
    ```
 
-4. The exam appears under **Exams** in their sidebar. Tell them when to start. The clock starts when each student clicks **Start exam…**.
+4. Then the exam appears under **Exams** in their sidebar. Tell them when to start. The clock starts when each student clicks **Start exam…**.
 
 A student can take each exam **once**. Their progress is stored in VS Code on their computer.
 

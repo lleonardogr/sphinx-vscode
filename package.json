@@ -124,6 +124,17 @@
         "icon": "$(new-file)"
       },
       {
+        "command": "techChallenges.importContent",
+        "title": "Import Challenges, Tests or Exams…",
+        "category": "Tech Challenges",
+        "icon": "$(desktop-download)"
+      },
+      {
+        "command": "techChallenges.removeImported",
+        "title": "Remove Imported Challenges, Tests or Exams…",
+        "category": "Tech Challenges"
+      },
+      {
         "command": "techChallenges.validateChallenges",
         "title": "Validate Challenges in a Folder…",
         "category": "Tech Challenges",
@@ -162,6 +173,16 @@
     ],
     "menus": {
       "view/title": [
+        {
+          "command": "techChallenges.importContent",
+          "when": "view == techChallenges.list",
+          "group": "navigation@0"
+        },
+        {
+          "command": "techChallenges.removeImported",
+          "when": "view == techChallenges.list",
+          "group": "import"
+        },
         {
           "command": "techChallenges.createChallenge",
           "when": "view == techChallenges.list",
@@ -371,6 +392,7 @@
     "typescript": "^5.4.0"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.131.0"
+    "@anthropic-ai/sdk": "^0.131.0",
+    "fflate": "^0.8.3"
   }
 }

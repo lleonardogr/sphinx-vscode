@@ -325,16 +325,32 @@ On a JDK older than 25, only `*.classic.java` files are checked, and the validat
 
 You don't have to rebuild the extension to hand out challenges.
 
+### The easy way: Import
+
+1. Put your challenge, test and exam folders in one parent folder, for example `java-week-3/`, and zip it. (Zipping a single challenge or exam folder works too.)
+2. Send the zip to your class: email, your school's learning platform, a shared drive or a USB stick.
+3. Students click the **Import** button (⤓) at the top of the Tech Challenges sidebar, or run **Tech Challenges: Import Challenges, Tests or Exams…**, and choose the zip or the folder.
+
+The extension finds every folder with a `challenge.json` or an `exam.json` inside, checks that each one loads, and **copies** them into its own library. They keep working after the zip is deleted. Importing the same package again offers to replace the older version, and progress is kept.
+
+- If the package contains `Solution*.java` files, the import asks whether to **remove** them (students) or **keep** them (teachers, who need them to validate). You can still remove them from the zip before sharing, which is safer.
+- An imported item with the same id as a built-in one is renamed (for example `fizzbuzz-imported`), so both stay available.
+- **Tech Challenges: Remove Imported Challenges, Tests or Exams…** takes them out of the sidebar again. Students' own code files are kept.
+
+### Sharing a live folder
+
+Use this when you want students to get your changes without importing again, for example from a shared drive or a git repository they pull.
+
 1. Put your challenge folders in one parent folder, for example `java-week-3/`.
 2. **Remove the `Solution*.java` files** from the copy you share. If the folder is a git repository, keep the solutions in a separate private branch or repository.
-3. Share the folder with your class: a zip file, a shared drive, or a git repository they clone.
+3. Share the folder with your class: a shared drive, or a git repository they clone.
 4. Students add the folder to their settings, then click the refresh button in the Tech Challenges sidebar:
 
    ```json
    "techChallenges.extraChallengePaths": ["/path/to/java-week-3"]
    ```
 
-If a shared challenge has the same id as a built-in one, the shared one replaces it. You can use that to adapt a built-in challenge for your class.
+With a live folder, a challenge with the same id as a built-in one replaces it. You can use that to adapt a built-in challenge for your class.
 
 Students' progress is stored per challenge id, so keep ids stable after sharing.
 

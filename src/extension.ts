@@ -9,6 +9,7 @@ import { Progress } from './progress';
 import { RunOutcome, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
 import { runInTerminal } from './terminalRunner';
 import { ExamManager } from './examSession';
+import { importContent, libraryRoots, removeImported } from './importer';
 import { formatVerification, verifyResults } from './examVerify';
 import { ExamDefinition, ExamQuestion, loadExams, parseExamChallengeId } from './exams';
 import { ChallengeNode, ChallengeTreeProvider } from './treeView';
@@ -69,7 +70,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
   function reload(): void {
     const extra = config().get<string[]>('extraChallengePaths', []);
-    const builtIn = ['challenges', 'custom', 'tests', 'exams'].map((dir) => path.join(context.extensionPath, dir));
+    const builtIn = [
+      ...['challenges', 'custom', 'tests', 'exams'].map((dir) => path.join(context.extensionPath, dir)),
+      ...libraryRoots(libraryDir()),
+    ];
     const result = loadChallenges([...builtIn, ...extra]);
     challenges = result.challenges;
     const examResult = loadExams([...builtIn, ...extra], challenges);
@@ -101,6 +105,11 @@ export function activate(context: vscode.ExtensionContext): void {
       return path.join(ws.uri.fsPath, 'tech-challenges');
     }
     return path.join(context.globalStorageUri.fsPath, 'solutions');
+  }
+
+  /** Where imported challenges, tests and exams are copied. */
+  function libraryDir(): string {
+    return path.join(context.globalStorageUri.fsPath, 'library');
   }
 
   function examCodeDir(examId: string): string {
@@ -516,6 +525,14 @@ export function activate(context: vscode.ExtensionContext): void {
     reload,
   };
 
+  const importDeps = {
+    libraryDir: libraryDir(),
+    output,
+    challenges: () => challenges,
+    exams: () => exams,
+    reload,
+  };
+
   async function resolveExam(arg: unknown, placeHolder: string, filter: (t: ExamDefinition) => boolean): Promise<ExamDefinition | undefined> {
     if (typeof arg === 'string') {
       return exams.find((t) => t.id === arg);
@@ -618,6 +635,8 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     vscode.commands.registerCommand('techChallenges.verifyExamResults', verifyExamResultsCommand),
     vscode.commands.registerCommand('techChallenges.createChallenge', () => createChallenge(authoringDeps)),
+    vscode.commands.registerCommand('techChallenges.importContent', () => importContent(importDeps)),
+    vscode.commands.registerCommand('techChallenges.removeImported', () => removeImported(importDeps)),
     vscode.commands.registerCommand('techChallenges.validateChallenges', () => validateFolder(authoringDeps)),
     vscode.commands.registerCommand('techChallenges.resetProgress', async () => {
       const answer = await vscode.window.showWarningMessage(

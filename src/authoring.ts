@@ -16,7 +16,7 @@ interface AuthoringDeps {
 
 const config = () => vscode.workspace.getConfiguration('techChallenges');
 
-function slugify(title: string): string {
+export function slugify(title: string): string {
   return title
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
