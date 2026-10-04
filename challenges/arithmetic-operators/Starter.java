@@ -1,11 +1,7 @@
-import java.util.Scanner;
+void main() {
+    Scanner scanner = new Scanner(System.in);
+    int a = scanner.nextInt();
+    int b = scanner.nextInt();
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int a = scanner.nextInt();
-        int b = scanner.nextInt();
-
-        // TODO: print the five lines
-    }
+    // TODO: print the five lines
 }

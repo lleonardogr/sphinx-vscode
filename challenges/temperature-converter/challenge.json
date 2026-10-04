@@ -5,7 +5,7 @@
   "order": 5,
   "hints": [
     "Watch out: 9 / 5 in Java is 1, because both numbers are int! Use 9.0 / 5, or multiply by the double first: celsius * 9 / 5.",
-    "You can print two values with one printf: System.out.printf(\"%.1f C = %.1f F%n\", c, f);"
+    "You can format two values at once: IO.println(\"%.1f C = %.1f F\".formatted(c, f));"
   ],
   "tests": [
     {

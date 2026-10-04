@@ -1,0 +1,49 @@
+{
+  "title": "Rectangle Class",
+  "topic": "OOP",
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "Methods use the object's own fields: int area() { return width * height; }",
+    "isSquare() can return the comparison directly: return width == height;",
+    "Joining a boolean with text prints true or false."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\bclass\\s+Rectangle\\b",
+      "message": "Create a class named Rectangle."
+    },
+    {
+      "pattern": "\\bint\\s+area\\s*\\(\\s*\\)",
+      "message": "Give Rectangle a method int area()."
+    },
+    {
+      "pattern": "\\bint\\s+perimeter\\s*\\(\\s*\\)",
+      "message": "Give Rectangle a method int perimeter()."
+    },
+    {
+      "pattern": "\\bboolean\\s+isSquare\\s*\\(\\s*\\)",
+      "message": "Give Rectangle a method boolean isSquare()."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2\n3 4\n5 5\n",
+      "output": "Area: 12, Perimeter: 14, Square: false\nArea: 25, Perimeter: 20, Square: true\n"
+    },
+    {
+      "input": "1\n10 2\n",
+      "output": "Area: 20, Perimeter: 24, Square: false\n"
+    },
+    {
+      "input": "3\n1 1\n7 3\n100 100\n",
+      "output": "Area: 1, Perimeter: 4, Square: true\nArea: 21, Perimeter: 20, Square: false\nArea: 10000, Perimeter: 400, Square: true\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n0 9\n",
+      "output": "Area: 0, Perimeter: 18, Square: false\n",
+      "hidden": true
+    }
+  ]
+}

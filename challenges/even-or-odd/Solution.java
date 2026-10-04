@@ -1,13 +1,8 @@
-import java.util.Scanner;
-
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        if (n % 2 == 0) {
-            System.out.println("Even");
-        } else {
-            System.out.println("Odd");
-        }
+void main() {
+    int n = Integer.parseInt(IO.readln().trim());
+    if (n % 2 == 0) {
+        IO.println("Even");
+    } else {
+        IO.println("Odd");
     }
 }

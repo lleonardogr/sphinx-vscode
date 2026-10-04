@@ -1,10 +1,6 @@
-import java.util.Scanner;
+void main() {
+    Scanner scanner = new Scanner(System.in);
+    int score = scanner.nextInt();
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int score = scanner.nextInt();
-
-        // TODO: print the letter grade
-    }
+    // TODO: print the letter grade
 }

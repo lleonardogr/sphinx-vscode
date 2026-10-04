@@ -1,0 +1,20 @@
+import java.util.Scanner;
+
+// TODO: create a class Rectangle with:
+//   - two int fields: width and height
+//   - a constructor Rectangle(int width, int height)
+//   - int area()          returns width × height
+//   - int perimeter()     returns 2 × (width + height)
+//   - boolean isSquare()  returns true when width equals height
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        for (int i = 0; i < n; i++) {
+            int width = scanner.nextInt();
+            int height = scanner.nextInt();
+            // TODO: create a Rectangle and print: Area: <area>, Perimeter: <perimeter>, Square: <isSquare>
+        }
+    }
+}

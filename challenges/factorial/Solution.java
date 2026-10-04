@@ -1,13 +1,8 @@
-import java.util.Scanner;
-
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        long factorial = 1;
-        for (int i = 2; i <= n; i++) {
-            factorial *= i;
-        }
-        System.out.println(factorial);
+void main() {
+    int n = Integer.parseInt(IO.readln().trim());
+    long factorial = 1;
+    for (int i = 2; i <= n; i++) {
+        factorial *= i;
     }
+    IO.println(factorial);
 }

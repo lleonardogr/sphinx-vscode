@@ -1,10 +1,6 @@
-import java.util.Scanner;
+void main() {
+    Scanner scanner = new Scanner(System.in);
+    String text = scanner.nextLine();
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String text = scanner.nextLine();
-
-        // TODO: build the reversed text with a loop and print it
-    }
+    // TODO: build the reversed text with a loop and print it
 }

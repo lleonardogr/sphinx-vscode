@@ -1,13 +1,9 @@
-import java.util.Scanner;
+void main() {
+    Scanner scanner = new Scanner(System.in);
+    String text = scanner.nextLine();
+    int vowels = 0;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String text = scanner.nextLine();
-        int vowels = 0;
+    // TODO: count the vowels
 
-        // TODO: count the vowels
-
-        System.out.println(vowels);
-    }
+    IO.println(vowels);
 }

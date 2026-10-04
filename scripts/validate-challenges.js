@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-// Checks every challenge: Starter.java must compile, and every Solution*.java must satisfy the
-// rules and pass every test. Solution.modern.java holds a Java 25+ (compact source) variant.
+// Checks every challenge: every Starter*.java must compile, and every Solution*.java must satisfy
+// the rules and pass every test. Files without ".classic" use Java 25+ syntax (compact source
+// files, IO.println) and are skipped on older JDKs; *.classic.java files work on JDK 17+.
 //
 //   npm run validate                                    validate built-in challenges
 //   node scripts/validate-challenges.js path/to/folder  validate another challenge folder
-//   node scripts/validate-challenges.js --generate      fill each test's "output" from Solution.java
+//   node scripts/validate-challenges.js --generate      fill each test's "output" from the reference solution
 //
 // Requires `npm run compile` first (it reuses the extension's runner).
 const fs = require('fs');
@@ -41,15 +42,24 @@ async function main() {
   for (const c of challenges) {
     const problems = [];
 
-    const starter = await runAs(c.starterCode, { tests: [] });
-    if (starter.kind !== 'tests') problems.push(`Starter.java: ${starter.kind}\n${starter.raw ?? starter.message ?? ''}`);
+    const files = fs.readdirSync(c.dir).sort();
+    const runnable = (f) => f.includes('.classic.') || (javacVersion ?? 0) >= 25;
 
-    // Every Solution*.java is checked. Files named Solution.modern.java use Java 25+ syntax
-    // (compact source files, IO.println) and are skipped on older JDKs.
-    const solutions = fs.readdirSync(c.dir).filter((f) => /^Solution.*\.java$/.test(f)).sort();
+    for (const starterFile of files.filter((f) => /^Starter.*\.java$/.test(f))) {
+      if (!runnable(starterFile)) continue;
+      const starter = await runAs(fs.readFileSync(path.join(c.dir, starterFile), 'utf8'), { tests: [] });
+      if (starter.kind !== 'tests') problems.push(`${starterFile}: ${starter.kind}\n${starter.raw ?? starter.message ?? ''}`);
+    }
+
+    // With --generate, the first runnable solution (Solution.java when possible) produces the
+    // expected outputs, and the other solutions are then checked against them.
+    const solutions = files
+      .filter((f) => /^Solution.*\.java$/.test(f))
+      .sort((a, b) => Number(b === 'Solution.java') - Number(a === 'Solution.java'));
     if (solutions.length === 0) problems.push('no Solution.java');
+    const generator = solutions.find(runnable);
     for (const solutionFile of solutions) {
-      if (solutionFile.includes('.modern.') && (javacVersion ?? 0) < 25) {
+      if (!runnable(solutionFile)) {
         skipped++;
         continue;
       }
@@ -61,12 +71,13 @@ async function main() {
       });
       if (outcome.kind !== 'tests') {
         problems.push(`${solutionFile}: ${outcome.kind}\n${outcome.raw ?? outcome.message ?? (outcome.messages || []).join('\n')}`);
-      } else if (generate && solutionFile === 'Solution.java') {
+      } else if (generate && solutionFile === generator) {
         const metaPath = path.join(c.dir, 'challenge.json');
         const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
         outcome.results.forEach((r, i) => {
           if (r.exitCode !== 0 || r.timedOut) problems.push(`test ${i + 1}: solution failed\n${r.stderr}`);
           meta.tests[i].output = normalizeOutput(r.actual) + '\n';
+          c.tests[i].output = meta.tests[i].output;
         });
         fs.writeFileSync(metaPath, JSON.stringify(meta, null, 2) + '\n');
       } else {
@@ -86,7 +97,7 @@ async function main() {
   }
 
   console.log(`\n${challenges.length - failures + errors.length}/${challenges.length} challenges OK (${checkedSolutions - skipped} solutions checked)`);
-  if (skipped) console.log(`⚠ Skipped ${skipped} Solution.modern.java file(s): they need JDK 25+ (found ${javacVersion ?? 'unknown'}).`);
+  if (skipped) console.log(`⚠ Skipped ${skipped} modern solution(s): they need JDK 25+ (found ${javacVersion ?? 'unknown'}). Only *.classic.java files were checked.`);
   process.exit(failures ? 1 : 0);
 }
 
