@@ -1,6 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="117 95 1020 1020">
-<g transform="translate(0,1254) scale(0.1,-0.1)" fill="currentColor" stroke="none">
-<path d="M6365 9259 c50 -14 120 -84 134 -136 6 -21 11 -63 11 -94 l0 -56 273
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="1254.000000pt" height="1254.000000pt" viewBox="0 0 1254.000000 1254.000000"
+ preserveAspectRatio="xMidYMid meet">
+
+<g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M0 6270 l0 -6270 6270 0 6270 0 0 6270 0 6270 -6270 0 -6270 0 0
+-6270z m6365 2989 c50 -14 120 -84 134 -136 6 -21 11 -63 11 -94 l0 -56 273
 -7 c149 -4 542 -13 872 -21 549 -14 601 -17 613 -33 12 -15 -19 -49 -309 -333
 l-322 -317 19 -24 c10 -13 103 -109 205 -213 307 -313 319 -327 319 -346 0
 -12 -11 -24 -26 -29 -16 -6 -183 -9 -427 -8 -221 1 -585 1 -809 0 l-408 -2 0

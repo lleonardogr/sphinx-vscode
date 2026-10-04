@@ -61,7 +61,7 @@ export class ChallengePanel {
           localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, 'media')],
         },
       );
-      this.panel.iconPath = vscode.Uri.joinPath(this.extensionUri, 'media', 'icon.svg');
+      this.panel.iconPath = vscode.Uri.joinPath(this.extensionUri, 'media', 'logo', 'icon.png');
       this.panel.onDidDispose(() => {
         this.panel = undefined;
         this.challenge = undefined;

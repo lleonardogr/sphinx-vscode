@@ -5,9 +5,9 @@
   "version": "0.2.0",
   "publisher": "class-plugin",
   "license": "MIT",
-  "icon": "media/logo/icon-256.png",
+  "icon": "media/logo/icon.png",
   "galleryBanner": {
-    "color": "#1f1f1f",
+    "color": "#0d1627",
     "theme": "dark"
   },
   "author": "lleonardogr",

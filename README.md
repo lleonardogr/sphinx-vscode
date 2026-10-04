@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="media/logo/icon-256.png" alt="Tech Challenges logo" width="128">
+  <img src="media/logo/banner.png" alt="Tech Challenges: code brackets around a mountain path with a flag at the peak" width="100%">
 </p>
 
 # Tech Challenges for VS Code
