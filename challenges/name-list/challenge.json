@@ -2,7 +2,7 @@
   "title": "Clean Up a Name List",
   "topic": "Streams",
   "difficulty": "Medium",
-  "order": 3,
+  "order": 4,
   "hints": [
     "Start with Arrays.stream(line.split(\" \")): a Stream<String> of names.",
     "Capitalize inside map with a lambda: name -> name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase()",

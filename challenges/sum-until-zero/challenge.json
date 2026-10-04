@@ -2,7 +2,7 @@
   "title": "Sum Until Zero (do-while)",
   "topic": "Loops",
   "difficulty": "Easy",
-  "order": 8,
+  "order": 4,
   "hints": [
     "Read the number inside the do { } block, so it's read before the condition is checked.",
     "The condition at the end is while (number != 0);. Don't forget the semicolon.",

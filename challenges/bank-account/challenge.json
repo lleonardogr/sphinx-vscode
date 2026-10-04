@@ -2,7 +2,7 @@
   "title": "Bank Account (Encapsulation)",
   "topic": "OOP",
   "difficulty": "Medium",
-  "order": 4,
+  "order": 6,
   "hints": [
     "private means only code inside BankAccount can read or change balance.",
     "Check the rule first, and return false early if the operation is not allowed.",

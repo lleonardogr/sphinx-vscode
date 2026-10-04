@@ -2,7 +2,7 @@
   "title": "Leap Year",
   "topic": "Conditionals",
   "difficulty": "Medium",
-  "order": 4,
+  "order": 6,
   "hints": [
     "\"Divisible by 4\" means year % 4 == 0.",
     "Combine conditions with && (and), || (or) and != (not equal).",

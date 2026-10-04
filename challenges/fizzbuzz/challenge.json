@@ -2,7 +2,7 @@
   "title": "FizzBuzz",
   "topic": "Loops",
   "difficulty": "Medium",
-  "order": 5,
+  "order": 6,
   "hints": [
     "Combine a loop with an if / else if chain.",
     "Order matters: check \"both 3 and 5\" first, otherwise 15 would print Fizz."

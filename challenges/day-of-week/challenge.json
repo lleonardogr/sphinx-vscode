@@ -2,7 +2,7 @@
   "title": "Day of the Week",
   "topic": "Conditionals",
   "difficulty": "Easy",
-  "order": 5,
+  "order": 4,
   "hints": [
     "switch (day) { case 1: ...; break; case 2: ...; break; default: ... }",
     "Don't forget break; at the end of each case, or execution falls through to the next one!",

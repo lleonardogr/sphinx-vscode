@@ -1,6 +1,6 @@
 # Quizzes
 
-A **quiz** is a set of short questions about Java: multiple choice, true or false, short answer, and "what does this code print?". Students practise quizzes from the **Quizzes** group in the sidebar, and teachers can add a quiz to an [exam](exams.md) as a graded question.
+A **quiz** is a set of short questions about Java: multiple choice, true or false, short answer, and "what does this code print?". Each unit of the learning path ends with its quiz, and teachers can add a quiz to an [exam](exams.md) as a graded question.
 
 - [Taking a quiz (students)](#taking-a-quiz-students)
 - [Writing a quiz (teachers)](#writing-a-quiz-teachers)
@@ -12,7 +12,7 @@ A **quiz** is a set of short questions about Java: multiple choice, true or fals
 
 ## Taking a quiz (students)
 
-1. Open the **Quizzes** group in the Sphynx sidebar and click a quiz.
+1. Click the quiz at the end of a unit in the Sphynx sidebar (marked **Quiz**). Quizzes that belong to no unit are in the **Custom** section.
 2. Answer the questions. Click **Check** under a question to see right away whether it's correct, with the right answer and an explanation.
 3. Click **Check all answers** at the end to get your score. Your best score is shown in the sidebar, and a quiz turns green when you get everything right.
 4. **Start over** clears your answers so you can try again.
@@ -67,7 +67,7 @@ my-quizzes/
 |-------|---------|-------------|
 | `title` | required | Shown in the sidebar and at the top of the quiz. |
 | `description` | | Shown above the questions (Markdown). |
-| `topic` | | A label shown next to the title, e.g. `Loops`. |
+| `topic` | | The unit the quiz belongs to, such as `Loops`; it's listed at the end of that unit. Leave it out (or use another name) to put it in the Custom section. |
 | `questions` | required | The questions, in order. See below. |
 
 Every question can also have:

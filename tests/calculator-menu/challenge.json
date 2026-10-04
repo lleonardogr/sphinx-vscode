@@ -2,10 +2,11 @@
   "title": "Calculator Menu",
   "topic": "Tests",
   "skills": [
-    "Variables",
+    "Basics",
     "Conditionals",
     "Loops"
   ],
+  "unit": "Loops",
   "difficulty": "Easy",
   "order": 1,
   "hints": [

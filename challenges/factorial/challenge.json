@@ -2,7 +2,7 @@
   "title": "Factorial",
   "topic": "Loops",
   "difficulty": "Medium",
-  "order": 4,
+  "order": 5,
   "hints": [
     "Like a sum, but start at 1 and multiply instead of add.",
     "Factorials grow fast! An int can only hold up to 2,147,483,647, and 13! is already bigger. Use a long."

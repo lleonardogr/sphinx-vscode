@@ -2,7 +2,7 @@
   "title": "Collatz Steps (while)",
   "topic": "Loops",
   "difficulty": "Medium",
-  "order": 7,
+  "order": 8,
   "hints": [
     "The loop condition is simply n != 1.",
     "Inside the loop, update n (even: n / 2, odd: 3 * n + 1), then add 1 to steps.",

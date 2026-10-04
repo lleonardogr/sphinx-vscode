@@ -5,27 +5,29 @@ import { ExamManager, formatDuration } from './examSession';
 import { ExamDefinition, ExamQuestion, maxScore, questionKey, questionTitle } from './exams';
 import { QuizProgress } from './quizController';
 import { QuizDefinition } from './quizzes';
+import { PathGroup, TESTS_TOPIC, buildPath, groupLabel, unitName } from './path';
 
 export type ChallengeNode =
-  | { kind: 'topic'; topic: string }
+  | { kind: 'group'; group: PathGroup }
   | { kind: 'challenge'; challenge: Challenge }
   | { kind: 'examsRoot' }
   | { kind: 'exam'; exam: ExamDefinition }
   | { kind: 'examStart'; exam: ExamDefinition }
   | { kind: 'examQuestion'; exam: ExamDefinition; question: ExamQuestion }
-  | { kind: 'quizzesRoot' }
   | { kind: 'quiz'; quiz: QuizDefinition };
 
-const TOPIC_ICONS: Record<string, string> = {
-  Variables: 'symbol-variable',
+const GROUP_ICONS: Record<string, string> = {
+  Basics: 'symbol-variable',
   Conditionals: 'git-compare',
   Loops: 'sync',
-  'Data Structures': 'symbol-array',
   Strings: 'symbol-string',
   Methods: 'symbol-method',
+  Arrays: 'symbol-array',
+  Collections: 'list-tree',
   OOP: 'symbol-class',
+  Exceptions: 'warning',
+  Recursion: 'debug-restart',
   Streams: 'filter',
-  Tests: 'beaker',
   Custom: 'star-empty',
 };
 
@@ -51,22 +53,22 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
   }
 
   getChildren(node?: ChallengeNode): ChallengeNode[] {
-    const all = this.getChallenges();
     if (!node) {
-      const topics: ChallengeNode[] = [...new Set(all.map((c) => c.topic))].map((topic) => ({ kind: 'topic', topic }));
       return [
         ...(this.getExams().length ? [{ kind: 'examsRoot' } as ChallengeNode] : []),
-        ...(this.getQuizzes().length ? [{ kind: 'quizzesRoot' } as ChallengeNode] : []),
-        ...topics,
+        ...buildPath(this.getChallenges(), this.getQuizzes()).map((group): ChallengeNode => ({ kind: 'group', group })),
       ];
     }
     switch (node.kind) {
-      case 'topic':
-        return all.filter((c) => c.topic === node.topic).map((challenge) => ({ kind: 'challenge', challenge }));
+      case 'group':
+        // A unit lists its challenges, then its quiz, then the tests that close the stage.
+        return [
+          ...node.group.challenges.map((challenge): ChallengeNode => ({ kind: 'challenge', challenge })),
+          ...node.group.quizzes.map((quiz): ChallengeNode => ({ kind: 'quiz', quiz })),
+          ...node.group.tests.map((challenge): ChallengeNode => ({ kind: 'challenge', challenge })),
+        ];
       case 'examsRoot':
         return this.getExams().map((exam) => ({ kind: 'exam', exam }));
-      case 'quizzesRoot':
-        return this.getQuizzes().map((quiz) => ({ kind: 'quiz', quiz }));
       case 'exam':
         return this.exams.state(node.exam.id)
           ? node.exam.questions.map((question) => ({ kind: 'examQuestion', exam: node.exam, question }))
@@ -78,8 +80,8 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
 
   getTreeItem(node: ChallengeNode): vscode.TreeItem {
     switch (node.kind) {
-      case 'topic':
-        return this.topicItem(node.topic);
+      case 'group':
+        return this.groupItem(node.group);
       case 'challenge':
         return this.challengeItem(node.challenge);
       case 'examsRoot': {
@@ -100,31 +102,25 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
       }
       case 'examQuestion':
         return this.questionItem(node.exam, node.question);
-      case 'quizzesRoot': {
-        const item = new vscode.TreeItem('Quizzes', vscode.TreeItemCollapsibleState.Expanded);
-        item.id = 'quizzes';
-        item.iconPath = new vscode.ThemeIcon('question');
-        const quizzes = this.getQuizzes();
-        item.description = `${quizzes.filter((q) => this.perfect(q)).length}/${quizzes.length}`;
-        return item;
-      }
       case 'quiz':
         return this.quizItem(node.quiz);
     }
   }
 
-  private topicItem(topic: string): vscode.TreeItem {
-    const ids = this.getChallenges()
-      .filter((c) => c.topic === topic)
-      .map((c) => c.id);
+  private groupItem(group: PathGroup): vscode.TreeItem {
+    const ids = [...group.challenges, ...group.tests].map((c) => c.id);
     const solved = this.progress.solvedCount(ids);
-    const item = new vscode.TreeItem(topic, vscode.TreeItemCollapsibleState.Expanded);
-    item.id = `topic:${topic}`;
-    item.description = `${solved}/${ids.length}`;
+    const done = ids.length > 0 && solved === ids.length && group.quizzes.every((q) => this.perfect(q));
+    const item = new vscode.TreeItem(groupLabel(group), vscode.TreeItemCollapsibleState.Expanded);
+    item.id = `group:${group.kind}:${group.key}`;
+    item.description = ids.length ? `${solved}/${ids.length}` : undefined;
     item.iconPath = new vscode.ThemeIcon(
-      solved === ids.length ? 'pass-filled' : TOPIC_ICONS[topic] ?? 'folder',
-      solved === ids.length ? new vscode.ThemeColor('testing.iconPassed') : undefined,
+      done ? 'pass-filled' : GROUP_ICONS[group.key] ?? 'folder',
+      done ? new vscode.ThemeColor('testing.iconPassed') : undefined,
     );
+    if (group.kind === 'custom') {
+      item.tooltip = 'Challenges, quizzes and tests that belong to no unit: written by your teacher, imported, or your own.';
+    }
     return item;
   }
 
@@ -132,7 +128,8 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     const p = this.progress.get(c.id);
     const item = new vscode.TreeItem(c.title, vscode.TreeItemCollapsibleState.None);
     item.id = `challenge:${c.id}`;
-    item.description = c.difficulty;
+    const isTest = c.topic === TESTS_TOPIC;
+    item.description = isTest ? `Test · ${c.difficulty}` : c.difficulty;
     item.contextValue = 'challenge';
     item.command = { command: 'sphynx.open', title: 'Open Challenge', arguments: [c.id] };
     if (p?.status === 'solved') {
@@ -140,10 +137,10 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     } else if (p?.status === 'attempted') {
       item.iconPath = new vscode.ThemeIcon('circle-large-filled', new vscode.ThemeColor('testing.iconQueued'));
     } else {
-      item.iconPath = new vscode.ThemeIcon('circle-large-outline');
+      item.iconPath = new vscode.ThemeIcon(isTest ? 'beaker' : 'circle-large-outline');
     }
     item.tooltip = new vscode.MarkdownString(
-      `**${c.title}** · ${c.topic} · ${c.difficulty}\n\n` +
+      `**${c.title}** · ${isTest ? 'Test' : unitName(c.topic)} · ${c.difficulty}\n\n` +
         (c.skills.length ? `Mixes: ${c.skills.join(', ')}\n\n` : '') +
         (p?.status === 'solved' ? '✅ Solved' : p ? `Attempts: ${p.attempts}` : 'Not started'),
     );
@@ -187,10 +184,10 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     const item = new vscode.TreeItem(quiz.title, vscode.TreeItemCollapsibleState.None);
     item.id = `quiz:${quiz.id}`;
     item.contextValue = 'quiz';
-    item.description = score ? `best ${score.best}/${score.total}` : `${quiz.questions.length} questions`;
+    item.description = score ? `Quiz · best ${score.best}/${score.total}` : `Quiz · ${quiz.questions.length} questions`;
     item.command = { command: 'sphynx.openQuiz', title: 'Open Quiz', arguments: [quiz.id] };
     item.iconPath = !score
-      ? new vscode.ThemeIcon('circle-large-outline')
+      ? new vscode.ThemeIcon('question')
       : this.perfect(quiz)
         ? new vscode.ThemeIcon('pass-filled', new vscode.ThemeColor('testing.iconPassed'))
         : new vscode.ThemeIcon('circle-large-filled', new vscode.ThemeColor('testing.iconQueued'));

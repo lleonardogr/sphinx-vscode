@@ -2,7 +2,7 @@
   "title": "Weather Label (Ternary)",
   "topic": "Conditionals",
   "difficulty": "Easy",
-  "order": 6,
+  "order": 5,
   "hints": [
     "Start with two labels: temperature > 30 ? \"Hot\" : \"Not hot\".",
     "Replace the second value with another ternary: ... : temperature < 10 ? \"Cold\" : \"Mild\".",

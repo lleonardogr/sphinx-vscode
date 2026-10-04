@@ -100,8 +100,9 @@ VS Code gives you **autocomplete, hover documentation and error checking** for t
 | Field | Required | Description |
 |-------|----------|-------------|
 | `title` | yes | Name shown in the sidebar and panel. |
-| `topic` | no | Sidebar group. `Variables`, `Conditionals`, `Loops`, `Data Structures`, `Strings`, `Methods`, `OOP`, `Streams` and `Tests` are shown first, in that order. Any other name (for example `Recursion`) works too and is listed after them. **Leave it out** to put the challenge in the **Custom** group, which is always listed last. See the examples in [`custom/`](../custom). |
-| `skills` | no | Topics the challenge combines, shown as badges in the panel and the sidebar tooltip. Meant for [mixed challenges](#tests-mixed-challenges) in the `Tests` group. |
+| `topic` | no | The unit it belongs to. The built-in units, in teaching order: `Basics`, `Conditionals`, `Loops`, `Strings`, `Methods`, `Arrays`, `Collections`, `OOP`, `Exceptions`, `Recursion` and `Streams`. Use `Tests` for a [mixed challenge](#tests-mixed-challenges). Any other name (for example `Recursion Extras`) gets its own group after the units. **Leave it out** to put the challenge in the **Custom** section at the bottom. See the examples in [`custom/`](../custom). |
+| `skills` | no | Units the challenge combines, shown as badges in the panel and the sidebar tooltip. Meant for [mixed challenges](#tests-mixed-challenges). |
+| `unit` | no | For `"topic": "Tests"` only: the unit the test closes. It's listed at the end of that unit, after its quiz. Without it, the test goes to the Custom section. |
 | `difficulty` | no | `Easy` (default), `Medium` or `Hard`. |
 | `order` | no | Position inside the topic; lower comes first. |
 | `hints` | no | Hints revealed one at a time when the student clicks **Show a hint**. Order them from gentle to specific. |
@@ -221,13 +222,14 @@ A **test** is a normal challenge that is **bigger** and **mixes several topics**
 0. Exit
 ```
 
-The built-in tests are in the **Tests** group: [Calculator Menu](../tests/calculator-menu), [Grade Book Menu](../tests/grade-book-menu) and [Inventory Menu](../tests/inventory-menu). To write your own:
+The built-in tests close a stage of the path: [Calculator Menu](../tests/calculator-menu) at the end of Loops, and [Grade Book Menu](../tests/grade-book-menu) and [Inventory Menu](../tests/inventory-menu) at the end of Collections. To write your own:
 
-1. Set `"topic": "Tests"`, and list the topics it combines in `"skills"`. The panel shows them as badges:
+1. Set `"topic": "Tests"`, list the units it combines in `"skills"` (the panel shows them as badges), and name the unit it closes in `"unit"`, so it's listed at the end of that unit. Leave `"unit"` out to put it in the Custom section.
 
    ```json
    "topic": "Tests",
-   "skills": ["Variables", "Conditionals", "Loops", "Data Structures", "Methods"],
+   "skills": ["Basics", "Conditionals", "Loops", "Collections", "Methods"],
+   "unit": "Collections",
    ```
 
 2. **Specify the menu exactly** in `description.md`. Say what each option reads and prints, in a table, and give one complete example of input and output. Print the menu **once** at the start, so the expected outputs stay readable.

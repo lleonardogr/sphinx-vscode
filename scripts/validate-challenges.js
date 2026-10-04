@@ -13,12 +13,15 @@ const { validateChallenges, formatReport, reportPassed } = require('../out/valid
 async function main() {
   const args = process.argv.slice(2);
   const generate = args.includes('--generate');
+  // --strict: content-standard warnings fail the run (used in CI for the built-in content).
+  const strict = args.includes('--strict');
   const roots = args.filter((a) => !a.startsWith('--'));
   if (roots.length === 0) roots.push(...['challenges', 'custom', 'tests', 'exams', 'quizzes'].map((dir) => path.join(__dirname, '..', dir)));
 
   const builtIn = ['challenges', 'custom', 'tests', 'quizzes'].map((dir) => path.join(__dirname, '..', dir));
   const report = await validateChallenges(roots, {
     generate,
+    strict,
     referenceRoots: builtIn,
     onChallenge: (c) => process.stdout.write(c.ok ? '.' : 'x'),
   });

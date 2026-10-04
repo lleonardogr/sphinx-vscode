@@ -12,6 +12,7 @@ import { ExamManager } from './examSession';
 import { importContent, libraryRoots, removeImported } from './importer';
 import { QuizController, QuizProgress } from './quizController';
 import { QuizDefinition, loadQuizzes } from './quizzes';
+import { PathItem, buildPath, nextInPath } from './path';
 import { formatVerification, verifyResults } from './examVerify';
 import { ExamDefinition, ExamQuestion, loadExams, parseExamChallengeId } from './exams';
 import { ChallengeNode, ChallengeTreeProvider } from './treeView';
@@ -299,11 +300,16 @@ export function activate(context: vscode.ExtensionContext): void {
     };
   }
 
-  function nextUnsolved(after: Challenge): Challenge | undefined {
-    const i = challenges.findIndex((c) => c.id === after.id);
-    const ordered = [...challenges.slice(i + 1), ...challenges.slice(0, i)];
-    return ordered.find((c) => !progress.isSolved(c.id));
+  /** The challenge, quiz or test after `c` in the learning path. */
+  function nextItem(c: Challenge): PathItem | undefined {
+    return nextInPath(buildPath(challenges, quizzes), c.id);
   }
+
+  async function openPathItem(item: PathItem): Promise<void> {
+    await (item.kind === 'quiz' ? quizController.open(item.quiz.id) : openChallenge(item.challenge));
+  }
+
+  const itemTitle = (item: PathItem) => (item.kind === 'quiz' ? item.quiz.title : item.challenge.title);
 
   async function runChallenge(c: Challenge, mode: 'run' | 'submit'): Promise<void> {
     if (running.has(c.id)) {
@@ -384,16 +390,16 @@ export function activate(context: vscode.ExtensionContext): void {
       await progress.recordAttempt(c.id, solvedNow);
       updateStatus();
 
+      const next = solvedNow ? nextItem(c) : undefined;
       if (solvedNow) {
-        panel.post({ type: 'solved' });
+        panel.post({ type: 'solved', next: next && { title: itemTitle(next), quiz: next.kind === 'quiz' } });
       }
       if (firstSolve) {
-        const next = nextUnsolved(c);
         const solved = progress.solvedCount(challenges.map((x) => x.id));
         // Not awaited: the notification can stay open indefinitely and must not block further runs.
         vscode.window
-          .showInformationMessage(`🎉 "${c.title}" solved! (${solved}/${challenges.length})`, ...(next ? [`Next: ${next.title}`] : []))
-          .then((choice) => (choice && next ? openChallenge(next) : undefined));
+          .showInformationMessage(`🎉 "${c.title}" solved! (${solved}/${challenges.length})`, ...(next ? [`Next: ${itemTitle(next)}`] : []))
+          .then((choice) => (choice && next ? openPathItem(next) : undefined));
       }
     } catch (e) {
       output.appendLine(`[run] ${(e as Error).stack ?? e}`);
@@ -528,6 +534,13 @@ export function activate(context: vscode.ExtensionContext): void {
       case 'goto':
         revealCode(c, action.line, action.column);
         break;
+      case 'next': {
+        const next = nextItem(c);
+        if (next) {
+          void openPathItem(next);
+        }
+        break;
+      }
     }
   }
 

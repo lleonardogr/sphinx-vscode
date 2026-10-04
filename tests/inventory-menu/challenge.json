@@ -5,9 +5,10 @@
     "Conditionals",
     "Loops",
     "Strings",
-    "Data Structures",
+    "Collections",
     "Methods"
   ],
+  "unit": "Collections",
   "difficulty": "Hard",
   "order": 3,
   "hints": [

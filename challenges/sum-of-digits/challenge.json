@@ -2,7 +2,7 @@
   "title": "Sum of Digits",
   "topic": "Loops",
   "difficulty": "Medium",
-  "order": 6,
+  "order": 7,
   "hints": [
     "Keep going while n > 0: add n % 10 to the sum, then do n = n / 10.",
     "A while loop is a good fit when you don't know in advance how many times to repeat."

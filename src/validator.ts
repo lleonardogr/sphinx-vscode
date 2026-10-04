@@ -19,6 +19,8 @@ export interface ChallengeReport {
   tests: number;
   solutions: number;
   problems: string[];
+  /** Content-standard issues (see contentWarnings); they fail validation only with `strict`. */
+  warnings?: string[];
 }
 
 export interface ValidationReport {
@@ -35,6 +37,8 @@ export interface ValidateOptions {
   javaHome?: string;
   /** Extra challenge folders used only to resolve test questions that reference a challenge by id (e.g. the built-in ones). */
   referenceRoots?: string[];
+  /** Treat content-standard warnings as failures (used in CI for the built-in content). */
+  strict?: boolean;
   /** Called after each challenge, e.g. to print progress. */
   onChallenge?: (report: ChallengeReport) => void;
 }
@@ -125,7 +129,7 @@ async function validateOne(c: Challenge, javacVersion: number | undefined, opts:
     }
   }
 
-  return { id: c.id, dir: c.dir, ok: problems.length === 0, tests: c.tests.length, solutions: solutions.length, problems };
+  return { id: c.id, dir: c.dir, ok: problems.length === 0, tests: c.tests.length, solutions: solutions.length, problems, warnings: contentWarnings(c) };
 }
 
 /**
@@ -172,6 +176,34 @@ async function validateQuiz(dir: string, javacVersion: number | undefined, opts:
   return { kind: 'quiz', id: quiz.id, dir, ok: problems.length === 0, tests: quiz.questions.length, solutions: ran, problems };
 }
 
+/**
+ * The content standard for a challenge (docs/creating-challenges.md#checklist): a description that
+ * teaches, enough hidden tests to catch edge cases, and hints to get unstuck.
+ */
+export function contentWarnings(c: Challenge): string[] {
+  const warnings: string[] = [];
+  const words = c.description.split(/\s+/).filter(Boolean).length;
+  if (!/^\*\*Things to know\*\*|^#+\s*Things to know/im.test(c.description)) {
+    warnings.push('description.md has no "Things to know" section about the Java features involved');
+  }
+  if (words < 40) {
+    warnings.push(`description.md is very short (${words} words)`);
+  }
+  // A program that reads no input (like Hello, World!) can't have meaningful hidden tests.
+  const readsInput = c.tests.some((t) => t.input.trim() !== '');
+  const hidden = c.tests.filter((t) => t.hidden).length;
+  if (readsInput && hidden < 3) {
+    warnings.push(`only ${hidden} hidden test${hidden === 1 ? '' : 's'} (add edge cases: 3 or more)`);
+  }
+  if (readsInput && c.tests.length - hidden < 2) {
+    warnings.push('fewer than 2 visible tests (the panel shows them as examples)');
+  }
+  if (c.hints.length < 2) {
+    warnings.push(`only ${c.hints.length} hint${c.hints.length === 1 ? '' : 's'} (2 to 4)`);
+  }
+  return warnings;
+}
+
 export async function validateChallenges(roots: string[], opts: ValidateOptions = {}): Promise<ValidationReport> {
   const practice = loadChallenges(roots);
   // Private questions live in folders next to an exam.json; validate them too, plus the exam files themselves.
@@ -194,6 +226,9 @@ export async function validateChallenges(roots: string[], opts: ValidateOptions 
   const reports: ChallengeReport[] = [];
   for (const c of challenges) {
     const report = await validateOne(c, javacVersion, opts, counters);
+    if (opts.strict && report.warnings?.length) {
+      report.ok = false;
+    }
     reports.push(report);
     opts.onChallenge?.(report);
   }
@@ -213,11 +248,16 @@ export function formatReport(report: ValidationReport, generate = false): string
     const summary = c.kind === 'quiz'
       ? `quiz, ${c.tests} questions, ${c.solutions} code snippet${c.solutions === 1 ? '' : 's'} run`
       : `${c.tests} tests × ${c.solutions} solution${c.solutions === 1 ? '' : 's'}`;
-    lines.push(c.ok ? `✓ ${c.id} (${summary})${generate ? ', outputs written' : ''}` : `✗ ${c.id}\n  ${c.problems.join('\n  ')}`);
+    const warn = (c.warnings ?? []).map((w) => `\n  ⚠ ${w}`).join('');
+    lines.push(c.problems.length ? `✗ ${c.id}\n  ${c.problems.join('\n  ')}${warn}` : `${c.ok ? '✓' : '✗'} ${c.id} (${summary})${generate ? ', outputs written' : ''}${warn}`);
   }
   const ok = report.challenges.filter((c) => c.ok).length;
   const quizzes = report.challenges.filter((c) => c.kind === 'quiz').length;
   lines.push('', `${ok}/${report.challenges.length} ${quizzes ? 'challenges and quizzes' : 'challenges'} OK (${report.checkedSolutions} solutions${quizzes ? ' and snippets' : ''} checked)`);
+  const warned = report.challenges.filter((c) => c.warnings?.length).length;
+  if (warned) {
+    lines.push(`⚠ ${warned} challenge(s) don't meet the content standard yet (see the ⚠ lines).`);
+  }
   if (report.skippedSolutions) {
     lines.push(`⚠ Skipped ${report.skippedSolutions} modern solution(s): they need JDK 25+ (found ${report.javacVersion ?? 'none'}). Only *.classic.java files were checked.`);
   }

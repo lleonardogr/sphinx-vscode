@@ -1,8 +1,8 @@
 {
   "title": "Above Average (for-each)",
-  "topic": "Loops",
+  "topic": "Arrays",
   "difficulty": "Easy",
-  "order": 9,
+  "order": 5,
   "hints": [
     "First loop: for (int number : numbers) { sum += number; }",
     "Divide as a double, or you lose the decimals: (double) sum / n.",

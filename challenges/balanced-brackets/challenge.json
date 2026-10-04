@@ -1,8 +1,8 @@
 {
   "title": "Balanced Brackets (Stack)",
-  "topic": "Data Structures",
+  "topic": "Collections",
   "difficulty": "Medium",
-  "order": 9,
+  "order": 8,
   "hints": [
     "Push every opening bracket. When you see a closing bracket, the top of the stack must be its matching opening bracket.",
     "A closing bracket with an empty stack means the text is not balanced.",

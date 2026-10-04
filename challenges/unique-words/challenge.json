@@ -1,8 +1,8 @@
 {
   "title": "Unique Words (HashSet)",
-  "topic": "Data Structures",
+  "topic": "Collections",
   "difficulty": "Easy",
-  "order": 6,
+  "order": 2,
   "hints": [
     "Add every word to the set. Its size at the end is the number of unique words.",
     "add() tells you whether the word is new: it returns false for a repeat.",

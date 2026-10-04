@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- **The learning path**: the sidebar now lists numbered **units** in teaching order (1 · Basics, 2 · Conditionals, 3 · Loops, 4 · Strings & Characters, 5 · Methods, 6 · Arrays, 7 · Collections, 8 · Object-Oriented Programming, 11 · Lambdas & Streams), so every challenge only uses what earlier units taught.
+  - Strings and Methods come before arrays and collections; Data Structures is split into **Arrays** and **Collections**; Above Average moves from Loops to Arrays; Sum Until Zero moves up in Loops.
+  - Each unit lists its challenges, then its **quiz**, then the **tests** that close a stage (a new `"unit"` field in `challenge.json`). The separate Quizzes and Tests groups are gone.
+  - Challenges, quizzes and tests that belong to no unit (from teachers or imports) are grouped in the **Custom** section at the bottom.
+  - Progress is kept: it is stored by challenge id. The old topic name `Variables` still works in custom content.
+
+### Added
+
+- **Next step** button in the success banner after a challenge is accepted: it opens the next challenge, quiz or test in the path.
+- The validator reports **content-standard warnings** (no "Things to know" section, a very short description, fewer than 3 hidden tests or 2 hints), and `--strict` makes them fail the run.
+
 ## [0.6.0] - 2026-10-04
 
 ### Changed

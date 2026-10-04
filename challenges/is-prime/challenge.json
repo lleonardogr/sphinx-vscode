@@ -2,7 +2,7 @@
   "title": "Prime Numbers (Method)",
   "topic": "Methods",
   "difficulty": "Medium",
-  "order": 1,
+  "order": 3,
   "hints": [
     "Numbers smaller than 2 are never prime: return false right away.",
     "Try every divisor d from 2 up to n - 1. If n % d == 0, it's not prime.",

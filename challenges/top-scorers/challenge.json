@@ -2,7 +2,7 @@
   "title": "Top 3 Scorers",
   "topic": "Streams",
   "difficulty": "Hard",
-  "order": 5,
+  "order": 7,
   "hints": [
     "First map each entry to a Player: split on \":\" and parse the score.",
     "Comparator.comparingInt(Player::score).reversed().thenComparing(Player::name) gives the right order.",

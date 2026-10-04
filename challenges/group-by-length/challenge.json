@@ -2,7 +2,7 @@
   "title": "Group Words by Length",
   "topic": "Streams",
   "difficulty": "Medium",
-  "order": 4,
+  "order": 5,
   "hints": [
     "String::length is a method reference: it's the same as word -> word.length().",
     "groupingBy keeps the words of each group in the order they appear in the stream.",

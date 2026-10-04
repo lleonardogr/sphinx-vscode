@@ -26,15 +26,18 @@
     "topic": {
       "type": "string",
       "minLength": 1,
-      "description": "Group in the sidebar. Variables, Conditionals, Loops, Data Structures, Strings, Methods, OOP, Streams and Tests are listed first, in that order; any other name works too. Leave it out to put the challenge in the \"Custom\" group (always listed last).",
+      "description": "Sidebar unit. The built-in units, in teaching order: Basics, Conditionals, Loops, Strings, Methods, Arrays, Collections, OOP, Exceptions, Recursion and Streams. Use \"Tests\" for a bigger mixed challenge (and set \"unit\"). Any other name works too and gets its own group after the units. Leave it out to put the challenge in the Custom section at the bottom.",
       "examples": [
-        "Variables",
+        "Basics",
         "Conditionals",
         "Loops",
-        "Data Structures",
         "Strings",
         "Methods",
+        "Arrays",
+        "Collections",
         "OOP",
+        "Exceptions",
+        "Recursion",
         "Streams",
         "Tests"
       ]
@@ -53,6 +56,23 @@
           "Conditionals",
           "Loops"
         ]
+      ]
+    },
+    "unit": {
+      "type": "string",
+      "description": "For \"Tests\" only: the unit this test closes. It is listed at the end of that unit, after its quiz. Without it, the test goes to the Custom section.",
+      "examples": [
+        "Basics",
+        "Conditionals",
+        "Loops",
+        "Strings",
+        "Methods",
+        "Arrays",
+        "Collections",
+        "OOP",
+        "Exceptions",
+        "Recursion",
+        "Streams"
       ]
     },
     "difficulty": {
