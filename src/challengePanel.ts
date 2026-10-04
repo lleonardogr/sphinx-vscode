@@ -13,9 +13,9 @@ export type PanelAction =
   | { type: 'openCode' }
   | { type: 'goto'; line: number; column: number };
 
-/** Extra information shown when the challenge is a question of a test. */
-export interface PanelTestInfo {
-  testTitle: string;
+/** Extra information shown when the challenge is a question of an exam. */
+export interface PanelExamInfo {
+  examTitle: string;
   mode: 'open' | 'closed';
   points: number;
   earned: number;
@@ -31,13 +31,13 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-export function testStatusText(t: PanelTestInfo): string {
+export function examStatusText(t: PanelExamInfo): string {
   if (!t.started) {
-    return 'Start the test from the Tests group in the sidebar to submit answers.';
+    return 'Start the exam from the Exams group in the sidebar to submit answers.';
   }
   const best = `Best so far: ${t.earned} / ${t.points} points.`;
   if (t.finished) {
-    return `The test is finished. ${best}`;
+    return `The exam is finished. ${best}`;
   }
   return `${best} ${t.submissionsLeft} of ${t.maxSubmissions} submission${t.maxSubmissions === 1 ? '' : 's'} left. Run (sample tests) is unlimited.`;
 }
@@ -61,8 +61,8 @@ export class ChallengePanel {
   private challenge: Challenge | undefined;
   private ready = false;
   private queue: unknown[] = [];
-  /** Returns test details when the challenge belongs to a test. Set by the extension. */
-  testInfo: (c: Challenge) => PanelTestInfo | undefined = () => undefined;
+  /** Returns exam details when the challenge belongs to an exam. Set by the extension. */
+  examInfo: (c: Challenge) => PanelExamInfo | undefined = () => undefined;
 
   constructor(
     private readonly extensionUri: vscode.Uri,
@@ -174,9 +174,9 @@ export class ChallengePanel {
       ? `<button class="secondary" data-action="aiHint" title="Get a hint about your current code from an AI tutor">✨ Ask AI for a hint</button>
          <button class="link" data-action="aiSetup" title="Choose a local model or your own API key">AI settings</button>`
       : `<span class="muted">AI hints are disabled for this challenge.</span>`;
-    const t = this.testInfo(c);
+    const t = this.examInfo(c);
     const hints = t?.mode === 'closed'
-      ? `<h3>Hints</h3><p class="muted">Hints and AI hints are turned off during this closed test.</p>`
+      ? `<h3>Hints</h3><p class="muted">Hints and AI hints are turned off during this closed exam.</p>`
       : `<h3>Hints</h3>
          ${c.hints.map((h, i) => `<div class="hint" hidden><strong>Hint ${i + 1}:</strong> ${escapeHtml(h)}</div>`).join('')}
          <div id="ai-hint" class="ai-hint" hidden></div>
@@ -188,9 +188,9 @@ export class ChallengePanel {
     const solved = !t && this.progress.isSolved(c.id);
     const submitLabel = t ? `✔ Submit (${t.submissionsLeft} left)` : '✔ Submit';
     const submitDisabled = t && (t.submissionsLeft === 0 || t.finished || !t.started) ? 'disabled' : '';
-    const testBanner = t
-      ? `<div id="test-banner" class="banner ${t.finished ? 'success' : 'info'}"><strong>📝 ${escapeHtml(t.testTitle)}</strong> · ${t.mode === 'closed' ? 'Closed test' : 'Open test'}
-           <p id="test-status">${testStatusText(t)}</p></div>`
+    const examBanner = t
+      ? `<div id="exam-banner" class="banner ${t.finished ? 'success' : 'info'}"><strong>📝 ${escapeHtml(t.examTitle)}</strong> · ${t.mode === 'closed' ? 'Closed exam' : 'Open exam'}
+           <p id="exam-status">${examStatusText(t)}</p></div>`
       : '';
 
     return `<!DOCTYPE html>
@@ -202,7 +202,7 @@ export class ChallengePanel {
   <link rel="stylesheet" href="${media('panel.css')}">
   <title>${escapeHtml(c.title)}</title>
 </head>
-<body data-challenge="${escapeHtml(c.id)}"${t ? ' data-test="1"' : ''}>
+<body data-challenge="${escapeHtml(c.id)}"${t ? ' data-exam="1"' : ''}>
   <header>
     <div class="title-row">
       <h1>${escapeHtml(c.title)}</h1>
@@ -211,7 +211,8 @@ export class ChallengePanel {
     <div class="meta">
       <span class="badge topic">${escapeHtml(c.topic)}</span>${t ? `
       <span class="badge">${t.points} points</span>` : ''}
-      <span class="badge difficulty ${escapeHtml(c.difficulty.toLowerCase())}">${escapeHtml(c.difficulty)}</span>
+      <span class="badge difficulty ${escapeHtml(c.difficulty.toLowerCase())}">${escapeHtml(c.difficulty)}</span>${c.skills.length ? `
+      <span class="skills" title="Topics this challenge combines">Mixes: ${c.skills.map((s) => `<span class="badge skill">${escapeHtml(s)}</span>`).join('')}</span>` : ''}
     </div>
     <div class="toolbar">
       <button data-action="run" title="Compile and run the sample tests (Cmd/Ctrl+Alt+R)">▶ Run</button>
@@ -223,7 +224,7 @@ export class ChallengePanel {
     </div>
   </header>
 
-  ${testBanner}
+  ${examBanner}
   <section id="results" aria-live="polite"></section>
 
   <main>

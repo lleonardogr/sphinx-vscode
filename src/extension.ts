@@ -3,14 +3,14 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { AiHints } from './ai/hints';
 import { createChallenge, validateFolder } from './authoring';
-import { ChallengePanel, PanelAction, PanelTestInfo, testStatusText } from './challengePanel';
+import { ChallengePanel, PanelAction, PanelExamInfo, examStatusText } from './challengePanel';
 import { Challenge, loadChallenges } from './challenges';
 import { Progress } from './progress';
 import { RunOutcome, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
 import { runInTerminal } from './terminalRunner';
-import { TestManager } from './testSession';
-import { formatVerification, verifyResults } from './testVerify';
-import { TestDefinition, TestQuestion, loadTests, parseTestChallengeId } from './tests';
+import { ExamManager } from './examSession';
+import { formatVerification, verifyResults } from './examVerify';
+import { ExamDefinition, ExamQuestion, loadExams, parseExamChallengeId } from './exams';
 import { ChallengeNode, ChallengeTreeProvider } from './treeView';
 
 const CODE_FILE = 'Main.java';
@@ -20,14 +20,14 @@ export function activate(context: vscode.ExtensionContext): void {
   const output = vscode.window.createOutputChannel('Tech Challenges');
   const diagnostics = vscode.languages.createDiagnosticCollection('techChallenges');
   let challenges: Challenge[] = [];
-  let tests: TestDefinition[] = [];
+  let exams: ExamDefinition[] = [];
   const running = new Set<string>();
   /** Last (redacted) Run/Submit result per challenge, used as context for AI hints. */
   const lastOutcome = new Map<string, RunOutcome>();
   const ai = new AiHints(context);
 
-  const testManager = new TestManager(context, (testId) => testCodeDir(testId), (test, q) => gradeTestQuestion(test, q));
-  const tree = new ChallengeTreeProvider(() => challenges, progress, () => tests, testManager);
+  const examManager = new ExamManager(context, (examId) => examCodeDir(examId), (exam, q) => gradeExamQuestion(exam, q));
+  const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams, examManager);
   const treeView = vscode.window.createTreeView('techChallenges.list', { treeDataProvider: tree });
   const panel = new ChallengePanel(context.extensionUri, progress, (action, c) => handlePanelAction(action, c));
   const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
@@ -35,8 +35,8 @@ export function activate(context: vscode.ExtensionContext): void {
   status.tooltip = 'Tech Challenges: open the challenge list';
   status.show();
 
-  panel.testInfo = (c) => panelTestInfo(c);
-  context.subscriptions.push(output, diagnostics, treeView, status, testManager, { dispose: () => panel.dispose() });
+  panel.examInfo = (c) => panelExamInfo(c);
+  context.subscriptions.push(output, diagnostics, treeView, status, examManager, { dispose: () => panel.dispose() });
 
   const config = () => vscode.workspace.getConfiguration('techChallenges');
   const javaHome = () => config().get<string>('java.home', '').trim() || undefined;
@@ -69,17 +69,17 @@ export function activate(context: vscode.ExtensionContext): void {
 
   function reload(): void {
     const extra = config().get<string[]>('extraChallengePaths', []);
-    const builtIn = ['challenges', 'custom', 'tests'].map((dir) => path.join(context.extensionPath, dir));
+    const builtIn = ['challenges', 'custom', 'tests', 'exams'].map((dir) => path.join(context.extensionPath, dir));
     const result = loadChallenges([...builtIn, ...extra]);
     challenges = result.challenges;
-    const testResult = loadTests([...builtIn, ...extra], challenges);
-    tests = testResult.tests;
-    const errors = [...result.errors.filter((e) => !e.endsWith('folder not found')), ...testResult.errors];
+    const examResult = loadExams([...builtIn, ...extra], challenges);
+    exams = examResult.exams;
+    const errors = [...result.errors.filter((e) => !e.endsWith('folder not found')), ...examResult.errors];
     if (errors.length) {
       errors.forEach((e) => output.appendLine(`[challenges] ${e}`));
-      vscode.window.showWarningMessage('Some challenges or tests could not be loaded. See the "Tech Challenges" output for details.');
+      vscode.window.showWarningMessage('Some challenges or exams could not be loaded. See the "Tech Challenges" output for details.');
     }
-    testManager.setTests(tests);
+    examManager.setExams(exams);
     tree.refresh();
     updateStatus();
   }
@@ -103,49 +103,49 @@ export function activate(context: vscode.ExtensionContext): void {
     return path.join(context.globalStorageUri.fsPath, 'solutions');
   }
 
-  function testCodeDir(testId: string): string {
-    return path.join(codeRoot(), 'tests', testId);
+  function examCodeDir(examId: string): string {
+    return path.join(codeRoot(), 'exams', examId);
   }
 
   function codePath(c: Challenge): string {
-    const t = parseTestChallengeId(c.id);
-    return t ? path.join(testCodeDir(t.testId), t.questionId, CODE_FILE) : path.join(codeRoot(), c.id, CODE_FILE);
+    const t = parseExamChallengeId(c.id);
+    return t ? path.join(examCodeDir(t.examId), t.questionId, CODE_FILE) : path.join(codeRoot(), c.id, CODE_FILE);
   }
 
-  /** Practice challenges plus every test question. */
+  /** Practice challenges plus every exam question. */
   function findChallenge(id: string): Challenge | undefined {
-    return challenges.find((c) => c.id === id) ?? tests.flatMap((t) => t.questions).find((q) => q.challenge.id === id)?.challenge;
+    return challenges.find((c) => c.id === id) ?? exams.flatMap((t) => t.questions).find((q) => q.challenge.id === id)?.challenge;
   }
 
-  function testFor(c: Challenge): { test: TestDefinition; question: TestQuestion } | undefined {
-    const ids = parseTestChallengeId(c.id);
-    const test = ids && tests.find((t) => t.id === ids.testId);
-    const question = test?.questions.find((q) => q.id === ids!.questionId);
-    return test && question ? { test, question } : undefined;
+  function examFor(c: Challenge): { exam: ExamDefinition; question: ExamQuestion } | undefined {
+    const ids = parseExamChallengeId(c.id);
+    const exam = ids && exams.find((t) => t.id === ids.examId);
+    const question = exam?.questions.find((q) => q.id === ids!.questionId);
+    return exam && question ? { exam, question } : undefined;
   }
 
-  function panelTestInfo(c: Challenge): PanelTestInfo | undefined {
-    const tq = testFor(c);
+  function panelExamInfo(c: Challenge): PanelExamInfo | undefined {
+    const tq = examFor(c);
     if (!tq) {
       return undefined;
     }
-    const s = testManager.state(tq.test.id);
+    const s = examManager.state(tq.exam.id);
     return {
-      testTitle: tq.test.title,
-      mode: tq.test.mode,
+      examTitle: tq.exam.title,
+      mode: tq.exam.mode,
       points: tq.question.points,
       earned: s?.questions[tq.question.id]?.bestEarned ?? 0,
-      submissionsLeft: testManager.submissionsLeft(tq.test, tq.question.id),
-      maxSubmissions: tq.test.maxSubmissions,
+      submissionsLeft: examManager.submissionsLeft(tq.exam, tq.question.id),
+      maxSubmissions: tq.exam.maxSubmissions,
       started: !!s,
       finished: !!s?.finishedAt,
     };
   }
 
-  function postTestStatus(c: Challenge): void {
-    const info = panelTestInfo(c);
+  function postExamStatus(c: Challenge): void {
+    const info = panelExamInfo(c);
     if (info && panel.current?.id === c.id) {
-      panel.post({ type: 'testStatus', text: testStatusText(info), ...info });
+      panel.post({ type: 'examStatus', text: examStatusText(info), ...info });
     }
   }
 
@@ -158,14 +158,14 @@ export function activate(context: vscode.ExtensionContext): void {
       return undefined;
     }
     const parts = rel.split(path.sep);
-    if (parts.length === 3 && parts[0] === 'tests') {
-      return findChallenge(`test:${parts[1]}:${parts[2]}`);
+    if (parts.length === 3 && parts[0] === 'exams') {
+      return findChallenge(`exam:${parts[1]}:${parts[2]}`);
     }
     return parts.length === 1 ? challenges.find((c) => c.id === rel) : undefined;
   }
 
-  /** Grades a test question's current code against all its tests (used when a test is finished). */
-  async function gradeTestQuestion(_test: TestDefinition, q: TestQuestion): Promise<RunOutcome | undefined> {
+  /** Grades an exam question's current code against all its tests (used when an exam is finished). */
+  async function gradeExamQuestion(_exam: ExamDefinition, q: ExamQuestion): Promise<RunOutcome | undefined> {
     const file = codePath(q.challenge);
     if (!fs.existsSync(file)) {
       return undefined;
@@ -195,8 +195,8 @@ export function activate(context: vscode.ExtensionContext): void {
     if (typeof arg === 'string') {
       return findChallenge(arg);
     }
-    if (arg && typeof arg === 'object' && (arg as ChallengeNode).kind === 'testQuestion') {
-      return (arg as { question: TestQuestion }).question.challenge;
+    if (arg && typeof arg === 'object' && (arg as ChallengeNode).kind === 'examQuestion') {
+      return (arg as { question: ExamQuestion }).question.challenge;
     }
     if (arg && typeof arg === 'object' && (arg as ChallengeNode).kind === 'challenge') {
       return (arg as { challenge: Challenge }).challenge;
@@ -222,12 +222,12 @@ export function activate(context: vscode.ExtensionContext): void {
 
   async function openChallenge(c: Challenge): Promise<void> {
     void checkJdkForStyle();
-    const tq = testFor(c);
-    if (tq && !testManager.state(tq.test.id) && !(await testManager.start(tq.test))) {
+    const tq = examFor(c);
+    if (tq && !examManager.state(tq.exam.id) && !(await examManager.start(tq.exam))) {
       return;
     }
     await panel.show(c);
-    postTestStatus(c);
+    postExamStatus(c);
     const file = ensureCodeFile(c);
     await vscode.window.showTextDocument(vscode.Uri.file(file), { viewColumn: vscode.ViewColumn.Two, preview: false });
   }
@@ -280,19 +280,19 @@ export function activate(context: vscode.ExtensionContext): void {
     if (running.has(c.id)) {
       return;
     }
-    const tq = testFor(c);
+    const tq = examFor(c);
     if (tq) {
-      const s = testManager.state(tq.test.id);
+      const s = examManager.state(tq.exam.id);
       if (!s) {
-        vscode.window.showInformationMessage(`Start "${tq.test.title}" from the Tests group in the sidebar first.`);
+        vscode.window.showInformationMessage(`Start "${tq.exam.title}" from the Exams group in the sidebar first.`);
         return;
       }
       if (s.finishedAt) {
-        vscode.window.showInformationMessage(`"${tq.test.title}" is finished. Your answers are locked.`);
+        vscode.window.showInformationMessage(`"${tq.exam.title}" is finished. Your answers are locked.`);
         return;
       }
       if (mode === 'submit') {
-        const left = testManager.submissionsLeft(tq.test, tq.question.id);
+        const left = examManager.submissionsLeft(tq.exam, tq.question.id);
         if (left === 0) {
           vscode.window.showWarningMessage('You have no submissions left for this question.');
           return;
@@ -342,11 +342,11 @@ export function activate(context: vscode.ExtensionContext): void {
 
       if (tq) {
         if (mode === 'submit') {
-          const score = await testManager.recordSubmission(tq.test, tq.question, outcome, fs.readFileSync(file, 'utf8'));
-          panel.post({ type: 'testScore', ...score, points: tq.question.points });
+          const score = await examManager.recordSubmission(tq.exam, tq.question, outcome, fs.readFileSync(file, 'utf8'));
+          panel.post({ type: 'examScore', ...score, points: tq.question.points });
         }
-        postTestStatus(c);
-        return; // test questions don't count towards practice progress
+        postExamStatus(c);
+        return; // exam questions don't count towards practice progress
       }
 
       const allPassed = outcome.kind === 'tests' && outcome.results.every((r) => r.passed);
@@ -432,7 +432,7 @@ export function activate(context: vscode.ExtensionContext): void {
     if (doc) {
       const edit = new vscode.WorkspaceEdit();
       edit.replace(doc.uri, new vscode.Range(0, 0, doc.lineCount, 0), starterFor(c));
-      await testManager.withoutPasteCheck(() => vscode.workspace.applyEdit(edit));
+      await examManager.withoutPasteCheck(() => vscode.workspace.applyEdit(edit));
       await doc.save();
     } else {
       fs.writeFileSync(file, starterFor(c));
@@ -457,7 +457,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   async function askAiHint(c: Challenge): Promise<void> {
     if (!c.aiHints) {
-      vscode.window.showInformationMessage(testFor(c) ? 'AI hints are turned off during this closed test.' : 'AI hints are disabled for this challenge.');
+      vscode.window.showInformationMessage(examFor(c) ? 'AI hints are turned off during this closed exam.' : 'AI hints are disabled for this challenge.');
       return;
     }
     await panel.show(c);
@@ -516,33 +516,33 @@ export function activate(context: vscode.ExtensionContext): void {
     reload,
   };
 
-  async function resolveTest(arg: unknown, placeHolder: string, filter: (t: TestDefinition) => boolean): Promise<TestDefinition | undefined> {
+  async function resolveExam(arg: unknown, placeHolder: string, filter: (t: ExamDefinition) => boolean): Promise<ExamDefinition | undefined> {
     if (typeof arg === 'string') {
-      return tests.find((t) => t.id === arg);
+      return exams.find((t) => t.id === arg);
     }
-    if (arg && typeof arg === 'object' && 'test' in (arg as object)) {
-      return (arg as { test: TestDefinition }).test;
+    if (arg && typeof arg === 'object' && 'exam' in (arg as object)) {
+      return (arg as { exam: ExamDefinition }).exam;
     }
-    const candidates = tests.filter(filter);
+    const candidates = exams.filter(filter);
     if (candidates.length === 0) {
-      vscode.window.showInformationMessage('No matching test.');
+      vscode.window.showInformationMessage('No matching exam.');
       return undefined;
     }
     if (candidates.length === 1) {
       return candidates[0];
     }
     const pick = await vscode.window.showQuickPick(
-      candidates.map((t) => ({ label: t.title, description: `${t.durationMinutes} min · ${t.mode}`, test: t })),
+      candidates.map((t) => ({ label: t.title, description: `${t.durationMinutes} min · ${t.mode}`, exam: t })),
       { placeHolder },
     );
-    return pick?.test;
+    return pick?.exam;
   }
 
   /** Teachers: re-grade one or more results files and compare with the scores they claim. */
-  async function verifyTestResultsCommand(): Promise<void> {
+  async function verifyExamResultsCommand(): Promise<void> {
     const files = await vscode.window.showOpenDialog({
       canSelectMany: true,
-      filters: { 'Test results': ['json'] },
+      filters: { 'Exam results': ['json'] },
       openLabel: 'Verify',
       title: 'Choose the results files your students handed in',
     });
@@ -553,11 +553,11 @@ export function activate(context: vscode.ExtensionContext): void {
     output.show(true);
     let mismatches = 0;
     let failed = 0;
-    await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: 'Verifying test results', cancellable: false }, async (progress) => {
+    await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: 'Verifying exam results', cancellable: false }, async (progress) => {
       for (const f of files) {
         progress.report({ message: path.basename(f.fsPath) });
         try {
-          const report = await verifyResults(f.fsPath, tests, javaHome());
+          const report = await verifyResults(f.fsPath, exams, javaHome());
           if (!report.matches) {
             mismatches++;
           }
@@ -592,31 +592,31 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('techChallenges.setupAi', () => ai.setup()),
     vscode.commands.registerCommand('techChallenges.clearAiKeys', () => ai.clearApiKeys()),
     vscode.commands.registerCommand('techChallenges.refresh', reload),
-    vscode.commands.registerCommand('techChallenges.startTest', async (arg?: unknown) => {
-      const test = await resolveTest(arg, 'Which test do you want to start?', (t) => !testManager.state(t.id));
-      if (test && (await testManager.start(test))) {
-        await openChallenge(test.questions[0].challenge);
+    vscode.commands.registerCommand('techChallenges.startExam', async (arg?: unknown) => {
+      const exam = await resolveExam(arg, 'Which exam do you want to start?', (t) => !examManager.state(t.id));
+      if (exam && (await examManager.start(exam))) {
+        await openChallenge(exam.questions[0].challenge);
       }
     }),
-    vscode.commands.registerCommand('techChallenges.finishTest', async (arg?: unknown) => {
-      const test = await resolveTest(arg, 'Which test do you want to finish?', (t) => testManager.isActive(t.id));
-      if (test) {
-        await testManager.confirmFinish(test);
+    vscode.commands.registerCommand('techChallenges.finishExam', async (arg?: unknown) => {
+      const exam = await resolveExam(arg, 'Which exam do you want to finish?', (t) => examManager.isActive(t.id));
+      if (exam) {
+        await examManager.confirmFinish(exam);
       }
     }),
-    vscode.commands.registerCommand('techChallenges.openTestResults', async (arg?: unknown) => {
-      const test = await resolveTest(arg, 'Results of which test?', (t) => !!testManager.state(t.id)?.finishedAt);
-      if (test) {
-        await testManager.openResults(test);
+    vscode.commands.registerCommand('techChallenges.openExamResults', async (arg?: unknown) => {
+      const exam = await resolveExam(arg, 'Results of which exam?', (t) => !!examManager.state(t.id)?.finishedAt);
+      if (exam) {
+        await examManager.openResults(exam);
       }
     }),
-    vscode.commands.registerCommand('techChallenges.saveTestResults', async (arg?: unknown) => {
-      const test = await resolveTest(arg, 'Results of which test?', (t) => !!testManager.state(t.id)?.finishedAt);
-      if (test) {
-        await testManager.saveResultsCopy(test);
+    vscode.commands.registerCommand('techChallenges.saveExamResults', async (arg?: unknown) => {
+      const exam = await resolveExam(arg, 'Results of which exam?', (t) => !!examManager.state(t.id)?.finishedAt);
+      if (exam) {
+        await examManager.saveResultsCopy(exam);
       }
     }),
-    vscode.commands.registerCommand('techChallenges.verifyTestResults', verifyTestResultsCommand),
+    vscode.commands.registerCommand('techChallenges.verifyExamResults', verifyExamResultsCommand),
     vscode.commands.registerCommand('techChallenges.createChallenge', () => createChallenge(authoringDeps)),
     vscode.commands.registerCommand('techChallenges.validateChallenges', () => validateFolder(authoringDeps)),
     vscode.commands.registerCommand('techChallenges.resetProgress', async () => {
@@ -631,9 +631,9 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     }),
     vscode.window.onDidChangeActiveTextEditor(updateContextKey),
-    testManager.onDidChange(() => {
+    examManager.onDidChange(() => {
       if (panel.current) {
-        postTestStatus(panel.current);
+        postExamStatus(panel.current);
       }
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {

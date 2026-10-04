@@ -1,11 +1,11 @@
-// Runs tests for a student: start/finish, countdown, limited submissions, scoring, integrity
-// warnings (closed tests) and the results file the student hands in.
+// Runs exams for a student: start/finish, countdown, limited submissions, scoring, integrity
+// warnings (closed exams) and the results file the student hands in.
 import { createHash } from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { RunOutcome } from './runner';
-import { TestDefinition, TestQuestion, maxScore, scoreOutcome } from './tests';
+import { ExamDefinition, ExamQuestion, maxScore, scoreOutcome } from './exams';
 
 export interface QuestionState {
   submissions: number;
@@ -35,11 +35,11 @@ export interface SessionState {
   resultsFile?: string;
 }
 
-export interface TestResultsFile {
-  format: 'tech-challenges-test-results';
+export interface ExamResultsFile {
+  format: 'tech-challenges-exam-results';
   version: 1;
   extensionVersion: string;
-  test: { id: string; title: string; mode: string; durationMinutes: number; maxSubmissions: number };
+  exam: { id: string; title: string; mode: string; durationMinutes: number; maxSubmissions: number };
   student: string;
   startedAt: string;
   finishedAt: string;
@@ -59,7 +59,7 @@ export interface TestResultsFile {
   warnings: IntegrityWarning[];
 }
 
-const STATE_KEY = 'techChallenges.tests';
+const STATE_KEY = 'techChallenges.exams';
 const LARGE_INSERTION = 80; // characters inserted in a single edit
 const AWAY_THRESHOLD_MS = 15_000;
 
@@ -74,12 +74,12 @@ export function formatDuration(ms: number): string {
   return `${h ? `${h}:` : ''}${mm}:${String(s).padStart(2, '0')}`;
 }
 
-export class TestManager implements vscode.Disposable {
+export class ExamManager implements vscode.Disposable {
   private readonly changed = new vscode.EventEmitter<void>();
   readonly onDidChange = this.changed.event;
   private readonly timerItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 101);
   private timer: NodeJS.Timeout | undefined;
-  private tests: TestDefinition[] = [];
+  private exams: ExamDefinition[] = [];
   private awaySince: number | undefined;
   private suppressPasteCheck = false;
   private finishing = new Set<string>();
@@ -87,10 +87,10 @@ export class TestManager implements vscode.Disposable {
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    /** Folder holding a test's code: <root>/<questionId>/Main.java */
-    private readonly codeDir: (testId: string) => string,
+    /** Folder holding an exam's code: <root>/<questionId>/Main.java */
+    private readonly codeDir: (examId: string) => string,
     /** Runs every test of a question against the student's current code (used for auto-submit). */
-    private readonly gradeQuestion: (test: TestDefinition, q: TestQuestion) => Promise<RunOutcome | undefined>,
+    private readonly gradeQuestion: (exam: ExamDefinition, q: ExamQuestion) => Promise<RunOutcome | undefined>,
   ) {
     this.timerItem.command = 'techChallenges.list.focus';
     this.disposables.push(
@@ -114,44 +114,44 @@ export class TestManager implements vscode.Disposable {
     return this.context.globalState.get<Record<string, SessionState>>(STATE_KEY, {});
   }
 
-  state(testId: string): SessionState | undefined {
-    return this.all()[testId];
+  state(examId: string): SessionState | undefined {
+    return this.all()[examId];
   }
 
-  private async save(testId: string, state: SessionState | undefined): Promise<void> {
+  private async save(examId: string, state: SessionState | undefined): Promise<void> {
     const all = { ...this.all() };
     if (state) {
-      all[testId] = state;
+      all[examId] = state;
     } else {
-      delete all[testId];
+      delete all[examId];
     }
     await this.context.globalState.update(STATE_KEY, all);
     this.changed.fire();
   }
 
-  isActive(testId: string): boolean {
-    const s = this.state(testId);
+  isActive(examId: string): boolean {
+    const s = this.state(examId);
     return !!s && !s.finishedAt;
   }
 
-  activeTest(): TestDefinition | undefined {
-    return this.tests.find((t) => this.isActive(t.id));
+  activeExam(): ExamDefinition | undefined {
+    return this.exams.find((t) => this.isActive(t.id));
   }
 
-  submissionsLeft(test: TestDefinition, questionId: string): number {
-    return Math.max(0, test.maxSubmissions - (this.state(test.id)?.questions[questionId]?.submissions ?? 0));
+  submissionsLeft(exam: ExamDefinition, questionId: string): number {
+    return Math.max(0, exam.maxSubmissions - (this.state(exam.id)?.questions[questionId]?.submissions ?? 0));
   }
 
-  score(test: TestDefinition): { earned: number; max: number } {
-    const s = this.state(test.id);
-    const earned = test.questions.reduce((sum, q) => sum + (s?.questions[q.id]?.bestEarned ?? 0), 0);
-    return { earned: Math.round(earned * 100) / 100, max: maxScore(test) };
+  score(exam: ExamDefinition): { earned: number; max: number } {
+    const s = this.state(exam.id);
+    const earned = exam.questions.reduce((sum, q) => sum + (s?.questions[q.id]?.bestEarned ?? 0), 0);
+    return { earned: Math.round(earned * 100) / 100, max: maxScore(exam) };
   }
 
-  /** Called after every reload: resumes the countdown, or finishes a test whose time ran out while VS Code was closed. */
-  setTests(tests: TestDefinition[]): void {
-    this.tests = tests;
-    const active = this.activeTest();
+  /** Called after every reload: resumes the countdown, or finishes an exam whose time ran out while VS Code was closed. */
+  setExams(exams: ExamDefinition[]): void {
+    this.exams = exams;
+    const active = this.activeExam();
     if (active && Date.now() >= this.state(active.id)!.endsAt) {
       void this.finish(active, 'time');
     } else {
@@ -162,37 +162,37 @@ export class TestManager implements vscode.Disposable {
 
   // ------------------------------------------------------------------ start / finish
 
-  async start(test: TestDefinition): Promise<boolean> {
-    if (this.state(test.id)?.finishedAt) {
-      vscode.window.showInformationMessage(`You already finished "${test.title}". Score: ${this.formatScore(test)}.`);
+  async start(exam: ExamDefinition): Promise<boolean> {
+    if (this.state(exam.id)?.finishedAt) {
+      vscode.window.showInformationMessage(`You already finished "${exam.title}". Score: ${this.formatScore(exam)}.`);
       return false;
     }
-    if (this.isActive(test.id)) {
+    if (this.isActive(exam.id)) {
       return true;
     }
-    const other = this.activeTest();
+    const other = this.activeExam();
     if (other) {
-      vscode.window.showWarningMessage(`Finish "${other.title}" before starting another test.`);
+      vscode.window.showWarningMessage(`Finish "${other.title}" before starting another exam.`);
       return false;
     }
 
     const rules = [
-      `Time limit: ${test.durationMinutes} minutes, starting now.`,
-      `${test.questions.length} question(s), ${maxScore(test)} points in total.`,
-      `Each question can be submitted ${test.maxSubmissions} time(s). Your best submission counts, with partial credit for the tests it passes. Run (sample tests) is unlimited.`,
-      test.mode === 'closed'
-        ? 'Closed test: hints and AI hints are turned off. Large pastes, AI completions and time spent outside VS Code are recorded in your results.'
-        : 'Open test: hints, AI hints and the internet are allowed.',
-      'When the time is up, your answers are submitted automatically and the test is locked.',
+      `Time limit: ${exam.durationMinutes} minutes, starting now.`,
+      `${exam.questions.length} question(s), ${maxScore(exam)} points in total.`,
+      `Each question can be submitted ${exam.maxSubmissions} time(s). Your best submission counts, with partial credit for the tests it passes. Run (sample tests) is unlimited.`,
+      exam.mode === 'closed'
+        ? 'Closed exam: hints and AI hints are turned off. Large pastes, AI completions and time spent outside VS Code are recorded in your results.'
+        : 'Open exam: hints, AI hints and the internet are allowed.',
+      'When the time is up, your answers are submitted automatically and the exam is locked.',
     ];
-    const ok = await vscode.window.showWarningMessage(`Start "${test.title}"?`, { modal: true, detail: rules.join('\n\n') }, 'Start Test');
-    if (ok !== 'Start Test') {
+    const ok = await vscode.window.showWarningMessage(`Start "${exam.title}"?`, { modal: true, detail: rules.join('\n\n') }, 'Start Exam');
+    if (ok !== 'Start Exam') {
       return false;
     }
     const previousName = this.context.globalState.get<string>('techChallenges.studentName', '');
     const student = (
       await vscode.window.showInputBox({
-        title: test.title,
+        title: exam.title,
         prompt: 'Your full name (it goes into the results file you hand in)',
         value: previousName,
         ignoreFocusOut: true,
@@ -205,95 +205,95 @@ export class TestManager implements vscode.Disposable {
     await this.context.globalState.update('techChallenges.studentName', student);
 
     const now = Date.now();
-    const state: SessionState = { student, startedAt: now, endsAt: now + test.durationMinutes * 60_000, questions: {}, warnings: [] };
-    if (test.mode === 'closed') {
+    const state: SessionState = { student, startedAt: now, endsAt: now + exam.durationMinutes * 60_000, questions: {}, warnings: [] };
+    if (exam.mode === 'closed') {
       for (const id of ['GitHub.copilot', 'GitHub.copilot-chat']) {
         if (vscode.extensions.getExtension(id)) {
-          state.warnings.push({ at: new Date(now).toISOString(), kind: 'copilot', detail: `The ${id} extension is installed and enabled during a closed test.` });
+          state.warnings.push({ at: new Date(now).toISOString(), kind: 'copilot', detail: `The ${id} extension is installed and enabled during a closed exam.` });
         }
       }
     }
-    await this.save(test.id, state);
+    await this.save(exam.id, state);
     this.ensureTimer();
     return true;
   }
 
-  async confirmFinish(test: TestDefinition): Promise<void> {
-    if (!this.isActive(test.id)) {
+  async confirmFinish(exam: ExamDefinition): Promise<void> {
+    if (!this.isActive(exam.id)) {
       return;
     }
-    const s = this.state(test.id)!;
-    const unanswered = test.questions.filter((q) => !s.questions[q.id]?.submissions).length;
+    const s = this.state(exam.id)!;
+    const unanswered = exam.questions.filter((q) => !s.questions[q.id]?.submissions).length;
     const answer = await vscode.window.showWarningMessage(
-      `Finish "${test.title}" now?`,
+      `Finish "${exam.title}" now?`,
       {
         modal: true,
         detail: `${unanswered ? `${unanswered} question(s) have no submission yet; they will be submitted automatically. ` : ''}You can't change your answers afterwards.`,
       },
-      'Finish Test',
+      'Finish Exam',
     );
-    if (answer === 'Finish Test') {
-      await this.finish(test, 'student');
+    if (answer === 'Finish Exam') {
+      await this.finish(exam, 'student');
     }
   }
 
-  /** Auto-submits answers that changed since their last submission (if submissions remain), locks the test and writes the results file. */
-  async finish(test: TestDefinition, by: 'student' | 'time'): Promise<void> {
-    if (!this.isActive(test.id) || this.finishing.has(test.id)) {
+  /** Auto-submits answers that changed since their last submission (if submissions remain), locks the exam and writes the results file. */
+  async finish(exam: ExamDefinition, by: 'student' | 'time'): Promise<void> {
+    if (!this.isActive(exam.id) || this.finishing.has(exam.id)) {
       return;
     }
-    this.finishing.add(test.id);
+    this.finishing.add(exam.id);
     try {
       if (by === 'time') {
-        vscode.window.showWarningMessage(`⏰ Time is up for "${test.title}". Submitting your answers…`);
+        vscode.window.showWarningMessage(`⏰ Time is up for "${exam.title}". Submitting your answers…`);
       }
-      await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: `Finishing "${test.title}"…` }, async () => {
+      await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: `Finishing "${exam.title}"…` }, async () => {
         await vscode.workspace.saveAll(false);
-        for (const q of test.questions) {
-          const file = path.join(this.codeDir(test.id), q.id, 'Main.java');
-          if (!fs.existsSync(file) || this.submissionsLeft(test, q.id) === 0) {
+        for (const q of exam.questions) {
+          const file = path.join(this.codeDir(exam.id), q.id, 'Main.java');
+          if (!fs.existsSync(file) || this.submissionsLeft(exam, q.id) === 0) {
             continue;
           }
           const code = fs.readFileSync(file, 'utf8');
-          if (this.state(test.id)?.questions[q.id]?.lastSubmittedHash === hash(code)) {
+          if (this.state(exam.id)?.questions[q.id]?.lastSubmittedHash === hash(code)) {
             continue;
           }
-          const outcome = await this.gradeQuestion(test, q);
+          const outcome = await this.gradeQuestion(exam, q);
           if (outcome) {
-            await this.recordSubmission(test, q, outcome, code);
+            await this.recordSubmission(exam, q, outcome, code);
           }
         }
       });
-      const s = { ...this.state(test.id)!, finishedAt: Date.now(), finishedBy: by };
-      await this.save(test.id, s);
-      const file = this.writeResults(test);
-      await this.save(test.id, { ...this.state(test.id)!, resultsFile: file });
+      const s = { ...this.state(exam.id)!, finishedAt: Date.now(), finishedBy: by };
+      await this.save(exam.id, s);
+      const file = this.writeResults(exam);
+      await this.save(exam.id, { ...this.state(exam.id)!, resultsFile: file });
       this.ensureTimer();
       const choice = await vscode.window.showInformationMessage(
-        `"${test.title}" finished: ${this.formatScore(test)}. Your results file is ready to hand in.`,
+        `"${exam.title}" finished: ${this.formatScore(exam)}. Your results file is ready to hand in.`,
         'Open Results',
         'Save a Copy…',
       );
       if (choice === 'Open Results') {
-        await this.openResults(test);
+        await this.openResults(exam);
       } else if (choice === 'Save a Copy…') {
-        await this.saveResultsCopy(test);
+        await this.saveResultsCopy(exam);
       }
     } finally {
-      this.finishing.delete(test.id);
+      this.finishing.delete(exam.id);
     }
   }
 
-  formatScore(test: TestDefinition): string {
-    const { earned, max } = this.score(test);
+  formatScore(exam: ExamDefinition): string {
+    const { earned, max } = this.score(exam);
     return `${earned} / ${max} points`;
   }
 
   // ------------------------------------------------------------------ submissions
 
   /** Records a graded submission and returns its score. */
-  async recordSubmission(test: TestDefinition, q: TestQuestion, outcome: RunOutcome, code: string): Promise<{ earned: number; passed: number; total: number }> {
-    const s = this.state(test.id);
+  async recordSubmission(exam: ExamDefinition, q: ExamQuestion, outcome: RunOutcome, code: string): Promise<{ earned: number; passed: number; total: number }> {
+    const s = this.state(exam.id);
     if (!s || s.finishedAt) {
       return { earned: 0, passed: 0, total: 0 };
     }
@@ -308,14 +308,14 @@ export class TestManager implements vscode.Disposable {
       bestCode: better ? code : prev.bestCode,
       lastSubmittedHash: hash(code),
     };
-    await this.save(test.id, { ...s, questions: { ...s.questions, [q.id]: next } });
+    await this.save(exam.id, { ...s, questions: { ...s.questions, [q.id]: next } });
     return result;
   }
 
   // ------------------------------------------------------------------ countdown
 
   private ensureTimer(): void {
-    const active = this.activeTest();
+    const active = this.activeExam();
     if (!active) {
       if (this.timer) {
         clearInterval(this.timer);
@@ -355,7 +355,7 @@ export class TestManager implements vscode.Disposable {
     this.timerItem.show();
   }
 
-  // ------------------------------------------------------------------ integrity (closed tests)
+  // ------------------------------------------------------------------ integrity (closed exams)
 
   /** Lets the extension write files (starter code, reset) without triggering a paste warning. */
   async withoutPasteCheck<T>(fn: () => Thenable<T> | T): Promise<T> {
@@ -367,16 +367,16 @@ export class TestManager implements vscode.Disposable {
     }
   }
 
-  private warn(testId: string, warning: Omit<IntegrityWarning, 'at'>): void {
-    const s = this.state(testId);
+  private warn(examId: string, warning: Omit<IntegrityWarning, 'at'>): void {
+    const s = this.state(examId);
     if (!s || s.finishedAt) {
       return;
     }
-    void this.save(testId, { ...s, warnings: [...s.warnings, { at: new Date().toISOString(), ...warning }] });
+    void this.save(examId, { ...s, warnings: [...s.warnings, { at: new Date().toISOString(), ...warning }] });
   }
 
   private onEdit(e: vscode.TextDocumentChangeEvent): void {
-    const active = this.activeTest();
+    const active = this.activeExam();
     if (!active || active.mode !== 'closed' || this.suppressPasteCheck || e.reason !== undefined) {
       return; // e.reason is set for undo/redo
     }
@@ -397,7 +397,7 @@ export class TestManager implements vscode.Disposable {
   }
 
   private onWindowState(s: vscode.WindowState): void {
-    const active = this.activeTest();
+    const active = this.activeExam();
     if (!active || active.mode !== 'closed') {
       this.awaySince = undefined;
       return;
@@ -415,23 +415,23 @@ export class TestManager implements vscode.Disposable {
 
   // ------------------------------------------------------------------ results
 
-  buildResults(test: TestDefinition): TestResultsFile {
-    const s = this.state(test.id)!;
+  buildResults(exam: ExamDefinition): ExamResultsFile {
+    const s = this.state(exam.id)!;
     const finishedAt = s.finishedAt ?? Date.now();
     return {
-      format: 'tech-challenges-test-results',
+      format: 'tech-challenges-exam-results',
       version: 1,
       extensionVersion: String(this.context.extension.packageJSON.version ?? ''),
-      test: { id: test.id, title: test.title, mode: test.mode, durationMinutes: test.durationMinutes, maxSubmissions: test.maxSubmissions },
+      exam: { id: exam.id, title: exam.title, mode: exam.mode, durationMinutes: exam.durationMinutes, maxSubmissions: exam.maxSubmissions },
       student: s.student,
       startedAt: new Date(s.startedAt).toISOString(),
       finishedAt: new Date(finishedAt).toISOString(),
       finishedBy: s.finishedBy ?? 'student',
       timeTakenSeconds: Math.round((finishedAt - s.startedAt) / 1000),
-      score: this.score(test),
-      questions: test.questions.map((q) => {
+      score: this.score(exam),
+      questions: exam.questions.map((q) => {
         const qs = s.questions[q.id];
-        const file = path.join(this.codeDir(test.id), q.id, 'Main.java');
+        const file = path.join(this.codeDir(exam.id), q.id, 'Main.java');
         return {
           id: q.id,
           title: q.challenge.title,
@@ -447,32 +447,32 @@ export class TestManager implements vscode.Disposable {
     };
   }
 
-  private writeResults(test: TestDefinition): string {
-    const results = this.buildResults(test);
+  private writeResults(exam: ExamDefinition): string {
+    const results = this.buildResults(exam);
     const slug = results.student.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'student';
-    const file = path.join(this.codeDir(test.id), `results-${slug}.json`);
+    const file = path.join(this.codeDir(exam.id), `results-${slug}.json`);
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, JSON.stringify(results, null, 2) + '\n');
     return file;
   }
 
-  async openResults(test: TestDefinition): Promise<void> {
-    const file = this.state(test.id)?.resultsFile;
+  async openResults(exam: ExamDefinition): Promise<void> {
+    const file = this.state(exam.id)?.resultsFile;
     if (!file || !fs.existsSync(file)) {
-      vscode.window.showWarningMessage('No results file found for this test.');
+      vscode.window.showWarningMessage('No results file found for this exam.');
       return;
     }
     await vscode.window.showTextDocument(vscode.Uri.file(file), { preview: false });
   }
 
-  async saveResultsCopy(test: TestDefinition): Promise<void> {
-    const file = this.state(test.id)?.resultsFile;
+  async saveResultsCopy(exam: ExamDefinition): Promise<void> {
+    const file = this.state(exam.id)?.resultsFile;
     if (!file || !fs.existsSync(file)) {
       return;
     }
     const target = await vscode.window.showSaveDialog({
       defaultUri: vscode.Uri.file(path.join(require('os').homedir(), path.basename(file))),
-      filters: { 'Test results': ['json'] },
+      filters: { 'Exam results': ['json'] },
     });
     if (target) {
       fs.copyFileSync(file, target.fsPath);
@@ -480,9 +480,9 @@ export class TestManager implements vscode.Disposable {
     }
   }
 
-  /** Teacher/debug helper: forget a test's state so it can be taken again. */
-  async reset(test: TestDefinition): Promise<void> {
-    await this.save(test.id, undefined);
+  /** Teacher/debug helper: forget an exam's state so it can be taken again. */
+  async reset(exam: ExamDefinition): Promise<void> {
+    await this.save(exam.id, undefined);
     this.ensureTimer();
   }
 }

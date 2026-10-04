@@ -14,9 +14,9 @@ async function main() {
   const args = process.argv.slice(2);
   const generate = args.includes('--generate');
   const roots = args.filter((a) => !a.startsWith('--'));
-  if (roots.length === 0) roots.push(...['challenges', 'custom', 'tests'].map((dir) => path.join(__dirname, '..', dir)));
+  if (roots.length === 0) roots.push(...['challenges', 'custom', 'tests', 'exams'].map((dir) => path.join(__dirname, '..', dir)));
 
-  const builtIn = ['challenges', 'custom'].map((dir) => path.join(__dirname, '..', dir));
+  const builtIn = ['challenges', 'custom', 'tests'].map((dir) => path.join(__dirname, '..', dir));
   const report = await validateChallenges(roots, {
     generate,
     referenceRoots: builtIn,

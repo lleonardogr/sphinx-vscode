@@ -256,7 +256,7 @@ export async function validateFolder(deps: AuthoringDeps): Promise<void> {
     (progress) =>
       validateChallenges([folder], {
         generate: mode.generate,
-        referenceRoots: ['challenges', 'custom'].map((dir) => path.join(deps.extensionPath, dir)),
+        referenceRoots: ['challenges', 'custom', 'tests'].map((dir) => path.join(deps.extensionPath, dir)),
         javaHome: deps.javaHome(),
         onChallenge: (c) => progress.report({ message: c.id }),
       }),

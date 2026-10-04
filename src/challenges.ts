@@ -21,13 +21,15 @@ export interface Challenge {
   mustContain: Rule[];
   mustNotContain: Rule[];
   tests: TestCase[];
+  /** Topics a mixed "Tests" challenge combines, shown as badges (optional). */
+  skills: string[];
   timeLimitMs: number;
   /** Teachers can set "aiHints": false to disable AI hints for a challenge. */
   aiHints: boolean;
   dir: string;
 }
 
-export const TOPIC_ORDER = ['Variables', 'Conditionals', 'Loops', 'Data Structures', 'Strings', 'Methods', 'OOP', 'Streams'];
+export const TOPIC_ORDER = ['Variables', 'Conditionals', 'Loops', 'Data Structures', 'Strings', 'Methods', 'OOP', 'Streams', 'Tests'];
 
 /** Group for challenges whose challenge.json has no "topic". Always listed last. */
 export const CUSTOM_TOPIC = 'Custom';
@@ -63,6 +65,7 @@ export function loadChallenge(dir: string): Challenge {
     mustContain: meta.mustContain ?? [],
     mustNotContain: meta.mustNotContain ?? [],
     tests: meta.tests,
+    skills: Array.isArray(meta.skills) ? meta.skills.filter((s: unknown) => typeof s === 'string') : [],
     timeLimitMs: meta.timeLimitMs ?? 5000,
     aiHints: meta.aiHints !== false,
     dir,

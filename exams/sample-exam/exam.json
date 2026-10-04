@@ -1,6 +1,6 @@
 {
-  "title": "Sample Test: Java Basics",
-  "description": "An example closed test with two built-in challenges and one private question. Copy this folder to create your own.",
+  "title": "Sample Exam: Java Basics",
+  "description": "An example closed exam with two built-in challenges and one private question. Copy this folder to create your own.",
   "durationMinutes": 30,
   "mode": "closed",
   "maxSubmissions": 3,

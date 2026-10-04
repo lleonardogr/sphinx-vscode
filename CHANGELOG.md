@@ -6,14 +6,18 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
-- **Tests**: timed, graded sets of challenges, defined by a `test.json` (with a JSON schema for autocomplete).
-  - A **Tests** group in the sidebar, a countdown in the status bar, and the student's name in the results.
+- **Exams**: timed, graded sets of challenges, defined by an `exam.json` (with a JSON schema for autocomplete).
+  - An **Exams** group in the sidebar, a countdown in the status bar, and the student's name in the results.
   - **Limited submissions** per question with **partial credit** (points × tests passed ÷ total). The best submission counts, and Run stays unlimited.
-  - **Open** or **closed** mode. Closed tests hide hints and AI hints, and record integrity warnings: large pastes or AI completions, time spent outside VS Code, and an enabled GitHub Copilot.
-  - When time is up (even if VS Code was closed), changed answers are submitted automatically, the test is locked, and a **results file** is written.
-  - **Verify Students' Test Results (Teachers)** re-runs each saved answer and recomputes the score, flagging edited files.
-  - Private questions can live inside the test folder. A sample test ships in `tests/sample-test`.
-- Guide: [Tests](docs/tests.md).
+  - **Open** or **closed** mode. Closed exams hide hints and AI hints, and record integrity warnings: large pastes or AI completions, time spent outside VS Code, and an enabled GitHub Copilot.
+  - When time is up (even if VS Code was closed), changed answers are submitted automatically, the exam is locked, and a **results file** is written.
+  - **Verify Students' Exam Results (Teachers)** re-runs each saved answer and recomputes the score, flagging edited files.
+  - Private questions can live inside the exam folder. A sample exam ships in `exams/sample-exam`.
+  - Guide: [Exams](docs/exams.md).
+- **Tests**: a new group of bigger challenges that mix several topics in one program, graded with scripted runs of whole sessions.
+  - Three menu-driven console apps: **Calculator Menu** (Easy: variables, conditionals, loops), **Grade Book Menu** (Medium: adds a `List` and methods) and **Inventory Menu** (Hard: adds a `TreeMap` and strings).
+  - A new optional `"skills"` field in `challenge.json` lists the topics a challenge combines, shown as badges in the panel and the sidebar tooltip.
+  - Guide: [Tests: mixed challenges](docs/creating-challenges.md#tests-mixed-challenges).
 
 ## [0.3.0] - 2026-10-03
 

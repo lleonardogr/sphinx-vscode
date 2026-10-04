@@ -1,12 +1,12 @@
-// Re-grades a student's test results file: runs the code saved for each question against the
+// Re-grades a student's exam results file: runs the code saved for each question against the
 // question's tests and recomputes the score. A results file is plain JSON that a student could
 // edit, so teachers should trust the recomputed score, not the stored one. No vscode dependency.
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import { runChallengeCode } from './runner';
-import { TestDefinition, scoreOutcome } from './tests';
-import type { TestResultsFile } from './testSession';
+import { ExamDefinition, scoreOutcome } from './exams';
+import type { ExamResultsFile } from './examSession';
 
 export interface VerifiedQuestion {
   id: string;
@@ -20,29 +20,29 @@ export interface VerifiedQuestion {
 
 export interface VerificationReport {
   student: string;
-  testTitle: string;
+  examTitle: string;
   claimed: number;
   recomputed: number;
   max: number;
   matches: boolean;
   questions: VerifiedQuestion[];
-  warnings: TestResultsFile['warnings'];
+  warnings: ExamResultsFile['warnings'];
   timeTakenSeconds: number;
   finishedBy: string;
 }
 
-export async function verifyResults(resultsPath: string, tests: TestDefinition[], javaHome?: string): Promise<VerificationReport> {
-  const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8')) as TestResultsFile;
-  if (results.format !== 'tech-challenges-test-results') {
-    throw new Error('This is not a Tech Challenges test results file.');
+export async function verifyResults(resultsPath: string, exams: ExamDefinition[], javaHome?: string): Promise<VerificationReport> {
+  const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8')) as ExamResultsFile;
+  if (results.format !== 'tech-challenges-exam-results') {
+    throw new Error('This is not a Tech Challenges exam results file.');
   }
-  const test = tests.find((t) => t.id === results.test?.id);
-  if (!test) {
-    throw new Error(`The test "${results.test?.id}" is not available. Add the folder that contains it to techChallenges.extraChallengePaths.`);
+  const exam = exams.find((t) => t.id === results.exam?.id);
+  if (!exam) {
+    throw new Error(`The exam "${results.exam?.id}" is not available. Add the folder that contains it to techChallenges.extraChallengePaths.`);
   }
 
   const questions: VerifiedQuestion[] = [];
-  for (const q of test.questions) {
+  for (const q of exam.questions) {
     const saved = results.questions.find((x) => x.id === q.id);
     const claimed = saved?.earned ?? 0;
     if (!saved || !saved.code.trim() || !saved.submissions) {
@@ -81,10 +81,10 @@ export async function verifyResults(resultsPath: string, tests: TestDefinition[]
   const claimed = typeof results.score?.earned === 'number' ? results.score.earned : sum(questions.map((q) => q.claimed));
   return {
     student: results.student,
-    testTitle: test.title,
+    examTitle: exam.title,
     claimed,
     recomputed,
-    max: sum(test.questions.map((q) => q.points)),
+    max: sum(exam.questions.map((q) => q.points)),
     matches: Math.abs(claimed - recomputed) < 0.01 && questions.every((q) => Math.abs(q.claimed - q.recomputed) < 0.01),
     questions,
     warnings: results.warnings ?? [],
@@ -96,7 +96,7 @@ export async function verifyResults(resultsPath: string, tests: TestDefinition[]
 export function formatVerification(r: VerificationReport): string[] {
   const minutes = Math.round((r.timeTakenSeconds ?? 0) / 60);
   const lines = [
-    `${r.student}: ${r.testTitle}`,
+    `${r.student}: ${r.examTitle}`,
     `  Score (re-graded): ${r.recomputed} / ${r.max}${r.matches ? '  ✓ matches the results file' : `  ⚠ the results file claims ${r.claimed}`}`,
     `  Time taken: ${minutes} min (finished by ${r.finishedBy === 'time' ? 'the time limit' : 'the student'})`,
   ];

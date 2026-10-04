@@ -6,6 +6,7 @@ This guide is for anyone who wants to write challenges for Tech Challenges: teac
 - [How a challenge works](#how-a-challenge-works)
 - [The files](#the-files)
 - [Writing tests](#writing-tests)
+- [Tests: mixed challenges](#tests-mixed-challenges)
 - [Rules: requiring or forbidding code](#rules-requiring-or-forbidding-code)
 - [Validating](#validating)
 - [Sharing challenges with students](#sharing-challenges-with-students)
@@ -99,7 +100,8 @@ VS Code gives you **autocomplete, hover documentation and error checking** for t
 | Field | Required | Description |
 |-------|----------|-------------|
 | `title` | yes | Name shown in the sidebar and panel. |
-| `topic` | no | Sidebar group. `Variables`, `Conditionals`, `Loops`, `Data Structures`, `Strings`, `Methods`, `OOP` and `Streams` are shown first, in that order. Any other name (for example `Recursion`) works too and is listed after them. **Leave it out** to put the challenge in the **Custom** group, which is always listed last. See the examples in [`custom/`](../custom). |
+| `topic` | no | Sidebar group. `Variables`, `Conditionals`, `Loops`, `Data Structures`, `Strings`, `Methods`, `OOP`, `Streams` and `Tests` are shown first, in that order. Any other name (for example `Recursion`) works too and is listed after them. **Leave it out** to put the challenge in the **Custom** group, which is always listed last. See the examples in [`custom/`](../custom). |
+| `skills` | no | Topics the challenge combines, shown as badges in the panel and the sidebar tooltip. Meant for [mixed challenges](#tests-mixed-challenges) in the `Tests` group. |
 | `difficulty` | no | `Easy` (default), `Medium` or `Hard`. |
 | `order` | no | Position inside the topic; lower comes first. |
 | `hints` | no | Hints revealed one at a time when the student clicks **Show a hint**. Order them from gentle to specific. |
@@ -204,6 +206,45 @@ Each test has an `input` (exactly what the program reads), an `output` (exactly 
 **Generating outputs:** don't type expected outputs by hand. Leave them as `""` and run **Validate Challenges → Validate and fill in expected outputs**, or `node scripts/validate-challenges.js --generate path/to/folder` in this repository. Then **review them**: the outputs are only as correct as your solution.
 
 **JSON escaping:** a new line in a JSON string is `\n`, a quote is `\"`, and a backslash is `\\`.
+
+---
+
+## Tests: mixed challenges
+
+A **test** is a normal challenge that is **bigger** and **mixes several topics** in one program. It checks whether a student can put the pieces together, not just use one construct. Console apps with a **menu** are a natural fit:
+
+```
+=== Grade Book ===
+1. Add grade
+2. List grades
+3. Statistics
+0. Exit
+```
+
+The built-in tests are in the **Tests** group: [Calculator Menu](../tests/calculator-menu), [Grade Book Menu](../tests/grade-book-menu) and [Inventory Menu](../tests/inventory-menu). To write your own:
+
+1. Set `"topic": "Tests"`, and list the topics it combines in `"skills"`. The panel shows them as badges:
+
+   ```json
+   "topic": "Tests",
+   "skills": ["Variables", "Conditionals", "Loops", "Data Structures", "Methods"],
+   ```
+
+2. **Specify the menu exactly** in `description.md`. Say what each option reads and prints, in a table, and give one complete example of input and output. Print the menu **once** at the start, so the expected outputs stay readable.
+
+3. **Grade it with scripted runs.** Each test's `input` is a whole session: a sequence of menu choices (and the values they read), always ending with the exit option. The output is everything the program prints during that session:
+
+   ```json
+   { "input": "1\n80\n1\n95\n3\n0\n", "output": "" }
+   ```
+
+   Then fill in the outputs with **Validate and fill in expected outputs**, as usual.
+
+4. Use the hidden tests for what a menu app gets wrong: choosing an option before any data exists, invalid options, invalid values, exiting straight away, and long sessions that mix every option.
+
+5. Add a few `mustContain` rules for the structures the test is about, such as a loop, a `List<Integer>` or a method `String letter(int grade)`. Don't make the rules too strict: there are many good ways to write a menu.
+
+Tests can also be questions in an [exam](exams.md).
 
 ---
 

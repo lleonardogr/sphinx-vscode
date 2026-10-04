@@ -7,7 +7,7 @@ import * as os from 'os';
 import * as path from 'path';
 import { Challenge, loadChallenges } from './challenges';
 import { RunOutcome, RunRequest, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
-import { findTestDirs, loadTests } from './tests';
+import { findExamDirs, loadExams } from './exams';
 
 export interface ChallengeReport {
   id: string;
@@ -127,12 +127,12 @@ async function validateOne(c: Challenge, javacVersion: number | undefined, opts:
 
 export async function validateChallenges(roots: string[], opts: ValidateOptions = {}): Promise<ValidationReport> {
   const practice = loadChallenges(roots);
-  // Private questions live in folders next to a test.json; validate them too, plus the test files themselves.
-  const testDirs = findTestDirs(roots);
-  const questions = testDirs.length ? loadChallenges(testDirs) : { challenges: [], errors: [] };
+  // Private questions live in folders next to an exam.json; validate them too, plus the exam files themselves.
+  const examDirs = findExamDirs(roots);
+  const questions = examDirs.length ? loadChallenges(examDirs) : { challenges: [], errors: [] };
   const challenges = [...practice.challenges, ...questions.challenges];
   const references = opts.referenceRoots?.length ? loadChallenges(opts.referenceRoots).challenges : [];
-  const errors = [...practice.errors, ...questions.errors, ...loadTests(roots, [...references, ...practice.challenges]).errors];
+  const errors = [...practice.errors, ...questions.errors, ...loadExams(roots, [...references, ...practice.challenges]).errors];
   const javacVersion = await javacMajorVersion(opts.javaHome);
   const counters = { checked: 0, skipped: 0 };
   const reports: ChallengeReport[] = [];
