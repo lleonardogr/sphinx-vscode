@@ -1,0 +1,41 @@
+{
+  "title": "Grade Report",
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "Go through the grades once, keeping a running sum, the highest and lowest so far, and a pass counter.",
+    "sum / n with two ints drops the decimals. Cast first: (double) sum / n.",
+    "Print two decimals with \"Average: %.2f\".formatted(average), or System.out.printf in classic Java."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to go through the grades."
+    }
+  ],
+  "tests": [
+    {
+      "input": "4\n95 70 85 40\n",
+      "output": "Average: 72.50\nHighest: 95\nLowest: 40\nPassed: 3 of 4\n"
+    },
+    {
+      "input": "3\n60 59 61\n",
+      "output": "Average: 60.00\nHighest: 61\nLowest: 59\nPassed: 2 of 3\n"
+    },
+    {
+      "input": "1\n100\n",
+      "output": "Average: 100.00\nHighest: 100\nLowest: 100\nPassed: 1 of 1\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n0 0 0 0 0\n",
+      "output": "Average: 0.00\nHighest: 0\nLowest: 0\nPassed: 0 of 5\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n59 60 100 1 99 33\n",
+      "output": "Average: 58.67\nHighest: 100\nLowest: 1\nPassed: 3 of 6\n",
+      "hidden": true
+    }
+  ]
+}

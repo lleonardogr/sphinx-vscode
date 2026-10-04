@@ -63,7 +63,8 @@ export function activate(context: vscode.ExtensionContext): void {
 
   function reload(): void {
     const extra = config().get<string[]>('extraChallengePaths', []);
-    const result = loadChallenges([path.join(context.extensionPath, 'challenges'), ...extra]);
+    const builtIn = ['challenges', 'custom'].map((dir) => path.join(context.extensionPath, dir));
+    const result = loadChallenges([...builtIn, ...extra]);
     challenges = result.challenges;
     if (result.errors.length) {
       result.errors.forEach((e) => output.appendLine(`[challenges] ${e}`));

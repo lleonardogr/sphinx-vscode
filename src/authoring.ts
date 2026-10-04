@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { Challenge, TOPIC_ORDER } from './challenges';
+import { CUSTOM_TOPIC, Challenge, TOPIC_ORDER } from './challenges';
 import { formatReport, reportPassed, validateChallenges } from './validator';
 
 interface AuthoringDeps {
@@ -75,10 +75,11 @@ async function ensureRegistered(folder: string, deps: AuthoringDeps): Promise<vo
   vscode.window.showInformationMessage(`Added ${folder} to techChallenges.extraChallengePaths so its challenges appear in the sidebar.`);
 }
 
-function templates(title: string, topic: string, difficulty: string, order: number): Record<string, string> {
+/** `topic` undefined writes no "topic", so the challenge appears under Custom. */
+function templates(title: string, topic: string | undefined, difficulty: string, order: number): Record<string, string> {
   const challengeJson = {
     title,
-    topic,
+    ...(topic ? { topic } : {}),
     difficulty,
     order,
     hints: [
@@ -158,7 +159,7 @@ public class Main {
 }
 
 /** Writes a complete, valid example challenge into `dir`. */
-export function writeChallengeTemplate(dir: string, title: string, topic: string, difficulty: string, order: number): void {
+export function writeChallengeTemplate(dir: string, title: string, topic: string | undefined, difficulty: string, order: number): void {
   fs.mkdirSync(dir, { recursive: true });
   for (const [file, content] of Object.entries(templates(title, topic, difficulty, order))) {
     fs.writeFileSync(path.join(dir, file), content);
@@ -188,19 +189,24 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
   }
   const id = slugify(title);
 
-  const existingTopics = [...new Set([...TOPIC_ORDER, ...deps.challenges().map((c) => c.topic)])];
-  const topicPick = await vscode.window.showQuickPick([...existingTopics, '$(add) New topic…'], {
+  const NO_TOPIC = `$(star-empty) ${CUSTOM_TOPIC} (no topic)`;
+  const existingTopics = [...new Set([...TOPIC_ORDER, ...deps.challenges().map((c) => c.topic)])].filter((t) => t !== CUSTOM_TOPIC);
+  const topicPick = await vscode.window.showQuickPick([NO_TOPIC, ...existingTopics, '$(add) New topic…'], {
     title: 'New challenge (3/4): topic',
+    placeHolder: 'Challenges without a topic appear in the Custom folder',
     ignoreFocusOut: true,
   });
   if (!topicPick) {
     return;
   }
-  const topic = topicPick.startsWith('$(add)')
-    ? (await vscode.window.showInputBox({ title: 'Topic name', prompt: 'e.g. Recursion, Collections, Exceptions', ignoreFocusOut: true }))?.trim()
-    : topicPick;
-  if (!topic) {
-    return;
+  let topic: string | undefined;
+  if (topicPick.startsWith('$(add)')) {
+    topic = (await vscode.window.showInputBox({ title: 'Topic name', prompt: 'e.g. Recursion, Collections, Exceptions', ignoreFocusOut: true }))?.trim();
+    if (!topic) {
+      return;
+    }
+  } else if (topicPick !== NO_TOPIC) {
+    topic = topicPick;
   }
 
   const difficulty = await vscode.window.showQuickPick(['Easy', 'Medium', 'Hard'], { title: 'New challenge (4/4): difficulty', ignoreFocusOut: true });
@@ -208,7 +214,7 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
     return;
   }
 
-  const order = Math.max(0, ...deps.challenges().filter((c) => c.topic === topic).map((c) => c.order)) + 1;
+  const order = Math.max(0, ...deps.challenges().filter((c) => c.topic === (topic ?? CUSTOM_TOPIC)).map((c) => c.order)) + 1;
   const dir = path.join(folder, id);
   writeChallengeTemplate(dir, title, topic, difficulty, order);
 

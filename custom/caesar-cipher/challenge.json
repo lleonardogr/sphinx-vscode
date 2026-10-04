@@ -1,0 +1,36 @@
+{
+  "title": "Caesar Cipher",
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Characters are numbers: 'c' - 'a' is 2, the letter's position in the alphabet.",
+    "Add the shift to the position, then use % 26 to wrap around after z.",
+    "Turn the position back into a letter with (char) ('a' + position)."
+  ],
+  "aiHints": false,
+  "tests": [
+    {
+      "input": "3\nHello, World!\n",
+      "output": "Khoor, Zruog!\n"
+    },
+    {
+      "input": "1\nabc xyz\n",
+      "output": "bcd yza\n"
+    },
+    {
+      "input": "0\nSame\n",
+      "output": "Same\n",
+      "hidden": true
+    },
+    {
+      "input": "25\nZebra-123\n",
+      "output": "Ydaqz-123\n",
+      "hidden": true
+    },
+    {
+      "input": "13\nThe Quick Brown Fox\n",
+      "output": "Gur Dhvpx Oebja Sbk\n",
+      "hidden": true
+    }
+  ]
+}

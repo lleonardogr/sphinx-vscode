@@ -14,7 +14,7 @@ HackerRank / LeetCode-style coding challenges right inside VS Code, running full
 
 Students pick a challenge from the **Tech Challenges** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
 
-## Topics included (31 challenges)
+## Topics included (34 challenges)
 
 | Topic        | Challenges |
 |--------------|------------|
@@ -25,6 +25,7 @@ Students pick a challenge from the **Tech Challenges** sidebar. The problem stat
 | Strings      | Reverse a String · Count Vowels · Palindrome |
 | Methods      | Prime Numbers · Power |
 | OOP          | Your First Class · Rectangle Class · Book with `toString()` · Bank Account (encapsulation) · Shapes (inheritance) · Animals (interfaces) |
+| Custom       | Word Counter · Grade Report · Caesar Cipher: [example custom challenges](custom/) to copy when writing your own |
 
 ## Features
 
@@ -38,7 +39,7 @@ Students pick a challenge from the **Tech Challenges** sidebar. The problem stat
 - **Syntax requirements**: a challenge can require constructs (for example "use a `switch`", "create `class Square extends Shape`" or "keep `balance` private") or forbid shortcuts (`Math.max`, `reverse()`, `Math.pow`).
 - **AI hints (optional, off by default)**: an AI tutor gives one hint at a time about your current code, without writing the solution. It works with a **local model** (Ollama, LM Studio: free and private), **your own API key** (Anthropic Claude or any OpenAI-compatible API), or VS Code's language models (GitHub Copilot). API keys are stored in VS Code's encrypted secret storage. See [AI hints](docs/ai-hints.md).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
-- **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/31 solved` counter in the status bar.
+- **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/34 solved` counter in the status bar.
 
 ## Getting started (students)
 
@@ -132,7 +133,7 @@ For a classroom without internet access, AI hints can use a model running on eac
 
 Everything you need is in **[docs/creating-challenges.md](docs/creating-challenges.md)**: a 5-minute quick start, the file format, writing tests, the rules cookbook, validating, and sharing challenges with your class without rebuilding the extension.
 
-In short: run **Tech Challenges: Create New Challenge…**, edit the generated files, then run **Tech Challenges: Validate Challenges in a Folder…** to check everything and fill in the expected outputs.
+In short: run **Tech Challenges: Create New Challenge…**, edit the generated files, then run **Tech Challenges: Validate Challenges in a Folder…** to check everything and fill in the expected outputs. Challenges without a `topic` appear in the **Custom** group. The [`custom/`](custom/) folder has three examples you can copy.
 
 ## Roadmap
 

@@ -12,6 +12,7 @@ const TOPIC_ICONS: Record<string, string> = {
   Strings: 'symbol-string',
   Methods: 'symbol-method',
   OOP: 'symbol-class',
+  Custom: 'star-empty',
 };
 
 export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeNode> {
