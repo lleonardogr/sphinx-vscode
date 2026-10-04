@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Import Challenges, Tests or Exams…**: a new button (⤓) at the top of the sidebar imports what a teacher shared, as a `.zip` or a folder.
+  - Every folder with a `challenge.json` or an `exam.json` is found, checked, and copied into the extension's library, which loads automatically. No settings change is needed, and imports keep working after the zip is deleted.
+  - Packages that contain `Solution*.java` files ask whether to remove them (students) or keep them (teachers).
+  - Re-importing offers to replace the older version. Items whose id matches a built-in one are renamed with `-imported`. Unsafe zip paths are refused.
+  - **Remove Imported Challenges, Tests or Exams…** takes them out again.
+
 ## [0.4.0] - 2026-10-04
 
 ### Added
