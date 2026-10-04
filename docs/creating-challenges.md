@@ -63,7 +63,7 @@ The descriptions and hints are written in the language of `techChallenges.ai.res
 
 If a challenge still has problems after 3 attempts, you can save it as a draft and fix it yourself. Exam questions that fail are left out of the exam.
 
-**Model size matters.** Writing a working exercise, with two solutions that agree, is much harder than giving a hint. Very small local models (around 1B parameters, such as `gemma3:1b`) follow the format but usually write programs that ignore the input, so their drafts fail the checks. Use at least a 3B–7B model, preferably one trained for code (for example `qwen2.5-coder:3b` or `qwen2.5-coder:7b` in Ollama), or a remote provider. Small models are still fine for AI hints.
+**Model size matters.** Writing a working exercise, with two solutions that agree, is much harder than giving a hint. Very small local models (around 1B parameters, such as `gemma3:1b`) follow the format but usually write programs that ignore the input, so their drafts fail the checks. Use at least a 3B–7B model, preferably one trained for code (for example `qwen2.5-coder:3b` or `qwen2.5-coder:7b` in Ollama), or a remote provider. Avoid "thinking" models such as `qwen3` for generation on a laptop: they reason at length before answering, which can take many minutes and fill Ollama's context window before any answer. Small models are still fine for AI hints.
 
 **Always review what it writes** before giving it to students. Validation proves that the solutions agree with each other, not that the task is well explained or at the right level. Generating needs a JDK, the same as **Validate Challenges**.
 

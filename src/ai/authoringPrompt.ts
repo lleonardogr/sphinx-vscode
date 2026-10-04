@@ -96,7 +96,8 @@ export function serializeFiles(files: Record<string, string>): string {
 }
 
 /** Extracts the <<<FILE name>>> … <<<END>>> blocks from a model answer. Tolerates a missing <<<END>>> (the next <<<FILE starts a new block). */
-export function parseFiles(text: string): { files: Record<string, string>; problems: string[] } {
+export function parseFiles(answer: string): { files: Record<string, string>; problems: string[] } {
+  const text = withoutThinking(answer);
   const files: Record<string, string> = {};
   const re = /<<<\s*FILE\s+([\w.]+)\s*>>>[^\n]*\n([\s\S]*?)(?=<<<\s*END\s*>>>|<<<\s*FILE\b|$)/g;
   for (let m = re.exec(text); m; m = re.exec(text)) {
@@ -114,6 +115,11 @@ export function parseFiles(text: string): { files: Record<string, string>; probl
     }
   }
   return { files, problems: missingFiles(files) };
+}
+
+/** Removes the reasoning that "thinking" models (Qwen 3, DeepSeek R1…) may put before the answer. */
+export function withoutThinking(text: string): string {
+  return text.replace(/<think>[\s\S]*?(<\/think>|$)/g, '');
 }
 
 export function missingFiles(files: Record<string, string>): string[] {
@@ -269,7 +275,7 @@ ${spec.existingTitles.length ? `\nDo not reuse these existing exercises:\n${spec
 
 /** Extracts and checks the exam plan JSON (tolerating fences or text around it). */
 export function parseExamPlan(text: string, questions: number): { plan?: ExamPlan; problems: string[] } {
-  const json = firstJsonObject(text);
+  const json = firstJsonObject(withoutThinking(text));
   if (!json) {
     return { problems: ['The answer contains no JSON object.'] };
   }
