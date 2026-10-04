@@ -40,6 +40,11 @@
       "input": "6\ncow cow duck cat dog duck\n",
       "output": "The cow says Moo!\nThe cow says Moo!\nThe duck says Quack!\nThe cat says Meow!\nThe dog says Woof!\nThe duck says Quack!\n",
       "hidden": true
+    },
+    {
+      "input": "4\nduck duck duck duck\n",
+      "output": "The duck says Quack!\nThe duck says Quack!\nThe duck says Quack!\nThe duck says Quack!\n",
+      "hidden": true
     }
   ]
 }

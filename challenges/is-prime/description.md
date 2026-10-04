@@ -14,3 +14,9 @@ The `main` method is already written: it reads several numbers and calls your me
 **Output**
 
 For each number, `<n> is prime` or `<n> is not prime`.
+
+**Things to know**
+
+- A method gives back its result with `return`. As soon as `return false;` runs, the method stops.
+- You only need to test divisors up to the square root: if `n` has a divisor bigger than √n, it also has one smaller. Loop while `i * i <= n`.
+- Numbers below 2, including 0, 1 and negative numbers, are not prime.

@@ -7,6 +7,11 @@
       "message": "Use a loop (for or while)."
     }
   ],
+  "hints": [
+    "Keep a running total that starts at 0.",
+    "Add a number to the total only when number % 2 == 0.",
+    "Negative even numbers count too: -4 % 2 is 0."
+  ],
   "tests": [
     {
       "input": "5\n1 2 3 4 5\n",

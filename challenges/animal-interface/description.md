@@ -26,5 +26,10 @@ For each animal, in order:
 The dog says Woof!
 ```
 
+**Things to know**
+
+- `interface Animal { String name(); String sound(); }` only lists the methods.
+- `class Dog implements Animal` must write both methods, and they must be `public`.
+- An `Animal[]` array can store objects of any class that implements `Animal`. The loop calls `animal.sound()` without knowing which class it is.
 
 > **Classic Java:** write your classes in the same `Main.java` file, above or below `public class Main`, *without* the `public` keyword (only one class per file can be public).

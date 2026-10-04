@@ -40,6 +40,11 @@
       "input": "1\nZoe 0\n",
       "output": "Hi, I'm Zoe and I'm 0 years old.\n",
       "hidden": true
+    },
+    {
+      "input": "2\nAna 20\nAna 21\n",
+      "output": "Hi, I'm Ana and I'm 20 years old.\nHi, I'm Ana and I'm 21 years old.\n",
+      "hidden": true
     }
   ]
 }

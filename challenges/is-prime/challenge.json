@@ -32,6 +32,11 @@
       "input": "5\n97 100 121 7919 1000003\n",
       "output": "97 is prime\n100 is not prime\n121 is not prime\n7919 is prime\n1000003 is prime\n",
       "hidden": true
+    },
+    {
+      "input": "5\n1 2 49 53 1000000007\n",
+      "output": "1 is not prime\n2 is prime\n49 is not prime\n53 is prime\n1000000007 is prime\n",
+      "hidden": true
     }
   ]
 }

@@ -31,6 +31,16 @@
       "input": "3\nThe Pragmatic Programmer;Andrew Hunt;1999\nHead First Java;Kathy Sierra;2003\nSICP;Harold Abelson;1985\n",
       "output": "\"The Pragmatic Programmer\" by Andrew Hunt (1999)\n\"Head First Java\" by Kathy Sierra (2003)\n\"SICP\" by Harold Abelson (1985)\n",
       "hidden": true
+    },
+    {
+      "input": "1\nA Game of Thrones;George R. R. Martin;1996\n",
+      "output": "\"A Game of Thrones\" by George R. R. Martin (1996)\n",
+      "hidden": true
+    },
+    {
+      "input": "2\nIt;Stephen King;1986\nEmma;Jane Austen;1815\n",
+      "output": "\"It\" by Stephen King (1986)\n\"Emma\" by Jane Austen (1815)\n",
+      "hidden": true
     }
   ]
 }

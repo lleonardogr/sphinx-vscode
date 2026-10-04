@@ -16,4 +16,11 @@ Encode a message:
 
 The encoded message.
 
+**Things to know**
+
+- A `char` is a number: `'a' + 1` is `'b'`. Turn the number back into a character with `(char)`.
+- Work with the position in the alphabet: `(c - 'a' + k) % 26` wraps `z` around to `a`; then add `'a'` back.
+- `Character.isUpperCase(c)` and `Character.isLowerCase(c)` tell you which alphabet to use. Copy anything else as it is.
+- Build the result with a `StringBuilder`, then print it.
+
 > This example challenge has AI hints turned off (`"aiHints": false`), the way a teacher might set up an exam question.
