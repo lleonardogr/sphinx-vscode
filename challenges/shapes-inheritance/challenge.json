@@ -36,6 +36,11 @@
       "input": "3\ncircle 0.5\ncircle 10\ntriangle 0 7\n",
       "output": "Circle: 0.79\nCircle: 314.16\nTriangle: 0.00\nTotal area: 314.94\n",
       "hidden": true
+    },
+    {
+      "input": "2\nsquare 0.1\ntriangle 2.5 4\n",
+      "output": "Square: 0.01\nTriangle: 5.00\nTotal area: 5.01\n",
+      "hidden": true
     }
   ]
 }

@@ -13,3 +13,9 @@ An integer `n`.
 `Monday`, `Tuesday`, `Wednesday`, `Thursday`, `Friday`, `Saturday`, `Sunday`, or `Invalid day`.
 
 Use a `switch` statement for this one.
+
+**Things to know**
+
+- `switch (n) { case 1: … break; … default: … }` jumps straight to the matching `case`.
+- Without `break`, execution falls through into the next case.
+- `default` runs when no case matches, so it handles the invalid numbers.

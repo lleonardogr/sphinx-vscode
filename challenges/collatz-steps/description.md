@@ -18,3 +18,9 @@ An integer `n` (1 ≤ n ≤ 1,000,000).
 **Output**
 
 The number of steps to reach 1.
+
+**Things to know**
+
+- `while (n != 1) { … steps++; }` repeats until the condition becomes false.
+- `n % 2 == 0` tests for even.
+- The values can climb far above the starting number: from 837 799 they pass 2.9 billion, more than an `int` can hold (about 2.1 billion). Use a `long` for `n`.

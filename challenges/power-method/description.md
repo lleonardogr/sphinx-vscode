@@ -13,3 +13,9 @@ Two integers: `base` and `exponent` (0 ≤ exponent ≤ 60, and the result alway
 ```
 <base>^<exponent> = <result>
 ```
+
+**Things to know**
+
+- A method declares the type it returns (`long`) and the parameters it takes (`int base, int exponent`).
+- Start with `long result = 1;` and multiply by `base` once per turn of the loop, `exponent` times.
+- `long` holds results up to about 9 × 10¹⁸. `Math.pow` returns a `double` and isn't allowed here.

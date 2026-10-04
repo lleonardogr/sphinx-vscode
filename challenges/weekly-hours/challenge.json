@@ -32,6 +32,11 @@
       "input": "7\nSUNDAY 1\nSATURDAY 2\nFRIDAY 3\nTHURSDAY 4\nWEDNESDAY 5\nTUESDAY 6\nMONDAY 7\n",
       "output": "MONDAY: 7\nTUESDAY: 6\nWEDNESDAY: 5\nTHURSDAY: 4\nFRIDAY: 3\nSATURDAY: 2\nSUNDAY: 1\nBusiest: MONDAY\n",
       "hidden": true
+    },
+    {
+      "input": "2\nMONDAY 1\nSUNDAY 1\n",
+      "output": "MONDAY: 1\nTUESDAY: 0\nWEDNESDAY: 0\nTHURSDAY: 0\nFRIDAY: 0\nSATURDAY: 0\nSUNDAY: 1\nBusiest: MONDAY\n",
+      "hidden": true
     }
   ]
 }

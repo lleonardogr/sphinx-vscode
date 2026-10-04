@@ -12,6 +12,14 @@ All notable changes to this project are documented here. The format follows [Kee
   - Challenges, quizzes and tests that belong to no unit (from teachers or imports) are grouped in the **Custom** section at the bottom.
   - Progress is kept: it is stored by challenge id. The old topic name `Variables` still works in custom content.
 
+### Improved
+
+- Every built-in challenge now meets the content standard:
+  - 30 descriptions gained a **Things to know** section explaining the Java features involved, including the common traps (integer division, negative remainders, `int` overflow in Factorial and Collatz Steps).
+  - The 5 shortest descriptions were expanded, with examples.
+  - 11 challenges gained hidden edge-case tests.
+- `npm run validate` (and CI) is now strict for the built-in content.
+
 ### Added
 
 - **Next step** button in the success banner after a challenge is accepted: it opens the next challenge, quiz or test in the path.

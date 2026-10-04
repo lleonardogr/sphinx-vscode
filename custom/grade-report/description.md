@@ -17,3 +17,9 @@ Highest: 95
 Lowest: 40
 Passed: 3 of 4
 ```
+
+**Things to know**
+
+- One loop can track the sum, the highest grade, the lowest grade and how many passed.
+- Divide as a `double` for the average, `(double) sum / n`, and print it with `"%.2f"`.
+- Start the highest and lowest at the first grade, or at `Integer.MIN_VALUE` and `Integer.MAX_VALUE`.

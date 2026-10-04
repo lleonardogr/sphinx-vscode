@@ -19,5 +19,10 @@ Print each book by passing the object itself to `println`.
 
 One line per book in the format above.
 
+**Things to know**
+
+- `@Override public String toString() { … }` replaces the default text. Keep it `public` and spelled exactly like that.
+- `IO.println(book)` (or `System.out.println(book)`) calls `toString()` for you.
+- Split each line with `line.split(";")`. To put a quote inside a String, write `\"`: `"\"" + title + "\""`.
 
 > **Classic Java:** write your classes in the same `Main.java` file, above or below `public class Main`, *without* the `public` keyword (only one class per file can be public).

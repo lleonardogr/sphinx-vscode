@@ -22,3 +22,9 @@ Read a month number and a year, and print how many days that month has. February
 **Output**
 
 The number of days, or `Invalid month`.
+
+**Things to know**
+
+- Arrow labels such as `case 4, 6, 9, 11 -> 30;` never fall through, so no `break` is needed.
+- A switch expression must produce a value for every input, so it needs a `default ->` branch.
+- The leap-year rule from the previous challenge: `(year % 4 == 0 && year % 100 != 0) || year % 400 == 0`.

@@ -23,3 +23,10 @@ Read a list of numbers, then print their **average** (two decimal places) and ho
 Average: 3.00
 Above average: 2
 ```
+
+**Things to know**
+
+- Storing the values in an array (`int[] numbers = new int[n];`) lets you go through them twice.
+- Divide as a `double` to keep the decimals: `(double) sum / n`.
+- "Strictly above" means `>`, not `>=`.
+- Print two decimals with `"Average: %.2f".formatted(average)`.

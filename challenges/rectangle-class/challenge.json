@@ -44,6 +44,11 @@
       "input": "1\n0 9\n",
       "output": "Area: 0, Perimeter: 18, Square: false\n",
       "hidden": true
+    },
+    {
+      "input": "2\n12 1\n6 6\n",
+      "output": "Area: 12, Perimeter: 26, Square: false\nArea: 36, Perimeter: 24, Square: true\n",
+      "hidden": true
     }
   ]
 }

@@ -32,6 +32,11 @@
       "input": "4\nadd x\nremove x\nremove x\nprint\n",
       "output": "Removed x\nx not found\n(empty)\n",
       "hidden": true
+    },
+    {
+      "input": "7\nadd pen\nadd cup\nadd pen\nremove pen\nprint\ncount\nremove cup\n",
+      "output": "Removed pen\ncup, pen\nItems: 2\nRemoved cup\n",
+      "hidden": true
     }
   ]
 }

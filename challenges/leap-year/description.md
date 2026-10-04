@@ -14,3 +14,9 @@ A year (a positive integer).
 **Output**
 
 `Leap year` or `Not a leap year`.
+
+**Things to know**
+
+- `%` checks divisibility: `year % 4 == 0` means "divisible by 4".
+- `&&` (and), `||` (or) and `!=` (not equal) combine conditions. Use parentheses to make the order clear: `a && (b || c)`.
+- A `boolean` variable can store the whole rule: `boolean leap = …;`

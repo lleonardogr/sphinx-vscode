@@ -32,6 +32,11 @@
       "input": "Alan\n99\n",
       "output": "Hello, Alan!\nNext year you will be 100 years old.\n",
       "hidden": true
+    },
+    {
+      "input": "Mia\n17\n",
+      "output": "Hello, Mia!\nNext year you will be 18 years old.\n",
+      "hidden": true
     }
   ]
 }

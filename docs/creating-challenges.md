@@ -363,8 +363,8 @@ Students' progress is stored per challenge id, so keep ids stable after sharing.
 Challenges in this repository's `challenges/` folder ship with the extension. To add one:
 
 1. Fork the repository and run `npm install`.
-2. Create the challenge in `challenges/<id>/`. **Create New Challenge** offers this folder when you have the repository open.
-3. Run `npm run validate`. CI also validates on Linux, macOS and Windows, with JDK 17 and JDK 25.
+2. Create the challenge in `challenges/<id>/`, with the `topic` of its [unit](../README.md#the-learning-path-52-challenges) and an `order` that keeps the unit going from easy to hard. **Create New Challenge** offers this folder when you have the repository open.
+3. Run `npm run validate`. It is **strict** for the built-in content: besides compiling and running everything, it fails on the content standard in the checklist below (a "Things to know" section, at least 3 hidden tests and 2 hints, a description of 40 words or more). CI also validates on Linux, macOS and Windows, with JDK 17 and JDK 25.
 4. Add a line to `CHANGELOG.md` and open a pull request. See [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 Not sure if your idea fits? Open a **Challenge proposal** issue first.
@@ -373,14 +373,15 @@ Not sure if your idea fits? Open a **Challenge proposal** issue first.
 
 ## Checklist
 
-- [ ] The description states the input format, the output format and the limits.
+- [ ] The description states the input format, the output format and the limits, and ends with **Things to know**: 2 to 4 bullets on the Java features involved.
+- [ ] It only uses concepts from its own unit or earlier units.
 - [ ] Output formatting (spaces, case, decimals) is unambiguous.
 - [ ] 2–3 visible tests and 3–6 hidden edge-case tests.
 - [ ] Starters compile but don't solve the problem.
 - [ ] Both `Solution.java` and `Solution.classic.java` exist and pass.
 - [ ] Rules work in both Java styles.
-- [ ] Hints go from gentle to specific, without giving away the answer.
-- [ ] Validation passes, and you've reviewed the generated outputs.
+- [ ] 2 to 4 hints that go from gentle to specific, without giving away the answer.
+- [ ] Validation passes (in VS Code, check for ⚠ lines too), and you've reviewed the generated outputs.
 - [ ] You've solved it yourself from the sidebar, the way a student would.
 
 ---

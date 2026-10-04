@@ -19,3 +19,9 @@ The `main` method is already written. It reads commands and calls your methods. 
 **Output**
 
 `main` prints `Deposited X`, `Withdrew X`, `Insufficient funds`, `Invalid amount` or `Balance: X` for each command.
+
+**Things to know**
+
+- `private` fields can only be used inside their own class, so `main` has to go through `deposit`, `withdraw` and `getBalance`.
+- Check the rule first and `return false;` early when the operation isn't allowed. Otherwise change the balance and `return true;`.
+- Returning a `boolean` lets the code that called the method decide what to print.

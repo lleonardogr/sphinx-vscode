@@ -24,5 +24,11 @@ Square: 9.00
 Total area: 21.57
 ```
 
+**Things to know**
+
+- `class Square extends Shape` inherits from `Shape` and must implement its abstract methods, `name()` and `area()`.
+- Put `@Override` above each method you implement, so Java checks the signature for you.
+- A `Shape` variable can hold any subclass: `Shape s = new Square(3);`, and `s.area()` runs `Square`'s version.
+- Add the exact areas to a `double` total, and round only when printing.
 
 > **Classic Java:** write your classes in the same `Main.java` file, above or below `public class Main`, *without* the `public` keyword (only one class per file can be public).
