@@ -1,6 +1,5 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln().trim());
 
     // TODO: print "Even" or "Odd"
 }

@@ -1,6 +1,5 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    String text = scanner.nextLine();
+    String text = IO.readln();
     int vowels = 0;
 
     // TODO: count the vowels

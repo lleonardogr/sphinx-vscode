@@ -148,12 +148,14 @@ The starter is what the student sees when they open the challenge. It must **com
 
 ```java
 void main() {
-    Scanner scanner = new Scanner(System.in);   // no import needed in compact source files
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln().trim());      // line 1: how many numbers
+    String[] parts = IO.readln().trim().split(" ");    // line 2: the numbers
 
-    // TODO: read the n numbers and print the sum of the even ones
+    // TODO: turn the parts into numbers and print the sum of the even ones
 }
 ```
+
+Modern starters read input with `IO.readln()`, which returns one line as a `String`. Use `Integer.parseInt` / `Double.parseDouble` for numbers, and `split(" ")` when a line holds several values. `Scanner` also works in compact source files, without an import, if you prefer it.
 
 `Starter.classic.java` is the same starter as a classic class. Students who set `techChallenges.java.style` to `classic` get this one:
 

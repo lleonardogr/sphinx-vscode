@@ -112,13 +112,13 @@ The value of \`a + b\`.
 
 **Things to know**
 
-- \`scanner.nextInt()\` reads the next whole number.
+- \`IO.readln()\` reads a whole line, and \`Integer.parseInt(text)\` turns text into an \`int\`.
 `,
-    'Starter.java': `// Modern Java (JDK 25+). Scanner needs no import in a compact source file.
+    'Starter.java': `// Modern Java (JDK 25+): IO.readln() reads one line of input.
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int a = scanner.nextInt();
-    int b = scanner.nextInt();
+    String[] parts = IO.readln().trim().split(" ");
+    int a = Integer.parseInt(parts[0]);
+    int b = Integer.parseInt(parts[1]);
 
     // TODO: print the sum
 }
@@ -137,9 +137,9 @@ public class Main {
 `,
     'Solution.java': `// Reference solution (modern Java). Never shipped to students.
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int a = scanner.nextInt();
-    int b = scanner.nextInt();
+    String[] parts = IO.readln().trim().split(" ");
+    int a = Integer.parseInt(parts[0]);
+    int b = Integer.parseInt(parts[1]);
     IO.println(a + b);
 }
 `,

@@ -24,14 +24,14 @@ class Circle extends Shape {
 // TODO: create class Square extends Shape (one side) and class Triangle extends Shape (base and height)
 
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln().trim());
     double total = 0;
     for (int i = 0; i < n; i++) {
-        String type = scanner.next();
+        String[] parts = IO.readln().trim().split(" "); // e.g. ["circle", "2"] or ["triangle", "4", "5"]
+        String type = parts[0];
         Shape shape = null;
         if (type.equals("circle")) {
-            shape = new Circle(scanner.nextDouble());
+            shape = new Circle(Double.parseDouble(parts[1]));
         }
         // TODO: create a Square for "square" and a Triangle for "triangle"
 

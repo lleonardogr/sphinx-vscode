@@ -1,6 +1,5 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    String text = scanner.nextLine();
+    String text = IO.readln();
 
     // TODO: build the reversed text with a loop and print it
 }

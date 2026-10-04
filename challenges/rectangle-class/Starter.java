@@ -6,11 +6,11 @@
 //   - boolean isSquare()  returns true when width equals height
 
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln().trim());
     for (int i = 0; i < n; i++) {
-        int width = scanner.nextInt();
-        int height = scanner.nextInt();
+        String[] parts = IO.readln().trim().split(" ");
+        int width = Integer.parseInt(parts[0]);
+        int height = Integer.parseInt(parts[1]);
         // TODO: create a Rectangle and print: Area: <area>, Perimeter: <perimeter>, Square: <isSquare>
     }
 }

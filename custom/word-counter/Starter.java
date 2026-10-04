@@ -1,6 +1,5 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    String text = scanner.nextLine();
+    String text = IO.readln();
 
     // TODO: count the words and print the result
 }

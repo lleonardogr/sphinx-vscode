@@ -1,6 +1,6 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    // TODO: read width and height as double values
+    String[] parts = IO.readln().trim().split(" ");
+    // TODO: turn parts[0] and parts[1] into double values (width and height)
 
     // TODO: calculate the area and the perimeter
 

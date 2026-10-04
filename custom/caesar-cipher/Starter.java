@@ -1,8 +1,6 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int shift = scanner.nextInt();
-    scanner.nextLine(); // move to the next line
-    String message = scanner.nextLine();
+    int shift = Integer.parseInt(IO.readln().trim());
+    String message = IO.readln();
 
     // TODO: build the encoded message and print it
 }

@@ -1,6 +1,5 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int year = scanner.nextInt();
+    int year = Integer.parseInt(IO.readln().trim());
 
     // TODO: print "Leap year" or "Not a leap year"
 }

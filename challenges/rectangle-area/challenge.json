@@ -4,7 +4,7 @@
   "difficulty": "Easy",
   "order": 4,
   "hints": [
-    "scanner.nextDouble() reads a decimal number.",
+    "Double.parseDouble(parts[0]) turns the first part of the line into a decimal number.",
     "%.2f means: a decimal number with 2 digits after the point. \"Area: %.2f\".formatted(area) builds the text."
   ],
   "mustContain": [

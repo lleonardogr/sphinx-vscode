@@ -1,14 +1,11 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln().trim());
+    String[] parts = IO.readln().trim().split(" ");
     int[] numbers = new int[n];
-
-    // TODO: read the n numbers into the array
     for (int i = 0; i < n; i++) {
-        numbers[i] = scanner.nextInt();
+        numbers[i] = Integer.parseInt(parts[i]);
     }
-
-    int target = scanner.nextInt();
+    int target = Integer.parseInt(IO.readln().trim());
 
     // TODO: count how many times target appears in the array, then print it
 }

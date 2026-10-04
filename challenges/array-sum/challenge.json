@@ -4,7 +4,7 @@
   "difficulty": "Easy",
   "order": 1,
   "hints": [
-    "Reading: for (int i = 0; i < n; i++) { numbers[i] = scanner.nextInt(); }",
+    "Reading: for (int i = 0; i < n; i++) { numbers[i] = Integer.parseInt(parts[i]); }",
     "Summing: loop again over the array and add numbers[i] to a sum variable.",
     "Bonus: the enhanced for loop for (int x : numbers) visits each element."
   ],
