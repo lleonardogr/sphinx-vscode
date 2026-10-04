@@ -8,6 +8,19 @@
     "counts.put(word, counts.getOrDefault(word, 0) + 1) does all of that in one line.",
     "new TreeMap<>() instead of new HashMap<>() keeps the words in alphabetical order."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Frequência de palavras (HashMap)",
+      "hints": [
+        "Para cada palavra: leia a contagem atual (0 se for nova), some 1 e guarde de volta.",
+        "counts.put(word, counts.getOrDefault(word, 0) + 1) faz tudo isso em uma linha.",
+        "new TreeMap<>() no lugar de new HashMap<>() mantém as palavras em ordem alfabética."
+      ],
+      "mustContain": [
+        "Conte as palavras com um Map (HashMap ou TreeMap)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(HashMap|TreeMap|LinkedHashMap)\\b",

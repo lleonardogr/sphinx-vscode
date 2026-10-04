@@ -8,6 +8,19 @@
     "Use + to join text and variables: \"Hello, \" + name + \"!\"",
     "Careful: \"be \" + age + 1 gives \"be 361\". Put the math in parentheses: (age + 1)."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Saudação com variáveis",
+      "hints": [
+        "Integer.parseInt(IO.readln().trim()) lê a próxima linha e transforma em int.",
+        "Use + para juntar texto e variáveis: \"Hello, \" + name + \"!\"",
+        "Cuidado: \"be \" + age + 1 dá \"be 361\". Coloque a conta entre parênteses: (age + 1)."
+      ],
+      "mustContain": [
+        "Guarde a idade em uma variável int."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bint\\s+\\w+\\s*=",

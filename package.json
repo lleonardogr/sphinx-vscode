@@ -402,7 +402,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "vscode:prepublish": "npm run compile && npm run bundle",
-    "validate": "npm run compile && node scripts/validate-challenges.js --strict",
+    "validate": "npm run compile && node scripts/validate-challenges.js --strict --lang=pt-br",
     "package": "vsce package",
     "bundle": "esbuild src/extension.ts --bundle --platform=node --format=cjs --target=node20 --external:vscode --outfile=out/extension.js --minify",
     "prepare": "git config core.hooksPath .githooks || true"

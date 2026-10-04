@@ -8,6 +8,20 @@
     "extends Shape means a Square IS a Shape, so you can write: Shape shape = new Square(3);",
     "Format with 2 decimals: \"%s: %.2f\".formatted(shape.name(), shape.area())"
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Formas (herança)",
+      "hints": [
+        "Copie a estrutura de Circle: atributos, um construtor, name() e area().",
+        "extends Shape quer dizer que um Square É um Shape, então você pode escrever: Shape shape = new Square(3);",
+        "Formate com 2 casas decimais: \"%s: %.2f\".formatted(shape.name(), shape.area())"
+      ],
+      "mustContain": [
+        "Crie class Square extends Shape.",
+        "Crie class Triangle extends Shape."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bclass\\s+Square\\s+extends\\s+Shape\\b",

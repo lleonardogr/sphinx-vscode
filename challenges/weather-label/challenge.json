@@ -8,6 +8,22 @@
     "Replace the second value with another ternary: ... : temperature < 10 ? \"Cold\" : \"Mild\".",
     "Check the boundaries: 30 is Mild, 31 is Hot, 10 is Mild, 9 is Cold."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Rótulo do clima (ternário)",
+      "hints": [
+        "Comece com dois rótulos: temperature > 30 ? \"Hot\" : \"Not hot\".",
+        "Troque o segundo valor por outro ternário: ... : temperature < 10 ? \"Cold\" : \"Mild\".",
+        "Confira os limites: 30 é Mild, 31 é Hot, 10 é Mild, 9 é Cold."
+      ],
+      "mustContain": [
+        "Use o operador ternário: condição ? valorSeVerdadeiro : valorSeFalso."
+      ],
+      "mustNotContain": [
+        "Resolva com o operador ternário em vez de if / else."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\?[^;]*:",

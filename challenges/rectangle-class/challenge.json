@@ -8,6 +8,22 @@
     "isSquare() can return the comparison directly: return width == height;",
     "Joining a boolean with text prints true or false."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Classe Retângulo",
+      "hints": [
+        "Os métodos usam os atributos do próprio objeto: int area() { return width * height; }",
+        "isSquare() pode retornar a comparação direto: return width == height;",
+        "Juntar um boolean com texto imprime true ou false."
+      ],
+      "mustContain": [
+        "Crie uma classe chamada Rectangle.",
+        "Dê ao Rectangle um método int area().",
+        "Dê ao Rectangle um método int perimeter().",
+        "Dê ao Rectangle um método boolean isSquare()."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bclass\\s+Rectangle\\b",

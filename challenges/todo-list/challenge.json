@@ -8,6 +8,19 @@
     "remove(item) returns true when the item was in the list. Use that to choose the message.",
     "String.join(\", \", items) builds \"milk, eggs\" for you."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Lista de tarefas (ArrayList)",
+      "hints": [
+        "Crie a lista uma vez, antes do laço, para ela guardar os itens entre um comando e outro.",
+        "remove(item) retorna true quando o item estava na lista. Use isso para escolher a mensagem.",
+        "String.join(\", \", items) monta \"milk, eggs\" para você."
+      ],
+      "mustContain": [
+        "Guarde os itens em um ArrayList."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bArrayList\\b",

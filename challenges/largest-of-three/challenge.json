@@ -8,6 +8,22 @@
     "Some numbers can be equal. Should you use > or >=? Does it matter?",
     "The logical AND operator is &&: if (a >= b && a >= c) { ... }"
   ],
+  "translations": {
+    "pt-br": {
+      "title": "O maior de três",
+      "hints": [
+        "Comece supondo que a é o maior e compare com b e com c.",
+        "Alguns números podem ser iguais. Você deve usar > ou >=? Faz diferença?",
+        "O operador lógico E é &&: if (a >= b && a >= c) { ... }"
+      ],
+      "mustContain": [
+        "Use um if / else."
+      ],
+      "mustNotContain": [
+        "Resolva com if / else: Math.max não é permitido aqui."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bif\\b",

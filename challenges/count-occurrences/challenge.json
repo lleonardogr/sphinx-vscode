@@ -7,6 +7,19 @@
     "Use a counter variable that starts at 0.",
     "Inside the loop, if numbers[i] == target, do count++."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Contar ocorrências",
+      "hints": [
+        "Use uma variável contadora que começa em 0.",
+        "Dentro do laço, se numbers[i] == target, faça count++."
+      ],
+      "mustContain": [
+        "Guarde os números em um array (por exemplo int[] numbers).",
+        "Use um laço (for ou while)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\[\\s*\\]",

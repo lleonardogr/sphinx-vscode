@@ -8,6 +8,19 @@
     "Check from the highest grade down: if the score is >= 90 it's an A; otherwise, if it's >= 80 it's a B, and so on.",
     "Test the boundaries: 90, 89, 60 and 59."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Calculadora de conceitos",
+      "hints": [
+        "Use uma cadeia de if / else if / else.",
+        "Confira do maior conceito para o menor: se a nota for >= 90, é A; senão, se for >= 80, é B, e assim por diante.",
+        "Teste os limites: 90, 89, 60 e 59."
+      ],
+      "mustContain": [
+        "Use uma cadeia de if / else if / else."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "else\\s+if",

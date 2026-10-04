@@ -18,6 +18,22 @@
     "When the stock left is 0, call stock.remove(product) instead of storing 0.",
     "For the search, loop over stock.keySet() and keep the names where name.contains(text)."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Menu do estoque",
+      "hints": [
+        "Crie o Map<String, Integer> antes do laço. Um TreeMap mantém os produtos ordenados pelo nome.",
+        "Transforme o nome de cada produto em minúsculas assim que ler, para Apple e apple serem a mesma chave.",
+        "Teste a quantidade primeiro (ela precisa ser maior que 0), depois se o produto existe, depois se há estoque suficiente.",
+        "Quando o estoque restante for 0, chame stock.remove(product) em vez de guardar 0.",
+        "Na busca, percorra stock.keySet() e fique com os nomes em que name.contains(text)."
+      ],
+      "mustContain": [
+        "Guarde o estoque em um Map<String, Integer> (por exemplo um TreeMap ou HashMap).",
+        "Use um laço para manter o menu rodando."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bMap\\s*<\\s*String\\s*,\\s*Integer\\s*>",

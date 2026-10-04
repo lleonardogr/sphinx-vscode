@@ -7,6 +7,18 @@
     "for (int i = 1; i <= n; i++) { ... } repeats with i = 1, 2, ..., n.",
     "Check the condition: should it be i < n or i <= n?"
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Contar até N",
+      "hints": [
+        "for (int i = 1; i <= n; i++) { ... } repete com i = 1, 2, ..., n.",
+        "Confira a condição: deve ser i < n ou i <= n?"
+      ],
+      "mustContain": [
+        "Use um laço (for ou while)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(for|while)\\b",

@@ -8,6 +8,20 @@
     "Summing: loop again over the array and add numbers[i] to a sum variable.",
     "Bonus: the enhanced for loop for (int x : numbers) visits each element."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Soma de um array",
+      "hints": [
+        "Leitura: for (int i = 0; i < n; i++) { numbers[i] = Integer.parseInt(parts[i]); }",
+        "Soma: percorra o array de novo e vá somando numbers[i] em uma variável sum.",
+        "Extra: o for melhorado, for (int x : numbers), visita cada elemento."
+      ],
+      "mustContain": [
+        "Guarde os números em um array (por exemplo int[] numbers).",
+        "Use um laço (for ou while)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\[\\s*\\]",

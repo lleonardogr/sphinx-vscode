@@ -8,6 +8,23 @@
     "A loop can count down: for (int i = n - 1; i >= 0; i--)",
     "IO.print (without ln) does not move to a new line. Classic Java: System.out.print."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Inverter um array",
+      "hints": [
+        "O último elemento fica no índice numbers.length - 1.",
+        "Um laço pode contar para trás: for (int i = n - 1; i >= 0; i--)",
+        "IO.print (sem ln) não pula de linha. Java clássico: System.out.print."
+      ],
+      "mustContain": [
+        "Guarde os números em um array (por exemplo int[] numbers).",
+        "Use um laço (for ou while)."
+      ],
+      "mustNotContain": [
+        "Inverta com um laço: sem reverse() pronto."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\[\\s*\\]",

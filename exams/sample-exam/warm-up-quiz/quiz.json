@@ -30,5 +30,29 @@
         "0"
       ]
     }
-  ]
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de aquecimento",
+      "description": "Quatro perguntas rápidas antes das questões de código.",
+      "questions": [
+        {
+          "prompt": "Qual método imprime um texto e depois pula para a próxima linha no Java moderno?",
+          "options": [
+            "IO.print",
+            "IO.println",
+            "IO.readln",
+            "System.exit"
+          ]
+        },
+        {},
+        {
+          "prompt": "`==` é o jeito certo de comparar o conteúdo de duas Strings."
+        },
+        {
+          "prompt": "Qual é o índice do primeiro elemento de um array?"
+        }
+      ]
+    }
+  }
 }

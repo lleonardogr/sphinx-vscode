@@ -7,6 +7,15 @@
     "Watch out: 9 / 5 in Java is 1, because both numbers are int! Use 9.0 / 5, or multiply by the double first: celsius * 9 / 5.",
     "You can format two values at once: IO.println(\"%.1f C = %.1f F\".formatted(c, f));"
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Celsius para Fahrenheit",
+      "hints": [
+        "Atenção: 9 / 5 em Java é 1, porque os dois números são int! Use 9.0 / 5, ou multiplique pelo double primeiro: celsius * 9 / 5.",
+        "Você pode formatar dois valores de uma vez: IO.println(\"%.1f C = %.1f F\".formatted(c, f));"
+      ]
+    }
+  },
   "tests": [
     {
       "input": "25\n",

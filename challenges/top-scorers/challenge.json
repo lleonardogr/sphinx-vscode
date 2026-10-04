@@ -8,6 +8,22 @@
     "Comparator.comparingInt(Player::score).reversed().thenComparing(Player::name) gives the right order.",
     "For the numbering, stream the indexes: IntStream.range(0, top.size()).mapToObj(i -> (i + 1) + \". \" + ...)."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Os 3 maiores pontuadores",
+      "hints": [
+        "Primeiro transforme cada entrada em um Player: separe no \":\" e converta a pontuação.",
+        "Comparator.comparingInt(Player::score).reversed().thenComparing(Player::name) dá a ordem certa.",
+        "Para a numeração, faça um stream dos índices: IntStream.range(0, top.size()).mapToObj(i -> (i + 1) + \". \" + ...)."
+      ],
+      "mustContain": [
+        "Use a Stream API, por exemplo Arrays.stream(...) ou list.stream()."
+      ],
+      "mustNotContain": [
+        "Resolva sem laços for ou while: use operações de stream."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.|\\bIntStream\\b|Arrays\\s*\\.\\s*stream",

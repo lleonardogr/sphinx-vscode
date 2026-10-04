@@ -7,6 +7,18 @@
     "Double.parseDouble(parts[0]) turns the first part of the line into a decimal number.",
     "%.2f means: a decimal number with 2 digits after the point. \"Area: %.2f\".formatted(area) builds the text."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Área e perímetro do retângulo",
+      "hints": [
+        "Double.parseDouble(parts[0]) transforma a primeira parte da linha em um número decimal.",
+        "%.2f significa: um número decimal com 2 casas depois do ponto. \"Area: %.2f\".formatted(area) monta o texto."
+      ],
+      "mustContain": [
+        "Use variáveis double para números decimais."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bdouble\\b",

@@ -8,6 +8,21 @@
     "Methods that implement an interface must be public: public String sound() { return \"Woof\"; }",
     "An Animal[] array can hold a Dog, a Cat… anything that implements Animal."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Animais (interfaces)",
+      "hints": [
+        "interface Animal { String name(); String sound(); }",
+        "Métodos que implementam uma interface precisam ser public: public String sound() { return \"Woof\"; }",
+        "Um array Animal[] pode guardar um Dog, um Cat… qualquer coisa que implemente Animal."
+      ],
+      "mustContain": [
+        "Crie uma interface chamada Animal.",
+        "As classes de animais devem implementar Animal.",
+        "Guarde os animais em um array Animal[]."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\binterface\\s+Animal\\b",

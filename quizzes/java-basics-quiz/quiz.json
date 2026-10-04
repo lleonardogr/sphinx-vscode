@@ -85,5 +85,59 @@
       ],
       "explanation": "Multiplication happens before addition: `2 * 3 = 6`, then `10 + 6 = 16`."
     }
-  ]
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de fundamentos do Java",
+      "description": "Tipos, operadores e Strings. Confira cada resposta enquanto responde, ou todas no final.",
+      "questions": [
+        {
+          "prompt": "Qual é o melhor tipo para guardar um preço como `19.99`?",
+          "options": [
+            "int",
+            "double",
+            "char",
+            "boolean"
+          ],
+          "explanation": "`double` guarda números com casas decimais. `int` só guarda números inteiros."
+        },
+        {
+          "prompt": "Uma variável `int` consegue guardar um valor como `2.5`.",
+          "explanation": "`int` só guarda números inteiros. Use `double` para decimais."
+        },
+        {
+          "explanation": "Dividir dois `int` descarta os decimais: `7 / 2` é `3`. Escreva `7.0 / 2` ou `(double) a / b` para ter `3.5`."
+        },
+        {
+          "explanation": "`%` dá o resto de uma divisão: 7 = 2 × 3 + **1**."
+        },
+        {
+          "prompt": "Qual palavra-chave impede que o valor de uma variável mude depois de atribuído?",
+          "explanation": "`final int MAX = 10;` não pode receber outro valor."
+        },
+        {
+          "prompt": "Quais destes são tipos **primitivos**?",
+          "options": [
+            "int",
+            "String",
+            "boolean",
+            "double",
+            "Scanner"
+          ],
+          "explanation": "`int`, `boolean` e `double` são primitivos. `String` e `Scanner` são classes (tipos de referência)."
+        },
+        {
+          "explanation": "`s.length()` é `4`, e o `+` com uma String junta os dois: `\"4\" + \"JAVA\"`."
+        },
+        {
+          "prompt": "Este código imprime `true`.",
+          "explanation": "`equals` compara o conteúdo de duas Strings, então é `true`."
+        },
+        {
+          "prompt": "Qual é o valor de `10 + 2 * 3`?",
+          "explanation": "A multiplicação vem antes da soma: `2 * 3 = 6`, depois `10 + 6 = 16`."
+        }
+      ]
+    }
+  }
 }

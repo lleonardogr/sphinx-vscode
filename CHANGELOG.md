@@ -22,6 +22,7 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **All built-in content in Portuguese**: the 46 challenges, 3 tests, 3 custom examples, 3 quizzes and the sample exam have Portuguese titles, descriptions, hints, rule messages and quiz texts, and 104 starters have a Portuguese version with translated comments. `npm run validate` (and CI) now requires the Portuguese translation for built-in content.
 - **Portuguese (Brazil)**: a new `sphynx.language` setting (`en`, the default, or `pt-br`) switches Sphynx's language at once, without restarting.
   - The whole interface is translated: sidebar, units, challenge and quiz panels, run and submit results, exams, import, AI hints setup, terminal and messages. Command titles and settings follow VS Code's display language (`package.nls.pt-br.json`).
   - Content can carry translations next to the original: `description.pt-br.md`, a `translations` block in `challenge.json`, `quiz.json` and `exam.json`, and optional `Starter.pt-br.java`. Anything not translated falls back to English.

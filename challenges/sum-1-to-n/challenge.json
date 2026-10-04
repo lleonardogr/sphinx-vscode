@@ -7,6 +7,18 @@
     "This pattern is called an accumulator: start sum at 0 and add to it inside the loop.",
     "sum += i; is short for sum = sum + i;"
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Soma de 1 a N",
+      "hints": [
+        "Esse padrão se chama acumulador: comece sum em 0 e vá somando dentro do laço.",
+        "sum += i; é uma forma curta de sum = sum + i;"
+      ],
+      "mustContain": [
+        "Use um laço (for ou while)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(for|while)\\b",

@@ -7,6 +7,18 @@
     "Use IO.println(\"...\"); (or System.out.println(\"...\"); in classic Java).",
     "Check every character: capital H and W, a comma after Hello, and an exclamation mark at the end."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Olá, mundo!",
+      "hints": [
+        "Use IO.println(\"...\"); (ou System.out.println(\"...\"); no Java clássico).",
+        "Confira cada caractere: H e W maiúsculos, uma vírgula depois de Hello e um ponto de exclamação no final."
+      ],
+      "mustContain": [
+        "Imprima o texto com IO.println (ou System.out.println)."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "(System\\.out|\\bIO)\\s*\\.\\s*print",

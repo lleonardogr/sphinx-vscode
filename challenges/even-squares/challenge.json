@@ -8,6 +8,22 @@
     "n -> n % 2 == 0 is a lambda: a small function that receives n and returns true or false.",
     "Collectors.joining(\" \") returns an empty String when nothing passed the filter."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Quadrados dos pares",
+      "hints": [
+        "Monte o pipeline passo a passo: primeiro imprima o stream de números, depois acrescente o filter, depois o map.",
+        "n -> n % 2 == 0 é uma lambda: uma pequena função que recebe n e devolve true ou false.",
+        "Collectors.joining(\" \") devolve uma String vazia quando nada passou pelo filtro."
+      ],
+      "mustContain": [
+        "Use a Stream API, por exemplo Arrays.stream(...) ou list.stream()."
+      ],
+      "mustNotContain": [
+        "Resolva sem laços for ou while: use operações de stream."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.|\\bIntStream\\b|Arrays\\s*\\.\\s*stream",

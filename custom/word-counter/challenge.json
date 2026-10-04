@@ -7,6 +7,16 @@
     "An empty line has 0 words. Check for that before splitting.",
     "split(\"\\\\s+\") treats several spaces in a row as one separator."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Contador de palavras",
+      "hints": [
+        "Primeiro tire os espaços do começo e do fim com trim().",
+        "Uma linha vazia tem 0 palavras. Teste isso antes de separar.",
+        "split(\"\\\\s+\") trata vários espaços seguidos como um separador só."
+      ]
+    }
+  },
   "tests": [
     {
       "input": "Hello world\n",

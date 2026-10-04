@@ -65,5 +65,46 @@
       "answer": "4",
       "explanation": "Even numbers are skipped with `continue`, so only 1 and 3 are added."
     }
-  ]
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de laços e condicionais",
+      "description": "Leia cada trecho de código com atenção e descubra o que ele faz.",
+      "questions": [
+        {
+          "explanation": "`i` começa em 0 e o laço para quando `i < 3` fica falso, então ele imprime 0, 1 e 2."
+        },
+        {
+          "explanation": "`n` vai de 10 → 5 → 2 → 1 → 0, então o corpo do laço roda 4 vezes."
+        },
+        {
+          "prompt": "Qual laço sempre executa o corpo **pelo menos uma vez**?",
+          "options": [
+            "for",
+            "while",
+            "do-while",
+            "for-each"
+          ],
+          "explanation": "Um laço `do { … } while (condição);` testa a condição **depois** do corpo."
+        },
+        {
+          "explanation": "O operador ternário `condição ? a : b` escolhe `a` quando a condição é verdadeira."
+        },
+        {
+          "prompt": "`break` pula o resto da volta atual e continua na próxima.",
+          "explanation": "Isso é o `continue`. O `break` sai do laço de vez."
+        },
+        {
+          "prompt": "Qual palavra-chave pula para a próxima volta de um laço?",
+          "explanation": "`continue` pula para a próxima volta; `break` termina o laço."
+        },
+        {
+          "explanation": "Um switch como expressão devolve o valor do case que combina."
+        },
+        {
+          "explanation": "Os números pares são pulados com `continue`, então só 1 e 3 são somados."
+        }
+      ]
+    }
+  }
 }

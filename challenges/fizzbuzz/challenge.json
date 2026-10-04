@@ -7,6 +7,19 @@
     "Combine a loop with an if / else if chain.",
     "Order matters: check \"both 3 and 5\" first, otherwise 15 would print Fizz."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "FizzBuzz",
+      "hints": [
+        "Combine um laço com uma cadeia de if / else if.",
+        "A ordem importa: teste \"múltiplo de 3 e de 5\" primeiro, senão o 15 imprimiria Fizz."
+      ],
+      "mustContain": [
+        "Use um laço (for ou while).",
+        "Use um if / else."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\b(for|while)\\b",

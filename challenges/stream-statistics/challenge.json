@@ -9,6 +9,23 @@
     "Format the average with \"Average: %.2f\".formatted(stats.getAverage()).",
     "A hidden test fails with a negative sum? IntStream.sum() returns an int, which overflows above 2,147,483,647. getSum() from summaryStatistics() returns a long."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Estatísticas com streams",
+      "hints": [
+        "Transforme a linha em um IntStream com Arrays.stream(...).mapToInt(Integer::parseInt).",
+        "Chame .summaryStatistics() nele e guarde o resultado em uma variável.",
+        "Formate a média com \"Average: %.2f\".formatted(stats.getAverage()).",
+        "Um teste oculto falha com uma soma negativa? IntStream.sum() devolve um int, que estoura acima de 2.147.483.647. O getSum() do summaryStatistics() devolve um long."
+      ],
+      "mustContain": [
+        "Use a Stream API, por exemplo Arrays.stream(...) ou list.stream()."
+      ],
+      "mustNotContain": [
+        "Resolva sem laços for ou while: use operações de stream."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.|\\bIntStream\\b|Arrays\\s*\\.\\s*stream",

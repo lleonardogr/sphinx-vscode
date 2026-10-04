@@ -8,6 +8,23 @@
     "Check the rule first, and return false early if the operation is not allowed.",
     "balance += amount; adds to the field; balance -= amount; subtracts."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Conta bancária (encapsulamento)",
+      "hints": [
+        "private quer dizer que só o código dentro de BankAccount pode ler ou mudar balance.",
+        "Teste a regra primeiro e retorne false logo se a operação não for permitida.",
+        "balance += amount; soma no atributo; balance -= amount; subtrai."
+      ],
+      "mustContain": [
+        "Mantenha a classe BankAccount.",
+        "Mantenha o atributo balance privado (encapsulamento)."
+      ],
+      "mustNotContain": [
+        "Use account.getBalance() em vez de ler o atributo direto."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bclass\\s+BankAccount\\b",

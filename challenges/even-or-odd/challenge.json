@@ -7,6 +7,18 @@
     "A number is even when the remainder of dividing it by 2 is 0: n % 2 == 0.",
     "In Java, -3 % 2 is -1 (not 1), so checking n % 2 == 1 fails for negative numbers."
   ],
+  "translations": {
+    "pt-br": {
+      "title": "Par ou ímpar",
+      "hints": [
+        "Um número é par quando o resto da divisão por 2 é 0: n % 2 == 0.",
+        "Em Java, -3 % 2 é -1 (não 1), então testar n % 2 == 1 falha com números negativos."
+      ],
+      "mustContain": [
+        "Use um if / else."
+      ]
+    }
+  },
   "mustContain": [
     {
       "pattern": "\\bif\\b",
