@@ -20,6 +20,9 @@ First release of **Tech Challenges**, starting with Java.
 - Code requirement rules (`mustContain` / `mustNotContain`) for practising specific syntax.
 - Progress tracking in the tree view and status bar.
 - `extraChallengePaths` setting for loading teacher-provided challenges without rebuilding.
+- **AI hints** (optional, off by default): one hint at a time about the student's current code, without writing the solution. Providers: Ollama and LM Studio (local), Anthropic Claude and OpenAI-compatible APIs (your own key, stored in VS Code's secret storage), and VS Code language models. Hidden test inputs are never sent. Teachers can disable AI hints per challenge with `"aiHints": false`.
+- **Challenge authoring tools**: a **Create New Challenge** command, a **Validate Challenges in a Folder** command (no Node.js needed, can fill in expected outputs), and a JSON schema with autocomplete for `challenge.json`.
+- Guides: [Creating your own challenges](docs/creating-challenges.md) and [AI hints](docs/ai-hints.md).
 - `scripts/validate-challenges.js` to check every starter and reference solution (modern and classic) and to generate expected outputs.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 

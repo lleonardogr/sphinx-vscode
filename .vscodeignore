@@ -11,3 +11,6 @@ node_modules/**
 CONTRIBUTING.md
 tech-challenges/**
 java-challenges/**
+out/**
+!out/extension.js
+schemas/*.md

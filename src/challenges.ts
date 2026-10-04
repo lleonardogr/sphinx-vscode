@@ -22,6 +22,8 @@ export interface Challenge {
   mustNotContain: Rule[];
   tests: TestCase[];
   timeLimitMs: number;
+  /** Teachers can set "aiHints": false to disable AI hints for a challenge. */
+  aiHints: boolean;
   dir: string;
 }
 
@@ -56,6 +58,7 @@ export function loadChallenge(dir: string): Challenge {
     mustNotContain: meta.mustNotContain ?? [],
     tests: meta.tests,
     timeLimitMs: meta.timeLimitMs ?? 5000,
+    aiHints: meta.aiHints !== false,
     dir,
   };
 }

@@ -6,11 +6,13 @@ export type PanelAction =
   | { type: 'run' }
   | { type: 'submit' }
   | { type: 'terminal' }
+  | { type: 'aiHint' }
+  | { type: 'aiSetup' }
   | { type: 'reset' }
   | { type: 'openCode' }
   | { type: 'goto'; line: number; column: number };
 
-const ACTIONS = new Set(['run', 'submit', 'terminal', 'reset', 'openCode', 'goto']);
+const ACTIONS = new Set(['run', 'submit', 'terminal', 'aiHint', 'aiSetup', 'reset', 'openCode', 'goto']);
 
 function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -129,11 +131,17 @@ export class ChallengePanel {
           .join('')}</ul>`
       : '';
 
-    const hints = c.hints.length
-      ? `<h3>Hints</h3>
+    const aiButton = c.aiHints
+      ? `<button class="secondary" data-action="aiHint" title="Get a hint about your current code from an AI tutor">✨ Ask AI for a hint</button>
+         <button class="link" data-action="aiSetup" title="Choose a local model or your own API key">AI settings</button>`
+      : `<span class="muted">AI hints are disabled for this challenge.</span>`;
+    const hints = `<h3>Hints</h3>
          ${c.hints.map((h, i) => `<div class="hint" hidden><strong>Hint ${i + 1}:</strong> ${escapeHtml(h)}</div>`).join('')}
-         <button class="secondary" id="show-hint">Show a hint (${c.hints.length})</button>`
-      : '';
+         <div id="ai-hint" class="ai-hint" hidden></div>
+         <div class="hint-buttons">
+           ${c.hints.length ? `<button class="secondary" id="show-hint">Show a hint (${c.hints.length})</button>` : ''}
+           ${aiButton}
+         </div>`;
 
     const solved = this.progress.isSolved(c.id);
 

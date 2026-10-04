@@ -132,8 +132,61 @@
     }
   }
 
+  // ---- AI hints: streamed text, rendered with a tiny safe Markdown subset.
+  const aiBox = /** @type {HTMLElement | null} */ (document.getElementById('ai-hint'));
+  const aiButton = /** @type {HTMLButtonElement | null} */ (document.querySelector('button[data-action="aiHint"]'));
+  let aiText = '';
+  let aiLabel = '';
+
+  function renderMarkdown(md) {
+    const parts = esc(md).split(/```(?:\w+)?\n?/);
+    return parts
+      .map((part, i) => {
+        if (i % 2 === 1) return `<pre><code>${part.replace(/\n$/, '')}</code></pre>`;
+        return part
+          .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+          .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+          .replace(/(^|\n)[-*] (.*)/g, '$1• $2')
+          .replace(/\n/g, '<br>');
+      })
+      .join('');
+  }
+
+  function renderAi(state, extra) {
+    if (!aiBox) return;
+    aiBox.hidden = false;
+    const footer = `<div class="ai-footer">${esc(aiLabel)} · AI hints can be wrong. Check them against your own reasoning.</div>`;
+    if (state === 'error') {
+      aiBox.innerHTML = `<div class="ai-title">✨ AI hint</div><p class="ai-error">${esc(extra)}</p>`;
+    } else {
+      const body = aiText ? renderMarkdown(aiText) : '<span class="spinner"></span>Thinking…';
+      aiBox.innerHTML = `<div class="ai-title">✨ AI hint</div><div class="ai-body">${body}</div>${state === 'done' ? footer : ''}`;
+    }
+  }
+
   window.addEventListener('message', (event) => {
     const msg = event.data;
+    if (msg.type === 'aiStart') {
+      aiText = '';
+      aiLabel = msg.label;
+      if (aiButton) aiButton.disabled = true;
+      renderAi('streaming');
+      aiBox && aiBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      return;
+    }
+    if (msg.type === 'aiText') {
+      aiText += msg.text;
+      renderAi('streaming');
+      return;
+    }
+    if (msg.type === 'aiDone' || msg.type === 'aiError') {
+      if (aiButton) {
+        aiButton.disabled = false;
+        aiButton.textContent = '✨ Ask AI for another hint';
+      }
+      renderAi(msg.type === 'aiDone' ? 'done' : 'error', msg.message);
+      return;
+    }
     if (msg.type === 'running') {
       setBusy(true);
       results.innerHTML = banner(
