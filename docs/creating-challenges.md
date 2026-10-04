@@ -99,7 +99,7 @@ VS Code gives you **autocomplete, hover documentation and error checking** for t
 | Field | Required | Description |
 |-------|----------|-------------|
 | `title` | yes | Name shown in the sidebar and panel. |
-| `topic` | no | Sidebar group. `Variables`, `Conditionals`, `Loops`, `Arrays`, `Strings`, `Methods` and `OOP` are shown first, in that order. Any other name (for example `Recursion`) works too and is listed after them. **Leave it out** to put the challenge in the **Custom** group, which is always listed last. See the examples in [`custom/`](../custom). |
+| `topic` | no | Sidebar group. `Variables`, `Conditionals`, `Loops`, `Data Structures`, `Strings`, `Methods`, `OOP` and `Streams` are shown first, in that order. Any other name (for example `Recursion`) works too and is listed after them. **Leave it out** to put the challenge in the **Custom** group, which is always listed last. See the examples in [`custom/`](../custom). |
 | `difficulty` | no | `Easy` (default), `Medium` or `Hard`. |
 | `order` | no | Position inside the topic; lower comes first. |
 | `hints` | no | Hints revealed one at a time when the student clicks **Show a hint**. Order them from gentle to specific. |

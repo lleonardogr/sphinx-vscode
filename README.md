@@ -8,23 +8,24 @@
 [![Release](https://img.shields.io/github/v/release/lleonardogr/tech-challenges-vscode)](https://github.com/lleonardogr/tech-challenges-vscode/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-HackerRank / LeetCode-style coding challenges right inside VS Code, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. It starts with **Java**: from the basic syntax up to object-oriented programming.
+HackerRank / LeetCode-style coding challenges right inside VS Code, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. It starts with **Java**: from the basic syntax to data structures, object-oriented programming and the Stream API.
 
 📘 **Guides:** [Creating your own challenges](docs/creating-challenges.md) · [AI hints](docs/ai-hints.md)
 
 Students pick a challenge from the **Tech Challenges** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
 
-## Topics included (34 challenges)
+## Topics included (44 challenges)
 
 | Topic        | Challenges |
 |--------------|------------|
 | Variables    | Hello World · Greeting with Variables · Arithmetic Operators · Rectangle Area · Celsius to Fahrenheit |
 | Conditionals | Even or Odd · Largest of Three · Grade Calculator · Leap Year · Day of the Week (`switch`) |
 | Loops        | Count to N · Sum 1..N · Multiplication Table · Factorial · FizzBuzz · Sum of Digits (`while`) |
-| Arrays       | Array Sum · Largest and Smallest · Reverse an Array · Count Occurrences |
+| Data Structures | Array Sum · Largest and Smallest · Reverse an Array · Count Occurrences · To-Do List (`ArrayList`) · Unique Words (`HashSet`) · Word Frequency (`HashMap`) · Weekly Hours (`EnumMap`) · Balanced Brackets (stack) |
 | Strings      | Reverse a String · Count Vowels · Palindrome |
 | Methods      | Prime Numbers · Power |
 | OOP          | Your First Class · Rectangle Class · Book with `toString()` · Bank Account (encapsulation) · Shapes (inheritance) · Animals (interfaces) |
+| Streams      | Even Squares (`filter`/`map`) · Stream Statistics · Clean Up a Name List (`distinct`/`sorted`) · Group Words by Length (`groupingBy`) · Top 3 Scorers (comparators, `limit`). Solved without loops. |
 | Custom       | Word Counter · Grade Report · Caesar Cipher: [example custom challenges](custom/) to copy when writing your own |
 
 ## Features
@@ -39,7 +40,7 @@ Students pick a challenge from the **Tech Challenges** sidebar. The problem stat
 - **Syntax requirements**: a challenge can require constructs (for example "use a `switch`", "create `class Square extends Shape`" or "keep `balance` private") or forbid shortcuts (`Math.max`, `reverse()`, `Math.pow`).
 - **AI hints (optional, off by default)**: an AI tutor gives one hint at a time about your current code, without writing the solution. It works with a **local model** (Ollama, LM Studio: free and private), **your own API key** (Anthropic Claude or any OpenAI-compatible API), or VS Code's language models (GitHub Copilot). API keys are stored in VS Code's encrypted secret storage. See [AI hints](docs/ai-hints.md).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
-- **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/34 solved` counter in the status bar.
+- **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/44 solved` counter in the status bar.
 
 ## Getting started (students)
 

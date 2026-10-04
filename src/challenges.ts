@@ -27,7 +27,7 @@ export interface Challenge {
   dir: string;
 }
 
-export const TOPIC_ORDER = ['Variables', 'Conditionals', 'Loops', 'Arrays', 'Strings', 'Methods', 'OOP'];
+export const TOPIC_ORDER = ['Variables', 'Conditionals', 'Loops', 'Data Structures', 'Strings', 'Methods', 'OOP', 'Streams'];
 
 /** Group for challenges whose challenge.json has no "topic". Always listed last. */
 export const CUSTOM_TOPIC = 'Custom';

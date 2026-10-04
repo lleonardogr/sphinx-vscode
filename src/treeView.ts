@@ -8,10 +8,11 @@ const TOPIC_ICONS: Record<string, string> = {
   Variables: 'symbol-variable',
   Conditionals: 'git-compare',
   Loops: 'sync',
-  Arrays: 'symbol-array',
+  'Data Structures': 'symbol-array',
   Strings: 'symbol-string',
   Methods: 'symbol-method',
   OOP: 'symbol-class',
+  Streams: 'filter',
   Custom: 'star-empty',
 };
 

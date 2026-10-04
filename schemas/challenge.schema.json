@@ -26,15 +26,16 @@
     "topic": {
       "type": "string",
       "minLength": 1,
-      "description": "Group in the sidebar. Variables, Conditionals, Loops, Arrays, Strings, Methods and OOP are listed first, in that order; any other name works too. Leave it out to put the challenge in the \"Custom\" group (always listed last).",
+      "description": "Group in the sidebar. Variables, Conditionals, Loops, Data Structures, Strings, Methods, OOP and Streams are listed first, in that order; any other name works too. Leave it out to put the challenge in the \"Custom\" group (always listed last).",
       "examples": [
         "Variables",
         "Conditionals",
         "Loops",
-        "Arrays",
+        "Data Structures",
         "Strings",
         "Methods",
-        "OOP"
+        "OOP",
+        "Streams"
       ]
     },
     "difficulty": {
