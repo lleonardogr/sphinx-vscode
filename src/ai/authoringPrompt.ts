@@ -95,19 +95,79 @@ export function serializeFiles(files: Record<string, string>): string {
     .join('\n\n');
 }
 
-/** Extracts the <<<FILE name>>> … <<<END>>> blocks from a model answer. */
+/** Extracts the <<<FILE name>>> … <<<END>>> blocks from a model answer. Tolerates a missing <<<END>>> (the next <<<FILE starts a new block). */
 export function parseFiles(text: string): { files: Record<string, string>; problems: string[] } {
   const files: Record<string, string> = {};
-  const re = /<<<\s*FILE\s+([\w.]+)\s*>>>\s*\n([\s\S]*?)\n?\s*<<<\s*END\s*>>>/g;
+  const re = /<<<\s*FILE\s+([\w.]+)\s*>>>[^\n]*\n([\s\S]*?)(?=<<<\s*END\s*>>>|<<<\s*FILE\b|$)/g;
   for (let m = re.exec(text); m; m = re.exec(text)) {
     const name = m[1];
     if ((CHALLENGE_FILES as readonly string[]).includes(name)) {
-      // Some models wrap file content in a Markdown fence anyway.
-      files[name] = m[2].replace(/^\s*```[\w.-]*\n/, '').replace(/\n```\s*$/, '').replace(/\s+$/, '') + '\n';
+      const content = m[2]
+        .replace(/\s+$/, '')
+        // Small models end blocks with stray "#" or "..." lines, or wrap them in a Markdown fence.
+        .replace(/(\n\s*(#+|\.{3}|```)\s*)+$/, '')
+        .replace(/^\s*```[\w.-]*\n/, '')
+        .replace(/\n```\s*$/, '');
+      if (content.trim()) {
+        files[name] = (name === 'challenge.json' ? firstJsonObject(content) ?? content : content) + '\n';
+      }
     }
   }
-  const problems = REQUIRED_FILES.filter((f) => !files[f]).map((f) => `The answer is missing the file ${f}.`);
-  return { files, problems };
+  return { files, problems: missingFiles(files) };
+}
+
+export function missingFiles(files: Record<string, string>): string[] {
+  return REQUIRED_FILES.filter((f) => !files[f]).map((f) => `The answer is missing the file ${f}.`);
+}
+
+/** The first balanced {...} in `text`, ignoring braces inside strings; drops anything after it. */
+export function firstJsonObject(text: string): string | undefined {
+  const start = text.indexOf('{');
+  if (start === -1) {
+    return undefined;
+  }
+  let depth = 0;
+  let inString = false;
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (inString) {
+      if (ch === '\\') {
+        i++;
+      } else if (ch === '"') {
+        inString = false;
+      }
+    } else if (ch === '"') {
+      inString = true;
+    } else if (ch === '{') {
+      depth++;
+    } else if (ch === '}' && --depth === 0) {
+      return text.slice(start, i + 1);
+    }
+  }
+  return undefined;
+}
+
+// Text from the challenge.json template in the prompt, which small models sometimes copy as is.
+const PLACEHOLDERS = ['Java regex the code', 'Requirement shown to the student', 'Shown when it matches', 'exact stdin', '2 to 4 hints', 'Short title'];
+
+function isPlaceholder(text: string): boolean {
+  return PLACEHOLDERS.some((p) => text.includes(p));
+}
+
+/** Catches reference solutions that ignore the input: they still "pass" the tests they generated. */
+export function checkGeneratedOutputs(tests: { input: string; output: string }[]): string[] {
+  if (tests.length === 0) {
+    return [];
+  }
+  if (tests.every((t) => t.output.trim() === '')) {
+    return ['Solution.java printed nothing for every test. It must read the input and print the answer.'];
+  }
+  const inputs = new Set(tests.map((t) => t.input));
+  const outputs = new Set(tests.map((t) => t.output));
+  if (inputs.size > 1 && outputs.size === 1) {
+    return ['Solution.java printed the same output for every test input, so it probably ignores the input (for example a hardcoded value). It must read the input with IO.readln() or Scanner.'];
+  }
+  return [];
 }
 
 export interface CleanChallengeJson {
@@ -127,7 +187,7 @@ export function cleanChallengeJson(text: string, spec: GenerationSpec, order: nu
   const strings = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string' && x.trim() !== '') : []);
   const rules = (v: unknown, field: string) =>
     (Array.isArray(v) ? v : []).filter((r): r is { pattern: string; message: string } => {
-      if (!r || typeof r.pattern !== 'string' || typeof r.message !== 'string') {
+      if (!r || typeof r.pattern !== 'string' || typeof r.message !== 'string' || isPlaceholder(r.pattern) || isPlaceholder(r.message)) {
         return false;
       }
       try {
@@ -142,6 +202,9 @@ export function cleanChallengeJson(text: string, spec: GenerationSpec, order: nu
   const tests = (Array.isArray(raw.tests) ? raw.tests : [])
     .filter((t): t is { input: string; hidden?: boolean } => !!t && typeof t.input === 'string')
     .map((t) => ({ input: t.input.endsWith('\n') || t.input === '' ? t.input : `${t.input}\n`, output: '', ...(t.hidden ? { hidden: true } : {}) }));
+  if (tests.some((t) => isPlaceholder(t.input))) {
+    problems.push('A test input is the placeholder text from the instructions. Write real input values, like "42\\n".');
+  }
   const visible = tests.filter((t) => !t.hidden).length;
   if (tests.length < 3 || visible === 0) {
     problems.push(`challenge.json needs at least 3 tests with at least 1 visible (found ${tests.length} tests, ${visible} visible).`);
@@ -157,7 +220,7 @@ export function cleanChallengeJson(text: string, spec: GenerationSpec, order: nu
     ...(spec.kind === 'test' ? { skills: strings(raw.skills).slice(0, 6) } : {}),
     difficulty: spec.difficulty,
     order,
-    hints: strings(raw.hints).slice(0, 5),
+    hints: strings(raw.hints).filter((h) => !isPlaceholder(h)).slice(0, 5),
     mustContain: rules(raw.mustContain, 'mustContain'),
     mustNotContain: rules(raw.mustNotContain, 'mustNotContain'),
     tests,
@@ -206,14 +269,13 @@ ${spec.existingTitles.length ? `\nDo not reuse these existing exercises:\n${spec
 
 /** Extracts and checks the exam plan JSON (tolerating fences or text around it). */
 export function parseExamPlan(text: string, questions: number): { plan?: ExamPlan; problems: string[] } {
-  const start = text.indexOf('{');
-  const end = text.lastIndexOf('}');
-  if (start === -1 || end <= start) {
+  const json = firstJsonObject(text);
+  if (!json) {
     return { problems: ['The answer contains no JSON object.'] };
   }
   let raw: { title?: unknown; description?: unknown; questions?: unknown };
   try {
-    raw = JSON.parse(text.slice(start, end + 1));
+    raw = JSON.parse(json);
   } catch (e) {
     return { problems: [`The exam plan is not valid JSON: ${(e as Error).message}`] };
   }

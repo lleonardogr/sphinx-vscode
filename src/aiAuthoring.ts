@@ -13,14 +13,16 @@ import {
   buildExamPlanPrompt,
   buildGenerationPrompt,
   buildRepairPrompt,
+  checkGeneratedOutputs,
   cleanChallengeJson,
+  missingFiles,
   parseExamPlan,
   parseFiles,
 } from './ai/authoringPrompt';
 import { AiError, HintProvider } from './ai/providers';
 import { AuthoringDeps, ensureRegistered, pickFolder, slugify } from './authoring';
 import { CUSTOM_TOPIC, TOPIC_ORDER } from './challenges';
-import { javacMajorVersion } from './runner';
+import { TestCase, javacMajorVersion, runChallengeCode } from './runner';
 import { validateChallenges } from './validator';
 
 const MAX_ATTEMPTS = 3;
@@ -71,8 +73,9 @@ async function generateOne(deps: AuthoringDeps, run: Run, spec: GenerationSpec, 
     run.log(`\n--- ${label}, answer ${attempt} (${answer.length} characters)`);
 
     const parsed = parseFiles(answer);
+    // Keep good files from earlier answers when a repair answer leaves some out.
     files = { ...files, ...parsed.files };
-    problems = [...parsed.problems];
+    problems = missingFiles(files);
     if (parsed.files['challenge.json']) {
       const clean = cleanChallengeJson(parsed.files['challenge.json'], spec, 1);
       problems.push(...clean.problems);
@@ -98,6 +101,9 @@ async function generateOne(deps: AuthoringDeps, run: Run, spec: GenerationSpec, 
       const report = await validateChallenges([staging], { generate: true, javaHome: run.javaHome, referenceRoots: referenceRoots(deps) });
       problems = [...report.loadErrors, ...report.challenges.flatMap((c) => c.problems)];
       if (problems.length === 0) {
+        problems = await sanityCheck(dir, run, report.javacVersion);
+      }
+      if (problems.length === 0) {
         run.log(`✓ ${title}: valid after ${attempt} answer(s)`);
         return { ok: true, dir, title, attempts: attempt, problems };
       }
@@ -106,6 +112,32 @@ async function generateOne(deps: AuthoringDeps, run: Run, spec: GenerationSpec, 
     prompt = buildRepairPrompt(spec, files, problems);
   }
   return { ok: false, dir, title: title || 'AI challenge', attempts: MAX_ATTEMPTS, problems };
+}
+
+/**
+ * Checks the validator can't: the reference solution must depend on the input, and the starters
+ * must not already solve the challenge.
+ */
+async function sanityCheck(dir: string, run: Run, javacVersion: number | undefined): Promise<string[]> {
+  const tests = JSON.parse(fs.readFileSync(path.join(dir, 'challenge.json'), 'utf8')).tests as TestCase[];
+  const problems = checkGeneratedOutputs(tests);
+  for (const starter of ['Starter.java', 'Starter.classic.java']) {
+    const file = path.join(dir, starter);
+    if (!fs.existsSync(file) || (!starter.includes('.classic.') && (javacVersion ?? 0) < 25)) {
+      continue;
+    }
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'tech-challenges-ai-starter-'));
+    try {
+      fs.copyFileSync(file, path.join(tmp, 'Main.java'));
+      const outcome = await runChallengeCode({ file: path.join(tmp, 'Main.java'), tests, javaHome: run.javaHome });
+      if (outcome.kind === 'tests' && outcome.results.every((r) => r.passed)) {
+        problems.push(`${starter} already passes every test, so it gives the solution away. Leave the real work as TODO comments.`);
+      }
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  }
+  return problems;
 }
 
 /** Moves a staged folder into `parent`, picking a free name. Returns the new path. */
