@@ -2,6 +2,8 @@
 src/**
 scripts/**
 challenges/**/Solution*.java
+custom/**/Solution*.java
+custom/README.md
 **/*.map
 **/tsconfig.json
 node_modules/**

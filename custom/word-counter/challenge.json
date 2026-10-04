@@ -1,0 +1,35 @@
+{
+  "title": "Word Counter",
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Remove the spaces at the start and end first with trim().",
+    "An empty line has 0 words. Check for that before splitting.",
+    "split(\"\\\\s+\") treats several spaces in a row as one separator."
+  ],
+  "tests": [
+    {
+      "input": "Hello world\n",
+      "output": "2\n"
+    },
+    {
+      "input": "Java is fun to learn\n",
+      "output": "5\n"
+    },
+    {
+      "input": "   spaces   everywhere   \n",
+      "output": "2\n",
+      "hidden": true
+    },
+    {
+      "input": "single\n",
+      "output": "1\n",
+      "hidden": true
+    },
+    {
+      "input": "\n",
+      "output": "0\n",
+      "hidden": true
+    }
+  ]
+}

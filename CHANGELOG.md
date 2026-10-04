@@ -10,6 +10,8 @@ First release of **Tech Challenges**, starting with Java.
 
 ### Added
 
+- **Custom** group: a challenge whose `challenge.json` has no `topic` appears in a Custom folder at the bottom of the sidebar. `topic` is now optional, and **Create New Challenge** offers "Custom (no topic)".
+- Three example custom challenges in `custom/` (Word Counter, Grade Report, Caesar Cipher), shipped with the extension and validated in CI.
 - Extension icon for the Extensions view and the Marketplace (the sidebar keeps the coffee-cup icon).
 - Tech Challenges sidebar with 31 challenges across Variables, Conditionals, Loops, Arrays, Strings, Methods and OOP (classes, `toString`, encapsulation, inheritance, interfaces).
 - Problem panel with the description, examples, requirements and hints revealed one at a time.

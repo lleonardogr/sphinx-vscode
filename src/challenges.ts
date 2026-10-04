@@ -29,7 +29,13 @@ export interface Challenge {
 
 export const TOPIC_ORDER = ['Variables', 'Conditionals', 'Loops', 'Arrays', 'Strings', 'Methods', 'OOP'];
 
+/** Group for challenges whose challenge.json has no "topic". Always listed last. */
+export const CUSTOM_TOPIC = 'Custom';
+
 export function topicRank(topic: string): number {
+  if (topic === CUSTOM_TOPIC) {
+    return TOPIC_ORDER.length + 1;
+  }
   const i = TOPIC_ORDER.indexOf(topic);
   return i === -1 ? TOPIC_ORDER.length : i;
 }
@@ -41,13 +47,13 @@ function readOptional(dir: string, file: string): string {
 
 export function loadChallenge(dir: string): Challenge {
   const meta = JSON.parse(fs.readFileSync(path.join(dir, 'challenge.json'), 'utf8'));
-  if (!meta.title || !meta.topic || !Array.isArray(meta.tests) || meta.tests.length === 0) {
-    throw new Error('challenge.json needs "title", "topic" and at least one entry in "tests"');
+  if (!meta.title || !Array.isArray(meta.tests) || meta.tests.length === 0) {
+    throw new Error('challenge.json needs a "title" and at least one entry in "tests"');
   }
   return {
     id: meta.id ?? path.basename(dir),
     title: meta.title,
-    topic: meta.topic,
+    topic: typeof meta.topic === 'string' && meta.topic.trim() ? meta.topic.trim() : CUSTOM_TOPIC,
     difficulty: meta.difficulty ?? 'Easy',
     order: meta.order ?? 0,
     description: readOptional(dir, 'description.md'),
