@@ -1,6 +1,6 @@
 # Custom challenge examples
 
-These challenges show what a **custom challenge** looks like: one written by a teacher or student instead of being part of the main course. Their `challenge.json` files have **no `topic`**, so they appear in the **Custom** folder at the bottom of the Tech Challenges sidebar.
+These challenges show what a **custom challenge** looks like: one written by a teacher or student instead of being part of the main course. Their `challenge.json` files have **no `topic`**, so they appear in the **Custom** folder at the bottom of the Sphynx sidebar.
 
 | Challenge | Shows |
 |-----------|-------|
@@ -14,9 +14,9 @@ Each folder has the usual files: `challenge.json`, `description.md`, modern and 
 
 1. Copy one of these folders and rename it. The folder name is the challenge id, so it must be unique.
 2. Edit `description.md`, the starters and the solutions, then change the test inputs in `challenge.json` (leave each `"output"` as `""`).
-3. Run **Tech Challenges: Validate Challenges in a Folder…** → **Validate and fill in expected outputs**.
+3. Run **Sphynx: Validate Challenges in a Folder…** → **Validate and fill in expected outputs**.
 
-Or run **Tech Challenges: Create New Challenge…**, which writes a new challenge for you. Choose **Custom (no topic)** to put it in this group.
+Or run **Sphynx: Create New Challenge…**, which writes a new challenge for you. Choose **Custom (no topic)** to put it in this group.
 
 Add `"topic": "…"` to `challenge.json` if you'd rather have the challenge appear in a named group.
 

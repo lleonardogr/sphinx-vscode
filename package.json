@@ -1,6 +1,6 @@
 {
-  "name": "tech-challenges",
-  "displayName": "Tech Challenges",
+  "name": "sphynx",
+  "displayName": "Sphynx",
   "description": "LeetCode/HackerRank-style coding challenges inside VS Code, with mixed-skill tests, quizzes, timed exams and optional AI hints from a local model or your own API key. Starts with Java: variables, conditionals, loops, arrays, strings, methods and OOP.",
   "version": "0.5.0",
   "publisher": "class-plugin",
@@ -13,12 +13,12 @@
   "author": "lleonardogr",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lleonardogr/tech-challenges-vscode.git"
+    "url": "https://github.com/lleonardogr/sphynx-vscode.git"
   },
   "bugs": {
-    "url": "https://github.com/lleonardogr/tech-challenges-vscode/issues"
+    "url": "https://github.com/lleonardogr/sphynx-vscode/issues"
   },
-  "homepage": "https://github.com/lleonardogr/tech-challenges-vscode#readme",
+  "homepage": "https://github.com/lleonardogr/sphynx-vscode#readme",
   "engines": {
     "vscode": "^1.95.0"
   },
@@ -42,270 +42,270 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "techChallenges",
-          "title": "Tech Challenges",
+          "id": "sphynx",
+          "title": "Sphynx",
           "icon": "media/icon.svg"
         }
       ]
     },
     "views": {
-      "techChallenges": [
+      "sphynx": [
         {
-          "id": "techChallenges.list",
+          "id": "sphynx.list",
           "name": "Challenges"
         }
       ]
     },
     "commands": [
       {
-        "command": "techChallenges.open",
+        "command": "sphynx.open",
         "title": "Open Challenge",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(go-to-file)"
       },
       {
-        "command": "techChallenges.run",
+        "command": "sphynx.run",
         "title": "Run Sample Tests",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(play)"
       },
       {
-        "command": "techChallenges.submit",
+        "command": "sphynx.submit",
         "title": "Submit (Run All Tests)",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(check-all)"
       },
       {
-        "command": "techChallenges.runInTerminal",
+        "command": "sphynx.runInTerminal",
         "title": "Run in Terminal (Type Input Yourself)",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(terminal)"
       },
       {
-        "command": "techChallenges.resetCode",
+        "command": "sphynx.resetCode",
         "title": "Reset Code to Starter",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(discard)"
       },
       {
-        "command": "techChallenges.refresh",
+        "command": "sphynx.refresh",
         "title": "Reload Challenges",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(refresh)"
       },
       {
-        "command": "techChallenges.resetProgress",
+        "command": "sphynx.resetProgress",
         "title": "Reset All Progress",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(clear-all)"
       },
       {
-        "command": "techChallenges.askAiHint",
+        "command": "sphynx.askAiHint",
         "title": "Ask AI for a Hint",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(sparkle)"
       },
       {
-        "command": "techChallenges.setupAi",
+        "command": "sphynx.setupAi",
         "title": "Set Up AI Hints (Local Model or API Key)",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(settings-gear)"
       },
       {
-        "command": "techChallenges.clearAiKeys",
+        "command": "sphynx.clearAiKeys",
         "title": "Remove Saved AI API Keys",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(trash)"
       },
       {
-        "command": "techChallenges.createChallenge",
+        "command": "sphynx.createChallenge",
         "title": "Create New Challenge…",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(new-file)"
       },
       {
-        "command": "techChallenges.openQuiz",
+        "command": "sphynx.openQuiz",
         "title": "Open Quiz…",
-        "category": "Tech Challenges"
+        "category": "Sphynx"
       },
       {
-        "command": "techChallenges.importContent",
+        "command": "sphynx.importContent",
         "title": "Import Challenges, Quizzes, Tests or Exams…",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(desktop-download)"
       },
       {
-        "command": "techChallenges.removeImported",
+        "command": "sphynx.removeImported",
         "title": "Remove Imported Challenges, Quizzes, Tests or Exams…",
-        "category": "Tech Challenges"
+        "category": "Sphynx"
       },
       {
-        "command": "techChallenges.validateChallenges",
+        "command": "sphynx.validateChallenges",
         "title": "Validate Challenges in a Folder…",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(checklist)"
       },
       {
-        "command": "techChallenges.startExam",
+        "command": "sphynx.startExam",
         "title": "Start Exam…",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(play)"
       },
       {
-        "command": "techChallenges.finishExam",
+        "command": "sphynx.finishExam",
         "title": "Finish Exam…",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(debug-stop)"
       },
       {
-        "command": "techChallenges.openExamResults",
+        "command": "sphynx.openExamResults",
         "title": "Open Exam Results",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(output)"
       },
       {
-        "command": "techChallenges.saveExamResults",
+        "command": "sphynx.saveExamResults",
         "title": "Save a Copy of Exam Results…",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(save-as)"
       },
       {
-        "command": "techChallenges.verifyExamResults",
+        "command": "sphynx.verifyExamResults",
         "title": "Verify Students' Exam Results… (Teachers)",
-        "category": "Tech Challenges",
+        "category": "Sphynx",
         "icon": "$(verified)"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "techChallenges.importContent",
-          "when": "view == techChallenges.list",
+          "command": "sphynx.importContent",
+          "when": "view == sphynx.list",
           "group": "navigation@0"
         },
         {
-          "command": "techChallenges.removeImported",
-          "when": "view == techChallenges.list",
+          "command": "sphynx.removeImported",
+          "when": "view == sphynx.list",
           "group": "import"
         },
         {
-          "command": "techChallenges.createChallenge",
-          "when": "view == techChallenges.list",
+          "command": "sphynx.createChallenge",
+          "when": "view == sphynx.list",
           "group": "navigation@0"
         },
         {
-          "command": "techChallenges.refresh",
-          "when": "view == techChallenges.list",
+          "command": "sphynx.refresh",
+          "when": "view == sphynx.list",
           "group": "navigation@1"
         },
         {
-          "command": "techChallenges.resetProgress",
-          "when": "view == techChallenges.list"
+          "command": "sphynx.resetProgress",
+          "when": "view == sphynx.list"
         },
         {
-          "command": "techChallenges.validateChallenges",
-          "when": "view == techChallenges.list",
+          "command": "sphynx.validateChallenges",
+          "when": "view == sphynx.list",
           "group": "authoring"
         },
         {
-          "command": "techChallenges.setupAi",
-          "when": "view == techChallenges.list",
+          "command": "sphynx.setupAi",
+          "when": "view == sphynx.list",
           "group": "ai"
         },
         {
-          "command": "techChallenges.verifyExamResults",
-          "when": "view == techChallenges.list",
+          "command": "sphynx.verifyExamResults",
+          "when": "view == sphynx.list",
           "group": "authoring"
         }
       ],
       "view/item/context": [
         {
-          "command": "techChallenges.resetCode",
-          "when": "view == techChallenges.list && viewItem == challenge"
+          "command": "sphynx.resetCode",
+          "when": "view == sphynx.list && viewItem == challenge"
         },
         {
-          "command": "techChallenges.startExam",
-          "when": "view == techChallenges.list && viewItem == exam-notStarted",
+          "command": "sphynx.startExam",
+          "when": "view == sphynx.list && viewItem == exam-notStarted",
           "group": "inline"
         },
         {
-          "command": "techChallenges.startExam",
-          "when": "view == techChallenges.list && viewItem == exam-notStarted"
+          "command": "sphynx.startExam",
+          "when": "view == sphynx.list && viewItem == exam-notStarted"
         },
         {
-          "command": "techChallenges.finishExam",
-          "when": "view == techChallenges.list && viewItem == exam-active",
+          "command": "sphynx.finishExam",
+          "when": "view == sphynx.list && viewItem == exam-active",
           "group": "inline"
         },
         {
-          "command": "techChallenges.finishExam",
-          "when": "view == techChallenges.list && viewItem == exam-active"
+          "command": "sphynx.finishExam",
+          "when": "view == sphynx.list && viewItem == exam-active"
         },
         {
-          "command": "techChallenges.openExamResults",
-          "when": "view == techChallenges.list && viewItem == exam-finished",
+          "command": "sphynx.openExamResults",
+          "when": "view == sphynx.list && viewItem == exam-finished",
           "group": "inline"
         },
         {
-          "command": "techChallenges.openExamResults",
-          "when": "view == techChallenges.list && viewItem == exam-finished"
+          "command": "sphynx.openExamResults",
+          "when": "view == sphynx.list && viewItem == exam-finished"
         },
         {
-          "command": "techChallenges.saveExamResults",
-          "when": "view == techChallenges.list && viewItem == exam-finished"
+          "command": "sphynx.saveExamResults",
+          "when": "view == sphynx.list && viewItem == exam-finished"
         }
       ],
       "editor/title": [
         {
-          "command": "techChallenges.run",
-          "when": "techChallenges.isChallengeFile",
+          "command": "sphynx.run",
+          "when": "sphynx.isChallengeFile",
           "group": "navigation@1"
         },
         {
-          "command": "techChallenges.runInTerminal",
-          "when": "techChallenges.isChallengeFile",
+          "command": "sphynx.runInTerminal",
+          "when": "sphynx.isChallengeFile",
           "group": "navigation@2"
         },
         {
-          "command": "techChallenges.submit",
-          "when": "techChallenges.isChallengeFile",
+          "command": "sphynx.submit",
+          "when": "sphynx.isChallengeFile",
           "group": "navigation@3"
         }
       ],
       "commandPalette": [
         {
-          "command": "techChallenges.resetCode",
-          "when": "techChallenges.isChallengeFile"
+          "command": "sphynx.resetCode",
+          "when": "sphynx.isChallengeFile"
         },
         {
-          "command": "techChallenges.askAiHint",
-          "when": "techChallenges.isChallengeFile"
+          "command": "sphynx.askAiHint",
+          "when": "sphynx.isChallengeFile"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "techChallenges.run",
+        "command": "sphynx.run",
         "key": "ctrl+alt+r",
         "mac": "cmd+alt+r",
-        "when": "techChallenges.isChallengeFile"
+        "when": "sphynx.isChallengeFile"
       },
       {
-        "command": "techChallenges.submit",
+        "command": "sphynx.submit",
         "key": "ctrl+alt+enter",
         "mac": "cmd+alt+enter",
-        "when": "techChallenges.isChallengeFile"
+        "when": "sphynx.isChallengeFile"
       }
     ],
     "configuration": {
-      "title": "Tech Challenges",
+      "title": "Sphynx",
       "properties": {
-        "techChallenges.java.home": {
+        "sphynx.java.home": {
           "type": "string",
           "default": "",
           "markdownDescription": "Path to a JDK installation (the folder that contains `bin/javac`). Leave empty to use `javac`/`java` from your PATH."
         },
-        "techChallenges.java.style": {
+        "sphynx.java.style": {
           "type": "string",
           "enum": [
             "modern",
@@ -318,12 +318,12 @@
           ],
           "markdownDescription": "Style of the starter code for new challenges. Both styles are always accepted when you run or submit, because only the output is checked. Use **Reset Code to Starter** to switch a challenge you already opened."
         },
-        "techChallenges.codeFolder": {
+        "sphynx.codeFolder": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Folder where your solutions are saved (one sub-folder per challenge). Leave empty to use `tech-challenges/` inside the open workspace, or the extension's private storage when no folder is open."
+          "markdownDescription": "Folder where your solutions are saved (one sub-folder per challenge). Leave empty to use `sphynx/` inside the open workspace, or the extension's private storage when no folder is open."
         },
-        "techChallenges.extraChallengePaths": {
+        "sphynx.extraChallengePaths": {
           "type": "array",
           "items": {
             "type": "string"
@@ -331,7 +331,7 @@
           "default": [],
           "markdownDescription": "Extra folders containing challenges (same format as the built-in ones). Teachers can use this to hand out new challenges without rebuilding the extension."
         },
-        "techChallenges.ai.provider": {
+        "sphynx.ai.provider": {
           "type": "string",
           "default": "off",
           "enum": [
@@ -350,19 +350,19 @@
             "Any OpenAI-compatible API (OpenAI, OpenRouter, Groq, a school server…) with your own key.",
             "A model already available in VS Code, such as GitHub Copilot."
           ],
-          "markdownDescription": "Where **AI hints** come from. Run **Tech Challenges: Set Up AI Hints** for a guided setup. API keys are stored in VS Code's encrypted secret storage, not in settings."
+          "markdownDescription": "Where **AI hints** come from. Run **Sphynx: Set Up AI Hints** for a guided setup. API keys are stored in VS Code's encrypted secret storage, not in settings."
         },
-        "techChallenges.ai.model": {
+        "sphynx.ai.model": {
           "type": "string",
           "default": "",
           "markdownDescription": "Model to use for AI hints. Leave empty for the default: `claude-opus-5-5` for Anthropic, the first installed model for Ollama/LM Studio, any available model for VS Code. Required for `openai-compatible`."
         },
-        "techChallenges.ai.baseUrl": {
+        "sphynx.ai.baseUrl": {
           "type": "string",
           "default": "",
           "markdownDescription": "API base URL for AI hints. Required for `openai-compatible` (e.g. `https://api.openai.com/v1`). Optional for the others (defaults: Ollama `http://localhost:11434/v1`, LM Studio `http://localhost:1234/v1`)."
         },
-        "techChallenges.ai.responseLanguage": {
+        "sphynx.ai.responseLanguage": {
           "type": "string",
           "default": "",
           "markdownDescription": "Language for AI hints, e.g. `Português` or `English`. Leave empty to use VS Code's display language."

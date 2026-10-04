@@ -1,18 +1,20 @@
 <p align="center">
-  <img src="media/logo/banner.png" alt="Tech Challenges: code brackets around a mountain path with a flag at the peak" width="100%">
+  <img src="media/logo/banner.png" alt="Sphynx: a geometric sphinx sitting between code brackets" width="100%">
 </p>
 
-# Tech Challenges for VS Code
+# Sphynx for VS Code
 
-[![CI](https://github.com/lleonardogr/tech-challenges-vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/lleonardogr/tech-challenges-vscode/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/lleonardogr/tech-challenges-vscode)](https://github.com/lleonardogr/tech-challenges-vscode/releases/latest)
+[![CI](https://github.com/lleonardogr/sphynx-vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/lleonardogr/sphynx-vscode/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/lleonardogr/sphynx-vscode)](https://github.com/lleonardogr/sphynx-vscode/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+> *Like the sphinx of the legend, Sphynx asks you questions, and you only pass if you answer them right.*
 
 HackerRank / LeetCode-style coding challenges right inside VS Code, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. It starts with **Java**: from the basic syntax to data structures, object-oriented programming and the Stream API.
 
 📘 **Guides:** [Creating your own challenges](docs/creating-challenges.md) · [Tests](docs/creating-challenges.md#tests-mixed-challenges) · [Quizzes](docs/quizzes.md) · [Exams](docs/exams.md) · [AI hints](docs/ai-hints.md)
 
-Students pick a challenge from the **Tech Challenges** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
+Students pick a challenge from the **Sphynx** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
 
 ## Topics included (52 challenges)
 
@@ -38,7 +40,7 @@ Students pick a challenge from the **Tech Challenges** sidebar. The problem stat
 - **Run in Terminal** compiles the program and runs it in an interactive terminal, so students can type input while it runs and see exactly what it prints.
 - **Clear feedback**: compiler errors show as red squiggles and link to the line, each test shows Expected vs. Your output with the first differing line, and the panel reports runtime exceptions and time-limit (infinite loop) failures.
 - **Hidden tests** catch edge cases like negative numbers, zero and overflow, without revealing their input.
-- **Modern Java by default, classic on request**: starter code uses Java 25+ compact source files (`void main()`, `IO.println`). Set `techChallenges.java.style` to `classic` for `public class Main` starter code. Either style is **always accepted**, because only the output is checked.
+- **Modern Java by default, classic on request**: starter code uses Java 25+ compact source files (`void main()`, `IO.println`). Set `sphynx.java.style` to `classic` for `public class Main` starter code. Either style is **always accepted**, because only the output is checked.
 - **Syntax requirements**: a challenge can require constructs (for example "use a `switch`", "create `class Square extends Shape`" or "keep `balance` private") or forbid shortcuts (`Math.max`, `reverse()`, `Math.pow`).
 - **AI hints (optional, off by default)**: an AI tutor gives one hint at a time about your current code, without writing the solution. It works with a **local model** (Ollama, LM Studio: free and private), **your own API key** (Anthropic Claude or any OpenAI-compatible API), or VS Code's language models (GitHub Copilot). API keys are stored in VS Code's encrypted secret storage. See [AI hints](docs/ai-hints.md).
 - **Tests**: bigger challenges that **mix several topics** in one program, such as a console app with a menu (`1. Add`, `2. List`, `0. Exit`). Each one shows the skills it combines, and is graded by feeding it whole sequences of menu choices.
@@ -47,6 +49,8 @@ Students pick a challenge from the **Tech Challenges** sidebar. The problem stat
 - **Import**: one button in the sidebar imports the challenges, tests and exams a teacher shared, as a `.zip` or a folder. They're copied into the extension's library, solutions can be stripped for students, and **Remove Imported…** takes them out again. See [Sharing challenges with students](docs/creating-challenges.md#sharing-challenges-with-students).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
 - **Progress tracking** shows ✓ in the tree, a count per topic, and an `x/52 solved` counter in the status bar.
+
+> **Upgrading from Tech Challenges?** Sphynx is the same extension with a new name. Install Sphynx and uninstall Tech Challenges. Your settings (`techChallenges.*` → `sphynx.*`) are copied over automatically, and your code in `tech-challenges/` keeps being used. Solved-challenge progress and saved AI keys start fresh.
 
 ## Getting started (students)
 
@@ -62,15 +66,15 @@ If you can only use JDK 17–24, that works too: the extension offers to switch 
 
 ### 2. Install the extension
 
-1. Open the [latest release](https://github.com/lleonardogr/tech-challenges-vscode/releases/latest) and download **`tech-challenges-x.y.z.vsix`**.
+1. Open the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) and download **`sphynx-x.y.z.vsix`**.
 2. In VS Code, open the **Extensions** view, click the **`...`** menu at the top, and choose **Install from VSIX…**. Then select the downloaded file.
 
-   Or, in a terminal: `code --install-extension tech-challenges-x.y.z.vsix`
-3. Open a folder for your work (**File → Open Folder…**). Your code is saved in `tech-challenges/<challenge>/Main.java` inside it.
+   Or, in a terminal: `code --install-extension sphynx-x.y.z.vsix`
+3. Open a folder for your work (**File → Open Folder…**). Your code is saved in `sphynx/<challenge>/Main.java` inside it.
 
 ### 3. Solve your first challenge
 
-1. Click the **Tech Challenges** icon in the Activity Bar (left side) and choose **Hello, World!** The problem opens on the left and your `Main.java` on the right.
+1. Click the **Sphynx** icon in the Activity Bar (left side) and choose **Hello, World!** The problem opens on the left and your `Main.java` on the right.
 2. Read the description and examples, then write your code.
 3. Check your work, in whichever way suits you:
 
@@ -115,24 +119,24 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 
 | Setting | Default | Description |
 | ------- | ------- | ----------- |
-| `techChallenges.java.style` | `modern` | Starter code style for new challenges: `modern` (JDK 25+) or `classic` (JDK 17+). Use **Reset Code to Starter** to switch a challenge you already opened. |
-| `techChallenges.java.home` | (empty) | The JDK folder, if `javac` is not on your PATH. |
-| `techChallenges.codeFolder` | (empty) | Where solutions are saved. |
-| `techChallenges.extraChallengePaths` | `[]` | Extra challenge folders provided by your teacher. |
-| `techChallenges.ai.provider` | `off` | AI hints provider: `ollama`, `lmstudio`, `anthropic`, `openai-compatible` or `vscode`. Run **Set Up AI Hints** for a guided setup. |
+| `sphynx.java.style` | `modern` | Starter code style for new challenges: `modern` (JDK 25+) or `classic` (JDK 17+). Use **Reset Code to Starter** to switch a challenge you already opened. |
+| `sphynx.java.home` | (empty) | The JDK folder, if `javac` is not on your PATH. |
+| `sphynx.codeFolder` | (empty) | Where solutions are saved. |
+| `sphynx.extraChallengePaths` | `[]` | Extra challenge folders provided by your teacher. |
+| `sphynx.ai.provider` | `off` | AI hints provider: `ollama`, `lmstudio`, `anthropic`, `openai-compatible` or `vscode`. Run **Set Up AI Hints** for a guided setup. |
 
 ## For teachers
 
 ### Share the extension with your class
 
-Point students to the [latest release](https://github.com/lleonardogr/tech-challenges-vscode/releases/latest) and the [Getting started](#getting-started-students) steps above. Reference solutions (`Solution*.java`) are **never** included in the `.vsix`, but they are visible in this public repository.
+Point students to the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) and the [Getting started](#getting-started-students) steps above. Reference solutions (`Solution*.java`) are **never** included in the `.vsix`, but they are visible in this public repository.
 
 To build the `.vsix` yourself:
 
 ```bash
 npm install
 npm run validate   # compiles the extension and checks every challenge against its reference solutions
-npm run package    # creates tech-challenges-<version>.vsix
+npm run package    # creates sphynx-<version>.vsix
 ```
 
 For a classroom without internet access, AI hints can use a model running on each computer, or on a school server. See [AI hints → For teachers](docs/ai-hints.md#for-teachers).
@@ -141,7 +145,7 @@ For a classroom without internet access, AI hints can use a model running on eac
 
 Everything you need is in **[docs/creating-challenges.md](docs/creating-challenges.md)**: a 5-minute quick start, the file format, writing tests, the rules cookbook, validating, and sharing challenges with your class without rebuilding the extension.
 
-In short: run **Tech Challenges: Create New Challenge…**, edit the generated files, then run **Tech Challenges: Validate Challenges in a Folder…** to check everything and fill in the expected outputs. Challenges without a `topic` appear in the **Custom** group. The [`custom/`](custom/) folder has three examples you can copy.
+In short: run **Sphynx: Create New Challenge…**, edit the generated files, then run **Sphynx: Validate Challenges in a Folder…** to check everything and fill in the expected outputs. Challenges without a `topic` appear in the **Custom** group. The [`custom/`](custom/) folder has three examples you can copy.
 
 ### Give an exam
 
@@ -159,8 +163,8 @@ Write an `exam.json` (title, duration, open or closed, submissions per question,
 ## Development
 
 ```bash
-git clone https://github.com/lleonardogr/tech-challenges-vscode.git
-cd tech-challenges-vscode
+git clone https://github.com/lleonardogr/sphynx-vscode.git
+cd sphynx-vscode
 npm install        # dependencies + the commit-message hook
 npm run compile    # type-check and build to out/
 ```

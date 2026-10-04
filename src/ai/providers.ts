@@ -47,7 +47,7 @@ export function defaultBaseUrl(id: ProviderId): string {
 
 function anthropicProvider(settings: ProviderSettings): HintProvider {
   if (!settings.apiKey) {
-    throw new AiError('No Anthropic API key is set. Run "Tech Challenges: Set Up AI Hints".');
+    throw new AiError('No Anthropic API key is set. Run "Sphynx: Set Up AI Hints".');
   }
   const model = settings.model || DEFAULT_ANTHROPIC_MODEL;
   const client = new Anthropic({ apiKey: settings.apiKey, ...(settings.baseUrl ? { baseURL: settings.baseUrl } : {}) });
@@ -77,11 +77,11 @@ function anthropicProvider(settings: ProviderSettings): HintProvider {
           throw e;
         }
         if (e instanceof Anthropic.AuthenticationError) {
-          throw new AiError('Anthropic rejected the API key. Check it with "Tech Challenges: Set Up AI Hints".');
+          throw new AiError('Anthropic rejected the API key. Check it with "Sphynx: Set Up AI Hints".');
         } else if (e instanceof Anthropic.PermissionDeniedError) {
           throw new AiError(`Your Anthropic API key cannot use the model "${model}".`);
         } else if (e instanceof Anthropic.NotFoundError) {
-          throw new AiError(`Anthropic does not know the model "${model}". Check the techChallenges.ai.model setting.`);
+          throw new AiError(`Anthropic does not know the model "${model}". Check the sphynx.ai.model setting.`);
         } else if (e instanceof Anthropic.RateLimitError) {
           throw new AiError('Too many AI requests right now (rate limit). Wait a moment and try again.');
         } else if (e instanceof Anthropic.APIConnectionError) {
@@ -127,19 +127,19 @@ function localHelp(id: ProviderId): string {
   if (id === 'lmstudio') {
     return 'Is LM Studio running with a model loaded and its local server started (Developer tab → Start Server)?';
   }
-  return 'Check the techChallenges.ai.baseUrl setting.';
+  return 'Check the sphynx.ai.baseUrl setting.';
 }
 
 async function openAiCompatibleProvider(settings: ProviderSettings): Promise<HintProvider> {
   const baseUrl = (settings.baseUrl || defaultBaseUrl(settings.id)).replace(/\/$/, '');
   if (!baseUrl) {
-    throw new AiError('Set techChallenges.ai.baseUrl to your provider\'s API URL (for example https://api.openai.com/v1).');
+    throw new AiError('Set sphynx.ai.baseUrl to your provider\'s API URL (for example https://api.openai.com/v1).');
   }
   const local = settings.id === 'ollama' || settings.id === 'lmstudio';
   let model = settings.model;
   if (!model) {
     if (!local) {
-      throw new AiError('Set techChallenges.ai.model to the model you want to use.');
+      throw new AiError('Set sphynx.ai.model to the model you want to use.');
     }
     let models: string[];
     try {
@@ -181,7 +181,7 @@ async function openAiCompatibleProvider(settings: ProviderSettings): Promise<Hin
       if (!res.ok || !res.body) {
         const text = await res.text().catch(() => '');
         if (res.status === 401 || res.status === 403) {
-          throw new AiError('The API key was rejected. Check it with "Tech Challenges: Set Up AI Hints".');
+          throw new AiError('The API key was rejected. Check it with "Sphynx: Set Up AI Hints".');
         }
         if (res.status === 404 && local) {
           throw new AiError(`The model "${model}" is not available. ${localHelp(settings.id)}`);

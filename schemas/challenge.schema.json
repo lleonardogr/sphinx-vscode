@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/lleonardogr/tech-challenges-vscode/blob/main/schemas/challenge.schema.json",
-  "title": "Tech Challenges challenge",
+  "$id": "https://github.com/lleonardogr/sphynx-vscode/blob/main/schemas/challenge.schema.json",
+  "title": "Sphynx challenge",
   "description": "Metadata, rules and tests for one challenge. Lives in challenges/<id>/challenge.json next to description.md, Starter.java, Starter.classic.java, Solution.java and Solution.classic.java. Guide: docs/creating-challenges.md",
   "type": "object",
   "required": [

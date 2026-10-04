@@ -6,7 +6,7 @@ export interface ChallengeProgress {
   solvedAt?: string;
 }
 
-const KEY = 'techChallenges.progress';
+const KEY = 'sphynx.progress';
 
 export class Progress {
   private readonly changed = new vscode.EventEmitter<void>();

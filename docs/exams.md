@@ -13,14 +13,14 @@ An **exam** is a timed, graded set of challenges. Teachers write exams, and stud
 
 ## How an exam works (students)
 
-1. Open the **Exams** group at the top of the Tech Challenges sidebar and click **Start exam…** under an exam.
+1. Open the **Exams** group at the top of the Sphynx sidebar and click **Start exam…** under an exam.
 2. Read the rules, confirm, and type your name. The countdown starts and is shown in the status bar.
 3. Click a question to open it. Write your answer as usual.
    - **Run** (sample tests), **Try your own input** and **Run in Terminal** are unlimited.
    - **Submit** runs all tests, including hidden ones, and is **limited** (for example 3 times per question). Each submission asks for confirmation.
    - Each submission earns **partial credit**: points × (tests passed ÷ total tests). Your **best** submission counts.
 4. Click **Finish Exam** (the stop button next to the exam) when you're done. When the time is up, the exam finishes on its own.
-5. When an exam finishes, answers that changed since their last submission are **submitted automatically**, if submissions remain. Then the exam is **locked**, and a results file is written to `tech-challenges/exams/<exam>/results-<your-name>.json`.
+5. When an exam finishes, answers that changed since their last submission are **submitted automatically**, if submissions remain. Then the exam is **locked**, and a results file is written to `sphynx/exams/<exam>/results-<your-name>.json`.
 6. Hand in that file: use **Save a Copy…** to put it wherever your teacher asks.
 
 Closing VS Code doesn't stop the clock. If the time runs out while VS Code is closed, the exam is finished and graded the next time you open it.
@@ -94,13 +94,13 @@ A question `id` is either:
 - the name of a **quiz folder inside the exam folder**: a private [quiz](quizzes.md#quizzes-in-exams), submitted once; or
 - the id of **any challenge or quiz** the extension knows, such as `even-or-odd` (a built-in one), a bigger mixed challenge from the **Tests** group such as `calculator-menu`, or one of your own challenges from `extraChallengePaths`.
 
-Copy the built-in example from the repository's [`exams/sample-exam`](../exams/sample-exam) folder to get started. Then validate your exam folder with **Tech Challenges: Validate Challenges in a Folder…**. It checks the private questions and reports unknown question ids.
+Copy the built-in example from the repository's [`exams/sample-exam`](../exams/sample-exam) folder to get started. Then validate your exam folder with **Sphynx: Validate Challenges in a Folder…**. It checks the private questions and reports unknown question ids.
 
 ---
 
 ## Giving the exam to your class
 
-The simplest way is to **zip the exam folder** and send it. **Remove the `Solution*.java` files** first. Students click **Import** (⤓) at the top of the Tech Challenges sidebar and choose the zip. If they forget, the import offers to remove any solutions it finds. See [Sharing challenges with students](creating-challenges.md#sharing-challenges-with-students).
+The simplest way is to **zip the exam folder** and send it. **Remove the `Solution*.java` files** first. Students click **Import** (⤓) at the top of the Sphynx sidebar and choose the zip. If they forget, the import offers to remove any solutions it finds. See [Sharing challenges with students](creating-challenges.md#sharing-challenges-with-students).
 
 To share a live folder instead:
 
@@ -109,7 +109,7 @@ To share a live folder instead:
 3. Students add the parent folder to their settings (or you pre-configure it):
 
    ```json
-   "techChallenges.extraChallengePaths": ["/path/to/java-exams"]
+   "sphynx.extraChallengePaths": ["/path/to/java-exams"]
    ```
 
 4. Then the exam appears under **Exams** in their sidebar. Tell them when to start. The clock starts when each student clicks **Start exam…**.
@@ -129,7 +129,7 @@ Students hand in `results-<name>.json`. The file contains:
 A results file is plain JSON, so a student could edit the score. Always **verify** it:
 
 1. Make sure the exam folder is available in your VS Code (the same `extraChallengePaths`).
-2. Run **Tech Challenges: Verify Students' Exam Results… (Teachers)**, also in the `...` menu of the sidebar, and select one or many results files.
+2. Run **Sphynx: Verify Students' Exam Results… (Teachers)**, also in the `...` menu of the sidebar, and select one or many results files.
 3. The extension **re-runs each saved answer against all the tests** and recomputes the score. The output looks like this:
 
    ```
@@ -150,7 +150,7 @@ Use the **re-graded** score. A ⚠ means the file was changed after the exam.
 
 ## Limits you should know about
 
-Tech Challenges runs on the student's own computer, so a determined student can work around it. Exams suit practice, homework and supervised classroom quizzes. They aren't a secure exam system.
+Sphynx runs on the student's own computer, so a determined student can work around it. Exams suit practice, homework and supervised classroom quizzes. They aren't a secure exam system.
 
 - **The internet and other apps can't be blocked.** Closed exams turn off the extension's own hints and AI, and record warning signs, but students can still use a browser or another device.
 - **The clock uses the computer's time.** Changing the system clock affects it.
