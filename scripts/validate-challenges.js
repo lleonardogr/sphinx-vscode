@@ -14,10 +14,12 @@ async function main() {
   const args = process.argv.slice(2);
   const generate = args.includes('--generate');
   const roots = args.filter((a) => !a.startsWith('--'));
-  if (roots.length === 0) roots.push(path.join(__dirname, '..', 'challenges'), path.join(__dirname, '..', 'custom'));
+  if (roots.length === 0) roots.push(...['challenges', 'custom', 'tests'].map((dir) => path.join(__dirname, '..', dir)));
 
+  const builtIn = ['challenges', 'custom'].map((dir) => path.join(__dirname, '..', dir));
   const report = await validateChallenges(roots, {
     generate,
+    referenceRoots: builtIn,
     onChallenge: (c) => process.stdout.write(c.ok ? '.' : 'x'),
   });
   process.stdout.write('\n');

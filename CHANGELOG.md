@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Tests**: timed, graded sets of challenges, defined by a `test.json` (with a JSON schema for autocomplete).
+  - A **Tests** group in the sidebar, a countdown in the status bar, and the student's name in the results.
+  - **Limited submissions** per question with **partial credit** (points × tests passed ÷ total). The best submission counts, and Run stays unlimited.
+  - **Open** or **closed** mode. Closed tests hide hints and AI hints, and record integrity warnings: large pastes or AI completions, time spent outside VS Code, and an enabled GitHub Copilot.
+  - When time is up (even if VS Code was closed), changed answers are submitted automatically, the test is locked, and a **results file** is written.
+  - **Verify Students' Test Results (Teachers)** re-runs each saved answer and recomputes the score, flagging edited files.
+  - Private questions can live inside the test folder. A sample test ships in `tests/sample-test`.
+- Guide: [Tests](docs/tests.md).
+
 ## [0.3.0] - 2026-10-03
 
 ### Added
