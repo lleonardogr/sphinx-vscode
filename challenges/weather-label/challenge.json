@@ -1,0 +1,63 @@
+{
+  "title": "Weather Label (Ternary)",
+  "topic": "Conditionals",
+  "difficulty": "Easy",
+  "order": 6,
+  "hints": [
+    "Start with two labels: temperature > 30 ? \"Hot\" : \"Not hot\".",
+    "Replace the second value with another ternary: ... : temperature < 10 ? \"Cold\" : \"Mild\".",
+    "Check the boundaries: 30 is Mild, 31 is Hot, 10 is Mild, 9 is Cold."
+  ],
+  "mustContain": [
+    {
+      "pattern": "\\?[^;]*:",
+      "message": "Use the ternary operator: condition ? valueIfTrue : valueIfFalse."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\bif\\b",
+      "message": "Solve it with the ternary operator instead of if / else."
+    }
+  ],
+  "tests": [
+    {
+      "input": "35\n",
+      "output": "Hot\n"
+    },
+    {
+      "input": "5\n",
+      "output": "Cold\n"
+    },
+    {
+      "input": "30\n",
+      "output": "Mild\n",
+      "hidden": true
+    },
+    {
+      "input": "10\n",
+      "output": "Mild\n",
+      "hidden": true
+    },
+    {
+      "input": "31\n",
+      "output": "Hot\n",
+      "hidden": true
+    },
+    {
+      "input": "9\n",
+      "output": "Cold\n",
+      "hidden": true
+    },
+    {
+      "input": "-15\n",
+      "output": "Cold\n",
+      "hidden": true
+    },
+    {
+      "input": "20\n",
+      "output": "Mild\n",
+      "hidden": true
+    }
+  ]
+}
