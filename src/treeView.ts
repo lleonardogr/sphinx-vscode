@@ -2,7 +2,9 @@ import * as vscode from 'vscode';
 import { Challenge } from './challenges';
 import { Progress } from './progress';
 import { ExamManager, formatDuration } from './examSession';
-import { ExamDefinition, ExamQuestion, maxScore } from './exams';
+import { ExamDefinition, ExamQuestion, maxScore, questionKey, questionTitle } from './exams';
+import { QuizProgress } from './quizController';
+import { QuizDefinition } from './quizzes';
 
 export type ChallengeNode =
   | { kind: 'topic'; topic: string }
@@ -10,7 +12,9 @@ export type ChallengeNode =
   | { kind: 'examsRoot' }
   | { kind: 'exam'; exam: ExamDefinition }
   | { kind: 'examStart'; exam: ExamDefinition }
-  | { kind: 'examQuestion'; exam: ExamDefinition; question: ExamQuestion };
+  | { kind: 'examQuestion'; exam: ExamDefinition; question: ExamQuestion }
+  | { kind: 'quizzesRoot' }
+  | { kind: 'quiz'; quiz: QuizDefinition };
 
 const TOPIC_ICONS: Record<string, string> = {
   Variables: 'symbol-variable',
@@ -34,9 +38,12 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     private readonly progress: Progress,
     private readonly getExams: () => ExamDefinition[],
     private readonly exams: ExamManager,
+    private readonly getQuizzes: () => QuizDefinition[],
+    private readonly quizProgress: QuizProgress,
   ) {
     progress.onDidChange(() => this.refresh());
     exams.onDidChange(() => this.refresh());
+    quizProgress.onDidChange(() => this.refresh());
   }
 
   refresh(): void {
@@ -47,13 +54,19 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     const all = this.getChallenges();
     if (!node) {
       const topics: ChallengeNode[] = [...new Set(all.map((c) => c.topic))].map((topic) => ({ kind: 'topic', topic }));
-      return this.getExams().length ? [{ kind: 'examsRoot' }, ...topics] : topics;
+      return [
+        ...(this.getExams().length ? [{ kind: 'examsRoot' } as ChallengeNode] : []),
+        ...(this.getQuizzes().length ? [{ kind: 'quizzesRoot' } as ChallengeNode] : []),
+        ...topics,
+      ];
     }
     switch (node.kind) {
       case 'topic':
         return all.filter((c) => c.topic === node.topic).map((challenge) => ({ kind: 'challenge', challenge }));
       case 'examsRoot':
         return this.getExams().map((exam) => ({ kind: 'exam', exam }));
+      case 'quizzesRoot':
+        return this.getQuizzes().map((quiz) => ({ kind: 'quiz', quiz }));
       case 'exam':
         return this.exams.state(node.exam.id)
           ? node.exam.questions.map((question) => ({ kind: 'examQuestion', exam: node.exam, question }))
@@ -87,6 +100,16 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
       }
       case 'examQuestion':
         return this.questionItem(node.exam, node.question);
+      case 'quizzesRoot': {
+        const item = new vscode.TreeItem('Quizzes', vscode.TreeItemCollapsibleState.Expanded);
+        item.id = 'quizzes';
+        item.iconPath = new vscode.ThemeIcon('question');
+        const quizzes = this.getQuizzes();
+        item.description = `${quizzes.filter((q) => this.perfect(q)).length}/${quizzes.length}`;
+        return item;
+      }
+      case 'quiz':
+        return this.quizItem(node.quiz);
     }
   }
 
@@ -148,19 +171,45 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     item.tooltip = new vscode.MarkdownString(
       `**${exam.title}**\n\n${exam.description ? `${exam.description}\n\n` : ''}` +
         `- ${exam.durationMinutes} minutes, ${exam.questions.length} questions, ${maxScore(exam)} points\n` +
-        `- ${exam.maxSubmissions} submission(s) per question\n` +
+        `- ${exam.maxSubmissions} submission(s) per coding question${exam.questions.some((q) => q.kind === 'quiz') ? '; quizzes are submitted once' : ''}\n` +
         `- ${exam.mode === 'closed' ? 'Closed: no hints or AI hints; pastes and time outside VS Code are recorded' : 'Open: hints, AI and the internet allowed'}`,
+    );
+    return item;
+  }
+
+  private perfect(quiz: QuizDefinition): boolean {
+    const score = this.quizProgress.get(quiz.id);
+    return !!score && score.best >= score.total;
+  }
+
+  private quizItem(quiz: QuizDefinition): vscode.TreeItem {
+    const score = this.quizProgress.get(quiz.id);
+    const item = new vscode.TreeItem(quiz.title, vscode.TreeItemCollapsibleState.None);
+    item.id = `quiz:${quiz.id}`;
+    item.contextValue = 'quiz';
+    item.description = score ? `best ${score.best}/${score.total}` : `${quiz.questions.length} questions`;
+    item.command = { command: 'techChallenges.openQuiz', title: 'Open Quiz', arguments: [quiz.id] };
+    item.iconPath = !score
+      ? new vscode.ThemeIcon('circle-large-outline')
+      : this.perfect(quiz)
+        ? new vscode.ThemeIcon('pass-filled', new vscode.ThemeColor('testing.iconPassed'))
+        : new vscode.ThemeIcon('circle-large-filled', new vscode.ThemeColor('testing.iconQueued'));
+    item.tooltip = new vscode.MarkdownString(
+      `**${quiz.title}** · Quiz${quiz.topic ? ` · ${quiz.topic}` : ''}\n\n${quiz.description ? `${quiz.description}\n\n` : ''}` +
+        `${quiz.questions.length} questions` + (score ? `\n\nBest score: ${score.best} / ${score.total} (${score.attempts} attempt${score.attempts === 1 ? '' : 's'})` : ''),
     );
     return item;
   }
 
   private questionItem(exam: ExamDefinition, q: ExamQuestion): vscode.TreeItem {
     const qs = this.exams.state(exam.id)?.questions[q.id];
-    const item = new vscode.TreeItem(q.challenge.title, vscode.TreeItemCollapsibleState.None);
+    const item = new vscode.TreeItem(questionTitle(q), vscode.TreeItemCollapsibleState.None);
     item.id = `exam-question:${exam.id}:${q.id}`;
     const left = this.exams.submissionsLeft(exam, q.id);
     item.description = `${qs?.bestEarned ?? 0}/${q.points} pts · ${left} submission${left === 1 ? '' : 's'} left`;
-    item.command = { command: 'techChallenges.open', title: 'Open Question', arguments: [q.challenge.id] };
+    item.command = q.kind === 'quiz'
+      ? { command: 'techChallenges.openQuiz', title: 'Open Quiz', arguments: [questionKey(q)] }
+      : { command: 'techChallenges.open', title: 'Open Question', arguments: [questionKey(q)] };
     if (!qs?.submissions) {
       item.iconPath = new vscode.ThemeIcon('circle-large-outline');
     } else if (qs.bestEarned >= q.points) {

@@ -5,7 +5,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { RunOutcome } from './runner';
-import { ExamDefinition, ExamQuestion, maxScore, scoreOutcome } from './exams';
+import { ExamDefinition, ExamQuestion, maxScore, questionTitle, scoreOutcome } from './exams';
+import { gradeQuiz, parseAnswers, scaleQuizGrade } from './quizzes';
 
 export interface QuestionState {
   submissions: number;
@@ -48,6 +49,8 @@ export interface ExamResultsFile {
   score: { earned: number; max: number };
   questions: {
     id: string;
+    /** "quiz" questions store the student's answers (JSON) in `code`. Missing in older files: "challenge". */
+    type?: 'challenge' | 'quiz';
     title: string;
     points: number;
     earned: number;
@@ -138,8 +141,18 @@ export class ExamManager implements vscode.Disposable {
     return this.exams.find((t) => this.isActive(t.id));
   }
 
+  /** Quizzes are submitted once; coding questions up to the exam's maxSubmissions. */
+  maxSubmissions(exam: ExamDefinition, questionId: string): number {
+    return exam.questions.find((q) => q.id === questionId)?.kind === 'quiz' ? 1 : exam.maxSubmissions;
+  }
+
   submissionsLeft(exam: ExamDefinition, questionId: string): number {
-    return Math.max(0, exam.maxSubmissions - (this.state(exam.id)?.questions[questionId]?.submissions ?? 0));
+    return Math.max(0, this.maxSubmissions(exam, questionId) - (this.state(exam.id)?.questions[questionId]?.submissions ?? 0));
+  }
+
+  /** The file holding a question's current answer: Main.java, or answers.json for a quiz. */
+  answerFile(exam: ExamDefinition, q: ExamQuestion): string {
+    return path.join(this.codeDir(exam.id), q.id, q.kind === 'quiz' ? 'answers.json' : 'Main.java');
   }
 
   score(exam: ExamDefinition): { earned: number; max: number } {
@@ -180,6 +193,7 @@ export class ExamManager implements vscode.Disposable {
       `Time limit: ${exam.durationMinutes} minutes, starting now.`,
       `${exam.questions.length} question(s), ${maxScore(exam)} points in total.`,
       `Each question can be submitted ${exam.maxSubmissions} time(s). Your best submission counts, with partial credit for the tests it passes. Run (sample tests) is unlimited.`,
+      ...(exam.questions.some((q) => q.kind === 'quiz') ? ['Quizzes are submitted once, and you won\'t see which answers are right. Your answers are saved as you go.'] : []),
       exam.mode === 'closed'
         ? 'Closed exam: hints and AI hints are turned off. Large pastes, AI completions and time spent outside VS Code are recorded in your results.'
         : 'Open exam: hints, AI hints and the internet are allowed.',
@@ -250,12 +264,16 @@ export class ExamManager implements vscode.Disposable {
       await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: `Finishing "${exam.title}"…` }, async () => {
         await vscode.workspace.saveAll(false);
         for (const q of exam.questions) {
-          const file = path.join(this.codeDir(exam.id), q.id, 'Main.java');
+          const file = this.answerFile(exam, q);
           if (!fs.existsSync(file) || this.submissionsLeft(exam, q.id) === 0) {
             continue;
           }
           const code = fs.readFileSync(file, 'utf8');
           if (this.state(exam.id)?.questions[q.id]?.lastSubmittedHash === hash(code)) {
+            continue;
+          }
+          if (q.kind === 'quiz') {
+            await this.recordScore(exam, q, scaleQuizGrade(gradeQuiz(q.quiz, parseAnswers(code)), q.points), code);
             continue;
           }
           const outcome = await this.gradeQuestion(exam, q);
@@ -293,11 +311,15 @@ export class ExamManager implements vscode.Disposable {
 
   /** Records a graded submission and returns its score. */
   async recordSubmission(exam: ExamDefinition, q: ExamQuestion, outcome: RunOutcome, code: string): Promise<{ earned: number; passed: number; total: number }> {
+    return this.recordScore(exam, q, scoreOutcome(outcome, q.points), code);
+  }
+
+  /** Records an already-scored submission (a graded quiz, or a run outcome) and keeps the best one. */
+  async recordScore(exam: ExamDefinition, q: ExamQuestion, result: { earned: number; passed: number; total: number }, code: string): Promise<{ earned: number; passed: number; total: number }> {
     const s = this.state(exam.id);
-    if (!s || s.finishedAt) {
+    if (!s || s.finishedAt || this.submissionsLeft(exam, q.id) === 0) {
       return { earned: 0, passed: 0, total: 0 };
     }
-    const result = scoreOutcome(outcome, q.points);
     const prev = s.questions[q.id] ?? { submissions: 0, bestEarned: 0, bestPassed: 0, total: result.total };
     const better = prev.submissions === 0 || result.earned > prev.bestEarned;
     const next: QuestionState = {
@@ -431,14 +453,15 @@ export class ExamManager implements vscode.Disposable {
       score: this.score(exam),
       questions: exam.questions.map((q) => {
         const qs = s.questions[q.id];
-        const file = path.join(this.codeDir(exam.id), q.id, 'Main.java');
+        const file = this.answerFile(exam, q);
         return {
           id: q.id,
-          title: q.challenge.title,
+          type: q.kind,
+          title: questionTitle(q),
           points: q.points,
           earned: qs?.bestEarned ?? 0,
           passed: qs?.bestPassed ?? 0,
-          total: qs?.total ?? q.challenge.tests.length,
+          total: qs?.total ?? (q.kind === 'quiz' ? q.quiz.questions.length : q.challenge.tests.length),
           submissions: qs?.submissions ?? 0,
           code: qs?.bestCode ?? (fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : ''),
         };

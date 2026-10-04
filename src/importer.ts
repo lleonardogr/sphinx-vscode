@@ -1,4 +1,4 @@
-// "Import Challenges, Tests or Exams…": copies what a teacher shared (a folder or a .zip) into the
+// "Import Challenges, Quizzes, Tests or Exams…": copies what a teacher shared (a folder or a .zip) into the
 // extension's library, which is loaded like the built-in challenges. Copying means the import keeps
 // working after the original folder, download or USB stick is gone.
 import * as fs from 'fs';
@@ -8,6 +8,7 @@ import * as vscode from 'vscode';
 import { slugify } from './authoring';
 import { Challenge } from './challenges';
 import { ExamDefinition } from './exams';
+import { QuizDefinition } from './quizzes';
 import { Importable, checkImportables, extractZip, findImportables, findSolutions } from './importCore';
 
 export interface ImportDeps {
@@ -16,11 +17,12 @@ export interface ImportDeps {
   output: vscode.OutputChannel;
   challenges: () => Challenge[];
   exams: () => ExamDefinition[];
+  quizzes: () => QuizDefinition[];
   reload: () => void;
 }
 
 export function libraryRoots(libraryDir: string): string[] {
-  return [path.join(libraryDir, 'challenges'), path.join(libraryDir, 'exams')];
+  return ['challenges', 'quizzes', 'exams'].map((d) => path.join(libraryDir, d));
 }
 
 const isInside = (child: string, parent: string) => path.resolve(child).startsWith(path.resolve(parent) + path.sep);
@@ -29,9 +31,11 @@ function describe(items: Importable[]): string {
   const tests = items.filter((i) => i.kind === 'challenge' && i.topic === 'Tests').length;
   const challenges = items.filter((i) => i.kind === 'challenge').length - tests;
   const exams = items.filter((i) => i.kind === 'exam').length;
+  const quizzes = items.filter((i) => i.kind === 'quiz').length;
   const parts = [
     challenges && `${challenges} challenge${challenges > 1 ? 's' : ''}`,
     tests && `${tests} test${tests > 1 ? 's' : ''}`,
+    quizzes && `${quizzes} quiz${quizzes > 1 ? 'zes' : ''}`,
     exams && `${exams} exam${exams > 1 ? 's' : ''}`,
   ].filter(Boolean);
   return parts.length > 1 ? `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}` : String(parts[0] ?? 'nothing');
@@ -39,7 +43,7 @@ function describe(items: Importable[]): string {
 
 export async function importContent(deps: ImportDeps): Promise<void> {
   const picked = await vscode.window.showOpenDialog({
-    title: 'Import challenges, tests or exams',
+    title: 'Import challenges, quizzes, tests or exams',
     openLabel: 'Import',
     canSelectFiles: true,
     canSelectFolders: true,
@@ -72,13 +76,13 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     const found = findImportables(root, rootName);
     // Don't import the library into itself, or the extension's own folders.
     const candidates = found.filter((i) => !isInside(i.dir, deps.libraryDir));
-    const { ok, errors } = checkImportables(candidates, deps.challenges());
+    const { ok, errors } = checkImportables(candidates, deps.challenges(), deps.quizzes());
     errors.forEach((e) => deps.output.appendLine(`[import] ✗ ${e}`));
     if (ok.length === 0) {
       vscode.window.showWarningMessage(
         errors.length
           ? `Nothing could be imported from ${path.basename(source)}. See the "Tech Challenges" output for the problems.`
-          : `No challenges or exams found in ${path.basename(source)}. Each one needs a folder with a challenge.json or an exam.json.`,
+          : `No challenges or exams found in ${path.basename(source)}. Each one needs a folder with a challenge.json, quiz.json or exam.json.`,
       );
       return;
     }
@@ -104,10 +108,12 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     // renaming the imported one.
     const otherIds = new Set(deps.challenges().filter((c) => !isInside(c.dir, deps.libraryDir)).map((c) => c.id));
     const otherExamIds = new Set(deps.exams().filter((e) => !isInside(e.dir, deps.libraryDir)).map((e) => e.id));
+    const otherQuizIds = new Set(deps.quizzes().filter((q) => !isInside(q.dir, deps.libraryDir)).map((q) => q.id));
     const clashes: string[] = [];
     const plan = ok.map((item) => {
-      const clash = (item.kind === 'challenge' ? otherIds : otherExamIds).has(item.name);
-      const dest = path.join(deps.libraryDir, item.kind === 'exam' ? 'exams' : 'challenges', clash ? `${item.name}-imported` : item.name);
+      const clash = (item.kind === 'challenge' ? otherIds : item.kind === 'quiz' ? otherQuizIds : otherExamIds).has(item.name);
+      const folder = item.kind === 'exam' ? 'exams' : item.kind === 'quiz' ? 'quizzes' : 'challenges';
+      const dest = path.join(deps.libraryDir, folder, clash ? `${item.name}-imported` : item.name);
       if (clash) {
         clashes.push(`${item.title} → ${path.basename(dest)}`);
       }
@@ -169,13 +175,14 @@ export async function importContent(deps: ImportDeps): Promise<void> {
 export async function removeImported(deps: ImportDeps): Promise<void> {
   const items = [
     ...deps.exams().filter((e) => isInside(e.dir, deps.libraryDir)).map((e) => ({ label: `$(checklist) ${e.title}`, description: `exam · ${e.questions.length} questions`, dir: e.dir })),
+    ...deps.quizzes().filter((q) => isInside(q.dir, deps.libraryDir)).map((q) => ({ label: `$(question) ${q.title}`, description: `quiz · ${q.questions.length} questions`, dir: q.dir })),
     ...deps.challenges().filter((c) => isInside(c.dir, deps.libraryDir)).map((c) => ({ label: `$(symbol-event) ${c.title}`, description: `${c.topic} · ${c.difficulty}`, dir: c.dir })),
   ];
   if (items.length === 0) {
-    vscode.window.showInformationMessage('Nothing has been imported yet. Use "Import Challenges, Tests or Exams…" to add some.');
+    vscode.window.showInformationMessage('Nothing has been imported yet. Use "Import Challenges, Quizzes, Tests or Exams…" to add some.');
     return;
   }
-  const picks = await vscode.window.showQuickPick(items, { title: 'Remove imported challenges, tests or exams', canPickMany: true, ignoreFocusOut: true });
+  const picks = await vscode.window.showQuickPick(items, { title: 'Remove imported challenges, quizzes, tests or exams', canPickMany: true, ignoreFocusOut: true });
   if (!picks?.length) {
     return;
   }

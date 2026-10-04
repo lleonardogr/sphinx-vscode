@@ -7,7 +7,7 @@
 //     "maxSubmissions": 3,         // per question
 //     "questions": [
 //       { "id": "even-or-odd", "points": 20 },   // a built-in challenge id...
-//       { "id": "sum-of-evens", "points": 50 }   // ...or a challenge folder inside the exam folder
+//       { "id": "sum-of-evens", "points": 50 }   // ...or a challenge or quiz folder inside the exam folder
 //     ]
 //   }
 //
@@ -15,16 +15,30 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Challenge, loadChallenge } from './challenges';
+import { QuizDefinition, loadQuiz } from './quizzes';
 import { RunOutcome } from './runner';
 
 export type ExamMode = 'open' | 'closed';
 
-export interface ExamQuestion {
-  /** The question id inside the exam (a built-in challenge id or a sub-folder name). */
+interface ExamQuestionBase {
+  /** The question id inside the exam (a challenge or quiz id, or a sub-folder name). */
   id: string;
   points: number;
-  /** The challenge students solve. Its id is namespaced: exam:<examId>:<questionId>. */
-  challenge: Challenge;
+}
+
+export type ExamQuestion =
+  /** A coding challenge. Its id is namespaced: exam:<examId>:<questionId>. */
+  | (ExamQuestionBase & { kind: 'challenge'; challenge: Challenge })
+  /** A quiz, submitted once and graded by its answers. Its id is namespaced the same way. */
+  | (ExamQuestionBase & { kind: 'quiz'; quiz: QuizDefinition });
+
+export function questionTitle(q: ExamQuestion): string {
+  return q.kind === 'quiz' ? q.quiz.title : q.challenge.title;
+}
+
+/** The namespaced id the panels use for an exam question. */
+export function questionKey(q: ExamQuestion): string {
+  return q.kind === 'quiz' ? q.quiz.id : q.challenge.id;
 }
 
 export interface ExamDefinition {
@@ -61,7 +75,7 @@ export function scoreOutcome(outcome: RunOutcome, points: number): { earned: num
   return { earned: Math.round((points * passed * 100) / total) / 100, passed, total };
 }
 
-function loadExam(dir: string, challenges: Challenge[]): ExamDefinition {
+function loadExam(dir: string, challenges: Challenge[], quizzes: QuizDefinition[]): ExamDefinition {
   const meta = JSON.parse(fs.readFileSync(path.join(dir, 'exam.json'), 'utf8'));
   const id = meta.id ?? path.basename(dir);
   if (!meta.title || !Array.isArray(meta.questions) || meta.questions.length === 0) {
@@ -75,13 +89,20 @@ function loadExam(dir: string, challenges: Challenge[]): ExamDefinition {
     const points = typeof q.points === 'number' && q.points > 0 ? q.points : 10;
     const local = path.join(dir, q.id);
     let base: Challenge | undefined;
-    if (fs.existsSync(path.join(local, 'challenge.json'))) {
+    let quiz: QuizDefinition | undefined;
+    if (fs.existsSync(path.join(local, 'quiz.json'))) {
+      quiz = loadQuiz(local);
+    } else if (fs.existsSync(path.join(local, 'challenge.json'))) {
       base = loadChallenge(local);
     } else {
       base = challenges.find((c) => c.id === q.id);
+      quiz = base ? undefined : quizzes.find((z) => z.id === q.id);
+    }
+    if (quiz) {
+      return { kind: 'quiz', id: q.id, points, quiz: { ...quiz, id: examChallengeId(id, q.id) } };
     }
     if (!base) {
-      throw new Error(`question "${q.id}" is neither a folder in this exam nor a known challenge id`);
+      throw new Error(`question "${q.id}" is neither a folder in this exam nor a known challenge or quiz id`);
     }
     const challenge: Challenge = {
       ...base,
@@ -91,7 +112,7 @@ function loadExam(dir: string, challenges: Challenge[]): ExamDefinition {
       hints: mode === 'open' ? base.hints : [],
       aiHints: mode === 'open' && base.aiHints,
     };
-    return { id: q.id, points, challenge };
+    return { kind: 'challenge', id: q.id, points, challenge };
   });
   const ids = new Set<string>();
   for (const q of questions) {
@@ -129,12 +150,12 @@ export function findExamDirs(roots: string[]): string[] {
   return dirs;
 }
 
-export function loadExams(roots: string[], challenges: Challenge[]): { exams: ExamDefinition[]; errors: string[] } {
+export function loadExams(roots: string[], challenges: Challenge[], quizzes: QuizDefinition[] = []): { exams: ExamDefinition[]; errors: string[] } {
   const byId = new Map<string, ExamDefinition>();
   const errors: string[] = [];
   for (const dir of findExamDirs(roots)) {
     try {
-      const exam = loadExam(dir, challenges);
+      const exam = loadExam(dir, challenges, quizzes);
       byId.set(exam.id, exam);
     } catch (e) {
       errors.push(`${dir}: ${(e as Error).message}`);

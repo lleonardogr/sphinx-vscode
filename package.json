@@ -1,7 +1,7 @@
 {
   "name": "tech-challenges",
   "displayName": "Tech Challenges",
-  "description": "LeetCode/HackerRank-style coding challenges inside VS Code, with mixed-skill tests, timed exams and optional AI hints from a local model or your own API key. Starts with Java: variables, conditionals, loops, arrays, strings, methods and OOP.",
+  "description": "LeetCode/HackerRank-style coding challenges inside VS Code, with mixed-skill tests, quizzes, timed exams and optional AI hints from a local model or your own API key. Starts with Java: variables, conditionals, loops, arrays, strings, methods and OOP.",
   "version": "0.5.0",
   "publisher": "class-plugin",
   "license": "MIT",
@@ -124,14 +124,19 @@
         "icon": "$(new-file)"
       },
       {
+        "command": "techChallenges.openQuiz",
+        "title": "Open Quiz…",
+        "category": "Tech Challenges"
+      },
+      {
         "command": "techChallenges.importContent",
-        "title": "Import Challenges, Tests or Exams…",
+        "title": "Import Challenges, Quizzes, Tests or Exams…",
         "category": "Tech Challenges",
         "icon": "$(desktop-download)"
       },
       {
         "command": "techChallenges.removeImported",
-        "title": "Remove Imported Challenges, Tests or Exams…",
+        "title": "Remove Imported Challenges, Quizzes, Tests or Exams…",
         "category": "Tech Challenges"
       },
       {
@@ -372,6 +377,10 @@
       {
         "fileMatch": "exam.json",
         "url": "./schemas/exam.schema.json"
+      },
+      {
+        "fileMatch": "quiz.json",
+        "url": "./schemas/quiz.schema.json"
       }
     ]
   },

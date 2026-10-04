@@ -8,8 +8,11 @@ import * as path from 'path';
 import { Challenge, loadChallenges } from './challenges';
 import { RunOutcome, RunRequest, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
 import { findExamDirs, loadExams } from './exams';
+import { findQuizDirs, isWholeProgram, loadQuiz, loadQuizzes, quizProgram } from './quizzes';
 
 export interface ChallengeReport {
+  /** "quiz" reports count questions in `tests` and code snippets run in `solutions`. */
+  kind?: 'quiz';
   id: string;
   dir: string;
   ok: boolean;
@@ -125,6 +128,50 @@ async function validateOne(c: Challenge, javacVersion: number | undefined, opts:
   return { id: c.id, dir: c.dir, ok: problems.length === 0, tests: c.tests.length, solutions: solutions.length, problems };
 }
 
+/**
+ * Checks a quiz: it must load, and every "what does this code print?" snippet must compile and print
+ * exactly its answer. With `generate`, empty answers are filled in from the real output.
+ */
+async function validateQuiz(dir: string, javacVersion: number | undefined, opts: ValidateOptions, counters: { checked: number; skipped: number }): Promise<ChallengeReport> {
+  const problems: string[] = [];
+  const metaPath = path.join(dir, 'quiz.json');
+  const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+  const quiz = loadQuiz(dir);
+  let ran = 0;
+  let changed = false;
+  for (const [i, q] of quiz.questions.entries()) {
+    if (q.type !== 'output') {
+      continue;
+    }
+    // Snippets are wrapped in a compact void main(), which needs JDK 25+; a full classic program doesn't.
+    const classic = isWholeProgram(q.code) && !/\bvoid\s+main\s*\(\s*\)/.test(q.code);
+    if (!classic && (javacVersion ?? 0) < 25) {
+      counters.skipped++;
+      continue;
+    }
+    counters.checked++;
+    ran++;
+    const outcome = await runAs(quizProgram(q.code), { tests: [{ input: '', output: q.answer }], javaHome: opts.javaHome });
+    if (outcome.kind !== 'tests') {
+      problems.push(`question ${i + 1}: the code ${describe(outcome)}`);
+      continue;
+    }
+    const r = outcome.results[0];
+    if (r.timedOut || r.exitCode !== 0) {
+      problems.push(`question ${i + 1}: the code ${r.timedOut ? 'timed out' : `crashed\n${r.stderr}`}`);
+    } else if (opts.generate && !q.options && q.answer === '') {
+      meta.questions[i].answer = normalizeOutput(r.actual);
+      changed = true;
+    } else if (!r.passed) {
+      problems.push(`question ${i + 1}: the answer is ${JSON.stringify(q.answer)} but the code prints ${JSON.stringify(normalizeOutput(r.actual))}`);
+    }
+  }
+  if (changed) {
+    fs.writeFileSync(metaPath, JSON.stringify(meta, null, 2) + '\n');
+  }
+  return { kind: 'quiz', id: quiz.id, dir, ok: problems.length === 0, tests: quiz.questions.length, solutions: ran, problems };
+}
+
 export async function validateChallenges(roots: string[], opts: ValidateOptions = {}): Promise<ValidationReport> {
   const practice = loadChallenges(roots);
   // Private questions live in folders next to an exam.json; validate them too, plus the exam files themselves.
@@ -132,12 +179,27 @@ export async function validateChallenges(roots: string[], opts: ValidateOptions 
   const questions = examDirs.length ? loadChallenges(examDirs) : { challenges: [], errors: [] };
   const challenges = [...practice.challenges, ...questions.challenges];
   const references = opts.referenceRoots?.length ? loadChallenges(opts.referenceRoots).challenges : [];
-  const errors = [...practice.errors, ...questions.errors, ...loadExams(roots, [...references, ...practice.challenges]).errors];
+  // Quizzes: practice ones in the roots, and private ones inside exam folders.
+  const quizDirs = [...findQuizDirs(roots), ...findQuizDirs(examDirs)];
+  const quizLoad = loadQuizzes([...roots, ...examDirs]);
+  const referenceQuizzes = opts.referenceRoots?.length ? loadQuizzes(opts.referenceRoots).quizzes : [];
+  const errors = [
+    ...practice.errors,
+    ...questions.errors,
+    ...quizLoad.errors,
+    ...loadExams(roots, [...references, ...practice.challenges], [...referenceQuizzes, ...loadQuizzes(roots).quizzes]).errors,
+  ];
   const javacVersion = await javacMajorVersion(opts.javaHome);
   const counters = { checked: 0, skipped: 0 };
   const reports: ChallengeReport[] = [];
   for (const c of challenges) {
     const report = await validateOne(c, javacVersion, opts, counters);
+    reports.push(report);
+    opts.onChallenge?.(report);
+  }
+  const broken = new Set(quizLoad.errors.map((e) => e.slice(0, e.indexOf(': '))));
+  for (const dir of quizDirs.filter((d) => !broken.has(d))) {
+    const report = await validateQuiz(dir, javacVersion, opts, counters);
     reports.push(report);
     opts.onChallenge?.(report);
   }
@@ -148,10 +210,14 @@ export function formatReport(report: ValidationReport, generate = false): string
   const lines = [`Using javac ${report.javacVersion ?? '(not found)'}`, ''];
   report.loadErrors.forEach((e) => lines.push(`✗ ${e}`));
   for (const c of report.challenges) {
-    lines.push(c.ok ? `✓ ${c.id} (${c.tests} tests × ${c.solutions} solution${c.solutions === 1 ? '' : 's'})${generate ? ', outputs written' : ''}` : `✗ ${c.id}\n  ${c.problems.join('\n  ')}`);
+    const summary = c.kind === 'quiz'
+      ? `quiz, ${c.tests} questions, ${c.solutions} code snippet${c.solutions === 1 ? '' : 's'} run`
+      : `${c.tests} tests × ${c.solutions} solution${c.solutions === 1 ? '' : 's'}`;
+    lines.push(c.ok ? `✓ ${c.id} (${summary})${generate ? ', outputs written' : ''}` : `✗ ${c.id}\n  ${c.problems.join('\n  ')}`);
   }
   const ok = report.challenges.filter((c) => c.ok).length;
-  lines.push('', `${ok}/${report.challenges.length} challenges OK (${report.checkedSolutions} solutions checked)`);
+  const quizzes = report.challenges.filter((c) => c.kind === 'quiz').length;
+  lines.push('', `${ok}/${report.challenges.length} ${quizzes ? 'challenges and quizzes' : 'challenges'} OK (${report.checkedSolutions} solutions${quizzes ? ' and snippets' : ''} checked)`);
   if (report.skippedSolutions) {
     lines.push(`⚠ Skipped ${report.skippedSolutions} modern solution(s): they need JDK 25+ (found ${report.javacVersion ?? 'none'}). Only *.classic.java files were checked.`);
   }

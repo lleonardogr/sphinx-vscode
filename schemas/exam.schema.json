@@ -30,8 +30,8 @@
         "required": ["id"],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string", "description": "A challenge folder inside this exam folder, or the id of any loaded challenge (e.g. \"even-or-odd\")." },
-          "points": { "type": "number", "exclusiveMinimum": 0, "default": 10, "description": "Points for this question. Partial credit = points × tests passed / total tests." }
+          "id": { "type": "string", "description": "A challenge or quiz folder inside this exam folder, or the id of any loaded challenge or quiz (e.g. \"even-or-odd\", \"java-basics-quiz\"). Quizzes are submitted once." },
+          "points": { "type": "number", "exclusiveMinimum": 0, "default": 10, "description": "Points for this question. Partial credit = points × tests passed / total tests (for a quiz: points × quiz points earned / quiz total)." }
         }
       }
     }

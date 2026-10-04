@@ -91,7 +91,8 @@ week-3-exam/
 A question `id` is either:
 
 - the name of a **folder inside the exam folder**: a **private question**, written like any challenge (see [Creating your own challenges](creating-challenges.md)). Students can't practise it beforehand, because it only appears inside the exam; or
-- the id of **any challenge** the extension knows, such as `even-or-odd` (a built-in one), a bigger mixed challenge from the **Tests** group such as `calculator-menu`, or one of your own challenges from `extraChallengePaths`.
+- the name of a **quiz folder inside the exam folder**: a private [quiz](quizzes.md#quizzes-in-exams), submitted once; or
+- the id of **any challenge or quiz** the extension knows, such as `even-or-odd` (a built-in one), a bigger mixed challenge from the **Tests** group such as `calculator-menu`, or one of your own challenges from `extraChallengePaths`.
 
 Copy the built-in example from the repository's [`exams/sample-exam`](../exams/sample-exam) folder to get started. Then validate your exam folder with **Tech Challenges: Validate Challenges in a Folder…**. It checks the private questions and reports unknown question ids.
 
