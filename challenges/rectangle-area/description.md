@@ -15,5 +15,5 @@ Perimeter: <2 * (width + height)>
 
 **Things to know**
 
-- Use `double` for numbers with decimals, and `scanner.nextDouble()` to read them.
+- Use `double` for numbers with decimals. `Double.parseDouble(text)` turns text like `"2.5"` into a `double`. (Classic Java: `scanner.nextDouble()`.)
 - `IO.println("Area: %.2f".formatted(area));` prints a number with two decimals. (Classic Java: `System.out.printf("Area: %.2f%n", area);`)

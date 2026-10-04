@@ -1,13 +1,13 @@
 enum Day { MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY }
 
 void main() {
-    Scanner scanner = new Scanner(System.in);
     // TODO: create an EnumMap<Day, Integer> and start every day at 0
 
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln().trim());
     for (int i = 0; i < n; i++) {
-        Day day = Day.valueOf(scanner.next());
-        int hours = scanner.nextInt();
+        String[] parts = IO.readln().trim().split(" ");
+        Day day = Day.valueOf(parts[0]);
+        int hours = Integer.parseInt(parts[1]);
         // TODO: add the hours to that day
     }
     // TODO: print every day in week order, then the busiest day

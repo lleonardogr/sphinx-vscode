@@ -1,6 +1,5 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int score = scanner.nextInt();
+    int score = Integer.parseInt(IO.readln().trim());
 
     // TODO: print the letter grade
 }

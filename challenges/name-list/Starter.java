@@ -1,5 +1,5 @@
 void main() {
-    String line = new Scanner(System.in).nextLine().trim();
+    String line = IO.readln().trim();
 
     // TODO: capitalize each name, remove duplicates, sort them and print them separated by ", "
 }

@@ -1,6 +1,5 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    String word = scanner.next();
+    String word = IO.readln().trim();
 
     // TODO: print "Palindrome" or "Not a palindrome"
 }

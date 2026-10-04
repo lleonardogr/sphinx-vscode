@@ -1,9 +1,9 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln().trim());
+    String[] parts = IO.readln().trim().split(" ");
     int[] grades = new int[n];
     for (int i = 0; i < n; i++) {
-        grades[i] = scanner.nextInt();
+        grades[i] = Integer.parseInt(parts[i]);
     }
 
     // TODO: compute the average, highest, lowest and number passed, then print the report

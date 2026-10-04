@@ -12,5 +12,5 @@ The same text, reversed.
 
 **Things to know**
 
-- `scanner.nextLine()` reads a whole line, including spaces.
+- `IO.readln()` reads a whole line, including spaces. (Classic Java: `scanner.nextLine()`.)
 - `text.length()` is the number of characters, and `text.charAt(i)` is the character at index `i`.

@@ -3,10 +3,9 @@
 //   "<title>" by <author> (<year>)
 
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int n = Integer.parseInt(scanner.nextLine().trim());
+    int n = Integer.parseInt(IO.readln().trim());
     for (int i = 0; i < n; i++) {
-        String[] parts = scanner.nextLine().split(";");
+        String[] parts = IO.readln().split(";");
         String title = parts[0];
         String author = parts[1];
         int year = Integer.parseInt(parts[2]);

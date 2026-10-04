@@ -1,8 +1,8 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int a = scanner.nextInt();
-    int b = scanner.nextInt();
-    int c = scanner.nextInt();
+    String[] parts = IO.readln().trim().split(" ");
+    int a = Integer.parseInt(parts[0]);
+    int b = Integer.parseInt(parts[1]);
+    int c = Integer.parseInt(parts[2]);
 
     // TODO: print the largest number
 }

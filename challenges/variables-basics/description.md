@@ -17,4 +17,4 @@ Next year you will be <age + 1> years old.
 **Things to know**
 
 - A `String` variable holds text, an `int` variable holds a whole number.
-- `scanner.next()` reads one word, `scanner.nextInt()` reads a whole number.
+- `IO.readln()` reads one line as a `String`, and `Integer.parseInt(text)` turns text like `"36"` into an `int`. (Classic Java: `scanner.next()` and `scanner.nextInt()`.)

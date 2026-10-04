@@ -1,5 +1,5 @@
 void main() {
-    String line = new Scanner(System.in).nextLine().trim();
+    String line = IO.readln().trim();
 
     // TODO: group the words by length (shortest first) and print each group as  length: word, word
 }

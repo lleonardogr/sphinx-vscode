@@ -18,16 +18,16 @@ class BankAccount {
 }
 
 void main() {
-    Scanner scanner = new Scanner(System.in);
     BankAccount account = new BankAccount();
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln().trim());
     for (int i = 0; i < n; i++) {
-        String command = scanner.next();
+        String[] parts = IO.readln().trim().split(" ");
+        String command = parts[0];
         if (command.equals("balance")) {
             IO.println("Balance: " + account.getBalance());
             continue;
         }
-        int amount = scanner.nextInt();
+        int amount = Integer.parseInt(parts[1]);
         if (command.equals("deposit")) {
             IO.println(account.deposit(amount) ? "Deposited " + amount : "Invalid amount");
         } else if (amount <= 0) {

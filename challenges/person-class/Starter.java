@@ -4,11 +4,11 @@
 //   - a method String introduce() that returns "Hi, I'm <name> and I'm <age> years old."
 
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln().trim());
     for (int i = 0; i < n; i++) {
-        String name = scanner.next();
-        int age = scanner.nextInt();
+        String[] parts = IO.readln().trim().split(" ");
+        String name = parts[0];
+        int age = Integer.parseInt(parts[1]);
         // TODO: create a Person object and print what introduce() returns
     }
 }

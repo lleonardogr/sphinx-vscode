@@ -1,11 +1,9 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln().trim());
+    String[] parts = IO.readln().trim().split(" ");
     int[] numbers = new int[n];
-
-    // TODO: read the n numbers into the array
     for (int i = 0; i < n; i++) {
-        numbers[i] = scanner.nextInt();
+        numbers[i] = Integer.parseInt(parts[i]);
     }
 
     // TODO: find the largest and the smallest numbers, then print them

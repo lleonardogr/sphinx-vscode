@@ -1,7 +1,6 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
     // 1. Read the name into a String variable
-    String name = scanner.next();
+    String name = IO.readln().trim();
 
     // 2. Read the age into an int variable
     // TODO

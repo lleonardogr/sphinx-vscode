@@ -1,10 +1,9 @@
 void main() {
-    Scanner scanner = new Scanner(System.in);
     // TODO: create an ArrayList<String> to hold the items
 
-    int n = scanner.nextInt();
+    int n = Integer.parseInt(IO.readln().trim());
     for (int i = 0; i < n; i++) {
-        String command = scanner.next();
+        String[] command = IO.readln().trim().split(" "); // e.g. ["add", "milk"] or ["count"]
         // TODO: handle "add <item>", "remove <item>", "count" and "print"
     }
 }

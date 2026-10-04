@@ -9,7 +9,11 @@ All notable changes to this project are documented here. The format follows [Kee
 - One challenge per language construct, each enforced by a rule:
   - **Conditionals:** Weather Label (ternary `? :`, no `if`) and Days in a Month (switch expression with `case ... ->`).
   - **Loops:** Collatz Steps (`while`, with a hidden test whose values overflow an `int`), Sum Until Zero (`do-while`) and Above Average (for-each).
-- The new modern starters read input with `IO.readln()`.
+
+### Changed
+
+- **All modern starters now read input the modern way, with `IO.readln()`** (plus `Integer.parseInt` / `Double.parseDouble`, and `split(" ")` for several values on one line) instead of `Scanner`. Challenge notes and hints show the modern call first, with the classic `Scanner` call in brackets. Classic starters still use `Scanner`, and both styles are still accepted.
+- **Create New Challenge** writes modern templates that use `IO.readln()`, and the guide's example starter does too.
 
 ## [0.2.1] - 2026-10-03
 
