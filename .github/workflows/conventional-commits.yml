@@ -1,0 +1,45 @@
+name: Conventional commits
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  check:
+    name: Conventional commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR title and commit messages
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pattern = /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9._\/-]+\))?!?: \S.{0,99}$/;
+            const problems = [];
+            const title = context.payload.pull_request.title;
+            // The PR title becomes the commit message on main (squash merge).
+            if (!pattern.test(title)) problems.push(`PR title: "${title}"`);
+            const commits = await github.paginate(github.rest.pulls.listCommits, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+            for (const c of commits) {
+              const subject = c.commit.message.split('\n')[0];
+              // "Update branch" merge commits and fixup commits are fine; they disappear on squash.
+              if (c.parents.length > 1 || /^(Merge|Revert|fixup!|squash!) /.test(subject)) continue;
+              if (!pattern.test(subject)) problems.push(`commit ${c.sha.slice(0, 7)}: "${subject}"`);
+            }
+            if (problems.length) {
+              core.setFailed(
+                'These do not follow Conventional Commits (https://www.conventionalcommits.org):\n' +
+                problems.map((p) => `  - ${p}`).join('\n') +
+                '\nExpected "<type>(<optional scope>)<optional !>: <subject>", for example "feat(panel): add a custom input box".' +
+                '\nTypes: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert.'
+              );
+            } else {
+              core.info(`✓ PR title and ${commits.length} commit(s) follow Conventional Commits.`);
+            }
