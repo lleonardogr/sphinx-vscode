@@ -2,7 +2,7 @@
   "name": "tech-challenges",
   "displayName": "Tech Challenges",
   "description": "LeetCode/HackerRank-style coding challenges inside VS Code, with optional AI hints from a local model or your own API key. Starts with Java: variables, conditionals, loops, arrays, strings, methods and OOP.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "class-plugin",
   "license": "MIT",
   "icon": "media/logo/icon.png",
