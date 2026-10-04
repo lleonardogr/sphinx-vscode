@@ -10,8 +10,8 @@
   ],
   "mustContain": [
     {
-      "pattern": "static\\s+long\\s+power\\s*\\(\\s*int\\s+\\w+\\s*,\\s*int\\s+\\w+\\s*\\)",
-      "message": "Write the method with this signature: static long power(int base, int exponent)."
+      "pattern": "\\blong\\s+power\\s*\\(\\s*int\\s+\\w+\\s*,\\s*int\\s+\\w+\\s*\\)",
+      "message": "Write the method with this signature: long power(int base, int exponent)."
     },
     {
       "pattern": "\\b(for|while)\\b",

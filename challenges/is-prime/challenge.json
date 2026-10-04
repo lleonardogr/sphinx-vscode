@@ -10,8 +10,8 @@
   ],
   "mustContain": [
     {
-      "pattern": "static\\s+boolean\\s+isPrime\\s*\\(\\s*int\\s+\\w+\\s*\\)",
-      "message": "Keep the method signature: static boolean isPrime(int n)."
+      "pattern": "\\bboolean\\s+isPrime\\s*\\(\\s*int\\s+\\w+\\s*\\)",
+      "message": "Keep the method signature: boolean isPrime(int n)."
     }
   ],
   "tests": [

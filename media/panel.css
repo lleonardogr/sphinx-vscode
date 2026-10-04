@@ -282,3 +282,14 @@ a {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.compile-hint {
+  border-left: 3px solid var(--warn);
+  padding-left: 8px;
+}
+
+.style-note {
+  margin-top: 2em;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}

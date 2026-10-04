@@ -4,7 +4,7 @@ Thanks for helping improve Tech Challenges! You can contribute in two main ways:
 
 ## Setup
 
-Requirements: Node.js 20+, a JDK 17+, and VS Code.
+Requirements: Node.js 20+, a JDK 25+ (so the modern solutions are validated too), and VS Code.
 
 ```bash
 npm install
@@ -20,7 +20,8 @@ Open the folder in VS Code and press **F5** to launch an Extension Development H
    - `challenge.json`: title, topic, difficulty, order, hints, rules and tests. The [README](README.md#add-a-challenge) documents the format.
    - `description.md`: the problem statement, starting with `# Title`. Describe the **Input** and **Output** formats precisely.
    - `Starter.java`: a `public class Main` that compiles but does not solve the problem.
-   - `Solution.java`: a reference solution (also `public class Main`).
+   - `Solution.java`: a reference solution in classic style (also `public class Main`).
+   - `Solution.modern.java` (recommended): the same solution as a Java 25+ compact source file (`void main()`, `IO.println`, `IO.readln`).
 3. Add tests with `"output": ""`, and mark the edge cases `"hidden": true`. Then generate the expected outputs:
 
    ```bash
@@ -35,6 +36,7 @@ Open the folder in VS Code and press **F5** to launch an Extension Development H
 - Aim at one concept per challenge, and say which construct to use when that is the point of the exercise. Enforce it with `mustContain` / `mustNotContain`.
 - Include at least two visible examples and a few hidden tests for edge cases (zero, negatives, boundaries, overflow).
 - Keep the output format unambiguous. When decimals are involved, specify how many places to print.
+- Students may use classic or modern (Java 25+) syntax. Don't write rules that only match one style, such as requiring `static`, `public class` or `System.out`.
 - Write hints that teach, not hints that give the answer away. Order them from gentle to specific.
 
 ## Code changes

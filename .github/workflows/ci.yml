@@ -7,12 +7,18 @@ on:
 
 jobs:
   validate:
-    name: Validate (${{ matrix.os }})
+    name: Validate (${{ matrix.os }}, JDK ${{ matrix.java }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        # JDK 25 checks both classic and modern (compact source / IO.println) solutions.
+        # JDK 17 checks that the classic style still works on the oldest supported JDK.
+        include:
+          - { os: ubuntu-latest, java: 25 }
+          - { os: windows-latest, java: 25 }
+          - { os: macos-latest, java: 25 }
+          - { os: ubuntu-latest, java: 17 }
     steps:
       - uses: actions/checkout@v5
 
@@ -24,7 +30,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 17
+          java-version: ${{ matrix.java }}
 
       - run: npm ci
 

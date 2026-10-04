@@ -4,13 +4,13 @@
   "difficulty": "Easy",
   "order": 1,
   "hints": [
-    "Use System.out.println(\"...\");",
+    "Use System.out.println(\"...\"); (classic Java) or IO.println(\"...\"); (Java 25+).",
     "Check every character: capital H and W, a comma after Hello, and an exclamation mark at the end."
   ],
   "mustContain": [
     {
-      "pattern": "System\\.out\\.print",
-      "message": "Use System.out.println to print."
+      "pattern": "(System\\.out|\\bIO)\\s*\\.\\s*print",
+      "message": "Print the text with System.out.println (or IO.println in Java 25+)."
     }
   ],
   "tests": [

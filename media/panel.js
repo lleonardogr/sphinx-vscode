@@ -110,10 +110,11 @@
               .map((e) => `<li><a href="#" data-line="${e.line}" data-column="${e.column}">Line ${e.line}</a>: <span>${esc(e.message)}</span></li>`)
               .join('')}</ul>`
           : '';
+        const hint = o.hint ? `<p class="compile-hint">💡 ${esc(o.hint)}</p>` : '';
         return banner(
           'error',
           'Compilation error',
-          `${list}<details><summary>Full compiler output</summary><pre>${esc(o.raw)}</pre></details>`,
+          `${hint}${list}<details><summary>Full compiler output</summary><pre>${esc(o.raw)}</pre></details>`,
         );
       }
       case 'tests': {
