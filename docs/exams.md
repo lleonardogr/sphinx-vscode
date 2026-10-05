@@ -40,29 +40,43 @@ Each exam sets `"mode"`:
 
 ### Restrictions
 
-The most common shortcut is copying the question into an AI chat in the browser and pasting the answer back. Closed exams break that loop by default:
+The most common shortcut is copying the question into an AI chat in the browser and pasting the answer back. Each exam chooses how strict it is with a **level**:
 
-| Rule | Default in closed exams | What happens |
-|------|-------------------------|--------------|
-| `blockCopy` | on | The question can't be selected or copied, and **Copy** and **Cut** are blocked in the answer files. Attempts are recorded. |
-| `blockPaste` | on | A paste of `pasteLimit` characters or more (default **50**) is **undone immediately** and recorded. Typing, autocomplete and snippets stay below the limit. |
-| `maxAwaySeconds` | off (`0`) | The total time a student may spend outside VS Code. Past it, the exam **finishes automatically** and the results say so. |
+| Level | Records pastes, time away and Copilot | Blocks copying | Blocks pastes | Limit on time outside VS Code |
+|-------|:---:|:---:|:---:|:---:|
+| `none` | – | – | – | – |
+| `relaxed` | ✓ | – | – | – |
+| `standard` | ✓ | ✓ | 50+ characters | – |
+| `strict` | ✓ | ✓ | 30+ characters | 60 s in total |
 
-Every time a student comes back after 15 seconds or more outside VS Code, they see a warning that it was recorded, and how much time away they have left when there is a limit. The start dialog lists all the rules, so nobody is surprised.
+Closed exams use `standard` unless you choose another level. Open exams use `none`.
 
-Change the rules per exam in `exam.json`:
+- **Blocking copying** means the question can't be selected or copied, and **Copy** and **Cut** do nothing in the answer files. Attempts are recorded.
+- **Blocking pastes** means a paste at or above the limit is **undone immediately** and recorded. Typing, autocomplete and snippets stay below the limit.
+- **The time limit** counts the total time outside VS Code. Past it, the exam **finishes automatically** and the results say why.
+
+Students see a warning every time they come back after 15 seconds or more away, with the time left when there is a limit. The start dialog lists the exam's level and rules, so nobody is surprised.
+
+Pick a level, and change single rules next to it if you need to:
 
 ```json
 "mode": "closed",
 "restrictions": {
-  "blockCopy": true,
-  "blockPaste": true,
-  "pasteLimit": 50,
-  "maxAwaySeconds": 120
+  "level": "strict",
+  "maxAwaySeconds": 180
 }
 ```
 
-Open exams have no restrictions unless you add them.
+| Rule | Description |
+|------|-------------|
+| `level` | `none`, `relaxed`, `standard` or `strict`. |
+| `blockCopy` | `true` or `false`. |
+| `blockPaste` | `true` or `false`. |
+| `pasteLimit` | The smallest paste that is blocked, in characters (10 or more). |
+| `maxAwaySeconds` | Total seconds allowed outside VS Code; `0` means no limit. |
+| `record` | Record warnings. It's always on when something is blocked or limited. |
+
+The level is independent of `mode`: an open-book exam can still be `relaxed`, for example, to see who pasted large answers.
 
 ### Warnings in the results file
 

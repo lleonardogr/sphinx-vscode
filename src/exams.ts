@@ -43,7 +43,14 @@ export function questionKey(q: ExamQuestion): string {
 }
 
 /** Anti-cheating rules. Closed exams default to blocking copy and large pastes; open exams to none. */
+/** Ready-made sets of rules, from no restrictions to the strictest. */
+export type RestrictionLevel = 'none' | 'relaxed' | 'standard' | 'strict';
+export const RESTRICTION_LEVELS: RestrictionLevel[] = ['none', 'relaxed', 'standard', 'strict'];
+
 export interface ExamRestrictions {
+  level: RestrictionLevel;
+  /** Record integrity warnings (large pastes, time outside VS Code, Copilot) in the results. */
+  record: boolean;
   /** No copying from the question panel, and no Copy/Cut in the answer files. */
   blockCopy: boolean;
   /** Pastes of pasteLimit characters or more are undone. */
@@ -55,16 +62,34 @@ export interface ExamRestrictions {
 
 export const DEFAULT_PASTE_LIMIT = 50;
 
+const LEVELS: Record<RestrictionLevel, Omit<ExamRestrictions, 'level'>> = {
+  none: { record: false, blockCopy: false, blockPaste: false, pasteLimit: DEFAULT_PASTE_LIMIT, maxAwaySeconds: 0 },
+  relaxed: { record: true, blockCopy: false, blockPaste: false, pasteLimit: DEFAULT_PASTE_LIMIT, maxAwaySeconds: 0 },
+  standard: { record: true, blockCopy: true, blockPaste: true, pasteLimit: DEFAULT_PASTE_LIMIT, maxAwaySeconds: 0 },
+  strict: { record: true, blockCopy: true, blockPaste: true, pasteLimit: 30, maxAwaySeconds: 60 },
+};
+
+/**
+ * The exam's rules: a level ("none", "relaxed", "standard" or "strict"; closed exams default to
+ * "standard" and open exams to "none"), with any rule written next to it overriding the level.
+ */
 export function examRestrictions(mode: ExamMode, raw: unknown): ExamRestrictions {
   const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
-  const closed = mode === 'closed';
+  const level: RestrictionLevel = RESTRICTION_LEVELS.includes(r.level as RestrictionLevel) ? (r.level as RestrictionLevel) : mode === 'closed' ? 'standard' : 'none';
+  const base = LEVELS[level];
   const bool = (v: unknown, fallback: boolean) => (typeof v === 'boolean' ? v : fallback);
   const num = (v: unknown, fallback: number, min: number) => (typeof v === 'number' && v >= min ? Math.floor(v) : fallback);
+  const blockCopy = bool(r.blockCopy, base.blockCopy);
+  const blockPaste = bool(r.blockPaste, base.blockPaste);
+  const maxAwaySeconds = num(r.maxAwaySeconds, base.maxAwaySeconds, 0);
   return {
-    blockCopy: bool(r.blockCopy, closed),
-    blockPaste: bool(r.blockPaste, closed),
-    pasteLimit: num(r.pasteLimit, DEFAULT_PASTE_LIMIT, 10),
-    maxAwaySeconds: num(r.maxAwaySeconds, 0, 0),
+    level,
+    // Blocking or limiting something implies recording it.
+    record: bool(r.record, base.record) || blockCopy || blockPaste || maxAwaySeconds > 0,
+    blockCopy,
+    blockPaste,
+    pasteLimit: num(r.pasteLimit, base.pasteLimit, 10),
+    maxAwaySeconds,
   };
 }
 

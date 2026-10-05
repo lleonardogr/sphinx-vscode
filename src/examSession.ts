@@ -208,10 +208,7 @@ export class ExamManager implements vscode.Disposable {
         ? [tr("Quizzes are submitted once, and you won't see which answers are right. Your answers are saved as you go.", 'Quizzes são enviados uma vez, e você não verá quais respostas estão certas. Suas respostas são salvas enquanto você responde.')]
         : []),
       exam.mode === 'closed'
-        ? tr(
-            'Closed exam: hints and AI hints are turned off. Large pastes, AI completions and time spent outside VS Code are recorded in your results.',
-            'Prova fechada: as dicas e as dicas de IA ficam desativadas. Colagens grandes, sugestões de IA e o tempo fora do VS Code ficam registrados no seu resultado.',
-          )
+        ? tr('Closed exam: hints and AI hints are turned off.', 'Prova fechada: as dicas e as dicas de IA ficam desativadas.')
         : tr('Open exam: hints, AI hints and the internet are allowed.', 'Prova aberta: dicas, dicas de IA e internet são permitidas.'),
       tr('When the time is up, your answers are submitted automatically and the exam is locked.', 'Quando o tempo acabar, suas respostas são enviadas automaticamente e a prova é bloqueada.'),
       ...this.restrictionRules(exam),
@@ -238,7 +235,7 @@ export class ExamManager implements vscode.Disposable {
 
     const now = Date.now();
     const state: SessionState = { student, startedAt: now, endsAt: now + exam.durationMinutes * 60_000, questions: {}, warnings: [] };
-    if (exam.mode === 'closed') {
+    if (exam.restrictions.record) {
       for (const id of ['GitHub.copilot', 'GitHub.copilot-chat']) {
         if (vscode.extensions.getExtension(id)) {
           state.warnings.push({ at: new Date(now).toISOString(), kind: 'copilot', detail: `The ${id} extension is installed and enabled during a closed exam.` });
@@ -253,7 +250,24 @@ export class ExamManager implements vscode.Disposable {
   /** The anti-cheating rules of this exam, as lines for the start dialog. */
   private restrictionRules(exam: ExamDefinition): string[] {
     const r = exam.restrictions;
+    const names: Record<string, [string, string]> = {
+      none: ['none', 'nenhuma'],
+      relaxed: ['relaxed', 'leve'],
+      standard: ['standard', 'padrão'],
+      strict: ['strict', 'rígida'],
+    };
     const lines: string[] = [];
+    if (r.level !== 'none' || r.record) {
+      lines.push(tr(`Restriction level: ${names[r.level][0]}.`, `Nível de restrição: ${names[r.level][1]}.`));
+    }
+    if (r.record) {
+      lines.push(
+        tr(
+          'Large pastes, AI completions and time spent outside VS Code are recorded in your results.',
+          'Colagens grandes, sugestões de IA e o tempo fora do VS Code ficam registrados no seu resultado.',
+        ),
+      );
+    }
     if (r.blockCopy) {
       lines.push(tr('Copying is turned off: you can\'t copy the questions or your code.', 'Copiar está desativado: você não pode copiar as questões nem o seu código.'));
     }
@@ -487,7 +501,7 @@ export class ExamManager implements vscode.Disposable {
 
   private onEdit(e: vscode.TextDocumentChangeEvent): void {
     const active = this.activeExam();
-    if (!active || active.mode !== 'closed' || this.suppressPasteCheck || e.reason !== undefined) {
+    if (!active || !active.restrictions.record || this.suppressPasteCheck || e.reason !== undefined) {
       return; // e.reason is set for undo/redo
     }
     const question = this.isExamFile(active, e.document.uri.fsPath);
@@ -529,7 +543,7 @@ export class ExamManager implements vscode.Disposable {
 
   private onWindowState(s: vscode.WindowState): void {
     const active = this.activeExam();
-    if (!active || active.mode !== 'closed') {
+    if (!active || !active.restrictions.record) {
       this.awaySince = undefined;
       return;
     }
