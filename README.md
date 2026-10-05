@@ -52,6 +52,7 @@ On the way to 1.0: a quiz for every unit, more challenges in each unit (up to Ha
 - **Import**: one button in the sidebar imports the challenges, tests and exams a teacher shared, as a `.zip` or a folder. They're copied into the extension's library, solutions can be stripped for students, and **Remove Imported…** takes them out again. See [Sharing challenges with students](docs/creating-challenges.md#sharing-challenges-with-students).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
 - **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/52 solved` counter in the status bar.
+- **Group by**: the filter button at the top of the sidebar groups challenges by **learning path** (units, the default), **difficulty** (Easy, Medium, Hard, then quizzes) or **progress** (not started, in progress, solved). The choice is remembered.
 
 > **Upgrading from Tech Challenges?** Sphynx is the same extension with a new name. Install Sphynx and uninstall Tech Challenges. Your settings (`techChallenges.*` → `sphynx.*`) are copied over automatically, and your code in `tech-challenges/` keeps being used. Solved-challenge progress and saved AI keys start fresh.
 

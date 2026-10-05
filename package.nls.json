@@ -43,5 +43,6 @@
   "config.language.ptbr": "Português (Brasil)",
   "command.checkJava": "Check Java Setup",
   "command.chooseJdk": "Choose JDK Folder…",
-  "command.copyBlocked": "Copy (blocked during the exam)"
+  "command.copyBlocked": "Copy (blocked during the exam)",
+  "command.groupBy": "Group Challenges By…"
 }

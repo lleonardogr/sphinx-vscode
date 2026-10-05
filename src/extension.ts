@@ -18,7 +18,7 @@ import { JavaSetup } from './javaSetup';
 import { clearJavaCache } from './runner';
 import { formatVerification, verifyResults } from './examVerify';
 import { ExamDefinition, ExamQuestion, loadExams, parseExamChallengeId } from './exams';
-import { ChallengeNode, ChallengeTreeProvider } from './treeView';
+import { ChallengeNode, ChallengeTreeProvider, GroupMode } from './treeView';
 
 const CODE_FILE = 'Main.java';
 
@@ -39,6 +39,8 @@ export function activate(context: vscode.ExtensionContext): void {
   const javaSetup = new JavaSetup(output, () => javaHome(), () => javaStyle());
   const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams, examManager, () => quizzes, quizProgress, () => javaSetup.problems());
   javaSetup.onDidChange(() => tree.refresh());
+  const GROUP_KEY = 'sphynx.groupBy';
+  tree.mode = context.globalState.get<GroupMode>(GROUP_KEY, 'path');
   const quizController = new QuizController(context.extensionUri, quizProgress, examManager, () => quizzes, () => exams);
   const treeView = vscode.window.createTreeView('sphynx.list', { treeDataProvider: tree });
   const panel = new ChallengePanel(context.extensionUri, progress, (action, c) => handlePanelAction(action, c));
@@ -686,6 +688,22 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('sphynx.clearAiKeys', () => ai.clearApiKeys()),
     vscode.commands.registerCommand('sphynx.refresh', reload),
     vscode.commands.registerCommand('sphynx.checkJava', () => javaSetup.checkInteractively()),
+    vscode.commands.registerCommand('sphynx.groupBy', async () => {
+      const options: { mode: GroupMode; label: string; detail: string }[] = [
+        { mode: 'path', label: tr('$(list-tree) Learning path', '$(list-tree) Trilha de aprendizado'), detail: tr('Units in teaching order, each with its quiz and tests (default).', 'Unidades na ordem de ensino, cada uma com seu quiz e testes (padrão).') },
+        { mode: 'difficulty', label: tr('$(flame) Difficulty', '$(flame) Dificuldade'), detail: tr('Easy, Medium and Hard, then the quizzes.', 'Fácil, Médio e Difícil, e depois os quizzes.') },
+        { mode: 'progress', label: tr('$(pass) Progress', '$(pass) Progresso'), detail: tr('Not started, in progress and solved.', 'Não iniciados, em andamento e resolvidos.') },
+      ];
+      const pick = await vscode.window.showQuickPick(
+        options.map((o) => ({ ...o, description: o.mode === tree.mode ? tr('(current)', '(atual)') : '' })),
+        { title: tr('Group challenges by', 'Agrupar desafios por') },
+      );
+      if (pick) {
+        tree.mode = pick.mode;
+        await context.globalState.update(GROUP_KEY, pick.mode);
+        tree.refresh();
+      }
+    }),
     vscode.commands.registerCommand('sphynx.copyBlocked', () => examManager.copyBlocked()),
     vscode.commands.registerCommand('sphynx.chooseJdk', () => javaSetup.chooseJdkFolder()),
     vscode.commands.registerCommand('sphynx.startExam', async (arg?: unknown) => {

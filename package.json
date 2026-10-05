@@ -94,6 +94,12 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "sphynx.groupBy",
+        "title": "%command.groupBy%",
+        "category": "Sphynx",
+        "icon": "$(list-filter)"
+      },
+      {
         "command": "sphynx.checkJava",
         "title": "%command.checkJava%",
         "category": "Sphynx",
@@ -194,6 +200,11 @@
     ],
     "menus": {
       "view/title": [
+        {
+          "command": "sphynx.groupBy",
+          "when": "view == sphynx.list",
+          "group": "navigation@1"
+        },
         {
           "command": "sphynx.importContent",
           "when": "view == sphynx.list",

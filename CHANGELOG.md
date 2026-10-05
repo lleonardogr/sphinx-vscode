@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Group challenges by** learning path, difficulty or progress: a new filter button at the top of the sidebar (and the **Sphynx: Group Challenges By…** command). In the difficulty and progress views each challenge shows its unit, items keep the teaching order inside each group, and the choice is remembered.
+
 ## [0.8.0] - 2026-10-05
 
 ### Added
