@@ -1,0 +1,69 @@
+{
+  "title": "Binary Search",
+  "topic": "Arrays",
+  "difficulty": "Hard",
+  "order": 10,
+  "hints": [
+    "Keep two indexes, low = 0 and high = n - 1, for the part of the array that can still hold the value.",
+    "While low <= high: mid = (low + high) / 2, count a step, then compare numbers[mid] with the value.",
+    "If numbers[mid] is smaller, the value can only be to the right: low = mid + 1. If bigger: high = mid - 1."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Busca binária",
+      "hints": [
+        "Guarde dois índices, low = 0 e high = n - 1, para a parte do array que ainda pode ter o valor.",
+        "Enquanto low <= high: mid = (low + high) / 2, conte um passo e compare numbers[mid] com o valor.",
+        "Se numbers[mid] for menor, o valor só pode estar à direita: low = mid + 1. Se for maior: high = mid - 1."
+      ],
+      "mustContain": [
+        "Guarde os números em um array.",
+        "Use um laço que corta o intervalo pela metade."
+      ],
+      "mustNotContain": [
+        "Escreva a busca você mesmo, sem métodos de busca prontos."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\[\\s*\\]",
+      "message": "Store the numbers in an array."
+    },
+    {
+      "pattern": "\\bwhile\\b|\\bfor\\b",
+      "message": "Use a loop that halves the range."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "binarySearch|indexOf|\\.stream|\\bcontains\\b",
+      "message": "Write the search yourself, without library search methods."
+    }
+  ],
+  "tests": [
+    {
+      "input": "7\n2 5 8 12 16 23 38\n3\n23\n2\n7\n",
+      "output": "23 found at index 5, steps: 2\n2 found at index 0, steps: 3\n7 not found, steps: 3\n"
+    },
+    {
+      "input": "1\n10\n2\n10\n11\n",
+      "output": "10 found at index 0, steps: 1\n11 not found, steps: 1\n"
+    },
+    {
+      "input": "10\n1 2 3 4 5 6 7 8 9 10\n4\n1\n10\n5\n11\n",
+      "output": "1 found at index 0, steps: 3\n10 found at index 9, steps: 4\n5 found at index 4, steps: 1\n11 not found, steps: 4\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n-40 -10 0 10 40\n3\n-40\n-41\n41\n",
+      "output": "-40 found at index 0, steps: 2\n-41 not found, steps: 2\n41 not found, steps: 3\n",
+      "hidden": true
+    },
+    {
+      "input": "8\n3 6 9 12 15 18 21 24\n2\n24\n4\n",
+      "output": "24 found at index 7, steps: 4\n4 not found, steps: 3\n",
+      "hidden": true
+    }
+  ]
+}

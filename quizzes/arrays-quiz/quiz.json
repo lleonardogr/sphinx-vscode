@@ -1,0 +1,108 @@
+{
+  "title": "Arrays Quiz",
+  "topic": "Arrays",
+  "description": "Indexes, lengths, default values, 2D arrays and the classic mistakes.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "int[] a = {4, 8, 15, 16, 23};\nIO.println(a[1] + a[a.length - 1]);",
+      "answer": "31",
+      "explanation": "`a[1]` is 8 and the last element, `a[4]`, is 23."
+    },
+    {
+      "type": "output",
+      "code": "int[] counts = new int[3];\nIO.println(counts[0] + \" \" + counts.length);",
+      "answer": "0 3",
+      "explanation": "A new `int[]` is filled with zeros, and `length` is the size it was created with."
+    },
+    {
+      "type": "choice",
+      "prompt": "What happens when this runs?",
+      "code": "int[] a = {1, 2, 3};\nIO.println(a[3]);",
+      "options": [
+        "It prints 0",
+        "It prints 3",
+        "It throws an ArrayIndexOutOfBoundsException",
+        "It doesn't compile"
+      ],
+      "answer": 2,
+      "explanation": "The valid indexes are 0, 1 and 2. Index 3 is outside the array, which fails when the program runs."
+    },
+    {
+      "type": "output",
+      "code": "int[] a = {1, 2, 3};\nint[] b = a;\nb[0] = 10;\nIO.println(a[0]);",
+      "answer": "10",
+      "explanation": "`b = a` copies the reference, not the array. Both names refer to the same array."
+    },
+    {
+      "type": "output",
+      "code": "int[][] grid = {{1, 2, 3}, {4, 5, 6}};\nIO.println(grid.length + \" \" + grid[1][2]);",
+      "answer": "2 6",
+      "explanation": "`grid.length` is the number of rows (2), and `grid[1][2]` is row 1, column 2."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "An array can grow after it is created, for example by assigning `a[a.length] = 5`.",
+      "answer": false,
+      "explanation": "Arrays have a fixed size. To grow, create a bigger array, or use an `ArrayList`."
+    },
+    {
+      "type": "output",
+      "code": "int[] a = {3, 1, 2};\nint sum = 0;\nfor (int x : a) {\n    sum += x * x;\n}\nIO.println(sum);",
+      "answer": "14",
+      "explanation": "The for-each loop visits 3, 1 and 2: 9 + 1 + 4 = 14."
+    },
+    {
+      "type": "short",
+      "prompt": "Which method of `java.util.Arrays` turns an array into readable text like `[1, 2, 3]`?",
+      "answer": [
+        "toString",
+        "Arrays.toString",
+        "toString()",
+        "Arrays.toString()"
+      ],
+      "explanation": "Printing an array directly shows something like `[I@1b6d3586`. `Arrays.toString(a)` shows its elements."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de arrays",
+      "description": "Índices, tamanhos, valores padrão, arrays 2D e os erros clássicos.",
+      "questions": [
+        {
+          "explanation": "`a[1]` é 8 e o último elemento, `a[4]`, é 23."
+        },
+        {
+          "explanation": "Um `int[]` novo vem cheio de zeros, e `length` é o tamanho com que ele foi criado."
+        },
+        {
+          "prompt": "O que acontece quando isto roda?",
+          "options": [
+            "Imprime 0",
+            "Imprime 3",
+            "Lança uma ArrayIndexOutOfBoundsException",
+            "Não compila"
+          ],
+          "explanation": "Os índices válidos são 0, 1 e 2. O índice 3 fica fora do array, o que falha quando o programa roda."
+        },
+        {
+          "explanation": "`b = a` copia a referência, não o array. Os dois nomes apontam para o mesmo array."
+        },
+        {
+          "explanation": "`grid.length` é o número de linhas (2), e `grid[1][2]` é a linha 1, coluna 2."
+        },
+        {
+          "prompt": "Um array pode crescer depois de criado, por exemplo atribuindo `a[a.length] = 5`.",
+          "explanation": "Arrays têm tamanho fixo. Para crescer, crie um array maior, ou use um `ArrayList`."
+        },
+        {
+          "explanation": "O for-each passa por 3, 1 e 2: 9 + 1 + 4 = 14."
+        },
+        {
+          "prompt": "Qual método de `java.util.Arrays` transforma um array em texto legível como `[1, 2, 3]`?",
+          "explanation": "Imprimir um array direto mostra algo como `[I@1b6d3586`. `Arrays.toString(a)` mostra os elementos."
+        }
+      ]
+    }
+  }
+}

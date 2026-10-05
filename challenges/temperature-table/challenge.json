@@ -1,0 +1,65 @@
+{
+  "title": "Temperature Table",
+  "topic": "Methods",
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "Write toFahrenheit first: return c * 9 / 5 + 32;",
+    "In main, loop from start to end, adding step each time, and call toFahrenheit for every value.",
+    "Print each row with \"%d C = %.1f F\".formatted(c, toFahrenheit(c))."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Tabela de temperaturas",
+      "hints": [
+        "Escreva toFahrenheit primeiro: return c * 9 / 5 + 32;",
+        "No main, faça um laço de start até end, somando step a cada volta, e chame toFahrenheit para cada valor.",
+        "Imprima cada linha com \"%d C = %.1f F\".formatted(c, toFahrenheit(c))."
+      ],
+      "mustContain": [
+        "Mantenha a assinatura do método: double toFahrenheit(double celsius).",
+        "Use um laço para imprimir as linhas."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bdouble\\s+toFahrenheit\\s*\\(\\s*(double|int)\\s+\\w+\\s*\\)",
+      "message": "Keep the method signature: double toFahrenheit(double celsius)."
+    },
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to print the rows."
+    }
+  ],
+  "tests": [
+    {
+      "input": "0 100 25\n",
+      "output": "0 C = 32.0 F\n25 C = 77.0 F\n50 C = 122.0 F\n75 C = 167.0 F\n100 C = 212.0 F\n"
+    },
+    {
+      "input": "-10 10 10\n",
+      "output": "-10 C = 14.0 F\n0 C = 32.0 F\n10 C = 50.0 F\n"
+    },
+    {
+      "input": "37 37 1\n",
+      "output": "37 C = 98.6 F\n",
+      "hidden": true
+    },
+    {
+      "input": "-40 0 8\n",
+      "output": "-40 C = -40.0 F\n-32 C = -25.6 F\n-24 C = -11.2 F\n-16 C = 3.2 F\n-8 C = 17.6 F\n0 C = 32.0 F\n",
+      "hidden": true
+    },
+    {
+      "input": "15 20 1\n",
+      "output": "15 C = 59.0 F\n16 C = 60.8 F\n17 C = 62.6 F\n18 C = 64.4 F\n19 C = 66.2 F\n20 C = 68.0 F\n",
+      "hidden": true
+    },
+    {
+      "input": "0 9 4\n",
+      "output": "0 C = 32.0 F\n4 C = 39.2 F\n8 C = 46.4 F\n",
+      "hidden": true
+    }
+  ]
+}

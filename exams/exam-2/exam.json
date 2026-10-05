@@ -1,0 +1,34 @@
+{
+  "title": "Exam 2: Building Blocks",
+  "description": "Covers units 5 to 7: methods, arrays and collections. A short quiz and three coding questions, from easy to hard.",
+  "translations": {
+    "pt-br": {
+      "title": "Prova 2: blocos de construção",
+      "description": "Cobre as unidades 5 a 7: métodos, arrays e coleções. Um quiz curto e três questões de código, da mais fácil à mais difícil."
+    }
+  },
+  "durationMinutes": 75,
+  "mode": "closed",
+  "maxSubmissions": 3,
+  "restrictions": {
+    "level": "standard"
+  },
+  "questions": [
+    {
+      "id": "exam-2-quiz",
+      "points": 20
+    },
+    {
+      "id": "score-statistics",
+      "points": 20
+    },
+    {
+      "id": "seat-map",
+      "points": 30
+    },
+    {
+      "id": "class-rosters",
+      "points": 30
+    }
+  ]
+}

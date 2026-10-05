@@ -16,7 +16,7 @@ HackerRank / LeetCode-style coding challenges right inside VS Code, in **English
 
 Students pick a challenge from the **Sphynx** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
 
-## The learning path (65 challenges)
+## The learning path (80 challenges)
 
 The sidebar lists numbered **units** in teaching order. Each unit runs from easy to harder challenges, ends with its quiz, and the last unit of a stage ends with a bigger **test** that mixes everything so far.
 
@@ -26,14 +26,14 @@ The sidebar lists numbered **units** in teaching order. Each unit runs from easy
 | 2 · Conditionals | Even or Odd · Largest of Three · Grade Calculator (`if`/`else if`) · Day of the Week (`switch` statement) · Weather Label (ternary `? :`) · Leap Year · Days in a Month (switch expression) · Triangle Classifier · Shipping Cost (chained rules) | Conditionals Quiz |
 | 3 · Loops | Count to N (`for`) · Sum 1..N · Multiplication Table · Sum Until Zero (`do-while`) · Factorial · FizzBuzz · Sum of Digits (`while`) · Collatz Steps (`while`) · Number Pyramid (nested loops) · Guess the Number · Primes up to N | Loops Quiz · Test: Calculator Menu |
 | 4 · Strings & Characters | Reverse a String · Count Vowels · Initials · Title Case · Palindrome · Password Checker · Anagrams · String Compression (`StringBuilder`) | Strings Quiz · Test: Hangman Referee |
-| 5 · Methods | Prime Numbers · Power | |
-| 6 · Arrays | Array Sum · Largest and Smallest · Reverse an Array · Count Occurrences · Above Average (for-each) | |
-| 7 · Collections | To-Do List (`ArrayList`) · Unique Words (`HashSet`) · Word Frequency (`HashMap`) · Weekly Hours (`EnumMap`) · Balanced Brackets (stack) | Tests: Grade Book Menu · Inventory Menu |
+| 5 · Methods | Max of Three · Temperature Table · Prime Numbers · Power · GCD and LCM · Overloaded `area()` · Perfect Numbers (helper methods) | Methods Quiz |
+| 6 · Arrays | Array Sum · Largest and Smallest · Reverse an Array · Count Occurrences · Above Average (for-each) · Second Largest · Rotate an Array · Bubble Sort · Matrix Sums (2D) · Binary Search · Tic-Tac-Toe Winner (2D) | Arrays Quiz |
+| 7 · Collections | To-Do List (`ArrayList`) · Unique Words (`HashSet`) · First Occurrences (`LinkedHashSet`) · Word Frequency (`HashMap`) · Phone Book (`TreeMap`) · Ticket Queue (`ArrayDeque`) · Weekly Hours (`EnumMap`) · Balanced Brackets (stack) · Most Common Words | Collections Quiz · Tests: Grade Book Menu · Inventory Menu |
 | 8 · Object-Oriented Programming | Your First Class · Rectangle Class · Book with `toString()` · Bank Account (encapsulation) · Shapes (inheritance) · Animals (interfaces) | |
 | 11 · Lambdas & Streams | Even Squares (`filter`/`map`) · Stream Statistics · Clean Up a Name List (`distinct`/`sorted`) · Group Words by Length (`groupingBy`) · Top 3 Scorers (comparators, `limit`). Solved without loops. | |
 | Custom | Word Counter · Grade Report · Caesar Cipher: [example custom challenges](custom/) to copy when writing your own | |
 
-**Exam 1: Basics to Strings** closes units 1–4: a 60-minute closed exam with a quiz and three private coding questions.
+Two exams close the first stages, each with a quiz and three private coding questions: **Exam 1: Basics to Strings** (units 1–4, 60 minutes) and **Exam 2: Building Blocks** (units 5–7, 75 minutes).
 
 On the way to 1.0: a quiz for every unit, more challenges in each unit (up to Hard), and the **9 · Exceptions** and **10 · Recursion** units.
 

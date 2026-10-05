@@ -1,0 +1,80 @@
+{
+  "title": "Tic-Tac-Toe Winner",
+  "topic": "Arrays",
+  "difficulty": "Hard",
+  "order": 11,
+  "hints": [
+    "Count the X and O marks first. X plays first, so a real game has as many X as O, or one X more.",
+    "Write wins(board, player) to check the 3 rows, the 3 columns and the 2 diagonals.",
+    "If X won, X must have exactly one more mark than O; if O won, the counts must be equal; both winning is impossible."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Vencedor do jogo da velha",
+      "hints": [
+        "Conte as marcas X e O primeiro. O X joga primeiro, então um jogo de verdade tem tantos X quanto O, ou um X a mais.",
+        "Escreva wins(board, player) para conferir as 3 linhas, as 3 colunas e as 2 diagonais.",
+        "Se o X ganhou, ele precisa ter exatamente uma marca a mais que o O; se o O ganhou, as quantidades precisam ser iguais; os dois ganharem é impossível."
+      ],
+      "mustContain": [
+        "Guarde o tabuleiro em um char[][].",
+        "Mantenha a assinatura do método: boolean wins(char[][] board, char player)."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "char\\s*\\[\\s*\\]\\s*\\[\\s*\\]",
+      "message": "Store the board in a char[][]."
+    },
+    {
+      "pattern": "\\bboolean\\s+wins\\s*\\(\\s*char\\s*\\[\\s*\\]\\s*\\[\\s*\\]\\s*\\w+\\s*,\\s*char\\s+\\w+\\s*\\)",
+      "message": "Keep the method signature: boolean wins(char[][] board, char player)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "XXX\nOO.\n...\n",
+      "output": "X wins\n"
+    },
+    {
+      "input": "XOX\nXOO\nOXX\n",
+      "output": "Draw\n"
+    },
+    {
+      "input": "X..\n.O.\n...\n",
+      "output": "Game in progress\n",
+      "hidden": true
+    },
+    {
+      "input": "OXX\nXO.\nX.O\n",
+      "output": "Invalid board\n",
+      "hidden": true
+    },
+    {
+      "input": "XXX\nOOO\n...\n",
+      "output": "Invalid board\n",
+      "hidden": true
+    },
+    {
+      "input": "OO.\n...\n...\n",
+      "output": "Invalid board\n",
+      "hidden": true
+    },
+    {
+      "input": "XO.\nXO.\nX..\n",
+      "output": "X wins\n",
+      "hidden": true
+    },
+    {
+      "input": "XX.\nOOO\nX..\n",
+      "output": "O wins\n",
+      "hidden": true
+    },
+    {
+      "input": "XXO\nXOO\nX.O\n",
+      "output": "Invalid board\n",
+      "hidden": true
+    }
+  ]
+}

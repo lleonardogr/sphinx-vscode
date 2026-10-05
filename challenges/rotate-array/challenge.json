@@ -1,0 +1,65 @@
+{
+  "title": "Rotate an Array",
+  "topic": "Arrays",
+  "difficulty": "Medium",
+  "order": 7,
+  "hints": [
+    "Rotating n times gives back the same array, so use k % n.",
+    "Create a second array: the element at index i moves to index (i + k) % n.",
+    "Print the result with spaces between the numbers."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Girar um array",
+      "hints": [
+        "Girar n vezes devolve o mesmo array, então use k % n.",
+        "Crie um segundo array: o elemento do índice i vai para o índice (i + k) % n.",
+        "Imprima o resultado com espaços entre os números."
+      ],
+      "mustContain": [
+        "Guarde os números em um array.",
+        "Use % para dar a volta nos índices."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\[\\s*\\]",
+      "message": "Store the numbers in an array."
+    },
+    {
+      "pattern": "%",
+      "message": "Use % to wrap the indexes around."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5 2\n1 2 3 4 5\n",
+      "output": "4 5 1 2 3\n"
+    },
+    {
+      "input": "3 0\n7 8 9\n",
+      "output": "7 8 9\n"
+    },
+    {
+      "input": "4 4\n1 2 3 4\n",
+      "output": "1 2 3 4\n",
+      "hidden": true
+    },
+    {
+      "input": "4 6\n1 2 3 4\n",
+      "output": "3 4 1 2\n",
+      "hidden": true
+    },
+    {
+      "input": "1 1000000000\n42\n",
+      "output": "42\n",
+      "hidden": true
+    },
+    {
+      "input": "6 1\n-1 -2 -3 -4 -5 -6\n",
+      "output": "-6 -1 -2 -3 -4 -5\n",
+      "hidden": true
+    }
+  ]
+}

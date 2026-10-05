@@ -1,0 +1,58 @@
+{
+  "title": "Class Rosters",
+  "difficulty": "Hard",
+  "hints": [
+    "Keep two maps: course → students and student → courses. Use TreeSet values so names come out sorted.",
+    "computeIfAbsent(key, k -> new TreeSet<>()) gets the set for a key, creating it the first time.",
+    "add and remove on a Set return true only when something changed: use that to choose the message."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Listas de turmas",
+      "hints": [
+        "Guarde dois mapas: turma → alunos e aluno → turmas. Use TreeSet nos valores para os nomes saírem ordenados.",
+        "computeIfAbsent(chave, k -> new TreeSet<>()) pega o set de uma chave, criando na primeira vez.",
+        "add e remove em um Set devolvem true só quando algo mudou: use isso para escolher a mensagem."
+      ],
+      "mustContain": [
+        "Use um Map para ligar turmas e alunos.",
+        "Use um Set para os nomes, para ninguém aparecer duas vezes."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "Map\\b",
+      "message": "Use a Map to link courses and students."
+    },
+    {
+      "pattern": "Set\\b",
+      "message": "Use a Set for the names, so nobody is listed twice."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\nenroll Ana Math\nenroll Bia Math\nenroll Ana Art\nroster Math\ncourses Ana\nenroll Ana Math\n",
+      "output": "Enrolled Ana in Math\nEnrolled Bia in Math\nEnrolled Ana in Art\nMath: Ana, Bia\nAna: Art, Math\nAna is already in Math\n"
+    },
+    {
+      "input": "3\nroster Music\ncourses Caio\ndrop Caio Music\n",
+      "output": "Music has no students\nCaio has no courses\nCaio is not in Music\n"
+    },
+    {
+      "input": "7\nenroll Zoe Bio\nenroll Al Bio\nenroll Mia Bio\ndrop Al Bio\nroster Bio\ndrop Al Bio\ncourses Al\n",
+      "output": "Enrolled Zoe in Bio\nEnrolled Al in Bio\nEnrolled Mia in Bio\nDropped Al from Bio\nBio: Mia, Zoe\nAl is not in Bio\nAl has no courses\n",
+      "hidden": true
+    },
+    {
+      "input": "6\nenroll Ana Math\ndrop Ana Math\nroster Math\ncourses Ana\nenroll Ana Math\nroster Math\n",
+      "output": "Enrolled Ana in Math\nDropped Ana from Math\nMath has no students\nAna has no courses\nEnrolled Ana in Math\nMath: Ana\n",
+      "hidden": true
+    },
+    {
+      "input": "5\nenroll Bo Chem\nenroll Bo Art\nenroll Bo Bio\ncourses Bo\nroster Art\n",
+      "output": "Enrolled Bo in Chem\nEnrolled Bo in Art\nEnrolled Bo in Bio\nBo: Art, Bio, Chem\nArt: Bo\n",
+      "hidden": true
+    }
+  ]
+}

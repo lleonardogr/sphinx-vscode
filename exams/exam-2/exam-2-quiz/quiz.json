@@ -1,0 +1,85 @@
+{
+  "title": "Exam 2 Quiz",
+  "description": "Six quick questions. You can submit the quiz only once.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "int twice(int x) {\n    return x * 2;\n}\n\nvoid main() {\n    IO.println(twice(twice(3)));\n}",
+      "answer": "12",
+      "explanation": "The inner call gives 6, and the outer call doubles it to 12."
+    },
+    {
+      "type": "output",
+      "code": "int[] a = {5, 3, 8};\na[1] = a[0] + a[2];\nIO.println(a[1]);",
+      "answer": "13",
+      "explanation": "`a[0] + a[2]` is 5 + 8."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which collection never holds the same value twice?",
+      "options": [
+        "ArrayList",
+        "HashSet",
+        "ArrayDeque",
+        "int[]"
+      ],
+      "answer": 1,
+      "explanation": "Sets ignore values they already contain."
+    },
+    {
+      "type": "output",
+      "code": "Map<String, Integer> stock = new HashMap<>();\nstock.put(\"pen\", 4);\nstock.merge(\"pen\", 3, Integer::sum);\nstock.merge(\"ink\", 1, Integer::sum);\nIO.println(stock.get(\"pen\") + stock.get(\"ink\"));",
+      "answer": "8",
+      "explanation": "`merge` adds 3 to the existing 4 (giving 7) and creates `ink` with 1. 7 + 1 = 8."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "`int[][] g = new int[2][3];` creates 2 rows with 3 columns each.",
+      "answer": true,
+      "explanation": "The first size is the number of rows, the second the number of columns."
+    },
+    {
+      "type": "short",
+      "prompt": "Which keyword sends a value back from a method to its caller?",
+      "answer": [
+        "return"
+      ],
+      "explanation": "`return value;` ends the method and gives the value to the caller."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz da prova 2",
+      "description": "Seis perguntas rápidas. Você só pode enviar o quiz uma vez.",
+      "questions": [
+        {
+          "explanation": "A chamada de dentro dá 6, e a de fora dobra para 12."
+        },
+        {
+          "explanation": "`a[0] + a[2]` é 5 + 8."
+        },
+        {
+          "prompt": "Qual coleção nunca guarda o mesmo valor duas vezes?",
+          "options": [
+            "ArrayList",
+            "HashSet",
+            "ArrayDeque",
+            "int[]"
+          ],
+          "explanation": "Sets ignoram valores que já têm."
+        },
+        {
+          "explanation": "`merge` soma 3 ao 4 que já existia (dando 7) e cria `ink` com 1. 7 + 1 = 8."
+        },
+        {
+          "prompt": "`int[][] g = new int[2][3];` cria 2 linhas com 3 colunas cada.",
+          "explanation": "O primeiro tamanho é o número de linhas, o segundo o número de colunas."
+        },
+        {
+          "prompt": "Qual palavra-chave devolve um valor de um método para quem chamou?",
+          "explanation": "`return valor;` termina o método e entrega o valor para quem chamou."
+        }
+      ]
+    }
+  }
+}

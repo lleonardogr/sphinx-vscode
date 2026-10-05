@@ -12,6 +12,10 @@ All notable changes to this project are documented here. The format follows [Kee
   - **Hangman Referee**, a test that closes the Strings unit.
   - **Conditionals Quiz** and **Strings Quiz**.
   - **Exam 1: Basics to Strings**: a 60-minute closed exam with a quiz and three private coding questions (Parking Fee, Digit Statistics, Word Stats).
+- **New content for units 5–7**, in English and Portuguese:
+  - 15 challenges: Max of Three, Temperature Table, GCD and LCM, Overloaded area() and Perfect Numbers (Methods); Second Largest, Rotate an Array, Bubble Sort, Matrix Sums, Binary Search and Tic-Tac-Toe Winner (Arrays); First Occurrences, Phone Book, Ticket Queue and Most Common Words (Collections).
+  - **Methods Quiz**, **Arrays Quiz** and **Collections Quiz**.
+  - **Exam 2: Building Blocks**: a 75-minute closed exam with a quiz and three private coding questions (Score Statistics, Seat Map, Class Rosters).
 
 ### Changed
 

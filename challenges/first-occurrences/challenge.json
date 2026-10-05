@@ -1,0 +1,60 @@
+{
+  "title": "First Occurrences (LinkedHashSet)",
+  "topic": "Collections",
+  "difficulty": "Easy",
+  "order": 3,
+  "hints": [
+    "A Set ignores values it already has: add returns false for a duplicate.",
+    "A LinkedHashSet keeps the order in which values were first added; a HashSet does not.",
+    "Removed duplicates = number of words read - size of the set."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Primeiras ocorrências (LinkedHashSet)",
+      "hints": [
+        "Um Set ignora valores que já tem: add devolve false para um repetido.",
+        "Um LinkedHashSet mantém a ordem em que os valores foram adicionados pela primeira vez; um HashSet não.",
+        "Duplicados removidos = número de palavras lidas - tamanho do set."
+      ],
+      "mustContain": [
+        "Use um LinkedHashSet para manter a ordem da primeira vez."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bLinkedHashSet\\b",
+      "message": "Use a LinkedHashSet to keep the first order."
+    }
+  ],
+  "tests": [
+    {
+      "input": "red blue red green blue red\n",
+      "output": "Unique: red blue green\nRemoved duplicates: 3\n"
+    },
+    {
+      "input": "one\n",
+      "output": "Unique: one\nRemoved duplicates: 0\n"
+    },
+    {
+      "input": "a b c d\n",
+      "output": "Unique: a b c d\nRemoved duplicates: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "x x x x x\n",
+      "output": "Unique: x\nRemoved duplicates: 4\n",
+      "hidden": true
+    },
+    {
+      "input": "Java java JAVA java\n",
+      "output": "Unique: Java java JAVA\nRemoved duplicates: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "the cat saw the dog and the cat ran\n",
+      "output": "Unique: the cat saw dog and ran\nRemoved duplicates: 3\n",
+      "hidden": true
+    }
+  ]
+}
