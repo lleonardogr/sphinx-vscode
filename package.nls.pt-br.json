@@ -40,5 +40,7 @@
   "config.ai.responseLanguage.description": "Idioma das dicas de IA, por exemplo `Português` ou `English`. Deixe vazio para usar o idioma do Sphynx (`sphynx.language`).",
   "config.language": "Idioma do Sphynx: desafios, quizzes, provas, painéis e mensagens. A Paleta de Comandos segue o idioma de exibição do próprio VS Code.",
   "config.language.en": "English",
-  "config.language.ptbr": "Português (Brasil)"
+  "config.language.ptbr": "Português (Brasil)",
+  "command.checkJava": "Verificar a instalação do Java",
+  "command.chooseJdk": "Escolher a pasta do JDK…"
 }

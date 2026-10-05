@@ -14,6 +14,8 @@ import { QuizController, QuizProgress } from './quizController';
 import { QuizDefinition, loadQuizzes } from './quizzes';
 import { PathItem, buildPath, nextInPath } from './path';
 import { plural, setLanguage, tr } from './i18n';
+import { JavaSetup } from './javaSetup';
+import { clearJavaCache } from './runner';
 import { formatVerification, verifyResults } from './examVerify';
 import { ExamDefinition, ExamQuestion, loadExams, parseExamChallengeId } from './exams';
 import { ChallengeNode, ChallengeTreeProvider } from './treeView';
@@ -34,7 +36,9 @@ export function activate(context: vscode.ExtensionContext): void {
   const ai = new AiHints(context);
 
   const examManager = new ExamManager(context, (examId) => examCodeDir(examId), (exam, q) => gradeExamQuestion(exam, q));
-  const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams, examManager, () => quizzes, quizProgress);
+  const javaSetup = new JavaSetup(output, () => javaHome(), () => javaStyle());
+  const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams, examManager, () => quizzes, quizProgress, () => javaSetup.problems());
+  javaSetup.onDidChange(() => tree.refresh());
   const quizController = new QuizController(context.extensionUri, quizProgress, examManager, () => quizzes, () => exams);
   const treeView = vscode.window.createTreeView('sphynx.list', { treeDataProvider: tree });
   const panel = new ChallengePanel(context.extensionUri, progress, (action, c) => handlePanelAction(action, c));
@@ -374,7 +378,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
       const tests = mode === 'run' ? c.tests.filter((t) => !t.hidden) : c.tests;
       const outcome = await vscode.window.withProgress(
-        { location: vscode.ProgressLocation.Window, title: mode === 'run' ? 'Running sample tests…' : 'Submitting…' },
+        { location: vscode.ProgressLocation.Window, title: mode === 'run' ? tr('Running sample tests…', 'Rodando os testes de exemplo…') : tr('Submitting…', 'Enviando…') },
         () =>
           runChallengeCode({
             file,
@@ -434,12 +438,15 @@ export function activate(context: vscode.ExtensionContext): void {
 
   async function showToolMissing(message: string): Promise<void> {
     const downloadLabel = tr('Download JDK', 'Baixar o JDK');
-    const settingsLabel = tr('Open Settings', 'Abrir configurações');
-    const choice = await vscode.window.showErrorMessage(message, downloadLabel, settingsLabel);
+    const checkLabel = tr('Check Java Setup', 'Verificar o Java');
+    const chooseLabel = tr('Choose JDK Folder…', 'Escolher a pasta do JDK…');
+    const choice = await vscode.window.showErrorMessage(message, downloadLabel, checkLabel, chooseLabel);
     if (choice === downloadLabel) {
       vscode.env.openExternal(vscode.Uri.parse('https://adoptium.net/temurin/releases/'));
-    } else if (choice === settingsLabel) {
-      vscode.commands.executeCommand('workbench.action.openSettings', 'sphynx.java.home');
+    } else if (choice === checkLabel) {
+      await javaSetup.checkInteractively();
+    } else if (choice === chooseLabel) {
+      await javaSetup.chooseJdkFolder();
     }
   }
 
@@ -677,6 +684,8 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('sphynx.setupAi', () => ai.setup()),
     vscode.commands.registerCommand('sphynx.clearAiKeys', () => ai.clearApiKeys()),
     vscode.commands.registerCommand('sphynx.refresh', reload),
+    vscode.commands.registerCommand('sphynx.checkJava', () => javaSetup.checkInteractively()),
+    vscode.commands.registerCommand('sphynx.chooseJdk', () => javaSetup.chooseJdkFolder()),
     vscode.commands.registerCommand('sphynx.startExam', async (arg?: unknown) => {
       const exam = await resolveExam(arg, tr('Which exam do you want to start?', 'Qual prova você quer começar?'), (t) => !examManager.state(t.id));
       if (exam && (await examManager.start(exam))) {
@@ -728,6 +737,11 @@ export function activate(context: vscode.ExtensionContext): void {
       quizController.refreshExamStatus();
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration('sphynx.java')) {
+        // A new JDK folder or style: re-check quietly, so the sidebar notice stays accurate.
+        clearJavaCache();
+        void javaSetup.checkQuietly();
+      }
       if (e.affectsConfiguration('sphynx')) {
         const languageChanged = e.affectsConfiguration('sphynx.language');
         setLanguage(config().get<string>('language'));
@@ -747,6 +761,8 @@ export function activate(context: vscode.ExtensionContext): void {
 
   setLanguage(config().get<string>('language'));
   reload();
+  context.subscriptions.push(javaSetup);
+  void javaSetup.checkQuietly();
   updateContextKey();
 }
 
