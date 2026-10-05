@@ -1,0 +1,74 @@
+{
+  "title": "Recursive Factorial",
+  "topic": "Recursion",
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Every recursive method needs a base case that answers without calling itself: factorial(0) is 1.",
+    "The recursive case calls the method with a smaller input: n * factorial(n - 1).",
+    "Use long: 20! is bigger than an int can hold."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Fatorial recursivo",
+      "hints": [
+        "Todo método recursivo precisa de um caso base que responde sem chamar a si mesmo: factorial(0) é 1.",
+        "O caso recursivo chama o método com uma entrada menor: n * factorial(n - 1).",
+        "Use long: 20! é maior do que cabe em um int."
+      ],
+      "mustContain": [
+        "Mantenha o método long factorial(int n).",
+        "Chame factorial(n - 1) dentro de factorial."
+      ],
+      "mustNotContain": [
+        "Resolva com recursão: sem laços for ou while."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\blong\\s+factorial\\s*\\(\\s*int\\s+\\w+\\s*\\)",
+      "message": "Keep the method long factorial(int n)."
+    },
+    {
+      "pattern": "factorial\\s*\\(\\s*\\w+\\s*-\\s*1\\s*\\)",
+      "message": "Call factorial(n - 1) inside factorial."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it with recursion: no for or while loops."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n",
+      "output": "5! = 120\n"
+    },
+    {
+      "input": "0\n",
+      "output": "0! = 1\n"
+    },
+    {
+      "input": "1\n",
+      "output": "1! = 1\n",
+      "hidden": true
+    },
+    {
+      "input": "10\n",
+      "output": "10! = 3628800\n",
+      "hidden": true
+    },
+    {
+      "input": "20\n",
+      "output": "20! = 2432902008176640000\n",
+      "hidden": true
+    },
+    {
+      "input": "13\n",
+      "output": "13! = 6227020800\n",
+      "hidden": true
+    }
+  ]
+}

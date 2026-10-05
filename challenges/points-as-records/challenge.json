@@ -1,0 +1,60 @@
+{
+  "title": "Points as Records",
+  "topic": "OOP",
+  "difficulty": "Easy",
+  "order": 4,
+  "hints": [
+    "Inside a record, the components are fields: x and y (or this.x and this.y).",
+    "distanceTo uses Pythagoras: Math.sqrt(dx * dx + dy * dy).",
+    "Records are immutable: translate returns a new Point instead of changing this one."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Pontos como records",
+      "hints": [
+        "Dentro de um record, os componentes são campos: x e y (ou this.x e this.y).",
+        "distanceTo usa Pitágoras: Math.sqrt(dx * dx + dy * dy).",
+        "Records são imutáveis: translate devolve um Point novo em vez de mudar este."
+      ],
+      "mustContain": [
+        "Mantenha o record Point(int x, int y).",
+        "translate deve criar um Point novo."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\brecord\\s+Point\\s*\\(\\s*int\\s+x\\s*,\\s*int\\s+y\\s*\\)",
+      "message": "Keep the record Point(int x, int y)."
+    },
+    {
+      "pattern": "new\\s+Point\\s*\\(",
+      "message": "translate should create a new Point."
+    }
+  ],
+  "tests": [
+    {
+      "input": "1 2 4 6\n3 4\n",
+      "output": "A = Point[x=1, y=2]\nB = Point[x=4, y=6]\nDistance: 5.00\nA moved = Point[x=4, y=6]\nA moved equals B: true\n"
+    },
+    {
+      "input": "0 0 0 0\n0 0\n",
+      "output": "A = Point[x=0, y=0]\nB = Point[x=0, y=0]\nDistance: 0.00\nA moved = Point[x=0, y=0]\nA moved equals B: true\n"
+    },
+    {
+      "input": "-3 -4 0 0\n1 1\n",
+      "output": "A = Point[x=-3, y=-4]\nB = Point[x=0, y=0]\nDistance: 5.00\nA moved = Point[x=-2, y=-3]\nA moved equals B: false\n",
+      "hidden": true
+    },
+    {
+      "input": "10 10 13 14\n0 -5\n",
+      "output": "A = Point[x=10, y=10]\nB = Point[x=13, y=14]\nDistance: 5.00\nA moved = Point[x=10, y=5]\nA moved equals B: false\n",
+      "hidden": true
+    },
+    {
+      "input": "5 -2 5 7\n0 9\n",
+      "output": "A = Point[x=5, y=-2]\nB = Point[x=5, y=7]\nDistance: 9.00\nA moved = Point[x=5, y=7]\nA moved equals B: true\n",
+      "hidden": true
+    }
+  ]
+}

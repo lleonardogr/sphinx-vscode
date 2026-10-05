@@ -1,0 +1,60 @@
+{
+  "title": "ID Generator (static)",
+  "topic": "OOP",
+  "difficulty": "Easy",
+  "order": 5,
+  "hints": [
+    "A static field belongs to the class, not to one object, so every Ticket sees the same counter.",
+    "In the constructor: id = nextId++; gives this ticket the current number and moves the counter forward.",
+    "count() is static too, so it is called on the class: Ticket.count()."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Gerador de IDs (static)",
+      "hints": [
+        "Um campo static pertence à classe, não a um objeto, então todo Ticket vê o mesmo contador.",
+        "No construtor: id = nextId++; dá a este ticket o número atual e avança o contador.",
+        "count() também é static, então é chamado pela classe: Ticket.count()."
+      ],
+      "mustContain": [
+        "Guarde o contador em um campo static int.",
+        "Mantenha a classe Ticket."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bstatic\\s+(private\\s+)?int\\s+\\w+\\s*=|\\bprivate\\s+static\\s+int\\s+\\w+",
+      "message": "Keep the counter in a static int field."
+    },
+    {
+      "pattern": "\\bclass\\s+Ticket\\b",
+      "message": "Keep the class Ticket."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\nFix login\nAdd dark mode\nUpdate docs\n",
+      "output": "#1 Fix login\n#2 Add dark mode\n#3 Update docs\nTickets created: 3\n"
+    },
+    {
+      "input": "1\nFirst\n",
+      "output": "#1 First\nTickets created: 1\n"
+    },
+    {
+      "input": "0\n",
+      "output": "Tickets created: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "5\na\nb\nc\nd\ne\n",
+      "output": "#1 a\n#2 b\n#3 c\n#4 d\n#5 e\nTickets created: 5\n",
+      "hidden": true
+    },
+    {
+      "input": "2\nSame title\nSame title\n",
+      "output": "#1 Same title\n#2 Same title\nTickets created: 2\n",
+      "hidden": true
+    }
+  ]
+}

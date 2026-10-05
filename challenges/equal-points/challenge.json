@@ -1,0 +1,69 @@
+{
+  "title": "Equal Points (equals and hashCode)",
+  "topic": "OOP",
+  "difficulty": "Hard",
+  "order": 10,
+  "hints": [
+    "equals must take an Object parameter: public boolean equals(Object o). Check the type with instanceof, then compare x and y.",
+    "hashCode must return the same number for equal points: Objects.hash(x, y) does it.",
+    "Add @Override above both methods: the compiler then tells you if the signature is wrong."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Pontos iguais (equals e hashCode)",
+      "hints": [
+        "equals precisa receber um Object: public boolean equals(Object o). Confira o tipo com instanceof e depois compare x e y.",
+        "hashCode precisa devolver o mesmo número para pontos iguais: Objects.hash(x, y) faz isso.",
+        "Coloque @Override em cima dos dois métodos: assim o compilador avisa se a assinatura estiver errada."
+      ],
+      "mustContain": [
+        "Sobrescreva equals(Object o): o parâmetro precisa ser Object.",
+        "Sobrescreva hashCode() também: HashSet e HashMap precisam dele."
+      ],
+      "mustNotContain": [
+        "Escreva equals e hashCode você mesmo em vez de usar um record."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "public\\s+boolean\\s+equals\\s*\\(\\s*Object\\s+\\w+\\s*\\)",
+      "message": "Override equals(Object o): the parameter must be Object."
+    },
+    {
+      "pattern": "public\\s+int\\s+hashCode\\s*\\(\\s*\\)",
+      "message": "Override hashCode() too: HashSet and HashMap need it."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\brecord\\b",
+      "message": "Write equals and hashCode yourself instead of using a record."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n1 2\n3 4\n1 2\n0 0\n1 2\n",
+      "output": "Points read: 5\nUnique points: 3\nMost repeated: (1, 2) x3\nContains (0, 0): true\n"
+    },
+    {
+      "input": "2\n5 5\n6 6\n",
+      "output": "Points read: 2\nUnique points: 2\nMost repeated: (5, 5) x1\nContains (0, 0): false\n"
+    },
+    {
+      "input": "4\n0 0\n0 0\n0 0\n0 0\n",
+      "output": "Points read: 4\nUnique points: 1\nMost repeated: (0, 0) x4\nContains (0, 0): true\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n-1 2\n2 -1\n-1 2\n2 -1\n7 7\n2 -1\n",
+      "output": "Points read: 6\nUnique points: 3\nMost repeated: (2, -1) x3\nContains (0, 0): false\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n10 20\n20 10\n10 21\n",
+      "output": "Points read: 3\nUnique points: 3\nMost repeated: (10, 20) x1\nContains (0, 0): false\n",
+      "hidden": true
+    }
+  ]
+}

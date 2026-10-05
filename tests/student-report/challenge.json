@@ -1,0 +1,78 @@
+{
+  "title": "Student Report",
+  "topic": "Tests",
+  "skills": [
+    "Collections",
+    "Methods",
+    "OOP",
+    "Streams"
+  ],
+  "unit": "Streams",
+  "difficulty": "Hard",
+  "order": 6,
+  "hints": [
+    "Turn every line into a Grade record first; then each part of the report is one stream over the list.",
+    "groupingBy(Grade::course, TreeMap::new, toList()) gives the courses in alphabetical order with their grades.",
+    "For \"best\", sort with Comparator.comparingInt(Grade::score).reversed().thenComparing(Grade::student) and take findFirst().",
+    "Student averages: groupingBy(Grade::student, averagingInt(Grade::score)). The top student is the highest average, ties broken by name."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Relatório da turma",
+      "hints": [
+        "Transforme cada linha em um record Grade primeiro; depois cada parte do relatório é um stream sobre a lista.",
+        "groupingBy(Grade::course, TreeMap::new, toList()) dá as matérias em ordem alfabética com as notas.",
+        "Para o \"best\", ordene com Comparator.comparingInt(Grade::score).reversed().thenComparing(Grade::student) e pegue findFirst().",
+        "Médias dos alunos: groupingBy(Grade::student, averagingInt(Grade::score)). O melhor aluno tem a maior média, com empate decidido pelo nome."
+      ],
+      "mustContain": [
+        "Use a Stream API para montar o relatório.",
+        "Mantenha o record Grade."
+      ],
+      "mustNotContain": [
+        "Monte o relatório com streams: sem laços for ou while."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.",
+      "message": "Use the Stream API to build the report."
+    },
+    {
+      "pattern": "\\brecord\\s+Grade\\b",
+      "message": "Keep the record Grade."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Build the report with streams: no for or while loops."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\nana Math 90\nbruno Math 45\nana Physics 80\ncarla Math 90\nbruno Physics 70\n",
+      "output": "Students: 3, courses: 2\nMath: average 75.0, best ana (90)\nPhysics: average 75.0, best ana (80)\nTop student: carla (average 90.0)\nBelow 60: bruno (Math 45)\n"
+    },
+    {
+      "input": "1\nzoe Art 59\n",
+      "output": "Students: 1, courses: 1\nArt: average 59.0, best zoe (59)\nTop student: zoe (average 59.0)\nBelow 60: zoe (Art 59)\n"
+    },
+    {
+      "input": "6\neva Bio 70\nfabio Bio 70\neva Chem 50\nfabio Chem 50\ngil Bio 100\ngil Chem 0\n",
+      "output": "Students: 3, courses: 2\nBio: average 80.0, best gil (100)\nChem: average 33.3, best eva (50)\nTop student: eva (average 60.0)\nBelow 60: eva (Chem 50), fabio (Chem 50), gil (Chem 0)\n",
+      "hidden": true
+    },
+    {
+      "input": "4\nhana Music 100\nhana Art 100\nivo Music 99\nivo Art 100\n",
+      "output": "Students: 2, courses: 2\nArt: average 100.0, best hana (100)\nMusic: average 99.5, best hana (100)\nTop student: hana (average 100.0)\nBelow 60: none\n",
+      "hidden": true
+    },
+    {
+      "input": "3\njoao History 59\njoao Geography 58\nkai History 60\n",
+      "output": "Students: 2, courses: 2\nGeography: average 58.0, best joao (58)\nHistory: average 59.5, best kai (60)\nTop student: kai (average 60.0)\nBelow 60: joao (Geography 58), joao (History 59)\n",
+      "hidden": true
+    }
+  ]
+}

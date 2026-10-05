@@ -16,6 +16,11 @@ All notable changes to this project are documented here. The format follows [Kee
   - 15 challenges: Max of Three, Temperature Table, GCD and LCM, Overloaded area() and Perfect Numbers (Methods); Second Largest, Rotate an Array, Bubble Sort, Matrix Sums, Binary Search and Tic-Tac-Toe Winner (Arrays); First Occurrences, Phone Book, Ticket Queue and Most Common Words (Collections).
   - **Methods Quiz**, **Arrays Quiz** and **Collections Quiz**.
   - **Exam 2: Building Blocks**: a 75-minute closed exam with a quiz and three private coding questions (Score Statistics, Seat Map, Class Rosters).
+- **New units 9 · Exceptions and 10 · Recursion**, and new content for units 8 and 11, in English and Portuguese:
+  - 18 challenges: Points as Records, ID Generator, Coins (enum), Equal Points and Payroll (OOP); Safe Division, Parse Numbers, Ask Until Valid, Insufficient Funds and Robust Calculator (Exceptions); Recursive Factorial, Recursive Digit Sum, Fibonacci, Recursive Palindrome and Tower of Hanoi (Recursion); Sort with a Comparator, Pass or Fail and Word Index (Streams).
+  - Two tests: **Library System** (closes OOP) and **Student Report** (closes Streams).
+  - **OOP Quiz**, **Exceptions Quiz**, **Recursion Quiz** and **Streams Quiz**. Every unit now has a quiz.
+  - **Final Exam**: a 120-minute closed exam with a quiz and three private coding questions (Vending Machine, Count Paths, Sales Report).
 
 ### Changed
 

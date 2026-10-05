@@ -1,0 +1,69 @@
+{
+  "title": "Tower of Hanoi",
+  "topic": "Recursion",
+  "difficulty": "Hard",
+  "order": 5,
+  "hints": [
+    "Think about the biggest disk: it can only move once all the n - 1 disks above it are out of the way, on the spare peg.",
+    "So: move n - 1 disks from \"from\" to \"via\", move disk n from \"from\" to \"to\", then move the n - 1 disks from \"via\" to \"to\".",
+    "Base case: moving 0 disks does nothing."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Torre de Hanói",
+      "hints": [
+        "Pense no maior disco: ele só pode se mexer quando os n - 1 discos em cima dele estiverem fora do caminho, no pino livre.",
+        "Então: mova n - 1 discos de \"from\" para \"via\", mova o disco n de \"from\" para \"to\", e depois mova os n - 1 discos de \"via\" para \"to\".",
+        "Caso base: mover 0 discos não faz nada."
+      ],
+      "mustContain": [
+        "Mantenha o método void hanoi(int n, char from, char to, char via).",
+        "Chame hanoi com n - 1 discos dentro de hanoi."
+      ],
+      "mustNotContain": [
+        "Resolva com recursão: sem laços for ou while."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bvoid\\s+hanoi\\s*\\(\\s*int\\s+\\w+\\s*,\\s*char\\s+\\w+\\s*,\\s*char\\s+\\w+\\s*,\\s*char\\s+\\w+\\s*\\)",
+      "message": "Keep the method void hanoi(int n, char from, char to, char via)."
+    },
+    {
+      "pattern": "hanoi\\s*\\(\\s*\\w+\\s*-\\s*1",
+      "message": "Call hanoi with n - 1 disks inside hanoi."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it with recursion: no for or while loops."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2\n",
+      "output": "Move disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nTotal moves: 3\n"
+    },
+    {
+      "input": "1\n",
+      "output": "Move disk 1 from A to C\nTotal moves: 1\n"
+    },
+    {
+      "input": "3\n",
+      "output": "Move disk 1 from A to C\nMove disk 2 from A to B\nMove disk 1 from C to B\nMove disk 3 from A to C\nMove disk 1 from B to A\nMove disk 2 from B to C\nMove disk 1 from A to C\nTotal moves: 7\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n",
+      "output": "Move disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 3 from A to B\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 4 from A to C\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 3 from B to C\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nTotal moves: 15\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n",
+      "output": "Move disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 3 from A to B\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 4 from A to C\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 3 from B to C\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 5 from A to B\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 3 from C to A\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 4 from C to B\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 3 from A to B\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 6 from A to C\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 3 from B to C\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 4 from B to A\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 3 from C to A\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 5 from B to C\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 3 from A to B\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 4 from A to C\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 3 from B to C\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nTotal moves: 63\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "title": "Sort with a Comparator (Lambdas)",
+  "topic": "Streams",
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "list.sort(...) takes a Comparator: something that compares two elements and returns a negative number, zero or a positive number.",
+    "Comparator.comparingInt(Person::age).thenComparing(Person::name) sorts by age, then by name.",
+    "For the second order, write a lambda: (a, b) -> ... comparing b's name length with a's, so longer names come first."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Ordenar com Comparator (lambdas)",
+      "hints": [
+        "list.sort(...) recebe um Comparator: algo que compara dois elementos e devolve um número negativo, zero ou positivo.",
+        "Comparator.comparingInt(Person::age).thenComparing(Person::name) ordena pela idade e depois pelo nome.",
+        "Para a segunda ordem, escreva uma lambda: (a, b) -> ... comparando o tamanho do nome de b com o de a, para nomes maiores virem primeiro."
+      ],
+      "mustContain": [
+        "Use uma lambda (->) ou uma referência de método (::).",
+        "Ordene a lista com sort(...) e um Comparator."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "->|::",
+      "message": "Use a lambda (->) or a method reference (::)."
+    },
+    {
+      "pattern": "\\.sort\\s*\\(|\\bsorted\\s*\\(",
+      "message": "Sort the list with sort(...) and a Comparator."
+    }
+  ],
+  "tests": [
+    {
+      "input": "ana:19 bruno:17 carla:19 di:17\n",
+      "output": "By age:\n  17 bruno\n  17 di\n  19 ana\n  19 carla\nBy name length:\n  bruno\n  carla\n  ana\n  di\n"
+    },
+    {
+      "input": "solo:30\n",
+      "output": "By age:\n  30 solo\nBy name length:\n  solo\n"
+    },
+    {
+      "input": "bob:20 al:20 cy:20\n",
+      "output": "By age:\n  20 al\n  20 bob\n  20 cy\nBy name length:\n  bob\n  al\n  cy\n",
+      "hidden": true
+    },
+    {
+      "input": "maximiliano:5 jo:99 eva:5 bea:6\n",
+      "output": "By age:\n  5 eva\n  5 maximiliano\n  6 bea\n  99 jo\nBy name length:\n  maximiliano\n  bea\n  eva\n  jo\n",
+      "hidden": true
+    },
+    {
+      "input": "zoe:40 adam:40 zack:41 amy:39\n",
+      "output": "By age:\n  39 amy\n  40 adam\n  40 zoe\n  41 zack\nBy name length:\n  adam\n  zack\n  amy\n  zoe\n",
+      "hidden": true
+    }
+  ]
+}

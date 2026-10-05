@@ -1,0 +1,58 @@
+{
+  "title": "Vending Machine",
+  "difficulty": "Medium",
+  "hints": [
+    "Check the problems in order inside select and throw a VendingException with the right message for the first one found.",
+    "Only change the machine (stock and credit) after every check passed.",
+    "Because VendingException is checked, the call in main must be inside try / catch."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Máquina de venda",
+      "hints": [
+        "Confira os problemas na ordem dentro do select e lance uma VendingException com a mensagem certa para o primeiro encontrado.",
+        "Só mude a máquina (estoque e crédito) depois que todas as verificações passarem.",
+        "Como VendingException é verificada, a chamada no main precisa estar dentro de try / catch."
+      ],
+      "mustContain": [
+        "Lance uma VendingException no select.",
+        "Capture VendingException no main."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "throw\\s+new\\s+VendingException\\s*\\(",
+      "message": "Throw a VendingException from select."
+    },
+    {
+      "pattern": "catch\\s*\\(\\s*VendingException\\s+\\w+\\s*\\)",
+      "message": "Catch VendingException in main."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2\nA1 Water 150 2\nB2 Chips 275 1\n6\nselect A1\ninsert 100\nselect A1\ninsert 100\nselect A1\nselect Z9\n",
+      "output": "Error: Insert 150 more cents\nCredit: 100\nError: Insert 50 more cents\nCredit: 200\nDispensed Water, change 50\nError: Unknown product Z9\n"
+    },
+    {
+      "input": "1\nC3 Gum 50 1\n4\ninsert 200\nselect C3\ninsert 50\nselect C3\n",
+      "output": "Credit: 200\nDispensed Gum, change 150\nCredit: 50\nError: Sold out: Gum\n"
+    },
+    {
+      "input": "1\nD4 Juice 300 0\n3\ninsert 500\nselect D4\nrefund\n",
+      "output": "Credit: 500\nError: Sold out: Juice\nRefunded 500\n",
+      "hidden": true
+    },
+    {
+      "input": "2\nE5 Candy 75 3\nF6 Soda 200 1\n7\ninsert 75\nselect E5\ninsert 300\nselect F6\ninsert 300\nselect F6\nrefund\n",
+      "output": "Credit: 75\nDispensed Candy, change 0\nCredit: 300\nDispensed Soda, change 100\nCredit: 300\nError: Sold out: Soda\nRefunded 300\n",
+      "hidden": true
+    },
+    {
+      "input": "1\nG7 Tea 120 1\n3\nrefund\ninsert 120\nselect G7\n",
+      "output": "Refunded 0\nCredit: 120\nDispensed Tea, change 0\n",
+      "hidden": true
+    }
+  ]
+}

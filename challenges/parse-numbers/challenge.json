@@ -1,0 +1,64 @@
+{
+  "title": "Parse Numbers (NumberFormatException)",
+  "topic": "Exceptions",
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "Integer.parseInt throws a NumberFormatException when the text is not a whole number.",
+    "Wrap only the parsing (and adding) in try, so one bad value skips just itself.",
+    "Count the valid numbers and add them up as you go; print Skipped: … inside the catch."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Ler números (NumberFormatException)",
+      "hints": [
+        "Integer.parseInt lança uma NumberFormatException quando o texto não é um número inteiro.",
+        "Coloque só a conversão (e a soma) dentro do try, para um valor ruim pular só ele mesmo.",
+        "Conte os números válidos e some enquanto avança; imprima Skipped: … dentro do catch."
+      ],
+      "mustContain": [
+        "Capture a NumberFormatException que o parseInt lança."
+      ],
+      "mustNotContain": [
+        "Deixe o parseInt decidir o que é número, e capture a exceção dele."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "catch\\s*\\(\\s*NumberFormatException\\s+\\w+\\s*\\)",
+      "message": "Catch the NumberFormatException that parseInt throws."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "matches\\s*\\(|isDigit|chars\\s*\\(",
+      "message": "Let parseInt decide what is a number, and catch its exception."
+    }
+  ],
+  "tests": [
+    {
+      "input": "12 abc 30 4.5 -7\n",
+      "output": "Skipped: abc\nSkipped: 4.5\nValid numbers: 3\nSum: 35\n"
+    },
+    {
+      "input": "hello\n",
+      "output": "Skipped: hello\nValid numbers: 0\nSum: 0\n"
+    },
+    {
+      "input": "1 2 3\n",
+      "output": "Valid numbers: 3\nSum: 6\n",
+      "hidden": true
+    },
+    {
+      "input": "+5 007 -0 1e3 99999999999\n",
+      "output": "Skipped: 1e3\nSkipped: 99999999999\nValid numbers: 3\nSum: 12\n",
+      "hidden": true
+    },
+    {
+      "input": "2147483647 1 x y z\n",
+      "output": "Skipped: x\nSkipped: y\nSkipped: z\nValid numbers: 2\nSum: 2147483648\n",
+      "hidden": true
+    }
+  ]
+}
