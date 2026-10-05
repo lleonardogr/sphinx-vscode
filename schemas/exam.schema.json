@@ -70,6 +70,33 @@
       "default": 3,
       "description": "Submissions allowed per question. The best one counts. Run (sample tests) is unlimited."
     },
+    "restrictions": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Anti-cheating rules. Closed exams block copying and large pastes by default; open exams don't. Guide: docs/exams.md#restrictions",
+      "properties": {
+        "blockCopy": {
+          "type": "boolean",
+          "description": "No copying from the question panel, and no Copy/Cut in the answer files. Default: true for closed exams."
+        },
+        "blockPaste": {
+          "type": "boolean",
+          "description": "Pastes of pasteLimit characters or more are undone and recorded. Default: true for closed exams."
+        },
+        "pasteLimit": {
+          "type": "integer",
+          "minimum": 10,
+          "default": 50,
+          "description": "Smallest paste that is blocked, in characters. Typing, autocomplete and snippets stay below it."
+        },
+        "maxAwaySeconds": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0,
+          "description": "Total seconds a student may spend outside VS Code; past it the exam finishes automatically. 0 = no limit (time away is only recorded)."
+        }
+      }
+    },
     "questions": {
       "type": "array",
       "minItems": 1,

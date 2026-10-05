@@ -26,6 +26,8 @@ export interface PanelExamInfo {
   maxSubmissions: number;
   started: boolean;
   finished: boolean;
+  /** Copying is blocked during this exam (exam.json restrictions). */
+  noCopy?: boolean;
 }
 
 const ACTIONS = new Set(['run', 'submit', 'terminal', 'custom', 'aiHint', 'aiSetup', 'reset', 'openCode', 'goto', 'next']);
@@ -211,7 +213,7 @@ export class ChallengePanel {
   <link rel="stylesheet" href="${media('panel.css')}">
   <title>${escapeHtml(c.title)}</title>
 </head>
-<body data-challenge="${escapeHtml(c.id)}" data-lang="${language()}"${t ? ' data-exam="1"' : ''}>
+<body data-challenge="${escapeHtml(c.id)}" data-lang="${language()}"${t ? ' data-exam="1"' : ''}${t?.noCopy && t.started && !t.finished ? ' data-nocopy="1"' : ''}>
   <header>
     <div class="title-row">
       <h1>${escapeHtml(c.title)}</h1>

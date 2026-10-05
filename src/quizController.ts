@@ -80,6 +80,7 @@ export class QuizController implements vscode.Disposable {
       started: !!s,
       finished: !!s?.finishedAt,
       submitted: (qs?.submissions ?? 0) > 0,
+      noCopy: eq.exam.restrictions.blockCopy,
     };
   }
 

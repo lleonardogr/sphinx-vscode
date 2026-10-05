@@ -38,10 +38,39 @@ Each exam sets `"mode"`:
 | Internet, other tools | allowed | not allowed (honor code) |
 | Integrity warnings recorded | no | yes, see below |
 
+### Restrictions
+
+The most common shortcut is copying the question into an AI chat in the browser and pasting the answer back. Closed exams break that loop by default:
+
+| Rule | Default in closed exams | What happens |
+|------|-------------------------|--------------|
+| `blockCopy` | on | The question can't be selected or copied, and **Copy** and **Cut** are blocked in the answer files. Attempts are recorded. |
+| `blockPaste` | on | A paste of `pasteLimit` characters or more (default **50**) is **undone immediately** and recorded. Typing, autocomplete and snippets stay below the limit. |
+| `maxAwaySeconds` | off (`0`) | The total time a student may spend outside VS Code. Past it, the exam **finishes automatically** and the results say so. |
+
+Every time a student comes back after 15 seconds or more outside VS Code, they see a warning that it was recorded, and how much time away they have left when there is a limit. The start dialog lists all the rules, so nobody is surprised.
+
+Change the rules per exam in `exam.json`:
+
+```json
+"mode": "closed",
+"restrictions": {
+  "blockCopy": true,
+  "blockPaste": true,
+  "pasteLimit": 50,
+  "maxAwaySeconds": 120
+}
+```
+
+Open exams have no restrictions unless you add them.
+
+### Warnings in the results file
+
 In a **closed** exam, the results file lists warnings with a timestamp:
 
-- **paste**: a single edit inserted 80 or more characters into an answer, which means a paste or an accepted AI completion (for example from Copilot);
-- **away**: VS Code lost focus for 15 seconds or more, and for how long;
+- **paste**: a paste that was blocked, or (with `blockPaste` off) a single edit of 80 or more characters, which means a paste or an accepted AI completion;
+- **copy**: an attempt to copy or cut code while copying was blocked;
+- **away**: VS Code lost focus for 15 seconds or more, for how long, and the running total. The results also give the total time away;
 - **copilot**: the GitHub Copilot extension was installed and enabled when the exam started.
 
 These are **signals for the teacher, not proof**. A student might paste their own code from another question, or switch windows to read the task on another screen. Use them to start a conversation.
@@ -152,7 +181,7 @@ Use the **re-graded** score. A ⚠ means the file was changed after the exam.
 
 Sphynx runs on the student's own computer, so a determined student can work around it. Exams suit practice, homework and supervised classroom quizzes. They aren't a secure exam system.
 
-- **The internet and other apps can't be blocked.** Closed exams turn off the extension's own hints and AI, and record warning signs, but students can still use a browser or another device.
+- **The internet and other apps can't be blocked.** Closed exams turn off the extension's own hints and AI, block copying and pasting, and limit or record time outside VS Code, but a student can still read a question on another device and retype an answer. Supervise the room for important exams.
 - **The clock uses the computer's time.** Changing the system clock affects it.
 - **Students could reset their VS Code data** to retake an exam. The results file includes the start time, so ask for it promptly, and consider supervising the class while the exam runs.
 - **Verification proves the score matches the code**, not who wrote the code.

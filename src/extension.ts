@@ -182,6 +182,7 @@ export function activate(context: vscode.ExtensionContext): void {
       maxSubmissions: tq.exam.maxSubmissions,
       started: !!s,
       finished: !!s?.finishedAt,
+      noCopy: tq.exam.restrictions.blockCopy,
     };
   }
 
@@ -685,6 +686,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('sphynx.clearAiKeys', () => ai.clearApiKeys()),
     vscode.commands.registerCommand('sphynx.refresh', reload),
     vscode.commands.registerCommand('sphynx.checkJava', () => javaSetup.checkInteractively()),
+    vscode.commands.registerCommand('sphynx.copyBlocked', () => examManager.copyBlocked()),
     vscode.commands.registerCommand('sphynx.chooseJdk', () => javaSetup.chooseJdkFolder()),
     vscode.commands.registerCommand('sphynx.startExam', async (arg?: unknown) => {
       const exam = await resolveExam(arg, tr('Which exam do you want to start?', 'Qual prova você quer começar?'), (t) => !examManager.state(t.id));

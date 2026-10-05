@@ -21,7 +21,7 @@ export interface QuestionState {
 
 export interface IntegrityWarning {
   at: string;
-  kind: 'paste' | 'away' | 'copilot';
+  kind: 'paste' | 'away' | 'copilot' | 'copy';
   question?: string;
   detail: string;
 }
@@ -31,7 +31,9 @@ export interface SessionState {
   startedAt: number;
   endsAt: number;
   finishedAt?: number;
-  finishedBy?: 'student' | 'time';
+  finishedBy?: 'student' | 'time' | 'away';
+  /** Total time spent outside VS Code, in milliseconds (closed exams). */
+  awayMs?: number;
   questions: Record<string, QuestionState>;
   warnings: IntegrityWarning[];
   resultsFile?: string;
@@ -45,8 +47,10 @@ export interface ExamResultsFile {
   student: string;
   startedAt: string;
   finishedAt: string;
-  finishedBy: 'student' | 'time';
+  finishedBy: 'student' | 'time' | 'away';
   timeTakenSeconds: number;
+  /** Total seconds spent outside VS Code (closed exams). */
+  awaySeconds?: number;
   score: { earned: number; max: number };
   questions: {
     id: string;
@@ -64,7 +68,7 @@ export interface ExamResultsFile {
 }
 
 const STATE_KEY = 'sphynx.exams';
-const LARGE_INSERTION = 80; // characters inserted in a single edit
+const LARGE_INSERTION = 80; // characters inserted in a single edit, recorded when pastes aren't blocked
 const AWAY_THRESHOLD_MS = 15_000;
 
 const hash = (s: string) => createHash('sha256').update(s).digest('hex');
@@ -85,6 +89,7 @@ export class ExamManager implements vscode.Disposable {
   private timer: NodeJS.Timeout | undefined;
   private exams: ExamDefinition[] = [];
   private awaySince: number | undefined;
+  private lastBlockNotice = 0;
   private suppressPasteCheck = false;
   private finishing = new Set<string>();
   private readonly disposables: vscode.Disposable[] = [];
@@ -102,6 +107,8 @@ export class ExamManager implements vscode.Disposable {
       this.changed,
       vscode.workspace.onDidChangeTextDocument((e) => this.onEdit(e)),
       vscode.window.onDidChangeWindowState((s) => this.onWindowState(s)),
+      vscode.window.onDidChangeActiveTextEditor(() => this.updateContext()),
+      this.changed.event(() => this.updateContext()),
     );
   }
 
@@ -207,6 +214,7 @@ export class ExamManager implements vscode.Disposable {
           )
         : tr('Open exam: hints, AI hints and the internet are allowed.', 'Prova aberta: dicas, dicas de IA e internet são permitidas.'),
       tr('When the time is up, your answers are submitted automatically and the exam is locked.', 'Quando o tempo acabar, suas respostas são enviadas automaticamente e a prova é bloqueada.'),
+      ...this.restrictionRules(exam),
     ];
     const startLabel = tr('Start Exam', 'Começar prova');
     const ok = await vscode.window.showWarningMessage(tr(`Start "${exam.title}"?`, `Começar "${exam.title}"?`), { modal: true, detail: rules.join('\n\n') }, startLabel);
@@ -242,6 +250,27 @@ export class ExamManager implements vscode.Disposable {
     return true;
   }
 
+  /** The anti-cheating rules of this exam, as lines for the start dialog. */
+  private restrictionRules(exam: ExamDefinition): string[] {
+    const r = exam.restrictions;
+    const lines: string[] = [];
+    if (r.blockCopy) {
+      lines.push(tr('Copying is turned off: you can\'t copy the questions or your code.', 'Copiar está desativado: você não pode copiar as questões nem o seu código.'));
+    }
+    if (r.blockPaste) {
+      lines.push(tr(`Pasting is turned off: pastes of ${r.pasteLimit} characters or more are undone and recorded.`, `Colar está desativado: colagens de ${r.pasteLimit} caracteres ou mais são desfeitas e registradas.`));
+    }
+    if (r.maxAwaySeconds > 0) {
+      lines.push(
+        tr(
+          `You can spend at most ${formatDuration(r.maxAwaySeconds * 1000)} outside VS Code in total. After that, the exam finishes automatically.`,
+          `Você pode passar no máximo ${formatDuration(r.maxAwaySeconds * 1000)} fora do VS Code no total. Depois disso, a prova termina automaticamente.`,
+        ),
+      );
+    }
+    return lines;
+  }
+
   async confirmFinish(exam: ExamDefinition): Promise<void> {
     if (!this.isActive(exam.id)) {
       return;
@@ -266,13 +295,17 @@ export class ExamManager implements vscode.Disposable {
   }
 
   /** Auto-submits answers that changed since their last submission (if submissions remain), locks the exam and writes the results file. */
-  async finish(exam: ExamDefinition, by: 'student' | 'time'): Promise<void> {
+  async finish(exam: ExamDefinition, by: 'student' | 'time' | 'away'): Promise<void> {
     if (!this.isActive(exam.id) || this.finishing.has(exam.id)) {
       return;
     }
     this.finishing.add(exam.id);
     try {
-      if (by === 'time') {
+      if (by === 'away') {
+        vscode.window.showWarningMessage(
+          tr(`⏰ You spent more than the allowed time outside VS Code. "${exam.title}" is finishing…`, `⏰ Você passou do tempo permitido fora do VS Code. "${exam.title}" está terminando…`),
+        );
+      } else if (by === 'time') {
         vscode.window.showWarningMessage(tr(`⏰ Time is up for "${exam.title}". Submitting your answers…`, `⏰ O tempo de "${exam.title}" acabou. Enviando suas respostas…`));
       }
       await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: tr(`Finishing "${exam.title}"…`, `Terminando "${exam.title}"…`) }, async () => {
@@ -379,7 +412,13 @@ export class ExamManager implements vscode.Disposable {
           vscode.window.showWarningMessage(tr(`⏰ ${minutes} minute${minutes > 1 ? 's' : ''} left in "${active.title}".`, `⏰ ${minutes > 1 ? `Faltam ${minutes} minutos` : 'Falta 1 minuto'} para terminar "${active.title}".`));
         }
       }
-      if (left <= 0) {
+      const max = active.restrictions.maxAwaySeconds * 1000;
+      if (max && this.awaySince && (s.awayMs ?? 0) + (Date.now() - this.awaySince) >= max) {
+        // Still away and past the limit: finish now, not when the student comes back.
+        const away = Date.now() - this.awaySince;
+        this.awaySince = undefined;
+        void this.addAway(active, away);
+      } else if (left <= 0) {
         void this.finish(active, 'time');
       } else if (Math.round(left / 1000) % 30 === 0) {
         this.changed.fire(); // refresh the sidebar every 30 seconds
@@ -413,25 +452,79 @@ export class ExamManager implements vscode.Disposable {
     void this.save(examId, { ...s, warnings: [...s.warnings, { at: new Date().toISOString(), ...warning }] });
   }
 
+  /** True when `file` is one of the active exam's answer files. */
+  private isExamFile(exam: ExamDefinition, file: string): string | undefined {
+    const rel = path.relative(this.codeDir(exam.id), file);
+    return rel.startsWith('..') || path.isAbsolute(rel) ? undefined : rel.split(path.sep)[0];
+  }
+
+  /** Copy and Cut are swapped for a "blocked" message while an exam answer file has focus (see package.json keybindings). */
+  updateContext(): void {
+    const active = this.activeExam();
+    const file = vscode.window.activeTextEditor?.document.uri.fsPath;
+    const noCopy = !!active && active.restrictions.blockCopy && !!file && !!this.isExamFile(active, file);
+    void vscode.commands.executeCommand('setContext', 'sphynx.examNoCopy', noCopy);
+  }
+
+  /** Called by the blocked Copy/Cut keybindings. */
+  copyBlocked(): void {
+    const active = this.activeExam();
+    if (!active) {
+      return;
+    }
+    const file = vscode.window.activeTextEditor?.document.uri.fsPath;
+    this.warn(active.id, { kind: 'copy', question: file ? this.isExamFile(active, file) : undefined, detail: 'Tried to copy or cut code (blocked).' });
+    this.notifyBlocked(tr('Copying is turned off during this exam.', 'Copiar está desativado durante esta prova.'));
+  }
+
+  private notifyBlocked(message: string): void {
+    // At most one notification every few seconds, so repeated attempts don't flood the screen.
+    if (Date.now() - this.lastBlockNotice > 4000) {
+      this.lastBlockNotice = Date.now();
+      vscode.window.showWarningMessage(`🔒 ${message} ${tr('This is recorded in your results.', 'Isso fica registrado no seu resultado.')}`);
+    }
+  }
+
   private onEdit(e: vscode.TextDocumentChangeEvent): void {
     const active = this.activeExam();
     if (!active || active.mode !== 'closed' || this.suppressPasteCheck || e.reason !== undefined) {
       return; // e.reason is set for undo/redo
     }
-    const rel = path.relative(this.codeDir(active.id), e.document.uri.fsPath);
-    if (rel.startsWith('..') || path.isAbsolute(rel)) {
+    const question = this.isExamFile(active, e.document.uri.fsPath);
+    if (!question) {
       return;
     }
-    for (const change of e.contentChanges) {
-      if (change.text.length >= LARGE_INSERTION) {
-        const lines = change.text.split('\n').length;
-        this.warn(active.id, {
-          kind: 'paste',
-          question: rel.split(path.sep)[0],
-          detail: `Large insertion of ${change.text.length} characters (${lines} line${lines > 1 ? 's' : ''}) in one edit: a paste or an AI completion.`,
-        });
-      }
+    const r = active.restrictions;
+    const limit = r.blockPaste ? r.pasteLimit : LARGE_INSERTION;
+    const big = e.contentChanges.find((c) => c.text.length >= limit);
+    if (!big) {
+      return;
     }
+    const lines = big.text.split('\n').length;
+    if (r.blockPaste) {
+      this.warn(active.id, { kind: 'paste', question, detail: `Blocked a paste of ${big.text.length} characters (${lines} line${lines > 1 ? 's' : ''}).` });
+      void this.undoPaste(e.document, big);
+      this.notifyBlocked(tr(`Pasting is turned off during this exam (${big.text.length} characters were removed).`, `Colar está desativado durante esta prova (${big.text.length} caracteres foram removidos).`));
+    } else {
+      this.warn(active.id, {
+        kind: 'paste',
+        question,
+        detail: `Large insertion of ${big.text.length} characters (${lines} line${lines > 1 ? 's' : ''}) in one edit: a paste or an AI completion.`,
+      });
+    }
+  }
+
+  /** Undoes a blocked paste: VS Code's Undo when it's the active editor (it also restores replaced text), else deletes it. */
+  private async undoPaste(doc: vscode.TextDocument, change: vscode.TextDocumentContentChangeEvent): Promise<void> {
+    if (vscode.window.activeTextEditor?.document === doc) {
+      await vscode.commands.executeCommand('undo');
+      return;
+    }
+    const start = change.range.start;
+    const end = doc.positionAt(doc.offsetAt(start) + change.text.length);
+    const edit = new vscode.WorkspaceEdit();
+    edit.delete(doc.uri, new vscode.Range(start, end));
+    await this.withoutPasteCheck(() => vscode.workspace.applyEdit(edit));
   }
 
   private onWindowState(s: vscode.WindowState): void {
@@ -441,13 +534,36 @@ export class ExamManager implements vscode.Disposable {
       return;
     }
     if (!s.focused) {
-      this.awaySince = Date.now();
+      this.awaySince ??= Date.now();
     } else if (this.awaySince) {
       const away = Date.now() - this.awaySince;
       this.awaySince = undefined;
-      if (away >= AWAY_THRESHOLD_MS) {
-        this.warn(active.id, { kind: 'away', detail: `Left VS Code for ${formatDuration(away)}.` });
+      void this.addAway(active, away);
+    }
+  }
+
+  /** Adds time spent outside VS Code; warns the student, and finishes the exam past maxAwaySeconds. */
+  private async addAway(exam: ExamDefinition, away: number): Promise<void> {
+    const s = this.state(exam.id);
+    if (!s || s.finishedAt) {
+      return;
+    }
+    const total = (s.awayMs ?? 0) + away;
+    await this.save(exam.id, { ...s, awayMs: total });
+    const max = exam.restrictions.maxAwaySeconds * 1000;
+    if (away >= AWAY_THRESHOLD_MS) {
+      this.warn(exam.id, { kind: 'away', detail: `Left VS Code for ${formatDuration(away)} (total ${formatDuration(total)}).` });
+      if (!max || total < max) {
+        vscode.window.showWarningMessage(
+          tr(
+            `You left VS Code for ${formatDuration(away)}. This is recorded in your results.${max ? ` Time left outside VS Code: ${formatDuration(max - total)}.` : ''}`,
+            `Você saiu do VS Code por ${formatDuration(away)}. Isso fica registrado no seu resultado.${max ? ` Tempo restante fora do VS Code: ${formatDuration(max - total)}.` : ''}`,
+          ),
+        );
       }
+    }
+    if (max && total >= max) {
+      void this.finish(exam, 'away');
     }
   }
 
@@ -466,6 +582,7 @@ export class ExamManager implements vscode.Disposable {
       finishedAt: new Date(finishedAt).toISOString(),
       finishedBy: s.finishedBy ?? 'student',
       timeTakenSeconds: Math.round((finishedAt - s.startedAt) / 1000),
+      awaySeconds: Math.round((s.awayMs ?? 0) / 1000),
       score: this.score(exam),
       questions: exam.questions.map((q) => {
         const qs = s.questions[q.id];

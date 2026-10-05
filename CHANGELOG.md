@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Exam restrictions** against the copy-to-AI-and-paste-back shortcut, on by default in closed exams and configurable per exam with a new `restrictions` block in `exam.json`:
+  - `blockCopy`: the question can't be selected or copied, and Copy and Cut are blocked in the answer files. Attempts are recorded as **copy** warnings.
+  - `blockPaste` / `pasteLimit` (default 50 characters): larger pastes are undone immediately and recorded. Typing, autocomplete and snippets still work.
+  - `maxAwaySeconds`: a limit on the total time outside VS Code. Past it, the exam finishes automatically (`finishedBy: "away"`), even if the student hasn't come back.
+  - Students now see a warning when they return after 15 seconds or more away. The results file includes the total time away, and **Verify** shows it.
+  - The start dialog lists the exam's rules.
+
 ## [0.7.1] - 2026-10-05
 
 ### Added

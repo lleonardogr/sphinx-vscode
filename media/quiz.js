@@ -108,5 +108,13 @@
     }
   });
 
+    // Exams can turn copying off: no selecting, copying, cutting or context menu in this page.
+  if (document.body.dataset.nocopy) {
+    for (const type of ['copy', 'cut', 'contextmenu', 'selectstart', 'dragstart']) {
+      document.addEventListener(type, (e) => e.preventDefault(), true);
+    }
+    document.body.classList.add('no-copy');
+  }
+
   vscode.postMessage({ type: 'ready' });
 })();

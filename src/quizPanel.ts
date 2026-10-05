@@ -12,6 +12,8 @@ export interface QuizExamInfo {
   started: boolean;
   finished: boolean;
   submitted: boolean;
+  /** Copying is blocked during this exam (exam.json restrictions). */
+  noCopy?: boolean;
 }
 
 export type QuizMessage =
@@ -190,7 +192,7 @@ export class QuizPanel {
   <link rel="stylesheet" href="${media('panel.css')}">
   <title>${escapeHtml(quiz.title)}</title>
 </head>
-<body data-mode="${practice ? 'practice' : 'exam'}" data-lang="${language()}"${locked ? ' data-locked="1"' : ''}>
+<body data-mode="${practice ? 'practice' : 'exam'}" data-lang="${language()}"${locked ? ' data-locked="1"' : ''}${exam?.noCopy && exam.started && !exam.finished ? ' data-nocopy="1"' : ''}>
   <header>
     <div class="title-row"><h1>${escapeHtml(quiz.title)}</h1></div>
     <div class="meta">
