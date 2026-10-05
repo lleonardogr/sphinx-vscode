@@ -22,7 +22,28 @@ import { ChallengeNode, ChallengeTreeProvider, GroupMode } from './treeView';
 
 const CODE_FILE = 'Main.java';
 
+/**
+ * Until 1.0.0 the extension id was class-plugin.sphynx. VS Code gives the new id an empty storage
+ * folder, so bring the old one's imported library and saved solutions along (once, best effort).
+ */
+function migrateOldStorage(storage: string): void {
+  const old = path.join(path.dirname(storage), 'class-plugin.sphynx');
+  for (const dir of ['library', 'solutions']) {
+    const from = path.join(old, dir);
+    const to = path.join(storage, dir);
+    if (fs.existsSync(from) && !fs.existsSync(to)) {
+      try {
+        fs.mkdirSync(storage, { recursive: true });
+        fs.cpSync(from, to, { recursive: true });
+      } catch {
+        // Nothing to lose: the old folder stays where it was.
+      }
+    }
+  }
+}
+
 export function activate(context: vscode.ExtensionContext): void {
+  migrateOldStorage(context.globalStorageUri.fsPath);
   const progress = new Progress(context.globalState);
   const output = vscode.window.createOutputChannel('Sphynx');
   const diagnostics = vscode.languages.createDiagnosticCollection('sphynx');

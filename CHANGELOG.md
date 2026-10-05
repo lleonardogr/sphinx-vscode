@@ -4,6 +4,12 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- Sphynx is now published on the **VS Code Marketplace** by the publisher `lleonardogr`, so the extension id is now `lleonardogr.sphynx`. VS Code treats it as a new extension: if you installed an earlier `.vsix`, uninstall the old Sphynx (`class-plugin.sphynx`) after installing this one.
+  - Imported challenges, quizzes and exams, and the solutions saved when no folder is open, are copied over automatically the first time it starts.
+  - Progress (solved marks and quiz scores) starts again from zero. Code saved in your workspace's `sphynx/` folder is not affected.
+
 ## [1.0.0] - 2026-10-05
 
 ### Added
