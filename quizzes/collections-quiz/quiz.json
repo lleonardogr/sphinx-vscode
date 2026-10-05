@@ -1,0 +1,104 @@
+{
+  "title": "Collections Quiz",
+  "topic": "Collections",
+  "description": "Lists, sets, maps and queues: what each one keeps, and which one fits the job.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "List<String> list = new ArrayList<>();\nlist.add(\"a\");\nlist.add(\"b\");\nlist.add(0, \"c\");\nIO.println(list);",
+      "answer": "[c, a, b]",
+      "explanation": "`add(0, \"c\")` inserts at index 0 and moves the others to the right."
+    },
+    {
+      "type": "output",
+      "code": "Set<Integer> set = new HashSet<>();\nset.add(3);\nset.add(3);\nset.add(5);\nIO.println(set.size());",
+      "answer": "2",
+      "explanation": "A set keeps each value only once, so the second 3 is ignored."
+    },
+    {
+      "type": "choice",
+      "prompt": "You need to look up a student's grade by their name. Which collection fits best?",
+      "options": [
+        "ArrayList<String>",
+        "HashSet<String>",
+        "HashMap<String, Integer>",
+        "ArrayDeque<String>"
+      ],
+      "answer": 2,
+      "explanation": "A map links each **key** (the name) to a **value** (the grade) and finds it quickly."
+    },
+    {
+      "type": "output",
+      "code": "Map<String, Integer> m = new TreeMap<>();\nm.put(\"pear\", 3);\nm.put(\"apple\", 5);\nm.put(\"pear\", 1);\nIO.println(m);",
+      "answer": "{apple=5, pear=1}",
+      "explanation": "A `TreeMap` keeps keys sorted, and putting an existing key replaces its value."
+    },
+    {
+      "type": "output",
+      "code": "Map<String, Integer> m = new HashMap<>();\nIO.println(m.get(\"x\") + \" \" + m.getOrDefault(\"x\", 0));",
+      "answer": "null 0",
+      "explanation": "`get` returns `null` for a missing key; `getOrDefault` returns the default you give it."
+    },
+    {
+      "type": "output",
+      "code": "Deque<Integer> stack = new ArrayDeque<>();\nstack.push(1);\nstack.push(2);\nstack.push(3);\nIO.println(stack.pop() + \" \" + stack.peek());",
+      "answer": "3 2",
+      "explanation": "A stack is last in, first out: `pop` removes 3, then `peek` looks at 2 without removing it."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "`List<int>` is a valid type in Java.",
+      "answer": false,
+      "explanation": "Collections hold objects, so use the wrapper class: `List<Integer>`. Java converts between `int` and `Integer` automatically."
+    },
+    {
+      "type": "short",
+      "prompt": "Which `Set` keeps its elements in the order they were added?",
+      "answer": [
+        "LinkedHashSet"
+      ],
+      "explanation": "`HashSet` has no defined order, `TreeSet` sorts, and `LinkedHashSet` keeps insertion order."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de coleções",
+      "description": "Listas, sets, mapas e filas: o que cada um guarda e qual serve para cada tarefa.",
+      "questions": [
+        {
+          "explanation": "`add(0, \"c\")` insere no índice 0 e empurra os outros para a direita."
+        },
+        {
+          "explanation": "Um set guarda cada valor uma vez só, então o segundo 3 é ignorado."
+        },
+        {
+          "prompt": "Você precisa buscar a nota de um aluno pelo nome. Qual coleção serve melhor?",
+          "options": [
+            "ArrayList<String>",
+            "HashSet<String>",
+            "HashMap<String, Integer>",
+            "ArrayDeque<String>"
+          ],
+          "explanation": "Um mapa liga cada **chave** (o nome) a um **valor** (a nota) e encontra rápido."
+        },
+        {
+          "explanation": "Um `TreeMap` mantém as chaves ordenadas, e dar `put` numa chave que existe troca o valor."
+        },
+        {
+          "explanation": "`get` devolve `null` para uma chave que não existe; `getOrDefault` devolve o padrão que você passar."
+        },
+        {
+          "explanation": "Uma pilha é o último a entrar, o primeiro a sair: `pop` tira o 3, e `peek` olha o 2 sem tirar."
+        },
+        {
+          "prompt": "`List<int>` é um tipo válido em Java.",
+          "explanation": "Coleções guardam objetos, então use a classe wrapper: `List<Integer>`. O Java converte entre `int` e `Integer` sozinho."
+        },
+        {
+          "prompt": "Qual `Set` mantém os elementos na ordem em que foram adicionados?",
+          "explanation": "O `HashSet` não tem ordem definida, o `TreeSet` ordena, e o `LinkedHashSet` mantém a ordem de inserção."
+        }
+      ]
+    }
+  }
+}

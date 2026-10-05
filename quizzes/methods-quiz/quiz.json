@@ -1,0 +1,111 @@
+{
+  "title": "Methods Quiz",
+  "topic": "Methods",
+  "description": "Parameters, return values, overloading and what happens to variables passed to a method.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "int square(int x) {\n    return x * x;\n}\n\nvoid main() {\n    IO.println(square(3) + square(4));\n}",
+      "answer": "25",
+      "explanation": "`square(3)` is 9 and `square(4)` is 16, so it prints 25."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does `void` mean in `void greet(String name)`?",
+      "options": [
+        "The method takes no parameters",
+        "The method returns nothing",
+        "The method can't be called",
+        "The method is empty"
+      ],
+      "answer": 1,
+      "explanation": "`void` is the return type: the method does its work (like printing) and gives no value back."
+    },
+    {
+      "type": "output",
+      "code": "void addOne(int n) {\n    n = n + 1;\n}\n\nvoid main() {\n    int x = 5;\n    addOne(x);\n    IO.println(x);\n}",
+      "answer": "5",
+      "explanation": "Java passes a **copy** of the value. Changing `n` inside the method doesn't change `x`."
+    },
+    {
+      "type": "output",
+      "code": "void fill(int[] a) {\n    a[0] = 99;\n}\n\nvoid main() {\n    int[] nums = {1, 2, 3};\n    fill(nums);\n    IO.println(nums[0]);\n}",
+      "answer": "99",
+      "explanation": "The copy is a copy of the **reference**: both `a` and `nums` point to the same array, so the change is visible."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "Two methods can have the same name if their parameter lists are different.",
+      "answer": true,
+      "explanation": "That is **overloading**: Java picks the method from the number and types of the arguments."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "Two methods can differ only in their return type, like `int size()` and `long size()`.",
+      "answer": false,
+      "explanation": "The return type is not enough: a call like `size()` would be ambiguous, so it doesn't compile."
+    },
+    {
+      "type": "output",
+      "code": "String describe(int n) {\n    if (n < 0) return \"negative\";\n    if (n == 0) return \"zero\";\n    return \"positive\";\n}\n\nvoid main() {\n    IO.println(describe(-2) + \" \" + describe(0));\n}",
+      "answer": "negative zero",
+      "explanation": "`return` ends the method right away, so only one of the returns runs for each call."
+    },
+    {
+      "type": "short",
+      "prompt": "What is the name for the values written inside the parentheses of a method **call**, like `3` in `square(3)`?",
+      "answer": [
+        "arguments",
+        "argument",
+        "args"
+      ],
+      "explanation": "Parameters are the variables in the method declaration; **arguments** are the values passed in the call."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de métodos",
+      "description": "Parâmetros, valores de retorno, sobrecarga e o que acontece com as variáveis passadas para um método.",
+      "questions": [
+        {
+          "explanation": "`square(3)` é 9 e `square(4)` é 16, então imprime 25."
+        },
+        {
+          "prompt": "O que `void` quer dizer em `void greet(String name)`?",
+          "options": [
+            "O método não recebe parâmetros",
+            "O método não devolve nada",
+            "O método não pode ser chamado",
+            "O método está vazio"
+          ],
+          "explanation": "`void` é o tipo de retorno: o método faz o trabalho (como imprimir) e não devolve valor."
+        },
+        {
+          "explanation": "O Java passa uma **cópia** do valor. Mudar `n` dentro do método não muda `x`."
+        },
+        {
+          "explanation": "A cópia é uma cópia da **referência**: `a` e `nums` apontam para o mesmo array, então a mudança aparece."
+        },
+        {
+          "prompt": "Dois métodos podem ter o mesmo nome se as listas de parâmetros forem diferentes.",
+          "explanation": "Isso é **sobrecarga**: o Java escolhe o método pelo número e pelos tipos dos argumentos."
+        },
+        {
+          "prompt": "Dois métodos podem ser diferentes só no tipo de retorno, como `int size()` e `long size()`.",
+          "explanation": "O tipo de retorno não basta: uma chamada como `size()` ficaria ambígua, então não compila."
+        },
+        {
+          "explanation": "`return` termina o método na hora, então só um dos returns roda em cada chamada."
+        },
+        {
+          "prompt": "Como se chamam (em inglês ou português) os valores escritos nos parênteses de uma **chamada** de método, como o `3` em `square(3)`?",
+          "explanation": "Parâmetros são as variáveis da declaração do método; **argumentos** são os valores passados na chamada.",
+          "answer": [
+            "argumentos",
+            "argumento"
+          ]
+        }
+      ]
+    }
+  }
+}

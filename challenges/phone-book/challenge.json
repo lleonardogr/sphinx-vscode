@@ -1,0 +1,64 @@
+{
+  "title": "Phone Book (TreeMap)",
+  "topic": "Collections",
+  "difficulty": "Medium",
+  "order": 5,
+  "hints": [
+    "A TreeMap<String, String> keeps its keys sorted, so list just walks through it.",
+    "put returns the old value, or null when the key is new: use it to choose between Added and Updated.",
+    "Walk the map with for (var entry : book.entrySet()) and print entry.getKey() and entry.getValue()."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Agenda telefônica (TreeMap)",
+      "hints": [
+        "Um TreeMap<String, String> mantém as chaves ordenadas, então o list só precisa percorrê-lo.",
+        "put devolve o valor antigo, ou null quando a chave é nova: use isso para escolher entre Added e Updated.",
+        "Percorra o mapa com for (var entry : book.entrySet()) e imprima entry.getKey() e entry.getValue()."
+      ],
+      "mustContain": [
+        "Use um TreeMap para os nomes ficarem ordenados."
+      ],
+      "mustNotContain": [
+        "Deixe o TreeMap manter a ordem; não ordene você mesmo."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bTreeMap\\b",
+      "message": "Use a TreeMap so the names stay sorted."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\bsort\\s*\\(|\\bsorted\\s*\\(",
+      "message": "Let the TreeMap keep the order; don't sort it yourself."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\nadd Maria 5551234\nadd Ana 5559876\nfind Maria\nadd Maria 5550000\nlist\nfind Bruno\n",
+      "output": "Added Maria\nAdded Ana\nMaria: 5551234\nUpdated Maria\nAna: 5559876\nMaria: 5550000\nBruno not found\n"
+    },
+    {
+      "input": "3\nlist\nremove Ana\nfind Ana\n",
+      "output": "Phone book is empty\nAna not found\nAna not found\n"
+    },
+    {
+      "input": "7\nadd Zoe 1\nadd adam 2\nadd Bob 3\nlist\nremove Bob\nremove Bob\nlist\n",
+      "output": "Added Zoe\nAdded adam\nAdded Bob\nBob: 3\nZoe: 1\nadam: 2\nRemoved Bob\nBob not found\nZoe: 1\nadam: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "4\nadd X 111\nremove X\nlist\nfind X\n",
+      "output": "Added X\nRemoved X\nPhone book is empty\nX not found\n",
+      "hidden": true
+    },
+    {
+      "input": "5\nadd Carla 900\nadd Carla 900\nadd Beto 800\nfind Carla\nlist\n",
+      "output": "Added Carla\nUpdated Carla\nAdded Beto\nCarla: 900\nBeto: 800\nCarla: 900\n",
+      "hidden": true
+    }
+  ]
+}

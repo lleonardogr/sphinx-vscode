@@ -1,0 +1,74 @@
+{
+  "title": "Second Largest",
+  "topic": "Arrays",
+  "difficulty": "Medium",
+  "order": 6,
+  "hints": [
+    "Keep two variables: largest and second. Start both at Integer.MIN_VALUE.",
+    "When a number is bigger than largest, the old largest becomes second. When it is between them (and different from largest), it becomes second.",
+    "Use a boolean (or a counter) to know whether a second value was ever found, so that 5 5 5 prints No second largest."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Segundo maior",
+      "hints": [
+        "Guarde duas variáveis: largest e second. Comece as duas com Integer.MIN_VALUE.",
+        "Quando um número for maior que largest, o antigo largest vira second. Quando ficar entre os dois (e diferente de largest), ele vira second.",
+        "Use um boolean (ou um contador) para saber se algum segundo valor foi encontrado, assim 5 5 5 imprime No second largest."
+      ],
+      "mustContain": [
+        "Guarde os números em um array."
+      ],
+      "mustNotContain": [
+        "Resolva com laços sobre o array, sem ordenar nem usar streams."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\[\\s*\\]",
+      "message": "Store the numbers in an array."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\bsort\\s*\\(|\\bArrays\\s*\\.\\s*stream|\\.stream\\s*\\(",
+      "message": "Solve it with loops over the array, without sorting or streams."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n4 9 2 9 7\n",
+      "output": "Second largest: 7\n"
+    },
+    {
+      "input": "3\n5 5 5\n",
+      "output": "No second largest\n"
+    },
+    {
+      "input": "2\n1 2\n",
+      "output": "Second largest: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n42\n",
+      "output": "No second largest\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n-5 -1 -3 -1 -8 -2\n",
+      "output": "Second largest: -2\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n10 9 8 7 6\n",
+      "output": "Second largest: 9\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n-2147483648 -2147483648 -2147483648 0\n",
+      "output": "Second largest: -2147483648\n",
+      "hidden": true
+    }
+  ]
+}

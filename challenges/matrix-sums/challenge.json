@@ -1,0 +1,55 @@
+{
+  "title": "Matrix Sums",
+  "topic": "Arrays",
+  "difficulty": "Medium",
+  "order": 9,
+  "hints": [
+    "Create the grid with int[][] grid = new int[rows][cols]; and fill it with two nested loops.",
+    "For row sums, the outer loop goes over rows; for column sums, the outer loop goes over columns.",
+    "The total is the sum of the row sums."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Somas da matriz",
+      "hints": [
+        "Crie a grade com int[][] grid = new int[rows][cols]; e preencha com dois laços aninhados.",
+        "Para as somas das linhas, o laço de fora percorre as linhas; para as das colunas, o laço de fora percorre as colunas.",
+        "O total é a soma das somas das linhas."
+      ],
+      "mustContain": [
+        "Guarde os números em um array 2D (int[][])."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\[\\s*\\]\\s*\\[\\s*\\]",
+      "message": "Store the numbers in a 2D array (int[][])."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2 3\n1 2 3\n4 5 6\n",
+      "output": "Row sums: 6 15\nColumn sums: 5 7 9\nTotal: 21\n"
+    },
+    {
+      "input": "1 1\n7\n",
+      "output": "Row sums: 7\nColumn sums: 7\nTotal: 7\n"
+    },
+    {
+      "input": "3 2\n1 -1\n2 -2\n3 -3\n",
+      "output": "Row sums: 0 0 0\nColumn sums: 6 -6\nTotal: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "3 3\n1 0 0\n0 1 0\n0 0 1\n",
+      "output": "Row sums: 1 1 1\nColumn sums: 1 1 1\nTotal: 3\n",
+      "hidden": true
+    },
+    {
+      "input": "2 4\n10 20 30 40\n-5 -5 -5 -5\n",
+      "output": "Row sums: 100 -20\nColumn sums: 5 15 25 35\nTotal: 80\n",
+      "hidden": true
+    }
+  ]
+}

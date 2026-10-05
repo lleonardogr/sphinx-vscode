@@ -1,0 +1,60 @@
+{
+  "title": "Most Common Words",
+  "topic": "Collections",
+  "difficulty": "Hard",
+  "order": 9,
+  "hints": [
+    "Split the text with split(\"[^a-z]+\") after toLowerCase(), and skip empty pieces.",
+    "Count with a HashMap<String, Integer>: counts.merge(word, 1, Integer::sum) adds 1.",
+    "Put the entries in a List and sort it with a Comparator: higher count first, then alphabetical. Print the first k."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Palavras mais comuns",
+      "hints": [
+        "Divida o texto com split(\"[^a-z]+\") depois de toLowerCase(), e pule os pedaços vazios.",
+        "Conte com um HashMap<String, Integer>: counts.merge(word, 1, Integer::sum) soma 1.",
+        "Coloque as entradas em uma List e ordene com um Comparator: maior contagem primeiro, depois ordem alfabética. Imprima as k primeiras."
+      ],
+      "mustContain": [
+        "Conte as palavras com um Map."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "Map\\b",
+      "message": "Count the words with a Map."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2\nThe cat and the hat. The END, and the cat!\n",
+      "output": "the: 4\nand: 2\n"
+    },
+    {
+      "input": "3\nbe or not to be\n",
+      "output": "be: 2\nnot: 1\nor: 1\n"
+    },
+    {
+      "input": "1\nHello\n",
+      "output": "hello: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "5\na b c\n",
+      "output": "a: 1\nb: 1\nc: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "3\nIt's a dog-eat-dog world; a DOG's life, it is.\n",
+      "output": "dog: 3\na: 2\nit: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "2\nzeta alpha zeta alpha beta beta\n",
+      "output": "alpha: 2\nbeta: 2\n",
+      "hidden": true
+    }
+  ]
+}

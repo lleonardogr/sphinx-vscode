@@ -1,0 +1,65 @@
+{
+  "title": "Overloaded area()",
+  "topic": "Methods",
+  "difficulty": "Medium",
+  "order": 6,
+  "hints": [
+    "Overloaded methods share a name but have a different number (or types) of parameters. Java picks the one that matches the call.",
+    "Circle: Math.PI * r * r. Rectangle: width * height.",
+    "Heron's formula: s = (a + b + c) / 2, then area = Math.sqrt(s * (s - a) * (s - b) * (s - c))."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "area() sobrecarregado",
+      "hints": [
+        "Métodos sobrecarregados têm o mesmo nome, mas número (ou tipos) diferentes de parâmetros. O Java escolhe o que combina com a chamada.",
+        "Círculo: Math.PI * r * r. Retângulo: width * height.",
+        "Fórmula de Heron: s = (a + b + c) / 2, depois area = Math.sqrt(s * (s - a) * (s - b) * (s - c))."
+      ],
+      "mustContain": [
+        "Mantenha area(double radius) para círculos.",
+        "Mantenha area(double width, double height) para retângulos.",
+        "Mantenha area(double a, double b, double c) para triângulos."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bdouble\\s+area\\s*\\(\\s*double\\s+\\w+\\s*\\)",
+      "message": "Keep area(double radius) for circles."
+    },
+    {
+      "pattern": "\\bdouble\\s+area\\s*\\(\\s*double\\s+\\w+\\s*,\\s*double\\s+\\w+\\s*\\)",
+      "message": "Keep area(double width, double height) for rectangles."
+    },
+    {
+      "pattern": "\\bdouble\\s+area\\s*\\(\\s*double\\s+\\w+\\s*,\\s*double\\s+\\w+\\s*,\\s*double\\s+\\w+\\s*\\)",
+      "message": "Keep area(double a, double b, double c) for triangles."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\ncircle 2\nrectangle 3 4.5\ntriangle 3 4 5\n",
+      "output": "Area of the circle: 12.57\nArea of the rectangle: 13.50\nArea of the triangle: 6.00\n"
+    },
+    {
+      "input": "1\ncircle 1\n",
+      "output": "Area of the circle: 3.14\n"
+    },
+    {
+      "input": "2\ntriangle 2 2 2\nrectangle 10 0.5\n",
+      "output": "Area of the triangle: 1.73\nArea of the rectangle: 5.00\n",
+      "hidden": true
+    },
+    {
+      "input": "3\ncircle 0.5\ncircle 10\ntriangle 7 8 9\n",
+      "output": "Area of the circle: 0.79\nArea of the circle: 314.16\nArea of the triangle: 26.83\n",
+      "hidden": true
+    },
+    {
+      "input": "1\nrectangle 1.5 1.5\n",
+      "output": "Area of the rectangle: 2.25\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "title": "Score Statistics",
+  "difficulty": "Easy",
+  "hints": [
+    "Store the scores in an int[] first, then loop over it.",
+    "Start highest and lowest with the first score, then compare each of the others.",
+    "A score of 60 or more passes."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Estatísticas das notas",
+      "hints": [
+        "Guarde as notas em um int[] primeiro e depois percorra o array.",
+        "Comece highest e lowest com a primeira nota e compare cada uma das outras.",
+        "Nota 60 ou mais é aprovado."
+      ],
+      "mustContain": [
+        "Guarde as notas em um array."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\[\\s*\\]",
+      "message": "Store the scores in an array."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n72 45 90 60 38\n",
+      "output": "Highest: 90\nLowest: 38\nPassed: 3 of 5\n"
+    },
+    {
+      "input": "1\n100\n",
+      "output": "Highest: 100\nLowest: 100\nPassed: 1 of 1\n"
+    },
+    {
+      "input": "4\n59 59 59 59\n",
+      "output": "Highest: 59\nLowest: 59\nPassed: 0 of 4\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n0 100 60 61 59 99\n",
+      "output": "Highest: 100\nLowest: 0\nPassed: 4 of 6\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n60 60 60\n",
+      "output": "Highest: 60\nLowest: 60\nPassed: 3 of 3\n",
+      "hidden": true
+    }
+  ]
+}

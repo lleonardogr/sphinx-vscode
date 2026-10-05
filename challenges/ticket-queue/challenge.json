@@ -1,0 +1,64 @@
+{
+  "title": "Ticket Queue (ArrayDeque)",
+  "topic": "Collections",
+  "difficulty": "Medium",
+  "order": 6,
+  "hints": [
+    "A queue is first in, first out: offer adds at the back, poll removes from the front.",
+    "poll returns null when the queue is empty, which is how you know to print No one waiting.",
+    "For status, String.join(\", \", queue) lists the names from front to back."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Fila de atendimento (ArrayDeque)",
+      "hints": [
+        "Uma fila é o primeiro a entrar, o primeiro a sair: offer coloca no fim, poll tira da frente.",
+        "poll devolve null quando a fila está vazia, e é assim que você sabe que deve imprimir No one waiting.",
+        "No status, String.join(\", \", queue) lista os nomes da frente para o fim."
+      ],
+      "mustContain": [
+        "Use uma fila (ArrayDeque) para a fila de pessoas."
+      ],
+      "mustNotContain": [
+        "Use uma fila, e não uma lista com remove(0)."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(ArrayDeque|Queue|Deque)\\b",
+      "message": "Use a queue (ArrayDeque) for the line."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\bArrayList\\b|\\.remove\\s*\\(\\s*0\\s*\\)",
+      "message": "Use a queue, not a list with remove(0)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\narrive Ana\narrive Bia\nstatus\nserve\narrive Caio\nstatus\n",
+      "output": "Ana joined at position 1\nBia joined at position 2\nWaiting: Ana, Bia\nServing Ana\nCaio joined at position 2\nWaiting: Bia, Caio\n"
+    },
+    {
+      "input": "2\nserve\nstatus\n",
+      "output": "No one waiting\nWaiting: nobody\n"
+    },
+    {
+      "input": "7\narrive A\nserve\nserve\narrive B\narrive C\narrive D\nstatus\n",
+      "output": "A joined at position 1\nServing A\nNo one waiting\nB joined at position 1\nC joined at position 2\nD joined at position 3\nWaiting: B, C, D\n",
+      "hidden": true
+    },
+    {
+      "input": "5\narrive Zed\nstatus\nserve\nstatus\nserve\n",
+      "output": "Zed joined at position 1\nWaiting: Zed\nServing Zed\nWaiting: nobody\nNo one waiting\n",
+      "hidden": true
+    },
+    {
+      "input": "4\narrive P1\narrive P2\nserve\nserve\n",
+      "output": "P1 joined at position 1\nP2 joined at position 2\nServing P1\nServing P2\n",
+      "hidden": true
+    }
+  ]
+}

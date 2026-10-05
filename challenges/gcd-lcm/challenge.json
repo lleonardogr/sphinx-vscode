@@ -1,0 +1,65 @@
+{
+  "title": "GCD and LCM",
+  "topic": "Methods",
+  "difficulty": "Medium",
+  "order": 5,
+  "hints": [
+    "Euclid's algorithm: while b != 0, replace (a, b) with (b, a % b). When b is 0, a is the GCD.",
+    "Use a temporary variable to swap: int r = a % b; a = b; b = r;",
+    "LCM = a / gcd(a, b) * b. Divide first so the number stays small, and return a long."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "MDC e MMC",
+      "hints": [
+        "Algoritmo de Euclides: enquanto b != 0, troque (a, b) por (b, a % b). Quando b for 0, a é o MDC.",
+        "Use uma variável temporária para trocar: int r = a % b; a = b; b = r;",
+        "MMC = a / mdc(a, b) * b. Divida primeiro para o número ficar pequeno, e devolva um long."
+      ],
+      "mustContain": [
+        "Mantenha a assinatura do método: int gcd(int a, int b).",
+        "Mantenha a assinatura do método: long lcm(int a, int b).",
+        "Chame gcd dentro de lcm em vez de achar o MMC de outro jeito."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bint\\s+gcd\\s*\\(\\s*int\\s+\\w+\\s*,\\s*int\\s+\\w+\\s*\\)",
+      "message": "Keep the method signature: int gcd(int a, int b)."
+    },
+    {
+      "pattern": "\\blong\\s+lcm\\s*\\(\\s*int\\s+\\w+\\s*,\\s*int\\s+\\w+\\s*\\)",
+      "message": "Keep the method signature: long lcm(int a, int b)."
+    },
+    {
+      "pattern": "\\blcm\\s*\\([^)]*\\)\\s*\\{[^}]*\\bgcd\\s*\\(",
+      "message": "Call gcd inside lcm instead of finding the LCM another way."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2\n12 18\n7 5\n",
+      "output": "GCD = 6, LCM = 36\nGCD = 1, LCM = 35\n"
+    },
+    {
+      "input": "1\n100 75\n",
+      "output": "GCD = 25, LCM = 300\n"
+    },
+    {
+      "input": "3\n1 1\n13 13\n6 35\n",
+      "output": "GCD = 1, LCM = 1\nGCD = 13, LCM = 13\nGCD = 1, LCM = 210\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n1000000 999999\n2147483647 2\n",
+      "output": "GCD = 1, LCM = 999999000000\nGCD = 1, LCM = 4294967294\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n48 180\n17 51\n",
+      "output": "GCD = 12, LCM = 720\nGCD = 17, LCM = 51\n",
+      "hidden": true
+    }
+  ]
+}

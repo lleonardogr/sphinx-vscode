@@ -1,0 +1,60 @@
+{
+  "title": "Perfect Numbers",
+  "topic": "Methods",
+  "difficulty": "Hard",
+  "order": 7,
+  "hints": [
+    "Divisors come in pairs: if d divides n, so does n / d. Loop d only while d * d <= n and add both.",
+    "Careful with the pairs: when d * d == n, add d only once; and never add n itself (1 pairs with n).",
+    "classify compares sumOfDivisors(n) with n: equal is perfect, bigger is abundant, smaller is deficient."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Números perfeitos",
+      "hints": [
+        "Divisores vêm em pares: se d divide n, n / d também divide. Faça o laço só enquanto d * d <= n e some os dois.",
+        "Cuidado com os pares: quando d * d == n, some d uma vez só; e nunca some o próprio n (o 1 faz par com n).",
+        "classify compara sumOfDivisors(n) com n: igual é perfect, maior é abundant, menor é deficient."
+      ],
+      "mustContain": [
+        "Mantenha a assinatura do método: long sumOfDivisors(long n).",
+        "Mantenha a assinatura do método: String classify(long n)."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\blong\\s+sumOfDivisors\\s*\\(\\s*long\\s+\\w+\\s*\\)",
+      "message": "Keep the method signature: long sumOfDivisors(long n)."
+    },
+    {
+      "pattern": "\\bString\\s+classify\\s*\\(\\s*long\\s+\\w+\\s*\\)",
+      "message": "Keep the method signature: String classify(long n)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\n6\n12\n8\n",
+      "output": "6 is perfect\n12 is abundant\n8 is deficient\n"
+    },
+    {
+      "input": "2\n28\n1\n",
+      "output": "28 is perfect\n1 is deficient\n"
+    },
+    {
+      "input": "4\n496\n8128\n945\n2\n",
+      "output": "496 is perfect\n8128 is perfect\n945 is abundant\n2 is deficient\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n33550336\n999999999989\n",
+      "output": "33550336 is perfect\n999999999989 is deficient\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n1000000000000\n8589869056\n36\n",
+      "output": "1000000000000 is abundant\n8589869056 is perfect\n36 is abundant\n",
+      "hidden": true
+    }
+  ]
+}

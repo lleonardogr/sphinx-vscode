@@ -1,0 +1,69 @@
+{
+  "title": "Max of Three (Method)",
+  "topic": "Methods",
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "A method receives values through its parameters and gives one back with return.",
+    "Start with int biggest = a; then replace it when b or c is bigger.",
+    "The main method is already written: it calls max for every line. You only write the body of max."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Maior de três (método)",
+      "hints": [
+        "Um método recebe valores pelos parâmetros e devolve um com return.",
+        "Comece com int biggest = a; e troque quando b ou c for maior.",
+        "O main já está pronto: ele chama max para cada linha. Você só escreve o corpo de max."
+      ],
+      "mustContain": [
+        "Mantenha a assinatura do método: int max(int a, int b, int c).",
+        "Devolva a resposta com return."
+      ],
+      "mustNotContain": [
+        "Escreva as comparações você mesmo, sem Math.max."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bint\\s+max\\s*\\(\\s*int\\s+\\w+\\s*,\\s*int\\s+\\w+\\s*,\\s*int\\s+\\w+\\s*\\)",
+      "message": "Keep the method signature: int max(int a, int b, int c)."
+    },
+    {
+      "pattern": "\\breturn\\b",
+      "message": "Give the answer back with return."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "Math\\s*\\.\\s*max",
+      "message": "Write the comparisons yourself, without Math.max."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\n1 2 3\n9 4 7\n5 5 5\n",
+      "output": "Max: 3\nMax: 9\nMax: 5\n"
+    },
+    {
+      "input": "1\n-3 -8 -1\n",
+      "output": "Max: -1\n"
+    },
+    {
+      "input": "2\n10 30 20\n0 -1 -2\n",
+      "output": "Max: 30\nMax: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n7 7 2\n2 7 7\n-5 0 -5\n",
+      "output": "Max: 7\nMax: 7\nMax: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n2147483647 0 -2147483648\n",
+      "output": "Max: 2147483647\n",
+      "hidden": true
+    }
+  ]
+}
