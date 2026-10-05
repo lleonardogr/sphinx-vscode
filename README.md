@@ -95,6 +95,7 @@ Sphynx checks Java when it starts. If something is wrong, it warns you and shows
 
 4. Stuck? Click **Show a hint**, or **✨ Ask AI for a hint** if your teacher or you set up [AI hints](docs/ai-hints.md).
 5. Made a mess? **Reset code** brings back the starter code.
+6. Want to start over? The ↺ button next to a challenge in the sidebar (**Reset Challenge**) brings back the starter code and clears its progress; next to a quiz it clears the best score. The ⨯ button at the top of the sidebar (**Reset All Challenges…**) resets everything, either progress and code or progress only. Exams are never reset.
 
 Your program reads its input and prints the answer, exactly like HackerRank. Both styles work:
 

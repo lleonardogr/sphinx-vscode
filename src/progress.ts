@@ -43,6 +43,16 @@ export class Progress {
     this.changed.fire();
   }
 
+  /** Forgets one challenge's status and attempts. */
+  async clear(id: string): Promise<void> {
+    const all = { ...this.all() };
+    if (id in all) {
+      delete all[id];
+      await this.state.update(KEY, all);
+      this.changed.fire();
+    }
+  }
+
   async reset(): Promise<void> {
     await this.state.update(KEY, undefined);
     this.changed.fire();

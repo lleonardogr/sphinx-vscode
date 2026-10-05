@@ -498,18 +498,120 @@ export function activate(context: vscode.ExtensionContext): void {
     if (answer !== resetLabel) {
       return;
     }
-    const file = ensureCodeFile(c);
+    ensureCodeFile(c);
+    await restoreStarter(c);
+    await revealCode(c);
+  }
+
+  /** Puts the starter code back in a challenge's Main.java, if the student ever opened it. */
+  async function restoreStarter(c: Challenge): Promise<boolean> {
+    const file = codePath(c);
     const doc = vscode.workspace.textDocuments.find((d) => d.uri.fsPath === file);
     if (doc) {
       const edit = new vscode.WorkspaceEdit();
       edit.replace(doc.uri, new vscode.Range(0, 0, doc.lineCount, 0), starterFor(c));
       await examManager.withoutPasteCheck(() => vscode.workspace.applyEdit(edit));
       await doc.save();
-    } else {
+    } else if (!fs.existsSync(file)) {
+      return false;
+    }
+    // Also covers an open editor that hasn't caught up with changes made on disk.
+    if (fs.readFileSync(file, 'utf8') !== starterFor(c)) {
       fs.writeFileSync(file, starterFor(c));
     }
     diagnostics.delete(vscode.Uri.file(file));
-    await revealCode(c);
+    return true;
+  }
+
+  /** Starter code and no progress, as if the challenge had never been opened. */
+  async function resetChallenge(c: Challenge): Promise<void> {
+    if (parseExamChallengeId(c.id)) {
+      vscode.window.showInformationMessage(tr('Exam questions can\'t be reset.', 'Questões de prova não podem ser restauradas.'));
+      return;
+    }
+    const resetLabel = tr('Reset Challenge', 'Restaurar desafio');
+    const answer = await vscode.window.showWarningMessage(
+      tr(`Reset "${c.title}"?`, `Restaurar "${c.title}"?`),
+      {
+        modal: true,
+        detail: tr(
+          'Your code goes back to the starter code and the challenge\'s progress (solved mark and attempts) is cleared. Your current code will be lost.',
+          'Seu código volta para o código inicial e o progresso do desafio (marca de resolvido e tentativas) é apagado. Seu código atual será perdido.',
+        ),
+      },
+      resetLabel,
+    );
+    if (answer !== resetLabel) {
+      return;
+    }
+    await restoreStarter(c);
+    await progress.clear(c.id);
+    updateStatus();
+    if (panel.current?.id === c.id) {
+      await panel.show(c);
+    }
+  }
+
+  async function resetQuiz(arg: unknown): Promise<void> {
+    const id = typeof arg === 'string' ? arg : (arg as { quiz?: QuizDefinition } | undefined)?.quiz?.id;
+    const quiz = id ? quizzes.find((q) => q.id === id) : undefined;
+    if (!quiz) {
+      return;
+    }
+    const resetLabel = tr('Reset Quiz', 'Restaurar quiz');
+    const answer = await vscode.window.showWarningMessage(
+      tr(`Reset "${quiz.title}"?`, `Restaurar "${quiz.title}"?`),
+      { modal: true, detail: tr('Its best score and attempts are cleared.', 'A melhor nota e as tentativas são apagadas.') },
+      resetLabel,
+    );
+    if (answer !== resetLabel) {
+      return;
+    }
+    await quizProgress.clear(quiz.id);
+    if (quizController.isOpen(quiz.id)) {
+      await quizController.refresh();
+    }
+  }
+
+  /** Resets every practice challenge and quiz: progress only, or progress and code. Exams are not touched. */
+  async function resetAllChallenges(): Promise<void> {
+    const everything = tr('Progress and Code', 'Progresso e código');
+    const progressOnly = tr('Progress Only', 'Só o progresso');
+    const answer = await vscode.window.showWarningMessage(
+      tr('Reset all challenges and quizzes?', 'Restaurar todos os desafios e quizzes?'),
+      {
+        modal: true,
+        detail: tr(
+          '"Progress and Code" clears every solved mark, attempt and quiz score, and puts every challenge\'s code back to the starter code: all your code will be lost.\n\n"Progress Only" clears the progress and keeps your code files.\n\nExams are not affected.',
+          '"Progresso e código" apaga todas as marcas de resolvido, tentativas e notas de quiz, e volta o código de todos os desafios para o código inicial: todo o seu código será perdido.\n\n"Só o progresso" apaga o progresso e mantém seus arquivos de código.\n\nAs provas não são afetadas.',
+        ),
+      },
+      everything,
+      progressOnly,
+    );
+    if (answer !== everything && answer !== progressOnly) {
+      return;
+    }
+    let restored = 0;
+    if (answer === everything) {
+      for (const c of challenges) {
+        if (await restoreStarter(c)) {
+          restored++;
+        }
+      }
+    }
+    await progress.reset();
+    await quizProgress.reset();
+    updateStatus();
+    const current = panel.current;
+    if (current && !parseExamChallengeId(current.id)) {
+      await panel.show(current);
+    }
+    vscode.window.showInformationMessage(
+      answer === everything
+        ? tr(`All progress was reset, and ${plural(restored, ['challenge', 'challenges'], ['desafio', 'desafios'])} went back to the starter code.`, `Todo o progresso foi zerado, e o código de ${plural(restored, ['challenge', 'challenges'], ['desafio', 'desafios'])} voltou para o código inicial.`)
+        : tr('All progress was reset. Your code files were kept.', 'Todo o progresso foi zerado. Seus arquivos de código foram mantidos.'),
+    );
   }
 
   async function runChallengeInTerminal(c: Challenge): Promise<void> {
@@ -683,6 +785,9 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('sphynx.submit', withChallenge((c) => runChallenge(c, 'submit'))),
     vscode.commands.registerCommand('sphynx.runInTerminal', withChallenge(runChallengeInTerminal)),
     vscode.commands.registerCommand('sphynx.resetCode', withChallenge(resetCode)),
+    vscode.commands.registerCommand('sphynx.resetChallenge', withChallenge(resetChallenge)),
+    vscode.commands.registerCommand('sphynx.resetQuiz', resetQuiz),
+    vscode.commands.registerCommand('sphynx.resetAllChallenges', resetAllChallenges),
     vscode.commands.registerCommand('sphynx.askAiHint', withChallenge(askAiHint)),
     vscode.commands.registerCommand('sphynx.setupAi', () => ai.setup()),
     vscode.commands.registerCommand('sphynx.clearAiKeys', () => ai.clearApiKeys()),

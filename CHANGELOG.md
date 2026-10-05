@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Reset Challenge**: a button next to each challenge in the sidebar (also in its right-click menu and the Command Palette) that brings back the starter code and clears the challenge's progress (solved mark and attempts). Next to a quiz, **Reset Quiz Score** clears its best score.
+- **Reset All Challenges…**: a button at the top of the sidebar that resets every challenge and quiz. Choose **Progress and Code** (all code goes back to the starter code) or **Progress Only** (code files are kept, like the old Reset All Progress). Exams are not affected.
+
 ## [0.9.0] - 2026-10-05
 
 ### Added
