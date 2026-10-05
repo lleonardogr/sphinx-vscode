@@ -1,0 +1,63 @@
+{
+  "title": "Count Paths",
+  "difficulty": "Medium",
+  "hints": [
+    "Base cases: outside the grid or on a # there are 0 paths; on the bottom-right cell there is 1.",
+    "Otherwise, the paths from a cell are the paths going down plus the paths going right.",
+    "Store each answer in memo[row][col] (it starts at -1), or big grids take far too long."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Contar caminhos",
+      "hints": [
+        "Casos base: fora da grade ou em um # há 0 caminhos; na casa de baixo à direita há 1.",
+        "Senão, os caminhos de uma casa são os caminhos indo para baixo mais os caminhos indo para a direita.",
+        "Guarde cada resposta em memo[row][col] (que começa em -1), senão grades grandes demoram demais."
+      ],
+      "mustContain": [
+        "Mantenha o método long paths(int row, int col).",
+        "Chame paths de forma recursiva para a próxima casa."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\blong\\s+paths\\s*\\(\\s*int\\s+\\w+\\s*,\\s*int\\s+\\w+\\s*\\)",
+      "message": "Keep the method long paths(int row, int col)."
+    },
+    {
+      "pattern": "paths\\s*\\(\\s*\\w+\\s*\\+\\s*1",
+      "message": "Call paths recursively for the next cell."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3 3\n...\n.#.\n...\n",
+      "output": "Paths: 2\n"
+    },
+    {
+      "input": "1 1\n.\n",
+      "output": "Paths: 1\n"
+    },
+    {
+      "input": "2 2\n.#\n#.\n",
+      "output": "Paths: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "18 18\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n..................\n",
+      "output": "Paths: 2333606220\n",
+      "hidden": true
+    },
+    {
+      "input": "4 5\n.....\n.##..\n...#.\n#....\n",
+      "output": "Paths: 4\n",
+      "hidden": true
+    },
+    {
+      "input": "2 3\n...\n..#\n",
+      "output": "Paths: 0\n",
+      "hidden": true
+    }
+  ]
+}

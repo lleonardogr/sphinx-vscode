@@ -1,0 +1,100 @@
+{
+  "title": "Final Exam Quiz",
+  "description": "Eight questions from the whole course. You can submit the quiz only once.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "int x = 7;\nx += x++ * 0 + 3;\nIO.println(x / 2 + \" \" + x % 4);",
+      "answer": "5 2",
+      "explanation": "`x++` gives 7 (and the addition then overwrites x), so x = 7 + (0 + 3) = 10. 10 / 2 = 5 and 10 % 4 = 2."
+    },
+    {
+      "type": "output",
+      "code": "String s = \"recursion\";\nIO.println(s.substring(2, 5).toUpperCase() + s.indexOf('r', 1));",
+      "answer": "CUR4",
+      "explanation": "`substring(2, 5)` is \"cur\"; the first `r` searching from index 1 is at index 4."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which collection should you use for a first-in, first-out waiting line?",
+      "options": [
+        "TreeSet",
+        "ArrayDeque",
+        "HashMap",
+        "int[]"
+      ],
+      "answer": 1,
+      "explanation": "`ArrayDeque` adds at the back and removes from the front efficiently."
+    },
+    {
+      "type": "output",
+      "code": "interface Shape { double area(); }\nrecord Square(double side) implements Shape {\n    public double area() { return side * side; }\n}\n\nvoid main() {\n    Shape s = new Square(3);\n    IO.println(s.area());\n}",
+      "answer": "9.0",
+      "explanation": "A record can implement an interface; the call runs `Square`'s `area`."
+    },
+    {
+      "type": "output",
+      "code": "int depth(int n) {\n    return n <= 1 ? 0 : 1 + depth(n / 2);\n}\n\nvoid main() {\n    IO.println(depth(40));\n}",
+      "answer": "5",
+      "explanation": "40 → 20 → 10 → 5 → 2 → 1: five halvings before reaching the base case."
+    },
+    {
+      "type": "output",
+      "code": "try {\n    Object o = \"text\";\n    Integer i = (Integer) o;\n    IO.println(\"cast\");\n} catch (ClassCastException e) {\n    IO.println(\"wrong type\");\n} finally {\n    IO.println(\"done\");\n}",
+      "answer": "wrong type\ndone",
+      "explanation": "A String can't be cast to Integer, so `ClassCastException` is caught; `finally` always runs."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(Stream.of(\"kiwi\", \"fig\", \"banana\", \"plum\")\n        .filter(f -> f.length() == 4)\n        .map(String::toUpperCase)\n        .sorted(Comparator.reverseOrder())\n        .toList());",
+      "answer": "[PLUM, KIWI]",
+      "explanation": "Only \"kiwi\" and \"plum\" have 4 letters; reverse order puts PLUM first."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "Two objects that are `equals` must return the same `hashCode`.",
+      "answer": true,
+      "explanation": "That is the contract that makes `HashSet` and `HashMap` work."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz da prova final",
+      "description": "Oito perguntas do curso inteiro. Você só pode enviar o quiz uma vez.",
+      "questions": [
+        {
+          "explanation": "`x++` dá 7 (e a soma depois sobrescreve x), então x = 7 + (0 + 3) = 10. 10 / 2 = 5 e 10 % 4 = 2."
+        },
+        {
+          "explanation": "`substring(2, 5)` é \"cur\"; o primeiro `r` procurando a partir do índice 1 está no índice 4."
+        },
+        {
+          "prompt": "Qual coleção você deve usar para uma fila em que o primeiro a chegar é o primeiro a sair?",
+          "options": [
+            "TreeSet",
+            "ArrayDeque",
+            "HashMap",
+            "int[]"
+          ],
+          "explanation": "`ArrayDeque` coloca no fim e tira da frente de forma eficiente."
+        },
+        {
+          "explanation": "Um record pode implementar uma interface; a chamada roda o `area` de `Square`."
+        },
+        {
+          "explanation": "40 → 20 → 10 → 5 → 2 → 1: cinco divisões até chegar no caso base."
+        },
+        {
+          "explanation": "Uma String não pode virar Integer, então a `ClassCastException` é capturada; o `finally` sempre roda."
+        },
+        {
+          "explanation": "Só \"kiwi\" e \"plum\" têm 4 letras; a ordem invertida coloca PLUM primeiro."
+        },
+        {
+          "prompt": "Dois objetos que são `equals` precisam devolver o mesmo `hashCode`.",
+          "explanation": "Esse é o contrato que faz `HashSet` e `HashMap` funcionarem."
+        }
+      ]
+    }
+  }
+}

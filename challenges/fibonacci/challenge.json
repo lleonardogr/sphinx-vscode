@@ -1,0 +1,74 @@
+{
+  "title": "Fibonacci (Memoization)",
+  "topic": "Recursion",
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Base cases: fib(0) is 0 and fib(1) is 1. Otherwise fib(n) = fib(n - 1) + fib(n - 2).",
+    "That alone is far too slow for n = 90: the same values are computed billions of times.",
+    "Before computing fib(n), check memo[n]. After computing it, store it there, so each value is computed only once."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Fibonacci (memoização)",
+      "hints": [
+        "Casos base: fib(0) é 0 e fib(1) é 1. Nos outros, fib(n) = fib(n - 1) + fib(n - 2).",
+        "Só isso é lento demais para n = 90: os mesmos valores são calculados bilhões de vezes.",
+        "Antes de calcular fib(n), olhe memo[n]. Depois de calcular, guarde lá, assim cada valor é calculado uma vez só."
+      ],
+      "mustContain": [
+        "Mantenha o método long fib(int n).",
+        "Chame fib de forma recursiva dentro de fib."
+      ],
+      "mustNotContain": [
+        "Resolva com recursão: sem laços for ou while."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\blong\\s+fib\\s*\\(\\s*int\\s+\\w+\\s*\\)",
+      "message": "Keep the method long fib(int n)."
+    },
+    {
+      "pattern": "fib\\s*\\(\\s*\\w+\\s*-\\s*1\\s*\\)",
+      "message": "Call fib recursively inside fib."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it with recursion: no for or while loops."
+    }
+  ],
+  "tests": [
+    {
+      "input": "10\n",
+      "output": "F(10) = 55\n"
+    },
+    {
+      "input": "1\n",
+      "output": "F(1) = 1\n"
+    },
+    {
+      "input": "0\n",
+      "output": "F(0) = 0\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n",
+      "output": "F(2) = 1\n",
+      "hidden": true
+    },
+    {
+      "input": "50\n",
+      "output": "F(50) = 12586269025\n",
+      "hidden": true
+    },
+    {
+      "input": "90\n",
+      "output": "F(90) = 2880067194370816120\n",
+      "hidden": true
+    }
+  ]
+}

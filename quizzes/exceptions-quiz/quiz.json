@@ -1,0 +1,117 @@
+{
+  "title": "Exceptions Quiz",
+  "topic": "Exceptions",
+  "description": "try, catch and finally, checked and unchecked exceptions, and throwing your own.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "try {\n    IO.println(\"A\");\n    int x = 1 / 0;\n    IO.println(\"B\");\n} catch (ArithmeticException e) {\n    IO.println(\"C\");\n}\nIO.println(\"D\");",
+      "answer": "A\nC\nD",
+      "explanation": "The division throws, so the rest of the `try` (\"B\") is skipped. The `catch` runs, and then the program continues."
+    },
+    {
+      "type": "output",
+      "code": "try {\n    IO.println(\"try\");\n} finally {\n    IO.println(\"finally\");\n}",
+      "answer": "try\nfinally",
+      "explanation": "`finally` always runs, whether or not an exception was thrown."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which of these is a **checked** exception that the compiler forces you to handle?",
+      "options": [
+        "NullPointerException",
+        "ArithmeticException",
+        "IOException",
+        "IllegalArgumentException"
+      ],
+      "answer": 2,
+      "explanation": "`IOException` extends `Exception` but not `RuntimeException`, so it is checked. The others are unchecked runtime exceptions."
+    },
+    {
+      "type": "output",
+      "code": "try {\n    Integer.parseInt(\"12a\");\n} catch (NumberFormatException e) {\n    IO.println(\"format\");\n} catch (IllegalArgumentException e) {\n    IO.println(\"argument\");\n}",
+      "answer": "format",
+      "explanation": "Java uses the first matching `catch`. `NumberFormatException` matches first (it is a subclass of `IllegalArgumentException`)."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "A method that can throw a checked exception must declare it with `throws` (or catch it).",
+      "answer": true,
+      "explanation": "That is what \"checked\" means: the compiler checks every method that can throw it."
+    },
+    {
+      "type": "output",
+      "code": "String s = null;\ntry {\n    IO.println(s.length());\n} catch (NullPointerException e) {\n    IO.println(\"no string\");\n}",
+      "answer": "no string",
+      "explanation": "Calling a method on `null` throws a `NullPointerException`."
+    },
+    {
+      "type": "choice",
+      "prompt": "Your own exception class `class BadInput extends ___` should be unchecked. What goes in the blank?",
+      "options": [
+        "Exception",
+        "RuntimeException",
+        "Error",
+        "Throwable"
+      ],
+      "answer": 1,
+      "explanation": "Extending `RuntimeException` makes it unchecked; extending `Exception` makes it checked."
+    },
+    {
+      "type": "short",
+      "prompt": "Which keyword starts a statement that raises an exception, as in `___ new IllegalStateException(\"closed\");`?",
+      "answer": [
+        "throw"
+      ],
+      "explanation": "`throw` raises an exception; `throws` (with an s) declares one in a method signature."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de exceções",
+      "description": "try, catch e finally, exceções verificadas e não verificadas, e lançar as suas.",
+      "questions": [
+        {
+          "explanation": "A divisão lança, então o resto do `try` (\"B\") é pulado. O `catch` roda e depois o programa continua."
+        },
+        {
+          "explanation": "O `finally` sempre roda, tendo exceção ou não."
+        },
+        {
+          "prompt": "Qual destas é uma exceção **verificada**, que o compilador obriga você a tratar?",
+          "options": [
+            "NullPointerException",
+            "ArithmeticException",
+            "IOException",
+            "IllegalArgumentException"
+          ],
+          "explanation": "`IOException` estende `Exception` mas não `RuntimeException`, então é verificada. As outras são exceções de execução não verificadas."
+        },
+        {
+          "explanation": "O Java usa o primeiro `catch` que combina. `NumberFormatException` combina primeiro (ela é subclasse de `IllegalArgumentException`)."
+        },
+        {
+          "prompt": "Um método que pode lançar uma exceção verificada precisa declarar com `throws` (ou capturar).",
+          "explanation": "É isso que \"verificada\" quer dizer: o compilador confere todo método que pode lançá-la."
+        },
+        {
+          "explanation": "Chamar um método em `null` lança uma `NullPointerException`."
+        },
+        {
+          "prompt": "A sua classe `class BadInput extends ___` deve ser não verificada. O que vai no espaço?",
+          "options": [
+            "Exception",
+            "RuntimeException",
+            "Error",
+            "Throwable"
+          ],
+          "explanation": "Estender `RuntimeException` deixa ela não verificada; estender `Exception` deixa ela verificada."
+        },
+        {
+          "prompt": "Qual palavra-chave começa o comando que lança uma exceção, como em `___ new IllegalStateException(\"closed\");`?",
+          "explanation": "`throw` lança uma exceção; `throws` (com s) declara uma na assinatura do método."
+        }
+      ]
+    }
+  }
+}

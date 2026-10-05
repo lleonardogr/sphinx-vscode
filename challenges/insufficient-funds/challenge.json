@@ -1,0 +1,65 @@
+{
+  "title": "Insufficient Funds (Custom Exception)",
+  "topic": "Exceptions",
+  "difficulty": "Medium",
+  "order": 4,
+  "hints": [
+    "Pass the message up to Exception with super(...) in the constructor; getMessage() then returns it.",
+    "In withdraw, check first and throw before changing the balance: throw new InsufficientFundsException(balance, amount);",
+    "Because the exception is checked, main must call withdraw inside try and catch InsufficientFundsException."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Saldo insuficiente (exceção própria)",
+      "hints": [
+        "Passe a mensagem para Exception com super(...) no construtor; aí getMessage() devolve ela.",
+        "No withdraw, confira primeiro e lance antes de mudar o saldo: throw new InsufficientFundsException(balance, amount);",
+        "Como a exceção é verificada (checked), o main precisa chamar withdraw dentro de um try e capturar InsufficientFundsException."
+      ],
+      "mustContain": [
+        "Lance uma InsufficientFundsException no withdraw.",
+        "Capture a InsufficientFundsException no main.",
+        "Mantenha InsufficientFundsException como exceção verificada (extends Exception)."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "throw\\s+new\\s+InsufficientFundsException\\s*\\(",
+      "message": "Throw an InsufficientFundsException from withdraw."
+    },
+    {
+      "pattern": "catch\\s*\\(\\s*InsufficientFundsException\\s+\\w+\\s*\\)",
+      "message": "Catch the InsufficientFundsException in main."
+    },
+    {
+      "pattern": "class\\s+InsufficientFundsException\\s+extends\\s+Exception\\b",
+      "message": "Keep InsufficientFundsException as a checked exception (extends Exception)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\ndeposit 100\nwithdraw 30\nwithdraw 80\nbalance\nwithdraw 70\n",
+      "output": "Deposited 100\nWithdrew 30\nError: Insufficient funds: balance 70, requested 80\nBalance: 70\nWithdrew 70\n"
+    },
+    {
+      "input": "2\nwithdraw 1\nbalance\n",
+      "output": "Error: Insufficient funds: balance 0, requested 1\nBalance: 0\n"
+    },
+    {
+      "input": "4\ndeposit 50\nwithdraw 50\nwithdraw 1\nbalance\n",
+      "output": "Deposited 50\nWithdrew 50\nError: Insufficient funds: balance 0, requested 1\nBalance: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "6\ndeposit 10\ndeposit 20\nwithdraw 31\nwithdraw 30\nbalance\nwithdraw 0\n",
+      "output": "Deposited 10\nDeposited 20\nError: Insufficient funds: balance 30, requested 31\nWithdrew 30\nBalance: 0\nWithdrew 0\n",
+      "hidden": true
+    },
+    {
+      "input": "3\nbalance\ndeposit 1000000\nwithdraw 999999\n",
+      "output": "Balance: 0\nDeposited 1000000\nWithdrew 999999\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "title": "Library System",
+  "topic": "Tests",
+  "skills": [
+    "Conditionals",
+    "Loops",
+    "Strings",
+    "Collections",
+    "Methods",
+    "OOP"
+  ],
+  "unit": "OOP",
+  "difficulty": "Hard",
+  "order": 5,
+  "hints": [
+    "Model the data first: a Book has an id, a title and a borrower (null when it is available). A Library keeps the books and the members.",
+    "A TreeMap<String, Book> keeps the books sorted by id for list; a Map<String, Integer> can count how many books each member has.",
+    "Give Library one method per command that returns the message to print; main only reads the line and calls the right method.",
+    "split(\" \", 3) splits \"add B1 Dom Casmurro\" into [\"add\", \"B1\", \"Dom Casmurro\"], keeping the spaces of the title."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Sistema da biblioteca",
+      "hints": [
+        "Modele os dados primeiro: um Book tem um id, um título e quem pegou emprestado (null quando está disponível). Uma Library guarda os livros e os membros.",
+        "Um TreeMap<String, Book> mantém os livros ordenados pelo id para o list; um Map<String, Integer> pode contar quantos livros cada membro tem.",
+        "Dê à Library um método por comando que devolve a mensagem a imprimir; o main só lê a linha e chama o método certo.",
+        "split(\" \", 3) divide \"add B1 Dom Casmurro\" em [\"add\", \"B1\", \"Dom Casmurro\"], mantendo os espaços do título."
+      ],
+      "mustContain": [
+        "Crie uma classe Book.",
+        "Crie uma classe Library que gerencia os livros e os membros."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bclass\\s+Book\\b",
+      "message": "Create a class Book."
+    },
+    {
+      "pattern": "\\bclass\\s+Library\\b",
+      "message": "Create a class Library that manages the books and members."
+    }
+  ],
+  "tests": [
+    {
+      "input": "add B1 Dom Casmurro\nadd B2 The Hobbit\njoin ana\nborrow B1 ana\nborrow B1 bia\njoin bia\nborrow B1 bia\nlist\nreturn B1\nborrow B1 bia\nexit\n",
+      "output": "Added book B1: Dom Casmurro\nAdded book B2: The Hobbit\nMember ana joined\nana borrowed Dom Casmurro\nNo member bia\nMember bia joined\nDom Casmurro is already borrowed by ana\nB1 Dom Casmurro - borrowed by ana\nB2 The Hobbit - available\nDom Casmurro returned\nbia borrowed Dom Casmurro\nBooks: 2, borrowed: 1\nGoodbye!\n"
+    },
+    {
+      "input": "list\nborrow B9 ana\nreturn B9\nfly\nexit\n",
+      "output": "No books\nNo book B9\nNo book B9\nUnknown command\nBooks: 0, borrowed: 0\nGoodbye!\n"
+    },
+    {
+      "input": "join ana\njoin ana\nadd X1 One\nadd X2 Two\nadd X3 Three\nadd X1 Again\nborrow X1 ana\nborrow X2 ana\nborrow X3 ana\nreturn X2\nborrow X3 ana\nreturn X2\nlist\nexit\n",
+      "output": "Member ana joined\nMember ana already exists\nAdded book X1: One\nAdded book X2: Two\nAdded book X3: Three\nBook X1 already exists\nana borrowed One\nana borrowed Two\nana has reached the limit of 2 books\nTwo returned\nana borrowed Three\nTwo is not borrowed\nX1 One - borrowed by ana\nX2 Two - available\nX3 Three - borrowed by ana\nBooks: 3, borrowed: 2\nGoodbye!\n",
+      "hidden": true
+    },
+    {
+      "input": "add B10 Ten\nadd B2 Two\nadd A1 Atlas of the World\njoin zed\nborrow B2 zed\nlist\nexit\n",
+      "output": "Added book B10: Ten\nAdded book B2: Two\nAdded book A1: Atlas of the World\nMember zed joined\nzed borrowed Two\nA1 Atlas of the World - available\nB10 Ten - available\nB2 Two - borrowed by zed\nBooks: 3, borrowed: 1\nGoodbye!\n",
+      "hidden": true
+    },
+    {
+      "input": "exit\nadd B1 Never Read\n",
+      "output": "Books: 0, borrowed: 0\nGoodbye!\n",
+      "hidden": true
+    }
+  ]
+}

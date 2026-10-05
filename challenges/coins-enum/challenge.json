@@ -1,0 +1,65 @@
+{
+  "title": "Coins (enum)",
+  "topic": "OOP",
+  "difficulty": "Medium",
+  "order": 7,
+  "hints": [
+    "An enum constant can take arguments, like PENNY(1). They go to a constructor you write inside the enum.",
+    "Coin.values() gives every constant in declaration order; coin.name() is its name, like \"DIME\".",
+    "Count with an EnumMap<Coin, Integer> or an int[] indexed by coin.ordinal(). Compare names with equalsIgnoreCase."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Moedas (enum)",
+      "hints": [
+        "Uma constante de enum pode receber argumentos, como PENNY(1). Eles vão para um construtor que você escreve dentro do enum.",
+        "Coin.values() dá todas as constantes na ordem em que foram declaradas; coin.name() é o nome, como \"DIME\".",
+        "Conte com um EnumMap<Coin, Integer> ou um int[] indexado por coin.ordinal(). Compare nomes com equalsIgnoreCase."
+      ],
+      "mustContain": [
+        "Mantenha o enum Coin.",
+        "Dê a cada moeda o valor entre parênteses, como PENNY(1)."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\benum\\s+Coin\\b",
+      "message": "Keep the enum Coin."
+    },
+    {
+      "pattern": "PENNY\\s*\\(\\s*1\\s*\\)",
+      "message": "Give each coin its value in parentheses, like PENNY(1)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "quarter dime dime penny\n",
+      "output": "PENNY x1\nDIME x2\nQUARTER x1\nTotal: 46 cents\n"
+    },
+    {
+      "input": "euro QUARTER\n",
+      "output": "Unknown coin: euro\nQUARTER x1\nTotal: 25 cents\n"
+    },
+    {
+      "input": "penny\n",
+      "output": "PENNY x1\nTotal: 1 cents\n",
+      "hidden": true
+    },
+    {
+      "input": "nickel Nickel NICKEL dime\n",
+      "output": "NICKEL x3\nDIME x1\nTotal: 25 cents\n",
+      "hidden": true
+    },
+    {
+      "input": "peso yen\n",
+      "output": "Unknown coin: peso\nUnknown coin: yen\nTotal: 0 cents\n",
+      "hidden": true
+    },
+    {
+      "input": "quarter quarter quarter quarter penny dime nickel\n",
+      "output": "PENNY x1\nNICKEL x1\nDIME x1\nQUARTER x4\nTotal: 116 cents\n",
+      "hidden": true
+    }
+  ]
+}

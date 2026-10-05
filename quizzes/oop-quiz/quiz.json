@@ -1,0 +1,118 @@
+{
+  "title": "OOP Quiz",
+  "topic": "OOP",
+  "description": "Classes and objects, records, enums, inheritance, interfaces and equality.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "class Counter {\n    int value;\n    void add() { value++; }\n}\n\nvoid main() {\n    Counter a = new Counter();\n    Counter b = a;\n    a.add();\n    b.add();\n    IO.println(a.value);\n}",
+      "answer": "2",
+      "explanation": "`b = a` copies the reference, so `a` and `b` are the same object, which was incremented twice."
+    },
+    {
+      "type": "output",
+      "code": "record Pair(int a, int b) {}\n\nvoid main() {\n    Pair p = new Pair(1, 2);\n    IO.println(p + \" \" + p.equals(new Pair(1, 2)));\n}",
+      "answer": "Pair[a=1, b=2] true",
+      "explanation": "Records get `toString` and `equals` for free; `equals` compares the components."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which keyword makes a field shared by all objects of a class?",
+      "options": [
+        "final",
+        "static",
+        "private",
+        "this"
+      ],
+      "answer": 1,
+      "explanation": "A `static` field belongs to the class itself, so there is a single copy."
+    },
+    {
+      "type": "output",
+      "code": "abstract class Animal {\n    abstract String sound();\n    String speak() { return \"I say \" + sound(); }\n}\n\nclass Dog extends Animal {\n    String sound() { return \"woof\"; }\n}\n\nvoid main() {\n    Animal a = new Dog();\n    IO.println(a.speak());\n}",
+      "answer": "I say woof",
+      "explanation": "`speak` is inherited, and its call to `sound()` runs the version of the real object: polymorphism."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "A class can extend several classes, but implement only one interface.",
+      "answer": false,
+      "explanation": "It is the other way around: a class extends **at most one** class, but can implement many interfaces."
+    },
+    {
+      "type": "output",
+      "code": "enum Size { SMALL, MEDIUM, LARGE }\n\nvoid main() {\n    IO.println(Size.LARGE.ordinal() + \" \" + Size.valueOf(\"MEDIUM\"));\n}",
+      "answer": "2 MEDIUM",
+      "explanation": "`ordinal()` is the position, counting from 0, and `valueOf` finds a constant by name."
+    },
+    {
+      "type": "choice",
+      "prompt": "You override `equals` in a class you put in a `HashSet`. What else must you override?",
+      "options": [
+        "toString",
+        "hashCode",
+        "compareTo",
+        "clone"
+      ],
+      "answer": 1,
+      "explanation": "Equal objects must have equal hash codes, or hash-based collections look in the wrong place."
+    },
+    {
+      "type": "short",
+      "prompt": "Which keyword calls the parent class's constructor from a subclass constructor?",
+      "answer": [
+        "super",
+        "super()"
+      ],
+      "explanation": "`super(args)` must be the first statement of the subclass constructor."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de orientação a objetos",
+      "description": "Classes e objetos, records, enums, herança, interfaces e igualdade.",
+      "questions": [
+        {
+          "explanation": "`b = a` copia a referência, então `a` e `b` são o mesmo objeto, que foi incrementado duas vezes."
+        },
+        {
+          "explanation": "Records ganham `toString` e `equals` de graça; o `equals` compara os componentes."
+        },
+        {
+          "prompt": "Qual palavra-chave faz um campo ser compartilhado por todos os objetos de uma classe?",
+          "options": [
+            "final",
+            "static",
+            "private",
+            "this"
+          ],
+          "explanation": "Um campo `static` pertence à própria classe, então existe uma cópia só."
+        },
+        {
+          "explanation": "`speak` é herdado, e a chamada a `sound()` roda a versão do objeto real: polimorfismo."
+        },
+        {
+          "prompt": "Uma classe pode estender várias classes, mas implementar só uma interface.",
+          "explanation": "É ao contrário: uma classe estende **no máximo uma** classe, mas pode implementar várias interfaces."
+        },
+        {
+          "explanation": "`ordinal()` é a posição, contando a partir de 0, e `valueOf` acha uma constante pelo nome."
+        },
+        {
+          "prompt": "Você sobrescreveu `equals` em uma classe que vai num `HashSet`. O que mais precisa sobrescrever?",
+          "options": [
+            "toString",
+            "hashCode",
+            "compareTo",
+            "clone"
+          ],
+          "explanation": "Objetos iguais precisam ter hash codes iguais, senão coleções baseadas em hash procuram no lugar errado."
+        },
+        {
+          "prompt": "Qual palavra-chave chama o construtor da classe mãe dentro do construtor de uma subclasse?",
+          "explanation": "`super(args)` precisa ser o primeiro comando do construtor da subclasse."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "title": "Sales Report",
+  "difficulty": "Hard",
+  "hints": [
+    "Map each line to a Sale record; revenue of a sale is quantity * price.",
+    "groupingBy(Sale::region, summingDouble(s -> s.quantity() * s.price())) gives the revenue per region; sort its entries by value descending, then by name.",
+    "For the best seller, group by product summing the quantities, then pick the max (ties broken by name)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Relatório de vendas",
+      "hints": [
+        "Transforme cada linha em um record Sale; a receita de uma venda é quantity * price.",
+        "groupingBy(Sale::region, summingDouble(s -> s.quantity() * s.price())) dá a receita por região; ordene as entradas pelo valor do maior para o menor, depois pelo nome.",
+        "Para o mais vendido, agrupe por produto somando as quantidades e pegue o maior (empate decidido pelo nome)."
+      ],
+      "mustContain": [
+        "Use a Stream API.",
+        "Agrupe as vendas com Collectors.groupingBy."
+      ],
+      "mustNotContain": [
+        "Monte o relatório com streams: sem laços for ou while."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.",
+      "message": "Use the Stream API."
+    },
+    {
+      "pattern": "groupingBy",
+      "message": "Group the sales with Collectors.groupingBy."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Build the report with streams: no for or while loops."
+    }
+  ],
+  "tests": [
+    {
+      "input": "4\nNorth Pen 10 2.50\nSouth Pen 15 2.50\nNorth Notebook 3 12.00\nSouth Ruler 4 1.25\n",
+      "output": "Total revenue: 103.50\nBy region:\n  North: 61.00\n  South: 42.50\nBest seller: Pen (25 units)\n"
+    },
+    {
+      "input": "1\nEast Lamp 1 99.99\n",
+      "output": "Total revenue: 99.99\nBy region:\n  East: 99.99\nBest seller: Lamp (1 units)\n"
+    },
+    {
+      "input": "5\nWest Cup 2 10.00\nEast Cup 2 10.00\nWest Plate 1 5.00\nEast Bowl 1 5.00\nNorth Mug 4 2.00\n",
+      "output": "Total revenue: 58.00\nBy region:\n  East: 25.00\n  West: 25.00\n  North: 8.00\nBest seller: Cup (4 units)\n",
+      "hidden": true
+    },
+    {
+      "input": "3\nCentral Chair 2 150.00\nCentral Desk 1 300.00\nSouth Chair 2 150.00\n",
+      "output": "Total revenue: 900.00\nBy region:\n  Central: 600.00\n  South: 300.00\nBest seller: Chair (4 units)\n",
+      "hidden": true
+    },
+    {
+      "input": "4\nA Zed 5 1.00\nB Alpha 5 1.00\nC Mid 3 3.00\nD Zed 0 1.00\n",
+      "output": "Total revenue: 19.00\nBy region:\n  C: 9.00\n  A: 5.00\n  B: 5.00\n  D: 0.00\nBest seller: Alpha (5 units)\n",
+      "hidden": true
+    }
+  ]
+}

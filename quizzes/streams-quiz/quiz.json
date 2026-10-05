@@ -1,0 +1,105 @@
+{
+  "title": "Streams Quiz",
+  "topic": "Streams",
+  "description": "Lambdas, method references and the most used stream operations and collectors.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "IO.println(Stream.of(1, 2, 3, 4, 5)\n        .filter(n -> n % 2 == 1)\n        .map(n -> n * 10)\n        .toList());",
+      "answer": "[10, 30, 50]",
+      "explanation": "`filter` keeps 1, 3 and 5, then `map` multiplies each by 10."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(IntStream.rangeClosed(1, 4).sum());",
+      "answer": "10",
+      "explanation": "`rangeClosed(1, 4)` is 1, 2, 3, 4, including the end."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which is a valid method reference for the lambda `s -> s.length()`?",
+      "options": [
+        "String::length",
+        "s::length",
+        "String.length()",
+        "length::String"
+      ],
+      "answer": 0,
+      "explanation": "`Type::method` refers to a method; Java passes each element as the object the method is called on."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(Stream.of(\"b\", \"a\", \"c\", \"a\")\n        .distinct()\n        .sorted()\n        .collect(Collectors.joining(\"-\")));",
+      "answer": "a-b-c",
+      "explanation": "`distinct` drops the second \"a\", `sorted` orders them, and `joining` puts \"-\" between them."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "A stream can be used again after a terminal operation like `toList()`.",
+      "answer": false,
+      "explanation": "A stream is consumed by its terminal operation. Create a new stream from the source to go again."
+    },
+    {
+      "type": "output",
+      "code": "Map<Integer, List<String>> byLength = Stream.of(\"hi\", \"hey\", \"yo\", \"hello\")\n        .collect(Collectors.groupingBy(String::length));\nIO.println(byLength.get(2));",
+      "answer": "[hi, yo]",
+      "explanation": "`groupingBy(String::length)` groups the words by length; the words with 2 letters are \"hi\" and \"yo\"."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(Stream.of(\"apple\", \"fig\", \"banana\")\n        .anyMatch(s -> s.length() > 5));",
+      "answer": "true",
+      "explanation": "`anyMatch` is true if at least one element passes the test; \"banana\" has 6 letters."
+    },
+    {
+      "type": "short",
+      "prompt": "Which operation turns every element into a stream and flattens them all into one stream?",
+      "answer": [
+        "flatMap",
+        "flatMap()"
+      ],
+      "explanation": "`flatMap` is how you go from a stream of lines to a stream of words, for example."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de streams",
+      "description": "Lambdas, referências de método e as operações e coletores de stream mais usados.",
+      "questions": [
+        {
+          "explanation": "`filter` mantém 1, 3 e 5, e depois `map` multiplica cada um por 10."
+        },
+        {
+          "explanation": "`rangeClosed(1, 4)` é 1, 2, 3, 4, incluindo o fim."
+        },
+        {
+          "prompt": "Qual é uma referência de método válida para a lambda `s -> s.length()`?",
+          "options": [
+            "String::length",
+            "s::length",
+            "String.length()",
+            "length::String"
+          ],
+          "explanation": "`Tipo::método` aponta para um método; o Java passa cada elemento como o objeto em que o método é chamado."
+        },
+        {
+          "explanation": "`distinct` tira o segundo \"a\", `sorted` ordena, e `joining` coloca \"-\" entre eles."
+        },
+        {
+          "prompt": "Um stream pode ser usado de novo depois de uma operação terminal como `toList()`.",
+          "explanation": "Um stream é consumido pela operação terminal. Crie um stream novo a partir da fonte para usar de novo."
+        },
+        {
+          "explanation": "`groupingBy(String::length)` agrupa as palavras pelo tamanho; as de 2 letras são \"hi\" e \"yo\"."
+        },
+        {
+          "explanation": "`anyMatch` é verdadeiro se pelo menos um elemento passa no teste; \"banana\" tem 6 letras."
+        },
+        {
+          "prompt": "Qual operação transforma cada elemento em um stream e junta todos em um stream só?",
+          "explanation": "`flatMap` é como você vai de um stream de linhas para um stream de palavras, por exemplo."
+        }
+      ]
+    }
+  }
+}

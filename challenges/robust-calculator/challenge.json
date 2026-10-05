@@ -1,0 +1,65 @@
+{
+  "title": "Robust Calculator",
+  "topic": "Exceptions",
+  "difficulty": "Hard",
+  "order": 5,
+  "hints": [
+    "calculate throws a CalculatorException for its own problems: unknown operator, division by zero and overflow.",
+    "Math.addExact, subtractExact and multiplyExact throw an ArithmeticException on overflow, just like a / 0 does: catch it and throw a CalculatorException with the right message.",
+    "In main, one try covers the whole line: a wrong number of parts, parseInt and calculate. Use one catch per kind of exception."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Calculadora robusta",
+      "hints": [
+        "calculate lança uma CalculatorException para os problemas dela: operador desconhecido, divisão por zero e estouro.",
+        "Math.addExact, subtractExact e multiplyExact lançam ArithmeticException quando estouram, igual a a / 0: capture e lance uma CalculatorException com a mensagem certa.",
+        "No main, um try cobre a linha inteira: número errado de partes, parseInt e calculate. Use um catch para cada tipo de exceção."
+      ],
+      "mustContain": [
+        "Lance CalculatorException para os erros da própria calculadora.",
+        "Capture CalculatorException no main.",
+        "Capture NumberFormatException para valores que não são números."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "throw\\s+new\\s+CalculatorException\\s*\\(",
+      "message": "Throw CalculatorException for the calculator's own errors."
+    },
+    {
+      "pattern": "catch\\s*\\(\\s*CalculatorException\\s+\\w+\\s*\\)",
+      "message": "Catch CalculatorException in main."
+    },
+    {
+      "pattern": "catch\\s*\\(\\s*NumberFormatException\\s+\\w+\\s*\\)",
+      "message": "Catch NumberFormatException for values that are not numbers."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n7 + 5\n10 / 0\n3 ^ 2\nabc * 2\n1 +\n",
+      "output": "7 + 5 = 12\nError: division by zero\nError: unknown operator ^\nError: not a number\nError: expected number operator number\n"
+    },
+    {
+      "input": "2\n-9 % 4\n2000000000 + 2000000000\n",
+      "output": "-9 % 4 = -1\nError: overflow\n"
+    },
+    {
+      "input": "4\n2147483647 - -1\n-2147483648 - 1\n65536 * 32768\n46340 * 46340\n",
+      "output": "Error: overflow\nError: overflow\nError: overflow\n46340 * 46340 = 2147395600\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n9 % 0\n0 / 5\n1 + 2 + 3\n4 x 4\n12 / 5\n",
+      "output": "Error: division by zero\n0 / 5 = 0\nError: expected number operator number\nError: unknown operator x\n12 / 5 = 2\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n  8   *   -3  \n2.5 + 1\n99999999999 - 1\n",
+      "output": "8 * -3 = -24\nError: not a number\nError: not a number\n",
+      "hidden": true
+    }
+  ]
+}

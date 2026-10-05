@@ -1,0 +1,69 @@
+{
+  "title": "Word Index (flatMap)",
+  "topic": "Streams",
+  "difficulty": "Hard",
+  "order": 8,
+  "hints": [
+    "IntStream.range(0, lines.size()) gives the line indexes; each line becomes many (word, line number) pairs with flatMap.",
+    "Split a line into words with Arrays.stream(line.toLowerCase().split(\"[^a-z]+\")).filter(w -> !w.isEmpty()).",
+    "Collect with groupingBy(Entry::word, TreeMap::new, mapping(Entry::line, toCollection(TreeSet::new))): sorted words, sorted line numbers without repeats."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Índice de palavras (flatMap)",
+      "hints": [
+        "IntStream.range(0, lines.size()) dá os índices das linhas; cada linha vira vários pares (palavra, número da linha) com flatMap.",
+        "Divida uma linha em palavras com Arrays.stream(line.toLowerCase().split(\"[^a-z]+\")).filter(w -> !w.isEmpty()).",
+        "Colete com groupingBy(Entry::word, TreeMap::new, mapping(Entry::line, toCollection(TreeSet::new))): palavras ordenadas e números de linha ordenados, sem repetir."
+      ],
+      "mustContain": [
+        "Use a Stream API, por exemplo Arrays.stream(...) ou list.stream().",
+        "Use flatMap para transformar cada linha nas palavras dela."
+      ],
+      "mustNotContain": [
+        "Resolva sem laços for ou while: use operações de stream."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.|\\bIntStream\\b|Arrays\\s*\\.\\s*stream",
+      "message": "Use the Stream API, for example Arrays.stream(...) or list.stream()."
+    },
+    {
+      "pattern": "flatMap",
+      "message": "Use flatMap to turn each line into its words."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it without for or while loops: use stream operations instead."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\nThe cat sat.\nA dog and a cat!\nthe END\n",
+      "output": "a: 2\nand: 2\ncat: 1, 2\ndog: 2\nend: 3\nsat: 1\nthe: 1, 3\n"
+    },
+    {
+      "input": "1\nhello hello world\n",
+      "output": "hello: 1\nworld: 1\n"
+    },
+    {
+      "input": "2\nZebra apple\nAPPLE zebra Apple\n",
+      "output": "apple: 1, 2\nzebra: 1, 2\n",
+      "hidden": true
+    },
+    {
+      "input": "4\nOne\n\ntwo, one\n...three? two-one\n",
+      "output": "one: 1, 3, 4\nthree: 4\ntwo: 3, 4\n",
+      "hidden": true
+    },
+    {
+      "input": "3\nx\ny\nx y z\n",
+      "output": "x: 1, 3\ny: 2, 3\nz: 3\n",
+      "hidden": true
+    }
+  ]
+}

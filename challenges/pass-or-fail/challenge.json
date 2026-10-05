@@ -1,0 +1,69 @@
+{
+  "title": "Pass or Fail (partitioningBy)",
+  "topic": "Streams",
+  "difficulty": "Medium",
+  "order": 6,
+  "hints": [
+    "Arrays.stream(line.split(\" \")).map(...) turns each name:score entry into a Student record.",
+    "Collectors.partitioningBy(s -> s.score() >= 60) gives a Map<Boolean, List<Student>>: get(true) are the passed, get(false) the failed.",
+    "Join names with .map(Student::name).collect(Collectors.joining(\", \")); averageAsDouble comes from mapToInt(...).average()."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Aprovado ou reprovado (partitioningBy)",
+      "hints": [
+        "Arrays.stream(line.split(\" \")).map(...) transforma cada entrada nome:nota em um record Student.",
+        "Collectors.partitioningBy(s -> s.score() >= 60) dá um Map<Boolean, List<Student>>: get(true) são os aprovados, get(false) os reprovados.",
+        "Junte os nomes com .map(Student::name).collect(Collectors.joining(\", \")); a média vem de mapToInt(...).average()."
+      ],
+      "mustContain": [
+        "Use a Stream API, por exemplo Arrays.stream(...) ou list.stream().",
+        "Separe os alunos com Collectors.partitioningBy."
+      ],
+      "mustNotContain": [
+        "Resolva sem laços for ou while: use operações de stream."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\.stream\\s*\\(|\\bStream\\s*\\.|\\bIntStream\\b|Arrays\\s*\\.\\s*stream",
+      "message": "Use the Stream API, for example Arrays.stream(...) or list.stream()."
+    },
+    {
+      "pattern": "partitioningBy",
+      "message": "Split the students with Collectors.partitioningBy."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it without for or while loops: use stream operations instead."
+    }
+  ],
+  "tests": [
+    {
+      "input": "ana:72 bruno:45 carla:60\n",
+      "output": "Passed (2): ana, carla\nFailed (1): bruno\nAverage: 59.0\n"
+    },
+    {
+      "input": "dan:59\n",
+      "output": "Passed (0): none\nFailed (1): dan\nAverage: 59.0\n"
+    },
+    {
+      "input": "a:100 b:100 c:100\n",
+      "output": "Passed (3): a, b, c\nFailed (0): none\nAverage: 100.0\n",
+      "hidden": true
+    },
+    {
+      "input": "x:0 y:59 z:1\n",
+      "output": "Passed (0): none\nFailed (3): x, y, z\nAverage: 20.0\n",
+      "hidden": true
+    },
+    {
+      "input": "eva:61 fabio:30 gil:90 hana:59 ivo:60\n",
+      "output": "Passed (3): eva, gil, ivo\nFailed (2): fabio, hana\nAverage: 60.0\n",
+      "hidden": true
+    }
+  ]
+}

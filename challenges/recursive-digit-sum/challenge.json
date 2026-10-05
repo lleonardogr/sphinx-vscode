@@ -1,0 +1,79 @@
+{
+  "title": "Recursive Digit Sum",
+  "topic": "Recursion",
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "Base case: a number below 10 is its own digit sum.",
+    "Recursive case: the last digit (n % 10) plus the digit sum of the rest (n / 10).",
+    "digitalRoot can call digitSum, then call itself on the result until a single digit is left."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Soma dos dígitos recursiva",
+      "hints": [
+        "Caso base: um número abaixo de 10 é a própria soma dos dígitos.",
+        "Caso recursivo: o último dígito (n % 10) mais a soma dos dígitos do resto (n / 10).",
+        "digitalRoot pode chamar digitSum e depois chamar a si mesmo com o resultado até sobrar um dígito só."
+      ],
+      "mustContain": [
+        "Mantenha o método int digitSum(long n).",
+        "Mantenha o método int digitalRoot(long n)."
+      ],
+      "mustNotContain": [
+        "Resolva com recursão: sem laços for ou while.",
+        "Trabalhe com o número, não com o texto dele."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bint\\s+digitSum\\s*\\(\\s*long\\s+\\w+\\s*\\)",
+      "message": "Keep the method int digitSum(long n)."
+    },
+    {
+      "pattern": "\\bint\\s+digitalRoot\\s*\\(\\s*long\\s+\\w+\\s*\\)",
+      "message": "Keep the method int digitalRoot(long n)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it with recursion: no for or while loops."
+    },
+    {
+      "pattern": "String\\.valueOf|toString\\s*\\(|charAt|split",
+      "message": "Work with the number, not with its text."
+    }
+  ],
+  "tests": [
+    {
+      "input": "9875\n",
+      "output": "Digit sum: 29\nDigital root: 2\n"
+    },
+    {
+      "input": "7\n",
+      "output": "Digit sum: 7\nDigital root: 7\n"
+    },
+    {
+      "input": "0\n",
+      "output": "Digit sum: 0\nDigital root: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "999999999999999999\n",
+      "output": "Digit sum: 162\nDigital root: 9\n",
+      "hidden": true
+    },
+    {
+      "input": "1000000000000000000\n",
+      "output": "Digit sum: 1\nDigital root: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "38\n",
+      "output": "Digit sum: 11\nDigital root: 2\n",
+      "hidden": true
+    }
+  ]
+}

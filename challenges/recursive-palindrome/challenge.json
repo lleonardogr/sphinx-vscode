@@ -1,0 +1,84 @@
+{
+  "title": "Recursive Palindrome",
+  "topic": "Recursion",
+  "difficulty": "Medium",
+  "order": 4,
+  "hints": [
+    "Base case: a text with 0 or 1 characters is a palindrome.",
+    "If the first and last characters differ, it is not a palindrome.",
+    "Otherwise, the answer is whether the middle part, text.substring(1, text.length() - 1), is a palindrome."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Palíndromo recursivo",
+      "hints": [
+        "Caso base: um texto com 0 ou 1 caractere é palíndromo.",
+        "Se o primeiro e o último caracteres forem diferentes, não é palíndromo.",
+        "Senão, a resposta é se o meio, text.substring(1, text.length() - 1), é palíndromo."
+      ],
+      "mustContain": [
+        "Mantenha o método boolean isPalindrome(String text).",
+        "Chame isPalindrome com uma parte menor do texto."
+      ],
+      "mustNotContain": [
+        "Resolva com recursão: sem laços for ou while.",
+        "Compare os caracteres de forma recursiva em vez de inverter o texto."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bboolean\\s+isPalindrome\\s*\\(\\s*String\\s+\\w+\\s*\\)",
+      "message": "Keep the method boolean isPalindrome(String text)."
+    },
+    {
+      "pattern": "isPalindrome\\s*\\([^)]*substring|isPalindrome\\s*\\(\\s*\\w+\\s*,",
+      "message": "Call isPalindrome on a smaller part of the text."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it with recursion: no for or while loops."
+    },
+    {
+      "pattern": "\\breverse\\s*\\(",
+      "message": "Compare characters recursively instead of reversing the text."
+    }
+  ],
+  "tests": [
+    {
+      "input": "Racecar\n",
+      "output": "\"Racecar\" is a palindrome\n"
+    },
+    {
+      "input": "hello\n",
+      "output": "\"hello\" is not a palindrome\n"
+    },
+    {
+      "input": "A man, a plan, a canal: Panama!\n",
+      "output": "\"A man, a plan, a canal: Panama!\" is a palindrome\n",
+      "hidden": true
+    },
+    {
+      "input": "x\n",
+      "output": "\"x\" is a palindrome\n",
+      "hidden": true
+    },
+    {
+      "input": "Was it a car or a cat I saw?\n",
+      "output": "\"Was it a car or a cat I saw?\" is a palindrome\n",
+      "hidden": true
+    },
+    {
+      "input": "12321 and 12321\n",
+      "output": "\"12321 and 12321\" is not a palindrome\n",
+      "hidden": true
+    },
+    {
+      "input": "ab\n",
+      "output": "\"ab\" is not a palindrome\n",
+      "hidden": true
+    }
+  ]
+}

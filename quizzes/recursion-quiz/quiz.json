@@ -1,0 +1,121 @@
+{
+  "title": "Recursion Quiz",
+  "topic": "Recursion",
+  "description": "Base cases, recursive cases, tracing calls and what goes wrong without a base case.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "int f(int n) {\n    if (n == 0) return 0;\n    return n + f(n - 1);\n}\n\nvoid main() {\n    IO.println(f(4));\n}",
+      "answer": "10",
+      "explanation": "`f(4) = 4 + 3 + 2 + 1 + 0 = 10`."
+    },
+    {
+      "type": "output",
+      "code": "void count(int n) {\n    if (n == 0) return;\n    count(n - 1);\n    IO.print(n + \" \");\n}\n\nvoid main() {\n    count(3);\n}",
+      "answer": "1 2 3",
+      "explanation": "The print comes **after** the recursive call, so the deepest call (n = 1) prints first."
+    },
+    {
+      "type": "choice",
+      "prompt": "What happens when a recursive method has no base case?",
+      "options": [
+        "It returns 0",
+        "It loops forever without errors",
+        "It throws a StackOverflowError",
+        "It doesn't compile"
+      ],
+      "answer": 2,
+      "explanation": "Each call adds a frame to the call stack. Without a base case the stack fills up and Java throws `StackOverflowError`."
+    },
+    {
+      "type": "output",
+      "code": "String rev(String s) {\n    if (s.isEmpty()) return \"\";\n    return rev(s.substring(1)) + s.charAt(0);\n}\n\nvoid main() {\n    IO.println(rev(\"abc\"));\n}",
+      "answer": "cba",
+      "explanation": "Each call moves the first character to the end of the reversed rest."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "Every recursive solution can also be written with a loop.",
+      "answer": true,
+      "explanation": "Yes, possibly with an explicit stack. Recursion is often just the clearer way to express the idea."
+    },
+    {
+      "type": "output",
+      "code": "int pow2(int n) {\n    return n == 0 ? 1 : 2 * pow2(n - 1);\n}\n\nvoid main() {\n    IO.println(pow2(10));\n}",
+      "answer": "1024",
+      "explanation": "Each level doubles the result of the level below: 2¹⁰ = 1024."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why is the plain recursive `fib(n) = fib(n - 1) + fib(n - 2)` slow for large `n`?",
+      "options": [
+        "Recursion is always slow in Java",
+        "It computes the same values again and again",
+        "long arithmetic is slow",
+        "The base case is wrong"
+      ],
+      "answer": 1,
+      "explanation": "The number of calls grows exponentially because subproblems repeat. Memoization stores each answer once."
+    },
+    {
+      "type": "short",
+      "prompt": "What is the name of the case that stops the recursion?",
+      "answer": [
+        "base case",
+        "base"
+      ],
+      "explanation": "The **base case** answers directly, without another recursive call."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de recursão",
+      "description": "Casos base, casos recursivos, rastrear chamadas e o que dá errado sem caso base.",
+      "questions": [
+        {
+          "explanation": "`f(4) = 4 + 3 + 2 + 1 + 0 = 10`."
+        },
+        {
+          "explanation": "O print vem **depois** da chamada recursiva, então a chamada mais funda (n = 1) imprime primeiro."
+        },
+        {
+          "prompt": "O que acontece quando um método recursivo não tem caso base?",
+          "options": [
+            "Ele devolve 0",
+            "Ele roda para sempre sem erro",
+            "Ele lança um StackOverflowError",
+            "Ele não compila"
+          ],
+          "explanation": "Cada chamada coloca um quadro na pilha de chamadas. Sem caso base a pilha enche e o Java lança `StackOverflowError`."
+        },
+        {
+          "explanation": "Cada chamada leva o primeiro caractere para o fim do resto invertido."
+        },
+        {
+          "prompt": "Toda solução recursiva também pode ser escrita com um laço.",
+          "explanation": "Sim, talvez com uma pilha explícita. A recursão muitas vezes só é o jeito mais claro de escrever a ideia."
+        },
+        {
+          "explanation": "Cada nível dobra o resultado do nível de baixo: 2¹⁰ = 1024."
+        },
+        {
+          "prompt": "Por que o `fib(n) = fib(n - 1) + fib(n - 2)` recursivo simples é lento para `n` grande?",
+          "options": [
+            "Recursão é sempre lenta em Java",
+            "Ele calcula os mesmos valores de novo e de novo",
+            "Aritmética com long é lenta",
+            "O caso base está errado"
+          ],
+          "explanation": "O número de chamadas cresce exponencialmente porque os subproblemas se repetem. A memoização guarda cada resposta uma vez."
+        },
+        {
+          "prompt": "Como se chama (em inglês ou português) o caso que para a recursão?",
+          "explanation": "O **caso base** responde direto, sem outra chamada recursiva.",
+          "answer": [
+            "caso base"
+          ]
+        }
+      ]
+    }
+  }
+}

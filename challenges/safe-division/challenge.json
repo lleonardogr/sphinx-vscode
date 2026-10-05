@@ -1,0 +1,64 @@
+{
+  "title": "Safe Division (try / catch)",
+  "topic": "Exceptions",
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Put the division inside try { … }. If it fails, Java jumps to the catch block.",
+    "Dividing an int by zero throws an ArithmeticException.",
+    "Catch that exception and print Cannot divide by zero; the loop then goes on to the next line."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Divisão segura (try / catch)",
+      "hints": [
+        "Coloque a divisão dentro de try { … }. Se ela falhar, o Java pula para o bloco catch.",
+        "Dividir um int por zero lança uma ArithmeticException.",
+        "Capture essa exceção e imprima Cannot divide by zero; o laço segue para a próxima linha."
+      ],
+      "mustContain": [
+        "Capture a ArithmeticException que a divisão por zero lança."
+      ],
+      "mustNotContain": [
+        "Não teste o divisor você mesmo: deixe a exceção avisar."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "catch\\s*\\(\\s*ArithmeticException\\s+\\w+\\s*\\)",
+      "message": "Catch the ArithmeticException that dividing by zero throws."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "[!=]=\\s*0\\b|\\b0\\s*[!=]=",
+      "message": "Don't test the divisor yourself: let the exception tell you."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\n10 2\n7 0\n-9 4\n",
+      "output": "10 / 2 = 5\nCannot divide by zero\n-9 / 4 = -2\n"
+    },
+    {
+      "input": "1\n0 5\n",
+      "output": "0 / 5 = 0\n"
+    },
+    {
+      "input": "2\n0 0\n5 0\n",
+      "output": "Cannot divide by zero\nCannot divide by zero\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n100 7\n-100 7\n1 1\n3 0\n",
+      "output": "100 / 7 = 14\n-100 / 7 = -14\n1 / 1 = 1\nCannot divide by zero\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n2147483647 1\n-2147483648 2\n",
+      "output": "2147483647 / 1 = 2147483647\n-2147483648 / 2 = -1073741824\n",
+      "hidden": true
+    }
+  ]
+}

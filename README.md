@@ -16,7 +16,7 @@ HackerRank / LeetCode-style coding challenges right inside VS Code, in **English
 
 Students pick a challenge from the **Sphynx** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
 
-## The learning path (80 challenges)
+## The learning path (100 challenges)
 
 The sidebar lists numbered **units** in teaching order. Each unit runs from easy to harder challenges, ends with its quiz, and the last unit of a stage ends with a bigger **test** that mixes everything so far.
 
@@ -29,13 +29,13 @@ The sidebar lists numbered **units** in teaching order. Each unit runs from easy
 | 5 · Methods | Max of Three · Temperature Table · Prime Numbers · Power · GCD and LCM · Overloaded `area()` · Perfect Numbers (helper methods) | Methods Quiz |
 | 6 · Arrays | Array Sum · Largest and Smallest · Reverse an Array · Count Occurrences · Above Average (for-each) · Second Largest · Rotate an Array · Bubble Sort · Matrix Sums (2D) · Binary Search · Tic-Tac-Toe Winner (2D) | Arrays Quiz |
 | 7 · Collections | To-Do List (`ArrayList`) · Unique Words (`HashSet`) · First Occurrences (`LinkedHashSet`) · Word Frequency (`HashMap`) · Phone Book (`TreeMap`) · Ticket Queue (`ArrayDeque`) · Weekly Hours (`EnumMap`) · Balanced Brackets (stack) · Most Common Words | Collections Quiz · Tests: Grade Book Menu · Inventory Menu |
-| 8 · Object-Oriented Programming | Your First Class · Rectangle Class · Book with `toString()` · Bank Account (encapsulation) · Shapes (inheritance) · Animals (interfaces) | |
-| 11 · Lambdas & Streams | Even Squares (`filter`/`map`) · Stream Statistics · Clean Up a Name List (`distinct`/`sorted`) · Group Words by Length (`groupingBy`) · Top 3 Scorers (comparators, `limit`). Solved without loops. | |
+| 8 · Object-Oriented Programming | Your First Class · Rectangle Class · Book with `toString()` · Points as Records · ID Generator (`static`) · Bank Account (encapsulation) · Coins (`enum`) · Shapes (inheritance) · Animals (interfaces) · Equal Points (`equals`/`hashCode`) · Payroll (polymorphism) | OOP Quiz · Test: Library System |
+| 9 · Exceptions | Safe Division (`try`/`catch`) · Parse Numbers · Ask Until Valid · Insufficient Funds (custom exception) · Robust Calculator | Exceptions Quiz |
+| 10 · Recursion | Recursive Factorial · Recursive Digit Sum · Fibonacci (memoization) · Recursive Palindrome · Tower of Hanoi | Recursion Quiz |
+| 11 · Lambdas & Streams | Sort with a Comparator (lambdas) · Even Squares (`filter`/`map`) · Stream Statistics · Clean Up a Name List (`distinct`/`sorted`) · Pass or Fail (`partitioningBy`) · Group Words by Length (`groupingBy`) · Top 3 Scorers (comparators, `limit`) · Word Index (`flatMap`). Solved without loops. | Streams Quiz · Test: Student Report |
 | Custom | Word Counter · Grade Report · Caesar Cipher: [example custom challenges](custom/) to copy when writing your own | |
 
-Two exams close the first stages, each with a quiz and three private coding questions: **Exam 1: Basics to Strings** (units 1–4, 60 minutes) and **Exam 2: Building Blocks** (units 5–7, 75 minutes).
-
-On the way to 1.0: a quiz for every unit, more challenges in each unit (up to Hard), and the **9 · Exceptions** and **10 · Recursion** units.
+Three exams close the stages, each with a quiz and three private coding questions: **Exam 1: Basics to Strings** (units 1–4, 60 minutes), **Exam 2: Building Blocks** (units 5–7, 75 minutes) and the **Final Exam** (the whole course, focused on units 8–11, 120 minutes).
 
 ## Features
 
@@ -53,7 +53,7 @@ On the way to 1.0: a quiz for every unit, more challenges in each unit (up to Ha
 - **Exams**: timed, graded sets of questions with a countdown, limited submissions, partial credit and a results file to hand in. An exam can be **open** (hints, AI and the internet allowed) or **closed** (hints and AI off, copying and pasting blocked, time outside VS Code recorded or limited). Teachers re-grade the results files with **Verify Exam Results**. See [Exams](docs/exams.md).
 - **Import**: one button in the sidebar imports the challenges, tests and exams a teacher shared, as a `.zip` or a folder. They're copied into the extension's library, solutions can be stripped for students, and **Remove Imported…** takes them out again. See [Sharing challenges with students](docs/creating-challenges.md#sharing-challenges-with-students).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
-- **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/52 solved` counter in the status bar.
+- **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/100 solved` counter in the status bar.
 - **Group by**: the filter button at the top of the sidebar groups challenges by **learning path** (units, the default), **difficulty** (Easy, Medium, Hard, then quizzes) or **progress** (not started, in progress, solved). The choice is remembered.
 
 > **Upgrading from Tech Challenges?** Sphynx is the same extension with a new name. Install Sphynx and uninstall Tech Challenges. Your settings (`techChallenges.*` → `sphynx.*`) are copied over automatically, and your code in `tech-challenges/` keeps being used. Solved-challenge progress and saved AI keys start fresh.

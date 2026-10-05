@@ -1,0 +1,34 @@
+{
+  "title": "Final Exam",
+  "description": "Covers the whole course, with a focus on units 8 to 11: objects, exceptions, recursion and streams. A quiz and three coding questions.",
+  "translations": {
+    "pt-br": {
+      "title": "Prova final",
+      "description": "Cobre o curso inteiro, com foco nas unidades 8 a 11: objetos, exceções, recursão e streams. Um quiz e três questões de código."
+    }
+  },
+  "durationMinutes": 120,
+  "mode": "closed",
+  "maxSubmissions": 3,
+  "restrictions": {
+    "level": "standard"
+  },
+  "questions": [
+    {
+      "id": "final-exam-quiz",
+      "points": 20
+    },
+    {
+      "id": "vending-machine",
+      "points": 25
+    },
+    {
+      "id": "count-paths",
+      "points": 25
+    },
+    {
+      "id": "sales-report",
+      "points": 30
+    }
+  ]
+}

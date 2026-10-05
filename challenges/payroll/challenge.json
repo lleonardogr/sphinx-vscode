@@ -1,0 +1,69 @@
+{
+  "title": "Payroll (Polymorphism)",
+  "topic": "OOP",
+  "difficulty": "Hard",
+  "order": 11,
+  "hints": [
+    "Each subclass calls super(name) first, then stores its own fields, and overrides type() and pay().",
+    "Hourly: the first 160 hours are paid at the normal rate and each hour beyond at 1.5 times the rate.",
+    "Keep everyone in a List<Employee> and call e.pay() in one loop: Java runs the right version for each object."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Folha de pagamento (polimorfismo)",
+      "hints": [
+        "Cada subclasse chama super(name) primeiro, depois guarda os próprios campos, e sobrescreve type() e pay().",
+        "Hourly: as primeiras 160 horas são pagas pelo valor normal e cada hora a mais por 1,5 vez o valor.",
+        "Guarde todo mundo em uma List<Employee> e chame e.pay() em um laço só: o Java roda a versão certa para cada objeto."
+      ],
+      "mustContain": [
+        "Crie a classe Hourly extends Employee.",
+        "Crie a classe Commissioned extends Employee."
+      ],
+      "mustNotContain": [
+        "Deixe cada classe calcular o próprio pagamento: nada de instanceof."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bclass\\s+Hourly\\s+extends\\s+Employee\\b",
+      "message": "Create class Hourly extends Employee."
+    },
+    {
+      "pattern": "\\bclass\\s+Commissioned\\s+extends\\s+Employee\\b",
+      "message": "Create class Commissioned extends Employee."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\binstanceof\\b",
+      "message": "Let each class compute its own pay: no instanceof checks."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\nsalaried Ana 5000\nhourly Bruno 25 170\ncommission Carla 2000 30000 5\n",
+      "output": "Ana (Salaried): 5000.00\nBruno (Hourly): 4375.00\nCarla (Commissioned): 3500.00\nTotal payroll: 12875.00\nTop earner: Ana\n"
+    },
+    {
+      "input": "1\nhourly Dan 10 160\n",
+      "output": "Dan (Hourly): 1600.00\nTotal payroll: 1600.00\nTop earner: Dan\n"
+    },
+    {
+      "input": "2\nhourly Eva 20 100\nhourly Fabio 20 200\n",
+      "output": "Eva (Hourly): 2000.00\nFabio (Hourly): 4400.00\nTotal payroll: 6400.00\nTop earner: Fabio\n",
+      "hidden": true
+    },
+    {
+      "input": "3\ncommission Gil 1000 0 10\nsalaried Hana 1500.50\ncommission Ivo 0 12345 2.5\n",
+      "output": "Gil (Commissioned): 1000.00\nHana (Salaried): 1500.50\nIvo (Commissioned): 308.63\nTotal payroll: 2809.13\nTop earner: Hana\n",
+      "hidden": true
+    },
+    {
+      "input": "2\nsalaried Joao 3000\nsalaried Kai 3000\n",
+      "output": "Joao (Salaried): 3000.00\nKai (Salaried): 3000.00\nTotal payroll: 6000.00\nTop earner: Joao\n",
+      "hidden": true
+    }
+  ]
+}
