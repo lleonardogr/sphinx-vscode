@@ -36,6 +36,16 @@ export class QuizProgress {
     this.changed.fire();
   }
 
+  /** Forgets one quiz's best score and attempts. */
+  async clear(id: string): Promise<void> {
+    const all = { ...this.state.get<Record<string, QuizScore>>(KEY, {}) };
+    if (id in all) {
+      delete all[id];
+      await this.state.update(KEY, all);
+      this.changed.fire();
+    }
+  }
+
   async reset(): Promise<void> {
     await this.state.update(KEY, undefined);
     this.changed.fire();
@@ -121,6 +131,11 @@ export class QuizController implements vscode.Disposable {
     }
     const score = this.progress.get(quiz.id);
     await this.panel.show(quiz, { best: score ? `${score.best} / ${score.total}` : undefined });
+  }
+
+  /** Whether the quiz panel is showing this quiz. */
+  isOpen(id: string): boolean {
+    return this.panel.current?.id === id;
   }
 
   /** Re-opens the current quiz, e.g. after the language changed. */

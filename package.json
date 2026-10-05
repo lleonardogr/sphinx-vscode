@@ -88,6 +88,24 @@
         "icon": "$(discard)"
       },
       {
+        "command": "sphynx.resetChallenge",
+        "title": "%command.resetChallenge%",
+        "category": "Sphynx",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "sphynx.resetQuiz",
+        "title": "%command.resetQuiz%",
+        "category": "Sphynx",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "sphynx.resetAllChallenges",
+        "title": "%command.resetAllChallenges%",
+        "category": "Sphynx",
+        "icon": "$(clear-all)"
+      },
+      {
         "command": "sphynx.refresh",
         "title": "%command.refresh%",
         "category": "Sphynx",
@@ -226,8 +244,9 @@
           "group": "navigation@1"
         },
         {
-          "command": "sphynx.resetProgress",
-          "when": "view == sphynx.list"
+          "command": "sphynx.resetAllChallenges",
+          "when": "view == sphynx.list",
+          "group": "navigation@2"
         },
         {
           "command": "sphynx.validateChallenges",
@@ -252,8 +271,29 @@
       ],
       "view/item/context": [
         {
+          "command": "sphynx.resetChallenge",
+          "when": "view == sphynx.list && viewItem == challenge",
+          "group": "inline"
+        },
+        {
+          "command": "sphynx.resetChallenge",
+          "when": "view == sphynx.list && viewItem == challenge",
+          "group": "reset@2"
+        },
+        {
           "command": "sphynx.resetCode",
-          "when": "view == sphynx.list && viewItem == challenge"
+          "when": "view == sphynx.list && viewItem == challenge",
+          "group": "reset@1"
+        },
+        {
+          "command": "sphynx.resetQuiz",
+          "when": "view == sphynx.list && viewItem == quiz",
+          "group": "inline"
+        },
+        {
+          "command": "sphynx.resetQuiz",
+          "when": "view == sphynx.list && viewItem == quiz",
+          "group": "reset"
         },
         {
           "command": "sphynx.startExam",
@@ -312,6 +352,10 @@
         {
           "command": "sphynx.askAiHint",
           "when": "sphynx.isChallengeFile"
+        },
+        {
+          "command": "sphynx.resetQuiz",
+          "when": "false"
         },
         {
           "command": "sphynx.copyBlocked",
