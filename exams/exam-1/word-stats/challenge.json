@@ -1,0 +1,49 @@
+{
+  "title": "Word Stats",
+  "difficulty": "Hard",
+  "hints": [
+    "trim() and split(\" +\") give you the words, even with several spaces between them.",
+    "Keep the longest word in a variable and replace it only when a word is strictly longer, so the first one wins a tie.",
+    "Count vowels with a loop over the characters of the whole line, comparing in lowercase."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Estatísticas das palavras",
+      "hints": [
+        "trim() e split(\" +\") dão as palavras, mesmo com vários espaços entre elas.",
+        "Guarde a palavra mais longa em uma variável e troque só quando uma palavra for maior de verdade, assim a primeira ganha no empate.",
+        "Conte as vogais com um laço pelos caracteres da linha inteira, comparando em minúsculas."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "The quick brown fox jumps\n",
+      "output": "Words: 5\nLongest: quick\nVowels: 6\n"
+    },
+    {
+      "input": "Java\n",
+      "output": "Words: 1\nLongest: Java\nVowels: 2\n"
+    },
+    {
+      "input": "  an  apple   a day  \n",
+      "output": "Words: 4\nLongest: apple\nVowels: 5\n",
+      "hidden": true
+    },
+    {
+      "input": "Programming is fun and Programming is hard\n",
+      "output": "Words: 7\nLongest: Programming\nVowels: 11\n",
+      "hidden": true
+    },
+    {
+      "input": "AEIOU aeiou xyz\n",
+      "output": "Words: 3\nLongest: AEIOU\nVowels: 10\n",
+      "hidden": true
+    },
+    {
+      "input": "cat dog pig\n",
+      "output": "Words: 3\nLongest: cat\nVowels: 3\n",
+      "hidden": true
+    }
+  ]
+}

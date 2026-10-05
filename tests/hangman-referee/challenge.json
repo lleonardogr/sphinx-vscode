@@ -1,0 +1,64 @@
+{
+  "title": "Hangman Referee",
+  "topic": "Tests",
+  "skills": [
+    "Basics",
+    "Conditionals",
+    "Loops",
+    "Strings"
+  ],
+  "unit": "Strings",
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "Keep the letters guessed so far in a String: guessed += letter; then guessed.indexOf(letter) >= 0 tells you whether it was already guessed.",
+    "Write the Word: line with a loop over the secret: each letter that was guessed is shown, the others are _, with a space between them.",
+    "The player wins when every letter of the secret is in guessed, and loses when the lives reach 0.",
+    "Use a while loop that stops when the game is won or lost, and check for invalid and repeated guesses before anything else."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Juiz da forca",
+      "hints": [
+        "Guarde as letras já chutadas em uma String: guessed += letter; depois guessed.indexOf(letter) >= 0 diz se ela já foi chutada.",
+        "Monte a linha Word: com um laço sobre a palavra secreta: cada letra chutada aparece, as outras viram _, com um espaço entre elas.",
+        "O jogador ganha quando toda letra da palavra está em guessed, e perde quando as vidas chegam a 0.",
+        "Use um while que para quando o jogo foi ganho ou perdido, e trate os palpites inválidos e repetidos antes de tudo."
+      ],
+      "mustContain": [
+        "Use um laço para continuar lendo palpites."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(while|for)\\b",
+      "message": "Use a loop to keep reading guesses."
+    }
+  ],
+  "tests": [
+    {
+      "input": "java\na\nx\nJ\nv\n",
+      "output": "Word: _ _ _ _\nGood guess!\nWord: _ a _ a\nWrong! Lives left: 5\nWord: _ a _ a\nGood guess!\nWord: j a _ a\nGood guess!\nWord: j a v a\nYou win! The word was java\n"
+    },
+    {
+      "input": "cat\nz\nq\nab\nz\nw\ne\nr\ny\n",
+      "output": "Word: _ _ _\nWrong! Lives left: 5\nWord: _ _ _\nWrong! Lives left: 4\nWord: _ _ _\nInvalid guess\nAlready guessed: z\nWrong! Lives left: 3\nWord: _ _ _\nWrong! Lives left: 2\nWord: _ _ _\nWrong! Lives left: 1\nWord: _ _ _\nWrong! Lives left: 0\nWord: _ _ _\nYou lose! The word was cat\n"
+    },
+    {
+      "input": "hello\nh\ne\nl\no\n",
+      "output": "Word: _ _ _ _ _\nGood guess!\nWord: h _ _ _ _\nGood guess!\nWord: h e _ _ _\nGood guess!\nWord: h e l l _\nGood guess!\nWord: h e l l o\nYou win! The word was hello\n",
+      "hidden": true
+    },
+    {
+      "input": "banana\n1\nb\nB\nn\nx\na\n",
+      "output": "Word: _ _ _ _ _ _\nInvalid guess\nGood guess!\nWord: b _ _ _ _ _\nAlready guessed: b\nGood guess!\nWord: b _ n _ n _\nWrong! Lives left: 5\nWord: b _ n _ n _\nGood guess!\nWord: b a n a n a\nYou win! The word was banana\n",
+      "hidden": true
+    },
+    {
+      "input": "code\na\nb\nf\ng\nh\ni\n",
+      "output": "Word: _ _ _ _\nWrong! Lives left: 5\nWord: _ _ _ _\nWrong! Lives left: 4\nWord: _ _ _ _\nWrong! Lives left: 3\nWord: _ _ _ _\nWrong! Lives left: 2\nWord: _ _ _ _\nWrong! Lives left: 1\nWord: _ _ _ _\nWrong! Lives left: 0\nWord: _ _ _ _\nYou lose! The word was code\n",
+      "hidden": true
+    }
+  ]
+}

@@ -7,6 +7,16 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Added
 
 - **Group challenges by** learning path, difficulty or progress: a new filter button at the top of the sidebar (and the **Sphynx: Group Challenges By…** command). In the difficulty and progress views each challenge shows its unit, items keep the teaching order inside each group, and the choice is remembered.
+- **New content for units 1–4**, in English and Portuguese:
+  - 12 challenges: Time Converter and Split the Bill (Basics); Triangle Classifier and Shipping Cost (Conditionals); Number Pyramid, Guess the Number and Primes up to N (Loops); Initials, Title Case, Password Checker, Anagrams and String Compression (Strings).
+  - **Hangman Referee**, a test that closes the Strings unit.
+  - **Conditionals Quiz** and **Strings Quiz**.
+  - **Exam 1: Basics to Strings**: a 60-minute closed exam with a quiz and three private coding questions (Parking Fee, Digit Statistics, Word Stats).
+
+### Changed
+
+- The Loops and Conditionals Quiz is now the **Loops Quiz** (id `loops-quiz`): its ternary and switch questions moved to the Conditionals Quiz, and it has two new loop questions. Best practice scores of the old quiz are not carried over.
+- The Grade Book Menu and Inventory Menu tests moved to orders 3 and 4, after Hangman Referee.
 
 ## [0.8.0] - 2026-10-05
 

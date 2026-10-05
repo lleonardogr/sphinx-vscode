@@ -1,0 +1,54 @@
+{
+  "title": "Parking Fee",
+  "difficulty": "Easy",
+  "hints": [
+    "Up to 30 minutes is free: check that first.",
+    "Count started hours by rounding up: (minutes + 59) / 60.",
+    "Use Math.min to cap the fee at 40.00."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Estacionamento",
+      "hints": [
+        "Até 30 minutos é grátis: teste isso primeiro.",
+        "Conte as horas começadas arredondando para cima: (minutes + 59) / 60.",
+        "Use Math.min para limitar o valor a 40.00."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "125\n",
+      "output": "Fee: 15.00\n"
+    },
+    {
+      "input": "20\n",
+      "output": "Fee: free\n"
+    },
+    {
+      "input": "30\n",
+      "output": "Fee: free\n",
+      "hidden": true
+    },
+    {
+      "input": "31\n",
+      "output": "Fee: 5.00\n",
+      "hidden": true
+    },
+    {
+      "input": "60\n",
+      "output": "Fee: 5.00\n",
+      "hidden": true
+    },
+    {
+      "input": "600\n",
+      "output": "Fee: 40.00\n",
+      "hidden": true
+    },
+    {
+      "input": "481\n",
+      "output": "Fee: 40.00\n",
+      "hidden": true
+    }
+  ]
+}

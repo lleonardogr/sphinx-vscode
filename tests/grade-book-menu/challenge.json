@@ -10,7 +10,7 @@
   ],
   "unit": "Collections",
   "difficulty": "Medium",
-  "order": 2,
+  "order": 3,
   "hints": [
     "Create the List<Integer> before the loop. If you create it inside, it starts empty every time.",
     "Only option 1 reads an extra line (the grade). Options 2, 3 and 4 read nothing.",

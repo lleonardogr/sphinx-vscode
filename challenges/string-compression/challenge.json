@@ -1,0 +1,65 @@
+{
+  "title": "String Compression",
+  "topic": "Strings",
+  "difficulty": "Hard",
+  "order": 8,
+  "hints": [
+    "Walk through the text and count how many times the current letter repeats in a row.",
+    "When the next letter is different (or the text ends), append the letter and its count to a StringBuilder, then start counting again.",
+    "At the end, compare lengths: print the compressed text only if it is shorter than the original."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Compressão de texto",
+      "hints": [
+        "Percorra o texto contando quantas vezes a letra atual se repete seguida.",
+        "Quando a próxima letra for diferente (ou o texto acabar), acrescente a letra e a contagem a um StringBuilder e recomece a contar.",
+        "No fim, compare os tamanhos: imprima o texto comprimido só se ele for menor que o original."
+      ],
+      "mustContain": [
+        "Monte o texto comprimido com um StringBuilder."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "StringBuilder",
+      "message": "Build the compressed text with a StringBuilder."
+    }
+  ],
+  "tests": [
+    {
+      "input": "aaaabbbc\n",
+      "output": "a4b3c1\n"
+    },
+    {
+      "input": "abc\n",
+      "output": "abc\n"
+    },
+    {
+      "input": "aaaaaaaaaaaa\n",
+      "output": "a12\n",
+      "hidden": true
+    },
+    {
+      "input": "a\n",
+      "output": "a\n",
+      "hidden": true
+    },
+    {
+      "input": "aabbcc\n",
+      "output": "aabbcc\n",
+      "hidden": true
+    },
+    {
+      "input": "aaabbbbbbbbbbbbccd\n",
+      "output": "a3b12c2d1\n",
+      "hidden": true
+    },
+    {
+      "input": "zzzzyzzzz\n",
+      "output": "z4y1z4\n",
+      "hidden": true
+    }
+  ]
+}

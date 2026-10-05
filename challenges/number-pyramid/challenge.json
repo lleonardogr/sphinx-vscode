@@ -1,0 +1,60 @@
+{
+  "title": "Number Pyramid",
+  "topic": "Loops",
+  "difficulty": "Medium",
+  "order": 9,
+  "hints": [
+    "Use one loop for the rows (row goes from 1 to n) and loops inside it to build each row.",
+    "Row r counts up from 1 to r, then back down from r - 1 to 1.",
+    "Build each row in a String or StringBuilder and add a space only between numbers, so no line ends with a space."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Pirâmide de números",
+      "hints": [
+        "Use um laço para as linhas (row vai de 1 a n) e laços dentro dele para montar cada linha.",
+        "A linha r conta de 1 até r e depois volta de r - 1 até 1.",
+        "Monte cada linha em uma String ou StringBuilder e coloque espaço só entre os números, para nenhuma linha terminar com espaço."
+      ],
+      "mustContain": [
+        "Use laços para montar a pirâmide."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bfor\\b|\\bwhile\\b",
+      "message": "Use loops to build the pyramid."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\n",
+      "output": "1\n1 2 1\n1 2 3 2 1\n"
+    },
+    {
+      "input": "1\n",
+      "output": "1\n"
+    },
+    {
+      "input": "4\n",
+      "output": "1\n1 2 1\n1 2 3 2 1\n1 2 3 4 3 2 1\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n",
+      "output": "1\n1 2 1\n1 2 3 2 1\n1 2 3 4 3 2 1\n1 2 3 4 5 4 3 2 1\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n",
+      "output": "1\n1 2 1\n",
+      "hidden": true
+    },
+    {
+      "input": "9\n",
+      "output": "1\n1 2 1\n1 2 3 2 1\n1 2 3 4 3 2 1\n1 2 3 4 5 4 3 2 1\n1 2 3 4 5 6 5 4 3 2 1\n1 2 3 4 5 6 7 6 5 4 3 2 1\n1 2 3 4 5 6 7 8 7 6 5 4 3 2 1\n1 2 3 4 5 6 7 8 9 8 7 6 5 4 3 2 1\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "title": "Guess the Number",
+  "topic": "Loops",
+  "difficulty": "Medium",
+  "order": 10,
+  "hints": [
+    "Read the secret number first, then keep reading guesses in a loop.",
+    "You don't know how many guesses there will be: a while loop that stops at the right guess fits well.",
+    "Count every guess, including the correct one."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Adivinhe o número",
+      "hints": [
+        "Leia o número secreto primeiro e depois continue lendo palpites em um laço.",
+        "Você não sabe quantos palpites virão: um while que para no palpite certo funciona bem.",
+        "Conte todos os palpites, inclusive o certo."
+      ],
+      "mustContain": [
+        "Use um laço para ler os palpites."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bwhile\\b|\\bfor\\b",
+      "message": "Use a loop to read the guesses."
+    }
+  ],
+  "tests": [
+    {
+      "input": "42\n50\n25\n42\n",
+      "output": "Too high\nToo low\nCorrect! You needed 3 guesses.\n"
+    },
+    {
+      "input": "7\n7\n",
+      "output": "Correct! You needed 1 guesses.\n"
+    },
+    {
+      "input": "100\n1\n50\n75\n88\n94\n97\n99\n100\n",
+      "output": "Too low\nToo low\nToo low\nToo low\nToo low\nToo low\nToo low\nCorrect! You needed 8 guesses.\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n2\n1\n",
+      "output": "Too high\nCorrect! You needed 2 guesses.\n",
+      "hidden": true
+    },
+    {
+      "input": "60\n30\n90\n60\n",
+      "output": "Too low\nToo high\nCorrect! You needed 3 guesses.\n",
+      "hidden": true
+    },
+    {
+      "input": "13\n12\n14\n13\n",
+      "output": "Too low\nToo high\nCorrect! You needed 3 guesses.\n",
+      "hidden": true
+    }
+  ]
+}

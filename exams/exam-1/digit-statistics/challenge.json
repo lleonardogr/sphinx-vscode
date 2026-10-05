@@ -1,0 +1,67 @@
+{
+  "title": "Digit Statistics",
+  "difficulty": "Medium",
+  "hints": [
+    "number % 10 is the last digit and number / 10 removes it.",
+    "Repeat while the number is greater than 0, updating a counter, a sum, the largest digit and the even count.",
+    "Zero has one digit: handle it so your loop still counts it, for example with a do … while."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Estatísticas dos dígitos",
+      "hints": [
+        "number % 10 é o último dígito e number / 10 o remove.",
+        "Repita enquanto o número for maior que 0, atualizando um contador, uma soma, o maior dígito e a quantidade de pares.",
+        "Zero tem um dígito: trate esse caso para o laço contar ele, por exemplo com um do … while."
+      ],
+      "mustContain": [
+        "Use % 10 para pegar os dígitos."
+      ],
+      "mustNotContain": [
+        "Trabalhe com o próprio número, sem transformar em String."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "%",
+      "message": "Use % 10 to get the digits."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\bString\\.valueOf\\b|toString\\(|\\bsplit\\b|charAt",
+      "message": "Work with the number itself, without turning it into a String."
+    }
+  ],
+  "tests": [
+    {
+      "input": "40725\n",
+      "output": "Digits: 5\nSum: 18\nLargest: 7\nEven digits: 3\n"
+    },
+    {
+      "input": "8\n",
+      "output": "Digits: 1\nSum: 8\nLargest: 8\nEven digits: 1\n"
+    },
+    {
+      "input": "0\n",
+      "output": "Digits: 1\nSum: 0\nLargest: 0\nEven digits: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "1111111111\n",
+      "output": "Digits: 10\nSum: 10\nLargest: 1\nEven digits: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "9876543210\n",
+      "output": "Digits: 10\nSum: 45\nLargest: 9\nEven digits: 5\n",
+      "hidden": true
+    },
+    {
+      "input": "100000000000000000\n",
+      "output": "Digits: 18\nSum: 1\nLargest: 1\nEven digits: 17\n",
+      "hidden": true
+    }
+  ]
+}

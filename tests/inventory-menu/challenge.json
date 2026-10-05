@@ -10,7 +10,7 @@
   ],
   "unit": "Collections",
   "difficulty": "Hard",
-  "order": 3,
+  "order": 4,
   "hints": [
     "Create the Map<String, Integer> before the loop. A TreeMap keeps the products sorted by name.",
     "Turn every product name into lowercase as soon as you read it, so Apple and apple are the same key.",

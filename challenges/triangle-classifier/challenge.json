@@ -1,0 +1,70 @@
+{
+  "title": "Triangle Classifier",
+  "topic": "Conditionals",
+  "difficulty": "Medium",
+  "order": 8,
+  "hints": [
+    "Check that it is a triangle first: every side must be positive and smaller than the sum of the other two.",
+    "If all three sides are equal, it is Equilateral. Check that before Isosceles.",
+    "Isosceles means at least two equal sides: a == b || b == c || a == c."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Classificador de triângulos",
+      "hints": [
+        "Primeiro confira se é um triângulo: todo lado precisa ser positivo e menor que a soma dos outros dois.",
+        "Se os três lados são iguais, é Equilateral. Teste isso antes de Isosceles.",
+        "Isosceles quer dizer pelo menos dois lados iguais: a == b || b == c || a == c."
+      ],
+      "mustContain": [
+        "Use if / else para classificar o triângulo."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bif\\b",
+      "message": "Use if / else to classify the triangle."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3 3 3\n",
+      "output": "Equilateral\n"
+    },
+    {
+      "input": "3 4 5\n",
+      "output": "Scalene\n"
+    },
+    {
+      "input": "5 5 8\n",
+      "output": "Isosceles\n",
+      "hidden": true
+    },
+    {
+      "input": "1 2 3\n",
+      "output": "Not a triangle\n",
+      "hidden": true
+    },
+    {
+      "input": "0 4 4\n",
+      "output": "Not a triangle\n",
+      "hidden": true
+    },
+    {
+      "input": "2 7 2\n",
+      "output": "Not a triangle\n",
+      "hidden": true
+    },
+    {
+      "input": "4 7 4\n",
+      "output": "Isosceles\n",
+      "hidden": true
+    },
+    {
+      "input": "-3 4 5\n",
+      "output": "Not a triangle\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "title": "Title Case",
+  "topic": "Strings",
+  "difficulty": "Easy",
+  "order": 4,
+  "hints": [
+    "Split the sentence into words with split(\" \").",
+    "For each word: substring(0, 1).toUpperCase() + substring(1).toLowerCase().",
+    "Join the words back with single spaces, for example with String.join(\" \", words)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Letras iniciais maiúsculas",
+      "hints": [
+        "Divida a frase em palavras com split(\" \").",
+        "Para cada palavra: substring(0, 1).toUpperCase() + substring(1).toLowerCase().",
+        "Junte as palavras de volta com um espaço, por exemplo com String.join(\" \", words)."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "hello world\n",
+      "output": "Hello World\n"
+    },
+    {
+      "input": "the qUICK BROWN fox\n",
+      "output": "The Quick Brown Fox\n"
+    },
+    {
+      "input": "java\n",
+      "output": "Java\n",
+      "hidden": true
+    },
+    {
+      "input": "a b c\n",
+      "output": "A B C\n",
+      "hidden": true
+    },
+    {
+      "input": "LEARNING JAVA IS FUN\n",
+      "output": "Learning Java Is Fun\n",
+      "hidden": true
+    },
+    {
+      "input": "o rato roeu a roupa do rei\n",
+      "output": "O Rato Roeu A Roupa Do Rei\n",
+      "hidden": true
+    }
+  ]
+}
