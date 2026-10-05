@@ -1,0 +1,112 @@
+{
+  "title": "Conditionals Quiz",
+  "topic": "Conditionals",
+  "description": "Decisions in code: `if`, `else`, logical operators, the ternary operator and `switch`.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "int age = 15;\nif (age >= 18) {\n    IO.println(\"adult\");\n} else if (age >= 13) {\n    IO.println(\"teen\");\n} else {\n    IO.println(\"child\");\n}",
+      "answer": "teen",
+      "explanation": "Only the first true condition runs: `age >= 18` is false, `age >= 13` is true."
+    },
+    {
+      "type": "output",
+      "code": "int x = 5;\nIO.println(x > 3 ? \"big\" : \"small\");",
+      "options": [
+        "big",
+        "small",
+        "true",
+        "5"
+      ],
+      "answer": 0,
+      "explanation": "The ternary operator `condition ? a : b` picks `a` when the condition is true."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which condition is true only when `n` is between 1 and 10, inclusive?",
+      "options": [
+        "`n >= 1 || n <= 10`",
+        "`n >= 1 && n <= 10`",
+        "`1 <= n <= 10`",
+        "`n > 1 && n < 10`"
+      ],
+      "answer": 1,
+      "explanation": "`&&` needs both sides to be true. `||` would be true for every number, and `1 <= n <= 10` does not compile in Java."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "`!(a && b)` is always the same as `!a || !b`.",
+      "answer": true,
+      "explanation": "This is De Morgan's law: \"not both\" means \"at least one is false\"."
+    },
+    {
+      "type": "output",
+      "code": "int day = 3;\nString name = switch (day) {\n    case 1 -> \"Mon\";\n    case 2 -> \"Tue\";\n    case 3 -> \"Wed\";\n    default -> \"?\";\n};\nIO.println(name);",
+      "answer": "Wed",
+      "explanation": "A switch expression returns the value of the matching case."
+    },
+    {
+      "type": "output",
+      "code": "int n = 7;\nif (n % 2 == 0)\n    IO.println(\"even\");\n    IO.println(\"done\");",
+      "answer": "done",
+      "explanation": "Without braces, `if` controls only the next statement. The second `println` always runs, whatever the indentation says."
+    },
+    {
+      "type": "short",
+      "prompt": "Which keyword runs a block when none of the `if` / `else if` conditions is true?",
+      "answer": [
+        "else"
+      ],
+      "explanation": "`else` catches every case the conditions before it did not."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "This code prints `yes`.",
+      "code": "String a = \"java\";\nString b = new String(\"java\");\nIO.println(a == b ? \"yes\" : \"no\");",
+      "answer": false,
+      "explanation": "`==` on Strings compares whether they are the same object, not their text. Strings read from input are new objects, so use `equals`."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de condicionais",
+      "description": "Decisões no código: `if`, `else`, operadores lógicos, o operador ternário e `switch`.",
+      "questions": [
+        {
+          "explanation": "Só a primeira condição verdadeira roda: `age >= 18` é falso, `age >= 13` é verdadeiro."
+        },
+        {
+          "explanation": "O operador ternário `condição ? a : b` escolhe `a` quando a condição é verdadeira."
+        },
+        {
+          "prompt": "Qual condição é verdadeira só quando `n` está entre 1 e 10, incluindo os dois?",
+          "options": [
+            "`n >= 1 || n <= 10`",
+            "`n >= 1 && n <= 10`",
+            "`1 <= n <= 10`",
+            "`n > 1 && n < 10`"
+          ],
+          "explanation": "`&&` precisa dos dois lados verdadeiros. `||` seria verdadeiro para qualquer número, e `1 <= n <= 10` nem compila em Java."
+        },
+        {
+          "prompt": "`!(a && b)` é sempre igual a `!a || !b`.",
+          "explanation": "É a lei de De Morgan: \"não os dois\" quer dizer \"pelo menos um é falso\"."
+        },
+        {
+          "explanation": "Um switch como expressão devolve o valor do case que combina."
+        },
+        {
+          "explanation": "Sem chaves, o `if` controla só o próximo comando. O segundo `println` sempre roda, não importa a indentação."
+        },
+        {
+          "prompt": "Qual palavra-chave roda um bloco quando nenhuma condição do `if` / `else if` é verdadeira?",
+          "explanation": "O `else` pega todos os casos que as condições antes dele não pegaram."
+        },
+        {
+          "prompt": "Este código imprime `yes`.",
+          "explanation": "`==` em Strings compara se são o mesmo objeto, não o texto. Strings lidas da entrada são objetos novos, então use `equals`."
+        }
+      ]
+    }
+  }
+}

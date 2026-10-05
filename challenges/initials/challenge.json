@@ -1,0 +1,51 @@
+{
+  "title": "Initials",
+  "topic": "Strings",
+  "difficulty": "Easy",
+  "order": 3,
+  "hints": [
+    "split(\" +\") breaks the name into words, even when there are several spaces between them.",
+    "charAt(0) is the first letter of a word.",
+    "Character.toUpperCase(c) turns a letter into uppercase. Add a dot after each initial."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Iniciais",
+      "hints": [
+        "split(\" +\") quebra o nome em palavras, mesmo com vários espaços entre elas.",
+        "charAt(0) é a primeira letra de uma palavra.",
+        "Character.toUpperCase(c) deixa uma letra maiúscula. Coloque um ponto depois de cada inicial."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "Ana Lima\n",
+      "output": "A.L.\n"
+    },
+    {
+      "input": "maria clara souza\n",
+      "output": "M.C.S.\n"
+    },
+    {
+      "input": "Bob\n",
+      "output": "B.\n",
+      "hidden": true
+    },
+    {
+      "input": "  joão   pedro  \n",
+      "output": "J.P.\n",
+      "hidden": true
+    },
+    {
+      "input": "ada byron king lovelace\n",
+      "output": "A.B.K.L.\n",
+      "hidden": true
+    },
+    {
+      "input": "X y Z\n",
+      "output": "X.Y.Z.\n",
+      "hidden": true
+    }
+  ]
+}

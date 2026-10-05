@@ -1,7 +1,7 @@
 {
-  "title": "Loops and Conditionals Quiz",
+  "title": "Loops Quiz",
   "topic": "Loops",
-  "description": "Read each piece of code carefully and work out what it does.",
+  "description": "Read each loop carefully and work out how many times it runs and what it prints.",
   "questions": [
     {
       "type": "output",
@@ -28,18 +28,6 @@
       "explanation": "A `do { … } while (condition);` loop checks the condition **after** the body."
     },
     {
-      "type": "output",
-      "code": "int x = 5;\nIO.println(x > 3 ? \"big\" : \"small\");",
-      "options": [
-        "big",
-        "small",
-        "true",
-        "5"
-      ],
-      "answer": 0,
-      "explanation": "The ternary operator `condition ? a : b` picks `a` when the condition is true."
-    },
-    {
       "type": "truefalse",
       "prompt": "`break` skips the rest of the current iteration and continues with the next one.",
       "answer": false,
@@ -55,21 +43,27 @@
     },
     {
       "type": "output",
-      "code": "int day = 3;\nString name = switch (day) {\n    case 1 -> \"Mon\";\n    case 2 -> \"Tue\";\n    case 3 -> \"Wed\";\n    default -> \"?\";\n};\nIO.println(name);",
-      "answer": "Wed",
-      "explanation": "A switch expression returns the value of the matching case."
-    },
-    {
-      "type": "output",
       "code": "int sum = 0;\nfor (int i = 1; i <= 4; i++) {\n    if (i % 2 == 0) continue;\n    sum += i;\n}\nIO.println(sum);",
       "answer": "4",
       "explanation": "Even numbers are skipped with `continue`, so only 1 and 3 are added."
+    },
+    {
+      "type": "output",
+      "code": "int count = 0;\nfor (int i = 0; i < 3; i++) {\n    for (int j = 0; j < 4; j++) {\n        count++;\n    }\n}\nIO.println(count);",
+      "answer": "12",
+      "explanation": "The inner loop runs 4 times for each of the 3 turns of the outer loop: 3 × 4 = 12."
+    },
+    {
+      "type": "output",
+      "code": "for (int i = 10; i > 0; i -= 3) {\n    IO.print(i + \" \");\n}",
+      "answer": "10 7 4 1",
+      "explanation": "`i` goes down by 3 each time: 10, 7, 4, 1. The next value, -2, fails `i > 0`."
     }
   ],
   "translations": {
     "pt-br": {
-      "title": "Quiz de laços e condicionais",
-      "description": "Leia cada trecho de código com atenção e descubra o que ele faz.",
+      "title": "Quiz de laços",
+      "description": "Leia cada laço com atenção e descubra quantas vezes ele roda e o que imprime.",
       "questions": [
         {
           "explanation": "`i` começa em 0 e o laço para quando `i < 3` fica falso, então ele imprime 0, 1 e 2."
@@ -88,9 +82,6 @@
           "explanation": "Um laço `do { … } while (condição);` testa a condição **depois** do corpo."
         },
         {
-          "explanation": "O operador ternário `condição ? a : b` escolhe `a` quando a condição é verdadeira."
-        },
-        {
           "prompt": "`break` pula o resto da volta atual e continua na próxima.",
           "explanation": "Isso é o `continue`. O `break` sai do laço de vez."
         },
@@ -99,10 +90,13 @@
           "explanation": "`continue` pula para a próxima volta; `break` termina o laço."
         },
         {
-          "explanation": "Um switch como expressão devolve o valor do case que combina."
+          "explanation": "Os números pares são pulados com `continue`, então só 1 e 3 são somados."
         },
         {
-          "explanation": "Os números pares são pulados com `continue`, então só 1 e 3 são somados."
+          "explanation": "O laço de dentro roda 4 vezes para cada uma das 3 voltas do laço de fora: 3 × 4 = 12."
+        },
+        {
+          "explanation": "`i` diminui de 3 em 3: 10, 7, 4, 1. O próximo valor, -2, não passa em `i > 0`."
         }
       ]
     }

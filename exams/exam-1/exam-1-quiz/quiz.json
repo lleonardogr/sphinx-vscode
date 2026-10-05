@@ -1,0 +1,82 @@
+{
+  "title": "Exam 1 Quiz",
+  "description": "Six quick questions. You can submit the quiz only once.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "IO.println(17 / 5 + \" \" + 17 % 5);",
+      "answer": "3 2",
+      "explanation": "`17 / 5` is integer division, so it gives 3; `17 % 5` is the remainder, 2."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which type should store a price such as `19.90`?",
+      "options": [
+        "`int`",
+        "`double`",
+        "`char`",
+        "`boolean`"
+      ],
+      "answer": 1,
+      "explanation": "`double` holds numbers with decimals."
+    },
+    {
+      "type": "output",
+      "code": "int score = 75;\nString grade;\nif (score >= 90) grade = \"A\";\nelse if (score >= 70) grade = \"B\";\nelse grade = \"C\";\nIO.println(grade);",
+      "answer": "B",
+      "explanation": "The first true condition is `score >= 70`."
+    },
+    {
+      "type": "output",
+      "code": "int total = 0;\nfor (int i = 1; i <= 5; i++) {\n    total += i * 2;\n}\nIO.println(total);",
+      "answer": "30",
+      "explanation": "It adds 2 + 4 + 6 + 8 + 10 = 30."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "A `while` loop whose condition starts as `false` never runs its body.",
+      "answer": true,
+      "explanation": "`while` checks the condition before each turn, including the first."
+    },
+    {
+      "type": "output",
+      "code": "String word = \"exam\";\nIO.println(word.length() + word.toUpperCase().substring(2));",
+      "answer": "4AM",
+      "explanation": "`length()` is 4, and `\"EXAM\".substring(2)` is `\"AM\"`. A number plus a String joins them as text."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz da prova 1",
+      "description": "Seis perguntas rápidas. Você só pode enviar o quiz uma vez.",
+      "questions": [
+        {
+          "explanation": "`17 / 5` é divisão inteira, então dá 3; `17 % 5` é o resto, 2."
+        },
+        {
+          "prompt": "Qual tipo deve guardar um preço como `19.90`?",
+          "options": [
+            "`int`",
+            "`double`",
+            "`char`",
+            "`boolean`"
+          ],
+          "explanation": "`double` guarda números com casas decimais."
+        },
+        {
+          "explanation": "A primeira condição verdadeira é `score >= 70`."
+        },
+        {
+          "explanation": "Ele soma 2 + 4 + 6 + 8 + 10 = 30."
+        },
+        {
+          "prompt": "Um laço `while` cuja condição começa `false` nunca roda o corpo.",
+          "explanation": "O `while` testa a condição antes de cada volta, inclusive a primeira."
+        },
+        {
+          "explanation": "`length()` é 4, e `\"EXAM\".substring(2)` é `\"AM\"`. Um número mais uma String vira texto junto."
+        }
+      ]
+    }
+  }
+}

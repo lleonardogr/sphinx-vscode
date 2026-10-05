@@ -1,0 +1,65 @@
+{
+  "title": "Anagrams",
+  "topic": "Strings",
+  "difficulty": "Medium",
+  "order": 7,
+  "hints": [
+    "First clean both texts: lowercase them and remove the spaces with replace(\" \", \"\").",
+    "Two texts are anagrams when every letter appears the same number of times in both.",
+    "Loop over the letters from 'a' to 'z' (a char loop works: for (char c = 'a'; c <= 'z'; c++)) and count each one in both texts."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Anagramas",
+      "hints": [
+        "Primeiro limpe os dois textos: deixe em minúsculas e tire os espaços com replace(\" \", \"\").",
+        "Dois textos são anagramas quando cada letra aparece o mesmo número de vezes nos dois.",
+        "Percorra as letras de 'a' a 'z' (dá para fazer um laço de char: for (char c = 'a'; c <= 'z'; c++)) e conte cada uma nos dois textos."
+      ],
+      "mustNotContain": [
+        "Resolva contando letras, sem ordenar arrays."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "\\bArrays\\b",
+      "message": "Solve it by counting letters, without sorting arrays."
+    }
+  ],
+  "tests": [
+    {
+      "input": "listen\nsilent\n",
+      "output": "Anagrams\n"
+    },
+    {
+      "input": "hello\nworld\n",
+      "output": "Not anagrams\n"
+    },
+    {
+      "input": "Dormitory\ndirty room\n",
+      "output": "Anagrams\n",
+      "hidden": true
+    },
+    {
+      "input": "aab\nabb\n",
+      "output": "Not anagrams\n",
+      "hidden": true
+    },
+    {
+      "input": "Astronomer\nMoon starer\n",
+      "output": "Anagrams\n",
+      "hidden": true
+    },
+    {
+      "input": "abc\nabcd\n",
+      "output": "Not anagrams\n",
+      "hidden": true
+    },
+    {
+      "input": "a\nA\n",
+      "output": "Anagrams\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "title": "Split the Bill",
+  "topic": "Basics",
+  "difficulty": "Medium",
+  "order": 7,
+  "hints": [
+    "Work in cents to avoid rounding problems: long cents = Math.round(total * 100);",
+    "Add the tip: cents * (100 + tip) / 100 is the total with tip, still in cents.",
+    "Rounding a division up: (a + b - 1) / b. Print cents as reais with \"%d.%02d\".formatted(c / 100, c % 100)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Dividir a conta",
+      "hints": [
+        "Trabalhe em centavos para evitar problemas de arredondamento: long cents = Math.round(total * 100);",
+        "Some a gorjeta: cents * (100 + tip) / 100 é o total com gorjeta, ainda em centavos.",
+        "Para arredondar uma divisão para cima: (a + b - 1) / b. Imprima centavos como reais com \"%d.%02d\".formatted(c / 100, c % 100)."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "100.00\n4\n10\n",
+      "output": "Each person pays: 27.50\n"
+    },
+    {
+      "input": "59.90\n3\n0\n",
+      "output": "Each person pays: 19.97\n"
+    },
+    {
+      "input": "10.00\n3\n0\n",
+      "output": "Each person pays: 3.34\n",
+      "hidden": true
+    },
+    {
+      "input": "0.01\n2\n0\n",
+      "output": "Each person pays: 0.01\n",
+      "hidden": true
+    },
+    {
+      "input": "1234.56\n7\n15\n",
+      "output": "Each person pays: 202.83\n",
+      "hidden": true
+    },
+    {
+      "input": "80.00\n1\n12\n",
+      "output": "Each person pays: 89.60\n",
+      "hidden": true
+    }
+  ]
+}

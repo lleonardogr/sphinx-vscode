@@ -1,0 +1,60 @@
+{
+  "title": "Primes up to N",
+  "topic": "Loops",
+  "difficulty": "Hard",
+  "order": 11,
+  "hints": [
+    "Loop over every number from 2 to n, and for each one decide whether it is prime.",
+    "To test k, try dividing it by every d from 2 while d * d <= k. If k % d == 0, it is not prime.",
+    "Collect the primes in a StringBuilder with spaces between them and count them as you go."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Primos até N",
+      "hints": [
+        "Percorra todos os números de 2 a n e, para cada um, decida se é primo.",
+        "Para testar k, tente dividir por todo d a partir de 2 enquanto d * d <= k. Se k % d == 0, não é primo.",
+        "Junte os primos em um StringBuilder com espaços entre eles e conte enquanto avança."
+      ],
+      "mustContain": [
+        "Use % para testar se um número divide outro."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "%",
+      "message": "Use % to test whether a number divides another."
+    }
+  ],
+  "tests": [
+    {
+      "input": "10\n",
+      "output": "2 3 5 7\nCount: 4\n"
+    },
+    {
+      "input": "2\n",
+      "output": "2\nCount: 1\n"
+    },
+    {
+      "input": "1\n",
+      "output": "No primes\nCount: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "30\n",
+      "output": "2 3 5 7 11 13 17 19 23 29\nCount: 10\n",
+      "hidden": true
+    },
+    {
+      "input": "97\n",
+      "output": "2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97\nCount: 25\n",
+      "hidden": true
+    },
+    {
+      "input": "100\n",
+      "output": "2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97\nCount: 25\n",
+      "hidden": true
+    }
+  ]
+}

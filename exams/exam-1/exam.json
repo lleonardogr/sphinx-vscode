@@ -1,0 +1,34 @@
+{
+  "title": "Exam 1: Basics to Strings",
+  "description": "Covers units 1 to 4: variables and arithmetic, conditionals, loops and Strings. A short quiz and three coding questions, from easy to hard.",
+  "translations": {
+    "pt-br": {
+      "title": "Prova 1: do básico às Strings",
+      "description": "Cobre as unidades 1 a 4: variáveis e aritmética, condicionais, laços e Strings. Um quiz curto e três questões de código, da mais fácil à mais difícil."
+    }
+  },
+  "durationMinutes": 60,
+  "mode": "closed",
+  "maxSubmissions": 3,
+  "restrictions": {
+    "level": "standard"
+  },
+  "questions": [
+    {
+      "id": "exam-1-quiz",
+      "points": 20
+    },
+    {
+      "id": "parking-fee",
+      "points": 20
+    },
+    {
+      "id": "digit-statistics",
+      "points": 30
+    },
+    {
+      "id": "word-stats",
+      "points": 30
+    }
+  ]
+}

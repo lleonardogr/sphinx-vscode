@@ -1,0 +1,70 @@
+{
+  "title": "Shipping Cost",
+  "topic": "Conditionals",
+  "difficulty": "Hard",
+  "order": 9,
+  "hints": [
+    "Validate first: a weight of 0 or less is Invalid weight, and more than 30 kg is Too heavy.",
+    "Find the base price from the weight bands with an if / else if chain.",
+    "Then apply the extras in order: the distance surcharge, then express (×2), then the free-shipping rule."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Custo do frete",
+      "hints": [
+        "Valide primeiro: peso 0 ou menos é Invalid weight, e mais de 30 kg é Too heavy.",
+        "Encontre o preço base pelas faixas de peso com uma cadeia de if / else if.",
+        "Depois aplique os extras na ordem: a taxa de distância, depois o expresso (×2), depois a regra do frete grátis."
+      ],
+      "mustContain": [
+        "Use if / else para aplicar as regras."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bif\\b",
+      "message": "Use if / else to apply the rules."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2.5\n120\nstandard\n100.00\n",
+      "output": "Shipping: 12.50\n"
+    },
+    {
+      "input": "0.8\n600\nexpress\n50.00\n",
+      "output": "Shipping: 24.00\n"
+    },
+    {
+      "input": "0\n10\nstandard\n20.00\n",
+      "output": "Invalid weight\n",
+      "hidden": true
+    },
+    {
+      "input": "31\n10\nstandard\n20.00\n",
+      "output": "Too heavy\n",
+      "hidden": true
+    },
+    {
+      "input": "30\n1000\nexpress\n300.00\n",
+      "output": "Shipping: 60.00\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n500\nstandard\n200.00\n",
+      "output": "Shipping: free\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n501\nexpress\n200.00\n",
+      "output": "Shipping: 24.00\n",
+      "hidden": true
+    },
+    {
+      "input": "12.3\n50\nstandard\n199.99\n",
+      "output": "Shipping: 20.00\n",
+      "hidden": true
+    }
+  ]
+}

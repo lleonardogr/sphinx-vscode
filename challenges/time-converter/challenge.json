@@ -1,0 +1,60 @@
+{
+  "title": "Time Converter",
+  "topic": "Basics",
+  "difficulty": "Easy",
+  "order": 6,
+  "hints": [
+    "Each hour has 3600 seconds and each minute has 60.",
+    "seconds / 3600 gives the whole hours; seconds % 3600 is what is left over.",
+    "Apply the same idea to the leftover: leftover / 60 minutes, leftover % 60 seconds."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Conversor de tempo",
+      "hints": [
+        "Cada hora tem 3600 segundos e cada minuto tem 60.",
+        "seconds / 3600 dá as horas inteiras; seconds % 3600 é o que sobra.",
+        "Use a mesma ideia no que sobrou: sobra / 60 minutos, sobra % 60 segundos."
+      ],
+      "mustContain": [
+        "Use o operador % para pegar os segundos que sobram."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "%",
+      "message": "Use the % operator to get the leftover seconds."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3725\n",
+      "output": "Hours: 1\nMinutes: 2\nSeconds: 5\n"
+    },
+    {
+      "input": "59\n",
+      "output": "Hours: 0\nMinutes: 0\nSeconds: 59\n"
+    },
+    {
+      "input": "0\n",
+      "output": "Hours: 0\nMinutes: 0\nSeconds: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "3600\n",
+      "output": "Hours: 1\nMinutes: 0\nSeconds: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "86399\n",
+      "output": "Hours: 23\nMinutes: 59\nSeconds: 59\n",
+      "hidden": true
+    },
+    {
+      "input": "1000000\n",
+      "output": "Hours: 277\nMinutes: 46\nSeconds: 40\n",
+      "hidden": true
+    }
+  ]
+}

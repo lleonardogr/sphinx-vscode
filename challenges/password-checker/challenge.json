@@ -1,0 +1,61 @@
+{
+  "title": "Password Checker",
+  "topic": "Strings",
+  "difficulty": "Medium",
+  "order": 6,
+  "hints": [
+    "Loop over the characters with charAt(i) and use boolean flags: hasUpper, hasLower, hasDigit.",
+    "Character.isUpperCase, Character.isLowerCase and Character.isDigit test a single char.",
+    "After the loop, print one line for each rule that failed, in the order of the table. If none failed, print Strong password."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Verificador de senha",
+      "hints": [
+        "Percorra os caracteres com charAt(i) e use variáveis boolean: hasUpper, hasLower, hasDigit.",
+        "Character.isUpperCase, Character.isLowerCase e Character.isDigit testam um char.",
+        "Depois do laço, imprima uma linha para cada regra que falhou, na ordem da tabela. Se nenhuma falhou, imprima Strong password."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "abc\n",
+      "output": "Too short\nNeeds an uppercase letter\nNeeds a digit\n"
+    },
+    {
+      "input": "Secret123\n",
+      "output": "Strong password\n"
+    },
+    {
+      "input": "password\n",
+      "output": "Needs an uppercase letter\nNeeds a digit\n",
+      "hidden": true
+    },
+    {
+      "input": "PASSWORD99\n",
+      "output": "Needs a lowercase letter\n",
+      "hidden": true
+    },
+    {
+      "input": "Ab1\n",
+      "output": "Too short\n",
+      "hidden": true
+    },
+    {
+      "input": "12345678\n",
+      "output": "Needs an uppercase letter\nNeeds a lowercase letter\n",
+      "hidden": true
+    },
+    {
+      "input": "Tr0ub4dor&3\n",
+      "output": "Strong password\n",
+      "hidden": true
+    },
+    {
+      "input": "aB cD eF\n",
+      "output": "Needs a digit\n",
+      "hidden": true
+    }
+  ]
+}
