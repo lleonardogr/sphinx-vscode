@@ -42,6 +42,32 @@ export function questionKey(q: ExamQuestion): string {
   return q.kind === 'quiz' ? q.quiz.id : q.challenge.id;
 }
 
+/** Anti-cheating rules. Closed exams default to blocking copy and large pastes; open exams to none. */
+export interface ExamRestrictions {
+  /** No copying from the question panel, and no Copy/Cut in the answer files. */
+  blockCopy: boolean;
+  /** Pastes of pasteLimit characters or more are undone. */
+  blockPaste: boolean;
+  pasteLimit: number;
+  /** Total time outside VS Code allowed, in seconds; past it the exam finishes. 0 = no limit (only recorded). */
+  maxAwaySeconds: number;
+}
+
+export const DEFAULT_PASTE_LIMIT = 50;
+
+export function examRestrictions(mode: ExamMode, raw: unknown): ExamRestrictions {
+  const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
+  const closed = mode === 'closed';
+  const bool = (v: unknown, fallback: boolean) => (typeof v === 'boolean' ? v : fallback);
+  const num = (v: unknown, fallback: number, min: number) => (typeof v === 'number' && v >= min ? Math.floor(v) : fallback);
+  return {
+    blockCopy: bool(r.blockCopy, closed),
+    blockPaste: bool(r.blockPaste, closed),
+    pasteLimit: num(r.pasteLimit, DEFAULT_PASTE_LIMIT, 10),
+    maxAwaySeconds: num(r.maxAwaySeconds, 0, 0),
+  };
+}
+
 export interface ExamDefinition {
   id: string;
   title: string;
@@ -49,6 +75,7 @@ export interface ExamDefinition {
   durationMinutes: number;
   mode: ExamMode;
   maxSubmissions: number;
+  restrictions: ExamRestrictions;
   questions: ExamQuestion[];
   dir: string;
 }
@@ -130,6 +157,7 @@ function loadExam(dir: string, challenges: Challenge[], quizzes: QuizDefinition[
     durationMinutes: typeof meta.durationMinutes === 'number' && meta.durationMinutes > 0 ? meta.durationMinutes : 60,
     mode,
     maxSubmissions: typeof meta.maxSubmissions === 'number' && meta.maxSubmissions > 0 ? Math.floor(meta.maxSubmissions) : 3,
+    restrictions: examRestrictions(mode, meta.restrictions),
     questions,
     dir,
   };

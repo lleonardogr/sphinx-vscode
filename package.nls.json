@@ -42,5 +42,6 @@
   "config.language.en": "English",
   "config.language.ptbr": "Português (Brasil)",
   "command.checkJava": "Check Java Setup",
-  "command.chooseJdk": "Choose JDK Folder…"
+  "command.chooseJdk": "Choose JDK Folder…",
+  "command.copyBlocked": "Copy (blocked during the exam)"
 }

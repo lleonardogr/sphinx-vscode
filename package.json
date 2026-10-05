@@ -185,6 +185,11 @@
         "title": "%command.verifyExamResults%",
         "category": "Sphynx",
         "icon": "$(verified)"
+      },
+      {
+        "command": "sphynx.copyBlocked",
+        "title": "%command.copyBlocked%",
+        "category": "Sphynx"
       }
     ],
     "menus": {
@@ -296,6 +301,10 @@
         {
           "command": "sphynx.askAiHint",
           "when": "sphynx.isChallengeFile"
+        },
+        {
+          "command": "sphynx.copyBlocked",
+          "when": "false"
         }
       ]
     },
@@ -311,6 +320,28 @@
         "key": "ctrl+alt+enter",
         "mac": "cmd+alt+enter",
         "when": "sphynx.isChallengeFile"
+      },
+      {
+        "command": "sphynx.copyBlocked",
+        "key": "ctrl+c",
+        "when": "editorFocus && sphynx.examNoCopy",
+        "mac": "cmd+c"
+      },
+      {
+        "command": "sphynx.copyBlocked",
+        "key": "ctrl+x",
+        "when": "editorFocus && sphynx.examNoCopy",
+        "mac": "cmd+x"
+      },
+      {
+        "command": "sphynx.copyBlocked",
+        "key": "ctrl+insert",
+        "when": "editorFocus && sphynx.examNoCopy"
+      },
+      {
+        "command": "sphynx.copyBlocked",
+        "key": "shift+delete",
+        "when": "editorFocus && sphynx.examNoCopy"
       }
     ],
     "configuration": {

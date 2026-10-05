@@ -30,6 +30,7 @@ export interface VerificationReport {
   warnings: ExamResultsFile['warnings'];
   timeTakenSeconds: number;
   finishedBy: string;
+  awaySeconds?: number;
 }
 
 export async function verifyResults(resultsPath: string, exams: ExamDefinition[], javaHome?: string): Promise<VerificationReport> {
@@ -99,6 +100,7 @@ export async function verifyResults(resultsPath: string, exams: ExamDefinition[]
     warnings: results.warnings ?? [],
     timeTakenSeconds: results.timeTakenSeconds,
     finishedBy: results.finishedBy,
+    awaySeconds: results.awaySeconds,
   };
 }
 
@@ -107,7 +109,8 @@ export function formatVerification(r: VerificationReport): string[] {
   const lines = [
     `${r.student}: ${r.examTitle}`,
     `  Score (re-graded): ${r.recomputed} / ${r.max}${r.matches ? '  ✓ matches the results file' : `  ⚠ the results file claims ${r.claimed}`}`,
-    `  Time taken: ${minutes} min (finished by ${r.finishedBy === 'time' ? 'the time limit' : 'the student'})`,
+    `  Time taken: ${minutes} min (finished by ${r.finishedBy === 'time' ? 'the time limit' : r.finishedBy === 'away' ? 'too much time outside VS Code' : 'the student'})` +
+      (r.awaySeconds ? `, ${Math.round(r.awaySeconds / 60 * 10) / 10} min outside VS Code` : ''),
   ];
   for (const q of r.questions) {
     const mismatch = Math.abs(q.claimed - q.recomputed) >= 0.01 ? `  ⚠ claimed ${q.claimed}` : '';

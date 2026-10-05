@@ -457,3 +457,7 @@ textarea.quiz-text { font-family: var(--vscode-editor-font-family, monospace); }
 #quiz-score .banner { margin-bottom: 20px; }
 
 .banner .next-step { display: block; margin-top: 10px; }
+
+/* Exams with copying turned off: text can't be selected (inputs stay usable). */
+body.no-copy { -webkit-user-select: none; user-select: none; }
+body.no-copy textarea, body.no-copy input { -webkit-user-select: text; user-select: text; }
