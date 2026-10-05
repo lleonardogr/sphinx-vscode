@@ -10,6 +10,11 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      # Optional: when these repository secrets exist, the release is also published to the
+      # VS Code Marketplace (VSCE_PAT) and to Open VSX (OVSX_PAT). See docs/publishing.md.
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
     steps:
       - uses: actions/checkout@v5
 
@@ -44,3 +49,11 @@ jobs:
           gh release create "$GITHUB_REF_NAME" *.vsix \
             --title "$GITHUB_REF_NAME" \
             --generate-notes
+
+      - name: Publish to the VS Code Marketplace
+        if: env.VSCE_PAT != ''
+        run: npx vsce publish --packagePath *.vsix
+
+      - name: Publish to Open VSX
+        if: env.OVSX_PAT != ''
+        run: npx --yes ovsx publish *.vsix
