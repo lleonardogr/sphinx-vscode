@@ -73,26 +73,43 @@
     "restrictions": {
       "type": "object",
       "additionalProperties": false,
-      "description": "Anti-cheating rules. Closed exams block copying and large pastes by default; open exams don't. Guide: docs/exams.md#restrictions",
+      "description": "How strict the exam is: pick a level, and optionally override single rules next to it. Closed exams default to \"standard\", open exams to \"none\". Guide: docs/exams.md#restrictions",
       "properties": {
+        "level": {
+          "type": "string",
+          "enum": [
+            "none",
+            "relaxed",
+            "standard",
+            "strict"
+          ],
+          "enumDescriptions": [
+            "No restrictions and nothing recorded (default for open exams).",
+            "Nothing blocked; large pastes, time outside VS Code and Copilot are recorded in the results.",
+            "Records everything, blocks copying and pastes of 50+ characters (default for closed exams).",
+            "Like standard, blocks pastes of 30+ characters, and finishes the exam after 60 s outside VS Code in total."
+          ]
+        },
+        "record": {
+          "type": "boolean",
+          "description": "Record integrity warnings (pastes, time away, Copilot). Always on when something is blocked or limited."
+        },
         "blockCopy": {
           "type": "boolean",
-          "description": "No copying from the question panel, and no Copy/Cut in the answer files. Default: true for closed exams."
+          "description": "No copying from the question panel, and no Copy/Cut in the answer files. Default: from the level."
         },
         "blockPaste": {
           "type": "boolean",
-          "description": "Pastes of pasteLimit characters or more are undone and recorded. Default: true for closed exams."
+          "description": "Pastes of pasteLimit characters or more are undone and recorded. Default: from the level."
         },
         "pasteLimit": {
           "type": "integer",
           "minimum": 10,
-          "default": 50,
           "description": "Smallest paste that is blocked, in characters. Typing, autocomplete and snippets stay below it."
         },
         "maxAwaySeconds": {
           "type": "integer",
           "minimum": 0,
-          "default": 0,
           "description": "Total seconds a student may spend outside VS Code; past it the exam finishes automatically. 0 = no limit (time away is only recorded)."
         }
       }

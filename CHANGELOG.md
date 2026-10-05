@@ -6,6 +6,7 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Exam restriction levels**: each exam picks how strict it is with `"restrictions": { "level": … }`: `none`, `relaxed` (record only), `standard` (the closed-exam default: also blocks copying and pastes of 50+ characters) or `strict` (pastes of 30+ characters, and the exam finishes after 60 s outside VS Code). Single rules can be overridden next to the level, and the start dialog shows the level.
 - **Exam restrictions** against the copy-to-AI-and-paste-back shortcut, on by default in closed exams and configurable per exam with a new `restrictions` block in `exam.json`:
   - `blockCopy`: the question can't be selected or copied, and Copy and Cut are blocked in the answer files. Attempts are recorded as **copy** warnings.
   - `blockPaste` / `pasteLimit` (default 50 characters): larger pastes are undone immediately and recorded. Typing, autocomplete and snippets still work.

@@ -10,6 +10,9 @@
   "durationMinutes": 30,
   "mode": "closed",
   "maxSubmissions": 3,
+  "restrictions": {
+    "level": "standard"
+  },
   "questions": [
     {
       "id": "warm-up-quiz",
