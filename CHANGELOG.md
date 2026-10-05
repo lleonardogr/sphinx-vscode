@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-05
+
 ### Added
 
 - **Group challenges by** learning path, difficulty or progress: a new filter button at the top of the sidebar (and the **Sphynx: Group Challenges By…** command). In the difficulty and progress views each challenge shows its unit, items keep the teaching order inside each group, and the choice is remembered.
@@ -189,7 +191,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.6.0...v0.7.0
