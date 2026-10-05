@@ -21,3 +21,5 @@ out/**
 schemas/*.md
 media/logo/source/**
 media/logo/banner.png
+.githooks/**
+docs/publishing.md
