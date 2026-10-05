@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-10-05
+
+### Added
+
+- **Check Java Setup**: a new command (also in the sidebar's `...` menu) that compiles and runs a tiny program the same way Run, Submit and Run in Terminal do. It reports the `javac` and `java` that were found, their versions, `sphynx.java.home` and `JAVA_HOME`, and whether modern (JDK 25+) and classic Java work, with the fix for each problem.
+  - It detects a missing JDK, a JDK older than 17, a `java` from a different (older) installation than `javac`, and a JDK that can't run the modern starters.
+- Sphynx **checks Java when it starts**: if code can't run, it warns once and shows **Java isn't ready** at the top of the sidebar until it's fixed.
+- **Choose JDK Folder…** sets `sphynx.java.home` after checking the folder has `bin/javac` (on macOS, picking the `.jdk` bundle works too) and checks again. The "Java not found" error now offers **Check Java Setup** and **Choose JDK Folder…**.
+
+### Fixed
+
+- The progress text "Running sample tests…" and "Submitting…" was not translated into Portuguese.
+
 ## [0.7.0] - 2026-10-05
 
 ### Changed
@@ -141,7 +154,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.4.0...v0.5.0

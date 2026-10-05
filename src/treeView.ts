@@ -7,6 +7,8 @@ import { QuizProgress } from './quizController';
 import { QuizDefinition } from './quizzes';
 import { PathGroup, TESTS_TOPIC, buildPath, groupLabel, unitName } from './path';
 import { difficultyName, plural, tr } from './i18n';
+import { JavaProblem } from './javaCheck';
+import { problemText } from './javaSetup';
 
 export type ChallengeNode =
   | { kind: 'group'; group: PathGroup }
@@ -15,7 +17,8 @@ export type ChallengeNode =
   | { kind: 'exam'; exam: ExamDefinition }
   | { kind: 'examStart'; exam: ExamDefinition }
   | { kind: 'examQuestion'; exam: ExamDefinition; question: ExamQuestion }
-  | { kind: 'quiz'; quiz: QuizDefinition };
+  | { kind: 'quiz'; quiz: QuizDefinition }
+  | { kind: 'javaNotice'; problem: JavaProblem };
 
 const GROUP_ICONS: Record<string, string> = {
   Basics: 'symbol-variable',
@@ -43,6 +46,8 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     private readonly exams: ExamManager,
     private readonly getQuizzes: () => QuizDefinition[],
     private readonly quizProgress: QuizProgress,
+    /** Problems that stop Java from running; shown as a notice at the top of the list. */
+    private readonly javaProblems: () => JavaProblem[] = () => [],
   ) {
     progress.onDidChange(() => this.refresh());
     exams.onDidChange(() => this.refresh());
@@ -56,6 +61,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
   getChildren(node?: ChallengeNode): ChallengeNode[] {
     if (!node) {
       return [
+        ...this.javaProblems().slice(0, 1).map((problem): ChallengeNode => ({ kind: 'javaNotice', problem })),
         ...(this.getExams().length ? [{ kind: 'examsRoot' } as ChallengeNode] : []),
         ...buildPath(this.getChallenges(), this.getQuizzes()).map((group): ChallengeNode => ({ kind: 'group', group })),
       ];
@@ -105,6 +111,16 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
         return this.questionItem(node.exam, node.question);
       case 'quiz':
         return this.quizItem(node.quiz);
+      case 'javaNotice': {
+        const text = problemText(node.problem);
+        const item = new vscode.TreeItem(tr("Java isn't ready", 'O Java não está pronto'), vscode.TreeItemCollapsibleState.None);
+        item.id = 'java-notice';
+        item.description = tr('click to check and fix', 'clique para verificar e corrigir');
+        item.iconPath = new vscode.ThemeIcon('warning', new vscode.ThemeColor('problemsWarningIcon.foreground'));
+        item.tooltip = new vscode.MarkdownString(`**${text.title}**\n\n${text.fix}`);
+        item.command = { command: 'sphynx.checkJava', title: tr('Check Java Setup', 'Verificar a instalação do Java') };
+        return item;
+      }
     }
   }
 

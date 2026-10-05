@@ -74,7 +74,7 @@ interface ProcessResult {
   spawnError?: Error;
 }
 
-function exec(cmd: string, args: string[], opts: { cwd: string; input?: string; timeoutMs: number }): Promise<ProcessResult> {
+export function exec(cmd: string, args: string[], opts: { cwd: string; input?: string; timeoutMs: number }): Promise<ProcessResult> {
   return new Promise((resolve) => {
     const start = Date.now();
     const out: Buffer[] = [];
@@ -126,7 +126,7 @@ function exec(cmd: string, args: string[], opts: { cwd: string; input?: string; 
   });
 }
 
-function javaBinary(javaHome: string | undefined, name: 'java' | 'javac'): string {
+export function javaBinary(javaHome: string | undefined, name: 'java' | 'javac'): string {
   if (!javaHome) {
     return name;
   }
@@ -187,6 +187,11 @@ export function parseJavacErrors(raw: string): CompileError[] {
 }
 
 const versionCache = new Map<string, Promise<number | undefined>>();
+
+/** Forgets cached javac versions, e.g. after the student installs a JDK or changes sphynx.java.home. */
+export function clearJavaCache(): void {
+  versionCache.clear();
+}
 
 /** Major version of the JDK's javac (e.g. 17, 25), or undefined if it can't be determined. */
 export function javacMajorVersion(javaHome?: string): Promise<number | undefined> {

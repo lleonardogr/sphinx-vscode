@@ -67,6 +67,8 @@ javac -version   # should print javac 25 or newer
 
 If you can only use JDK 17–24, that works too: the extension offers to switch to classic Java.
 
+Sphynx checks Java when it starts. If something is wrong, it warns you and shows **Java isn't ready** at the top of the sidebar. Run **Sphynx: Check Java Setup** at any time for a full report: which `javac` and `java` were found, their versions, whether modern and classic Java really compile and run, and how to fix each problem. If your JDK isn't on the PATH, **Sphynx: Choose JDK Folder…** points Sphynx at it. After installing Java, restart VS Code so it sees the new PATH.
+
 ### 2. Install the extension
 
 1. Open the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) and download **`sphynx-x.y.z.vsix`**.
