@@ -37,6 +37,15 @@ jobs:
       - name: Compile and validate challenges
         run: npm run validate
 
+      - name: Unit tests
+        run: npm run test:unit
+
+      # Starts VS Code with the extension. Needs JDK 25 for the modern starters, and a display
+      # (xvfb) on Linux.
+      - name: Integration tests
+        if: matrix.java == 25
+        run: ${{ runner.os == 'Linux' && 'xvfb-run -a ' || '' }}npm run test:integration
+
   package:
     name: Package
     runs-on: ubuntu-latest

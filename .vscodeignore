@@ -24,3 +24,4 @@ media/logo/banner.png
 .githooks/**
 docs/publishing.md
 media/screenshots/**
+.vscode-test/**
