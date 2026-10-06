@@ -49,5 +49,5 @@ The Release workflow validates the content, builds the `.vsix`, creates the GitH
 ## Notes
 
 - The Marketplace rejects a version that was already published, so every publish needs a new version number.
-- If the token expires, the publish step fails while the GitHub Release is still created. Renew the token, update the secret, and publish that `.vsix` by hand: `npx vsce publish --packagePath sphynx-X.Y.Z.vsix -p <token>`.
+- If the publish step fails (for example, the token expired), the GitHub Release is still created. Fix the cause (renew the token and update the secret), then re-run the failed workflow: it keeps the existing release and publishes again. You can also publish that `.vsix` by hand: `npx vsce publish --packagePath sphynx-X.Y.Z.vsix`.
 - Students who installed a `.vsix` with a different publisher ID have a different extension ID, so VS Code treats the Marketplace version as a new extension (their progress doesn't carry over). Uninstall the old one to avoid having both.
