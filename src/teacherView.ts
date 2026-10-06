@@ -9,7 +9,7 @@ import { QuizDefinition } from './quizzes';
 import { difficultyName, plural, tr } from './i18n';
 import { TESTS_TOPIC } from './path';
 
-/** Where an item comes from: shipped with Sphynx, imported into its library, or a folder in sphynx.extraChallengePaths. */
+/** Where an item comes from: shipped with Sphinx, imported into its library, or a folder in sphinx.extraChallengePaths. */
 export type Origin = 'builtIn' | 'imported' | 'folder';
 
 export type TeacherNode =
@@ -102,7 +102,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
   private section(id: 'exams' | 'content' | 'tools'): TeacherNode[] {
     if (id === 'exams') {
       const exams = this.getExams().filter((e) => !e.preview).sort((a, b) => Number(this.origin(a.dir) === 'builtIn') - Number(this.origin(b.dir) === 'builtIn') || a.title.localeCompare(b.title));
-      return exams.length ? exams.map((exam) => ({ kind: 'exam', exam })) : [{ kind: 'hint', label: tr('Import an exam, or copy the sample exam to start one', 'Importe uma prova, ou copie a prova de exemplo para começar'), command: 'sphynx.importContent' }];
+      return exams.length ? exams.map((exam) => ({ kind: 'exam', exam })) : [{ kind: 'hint', label: tr('Import an exam, or copy the sample exam to start one', 'Importe uma prova, ou copie a prova de exemplo para começar'), command: 'sphinx.importContent' }];
     }
     if (id === 'content') {
       const own = this.ownContent();
@@ -110,17 +110,17 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         ...own.challenges.sort((a, b) => a.title.localeCompare(b.title)).map((challenge): TeacherNode => ({ kind: 'challenge', challenge })),
         ...own.quizzes.sort((a, b) => a.title.localeCompare(b.title)).map((quiz): TeacherNode => ({ kind: 'quiz', quiz })),
       ];
-      return items.length ? items : [{ kind: 'hint', label: tr('Create a challenge or import a pack', 'Crie um desafio ou importe um pacote'), command: 'sphynx.createChallenge' }];
+      return items.length ? items : [{ kind: 'hint', label: tr('Create a challenge or import a pack', 'Crie um desafio ou importe um pacote'), command: 'sphinx.createChallenge' }];
     }
     const tool = (toolId: string, label: string, icon: string, command: string): TeacherNode => ({ kind: 'tool', id: toolId, label, icon, command });
     return [
-      tool('create', tr('Create New Challenge…', 'Criar novo desafio…'), 'add', 'sphynx.createChallenge'),
-      tool('import', tr('Import Challenges, Quizzes or Exams…', 'Importar desafios, quizzes ou provas…'), 'cloud-download', 'sphynx.importContent'),
-      tool('export', tr('Export a Pack for Students…', 'Exportar um pacote para os alunos…'), 'package', 'sphynx.exportPack'),
-      tool('validate', tr('Validate Challenges in a Folder…', 'Validar desafios de uma pasta…'), 'beaker', 'sphynx.validateChallenges'),
-      tool('results', tr('Class Results…', 'Resultados da turma…'), 'table', 'sphynx.classResults'),
-      tool('verify', tr("Verify Students' Exam Results…", 'Verificar resultados das provas…'), 'verified', 'sphynx.verifyExamResults'),
-      tool('ai', tr('Set Up AI Hints…', 'Configurar dicas de IA…'), 'sparkle', 'sphynx.setupAi'),
+      tool('create', tr('Create New Challenge…', 'Criar novo desafio…'), 'add', 'sphinx.createChallenge'),
+      tool('import', tr('Import Challenges, Quizzes or Exams…', 'Importar desafios, quizzes ou provas…'), 'cloud-download', 'sphinx.importContent'),
+      tool('export', tr('Export a Pack for Students…', 'Exportar um pacote para os alunos…'), 'package', 'sphinx.exportPack'),
+      tool('validate', tr('Validate Challenges in a Folder…', 'Validar desafios de uma pasta…'), 'beaker', 'sphinx.validateChallenges'),
+      tool('results', tr('Class Results…', 'Resultados da turma…'), 'table', 'sphinx.classResults'),
+      tool('verify', tr("Verify Students' Exam Results…", 'Verificar resultados das provas…'), 'verified', 'sphinx.verifyExamResults'),
+      tool('ai', tr('Set Up AI Hints…', 'Configurar dicas de IA…'), 'sparkle', 'sphinx.setupAi'),
     ];
   }
 
@@ -180,7 +180,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         item.iconPath = new vscode.ThemeIcon(qs?.submissions ? 'pass' : q.kind === 'quiz' ? 'question' : 'code');
         item.description = `${qs?.bestEarned ?? 0}/${q.points} pts`;
         const id = examChallengeId(node.exam.id, q.id);
-        item.command = q.kind === 'quiz' ? { command: 'sphynx.openQuiz', title: tr('Open', 'Abrir'), arguments: [id] } : { command: 'sphynx.open', title: tr('Open', 'Abrir'), arguments: [id] };
+        item.command = q.kind === 'quiz' ? { command: 'sphinx.openQuiz', title: tr('Open', 'Abrir'), arguments: [id] } : { command: 'sphinx.open', title: tr('Open', 'Abrir'), arguments: [id] };
         return item;
       }
       case 'examQuestion': {
@@ -190,7 +190,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         item.iconPath = new vscode.ThemeIcon(q.kind === 'quiz' ? 'question' : 'code');
         item.description = `${q.points} pts · ${q.kind === 'quiz' ? 'Quiz' : difficultyName(q.challenge.difficulty)}`;
         item.contextValue = 'teacherQuestion';
-        item.command = { command: 'sphynx.editItem', title: tr('Edit', 'Editar'), arguments: [node] };
+        item.command = { command: 'sphinx.editItem', title: tr('Edit', 'Editar'), arguments: [node] };
         return item;
       }
       case 'challenge': {
@@ -201,7 +201,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         item.description = `${tr(...ORIGIN[this.origin(c.dir)])} · ${difficultyName(c.difficulty)}`;
         item.tooltip = new vscode.MarkdownString(`**${c.title}**\n\n${plural(c.tests.length, ['test', 'tests'], ['teste', 'testes'])}\n\n\`${c.dir}\``);
         item.contextValue = 'teacherItem';
-        item.command = { command: 'sphynx.open', title: tr('Try', 'Testar'), arguments: [c.id] };
+        item.command = { command: 'sphinx.open', title: tr('Try', 'Testar'), arguments: [c.id] };
         return item;
       }
       case 'quiz': {
@@ -211,7 +211,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         item.iconPath = new vscode.ThemeIcon('question');
         item.description = `${tr(...ORIGIN[this.origin(q.dir)])} · Quiz · ${plural(q.questions.length, ['question', 'questions'], ['questão', 'questões'])}`;
         item.contextValue = 'teacherItem';
-        item.command = { command: 'sphynx.openQuiz', title: tr('Try', 'Testar'), arguments: [q.id] };
+        item.command = { command: 'sphinx.openQuiz', title: tr('Try', 'Testar'), arguments: [q.id] };
         return item;
       }
       case 'tool': {

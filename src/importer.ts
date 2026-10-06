@@ -57,7 +57,7 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     return;
   }
 
-  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-import-'));
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-import-'));
   try {
     let root = source;
     if (fs.statSync(source).isFile()) {
@@ -83,7 +83,7 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     if (ok.length === 0) {
       vscode.window.showWarningMessage(
         errors.length
-          ? tr(`Nothing could be imported from ${path.basename(source)}. See the "Sphynx" output for the problems.`, `Nada pôde ser importado de ${path.basename(source)}. Veja os problemas na saída "Sphynx".`)
+          ? tr(`Nothing could be imported from ${path.basename(source)}. See the "Sphinx" output for the problems.`, `Nada pôde ser importado de ${path.basename(source)}. Veja os problemas na saída "Sphinx".`)
           : tr(
               `No challenges or exams found in ${path.basename(source)}. Each one needs a folder with a challenge.json, quiz.json or exam.json.`,
               `Nenhum desafio ou prova encontrado em ${path.basename(source)}. Cada um precisa de uma pasta com challenge.json, quiz.json ou exam.json.`,
@@ -177,14 +177,14 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     }
     const notes = [
       clashes.length ? tr(`Renamed to avoid clashing with existing ids: ${clashes.join(', ')}.`, `Renomeados para não conflitar com ids existentes: ${clashes.join(', ')}.`) : '',
-      errors.length ? tr(`${errors.length} item(s) could not be imported; see the "Sphynx" output.`, `${errors.length} item(ns) não puderam ser importados; veja a saída "Sphynx".`) : '',
+      errors.length ? tr(`${errors.length} item(s) could not be imported; see the "Sphinx" output.`, `${errors.length} item(ns) não puderam ser importados; veja a saída "Sphinx".`) : '',
     ].filter(Boolean);
     const choice = await vscode.window.showInformationMessage(
       `${tr('Imported', 'Importados')}: ${describe(imported)}${removeSolutions ? tr(' (solutions removed)', ' (soluções removidas)') : ''}. ${notes.join(' ')}`.trim(),
       tr('Show in Sidebar', 'Mostrar na barra lateral'),
     );
     if (choice) {
-      await vscode.commands.executeCommand('sphynx.list.focus');
+      await vscode.commands.executeCommand('sphinx.list.focus');
     }
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });

@@ -1,4 +1,4 @@
-// Checks that Java works the way Sphynx uses it: javac and java are found, recent enough, from
+// Checks that Java works the way Sphinx uses it: javac and java are found, recent enough, from
 // the same JDK, and a tiny program really compiles and runs (the same path as Run, Submit and
 // Run in Terminal). No vscode dependency, so it can be tested on its own.
 import * as fs from 'fs';
@@ -71,7 +71,7 @@ export function parseJavaVersion(output: string): number | undefined {
 }
 
 async function tryProgram(source: string, javaHome: string | undefined): Promise<{ ok: boolean; detail: string }> {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-java-check-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-java-check-'));
   try {
     const file = path.join(dir, 'Main.java');
     fs.writeFileSync(file, source);

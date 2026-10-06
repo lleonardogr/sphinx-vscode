@@ -166,7 +166,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
         const item = new vscode.TreeItem(tr('Start exam…', 'Começar prova…'), vscode.TreeItemCollapsibleState.None);
         item.id = `exam-start:${node.exam.id}`;
         item.iconPath = new vscode.ThemeIcon('play');
-        item.command = { command: 'sphynx.startExam', title: tr('Start Exam', 'Começar prova'), arguments: [node.exam.id] };
+        item.command = { command: 'sphinx.startExam', title: tr('Start Exam', 'Começar prova'), arguments: [node.exam.id] };
         return item;
       }
       case 'examQuestion':
@@ -182,7 +182,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
         item.description = tr('click to check and fix', 'clique para verificar e corrigir');
         item.iconPath = new vscode.ThemeIcon('warning', new vscode.ThemeColor('problemsWarningIcon.foreground'));
         item.tooltip = new vscode.MarkdownString(`**${text.title}**\n\n${text.fix}`);
-        item.command = { command: 'sphynx.checkJava', title: tr('Check Java Setup', 'Verificar a instalação do Java') };
+        item.command = { command: 'sphinx.checkJava', title: tr('Check Java Setup', 'Verificar a instalação do Java') };
         return item;
       }
     }
@@ -228,7 +228,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
       item.description += ` · ${tr('needs', 'precisa de')} ${c.requires.map(unitName).join(', ')}`;
     }
     item.contextValue = 'challenge';
-    item.command = { command: 'sphynx.open', title: tr('Open Challenge', 'Abrir desafio'), arguments: [c.id] };
+    item.command = { command: 'sphinx.open', title: tr('Open Challenge', 'Abrir desafio'), arguments: [c.id] };
     if (p?.status === 'solved') {
       item.iconPath = new vscode.ThemeIcon('pass-filled', new vscode.ThemeColor('testing.iconPassed'));
     } else if (p?.status === 'attempted') {
@@ -263,7 +263,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     item.contextValue = 'lesson';
     item.description = `${tr('Lesson', 'Lição')} · ${lesson.minutes} min${view !== 'path' && lesson.topic ? ` · ${unitName(lesson.topic)}` : ''}`;
     item.iconPath = read ? new vscode.ThemeIcon('pass-filled', new vscode.ThemeColor('testing.iconPassed')) : new vscode.ThemeIcon('book');
-    item.command = { command: 'sphynx.openLesson', title: tr('Open Lesson', 'Abrir lição'), arguments: [lesson.id] };
+    item.command = { command: 'sphinx.openLesson', title: tr('Open Lesson', 'Abrir lição'), arguments: [lesson.id] };
     item.tooltip = new vscode.MarkdownString(
       `**${lesson.title}** · ${tr('Lesson', 'Lição')}${lesson.topic ? ` · ${unitName(lesson.topic)}` : ''}\n\n${tr(`About ${lesson.minutes} min to read.`, `Cerca de ${lesson.minutes} min de leitura.`)} ${read ? tr('✅ Read', '✅ Lida') : ''}` +
         this.requirementsText(lesson.requires),
@@ -324,7 +324,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     item.description =
       (score ? `Quiz · ${tr('best', 'melhor')} ${score.best}/${score.total}` : `Quiz · ${plural(quiz.questions.length, ['question', 'questions'], ['questão', 'questões'])}`) +
       (view !== 'path' && quiz.topic ? ` · ${unitName(quiz.topic)}` : '');
-    item.command = { command: 'sphynx.openQuiz', title: tr('Open Quiz', 'Abrir quiz'), arguments: [quiz.id] };
+    item.command = { command: 'sphinx.openQuiz', title: tr('Open Quiz', 'Abrir quiz'), arguments: [quiz.id] };
     item.iconPath = !score
       ? new vscode.ThemeIcon('question')
       : this.perfect(quiz)
@@ -346,8 +346,8 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     const left = this.exams.submissionsLeft(exam, q.id);
     item.description = `${qs?.bestEarned ?? 0}/${q.points} pts · ${tr(`${left} submission${left === 1 ? '' : 's'} left`, `${left} envio${left === 1 ? '' : 's'} restante${left === 1 ? '' : 's'}`)}`;
     item.command = q.kind === 'quiz'
-      ? { command: 'sphynx.openQuiz', title: tr('Open Quiz', 'Abrir quiz'), arguments: [questionKey(q)] }
-      : { command: 'sphynx.open', title: tr('Open Question', 'Abrir questão'), arguments: [questionKey(q)] };
+      ? { command: 'sphinx.openQuiz', title: tr('Open Quiz', 'Abrir quiz'), arguments: [questionKey(q)] }
+      : { command: 'sphinx.open', title: tr('Open Question', 'Abrir questão'), arguments: [questionKey(q)] };
     if (!qs?.submissions) {
       item.iconPath = new vscode.ThemeIcon('circle-large-outline');
     } else if (qs.bestEarned >= q.points) {

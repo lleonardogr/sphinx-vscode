@@ -40,7 +40,7 @@ export interface SessionState {
 }
 
 export interface ExamResultsFile {
-  format: 'sphynx-exam-results';
+  format: 'sphinx-exam-results';
   version: 1;
   extensionVersion: string;
   exam: { id: string; title: string; mode: string; durationMinutes: number; maxSubmissions: number };
@@ -67,7 +67,7 @@ export interface ExamResultsFile {
   warnings: IntegrityWarning[];
 }
 
-const STATE_KEY = 'sphynx.exams';
+const STATE_KEY = 'sphinx.exams';
 const LARGE_INSERTION = 80; // characters inserted in a single edit, recorded when pastes aren't blocked
 const AWAY_THRESHOLD_MS = 15_000;
 
@@ -103,7 +103,7 @@ export class ExamManager implements vscode.Disposable {
     /** Where sessions are saved: the extension's global state (see SafeState). */
     private readonly store: vscode.Memento = context.globalState,
   ) {
-    this.timerItem.command = 'sphynx.list.focus';
+    this.timerItem.command = 'sphinx.list.focus';
     this.disposables.push(
       this.timerItem,
       this.changed,
@@ -220,7 +220,7 @@ export class ExamManager implements vscode.Disposable {
     if (ok !== startLabel) {
       return false;
     }
-    const previousName = this.store.get<string>('sphynx.studentName', '');
+    const previousName = this.store.get<string>('sphinx.studentName', '');
     const student = (
       await vscode.window.showInputBox({
         title: exam.title,
@@ -233,7 +233,7 @@ export class ExamManager implements vscode.Disposable {
     if (!student) {
       return false;
     }
-    await this.store.update('sphynx.studentName', student);
+    await this.store.update('sphinx.studentName', student);
 
     const now = Date.now();
     const state: SessionState = { student, startedAt: now, endsAt: now + exam.durationMinutes * 60_000, questions: {}, warnings: [] };
@@ -479,7 +479,7 @@ export class ExamManager implements vscode.Disposable {
     const active = this.activeExam();
     const file = vscode.window.activeTextEditor?.document.uri.fsPath;
     const noCopy = !!active && active.restrictions.blockCopy && !!file && !!this.isExamFile(active, file);
-    void vscode.commands.executeCommand('setContext', 'sphynx.examNoCopy', noCopy);
+    void vscode.commands.executeCommand('setContext', 'sphinx.examNoCopy', noCopy);
   }
 
   /** Called by the blocked Copy/Cut keybindings. */
@@ -589,7 +589,7 @@ export class ExamManager implements vscode.Disposable {
     const s = this.state(exam.id)!;
     const finishedAt = s.finishedAt ?? Date.now();
     return {
-      format: 'sphynx-exam-results',
+      format: 'sphinx-exam-results',
       version: 1,
       extensionVersion: String(this.context.extension.packageJSON.version ?? ''),
       exam: { id: exam.id, title: exam.title, mode: exam.mode, durationMinutes: exam.durationMinutes, maxSubmissions: exam.maxSubmissions },

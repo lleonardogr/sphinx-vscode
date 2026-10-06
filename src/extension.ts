@@ -51,7 +51,7 @@ export function migrateOldStorage(storage: string): void {
 }
 
 /** What activate() returns. Used by the integration tests to check the extension's state. */
-export interface SphynxApi {
+export interface SphinxApi {
   progress: Progress;
   lessonProgress: LessonProgress;
   lessons(): LessonDefinition[];
@@ -68,13 +68,28 @@ export interface SphynxApi {
   codePath(c: Challenge): string;
 }
 
-export function activate(context: vscode.ExtensionContext): SphynxApi {
+/**
+ * Until 1.1.0 Sphinx was spelled "Sphynx", and its saved state used "sphynx." keys. Move them to
+ * "sphinx." keys once; the old key is removed so a later reset isn't undone by copying it again.
+ */
+export function migrateSphynxState(state: vscode.Memento): void {
+  for (const key of state.keys().filter((k) => k.startsWith('sphynx.'))) {
+    const renamed = `sphinx.${key.slice('sphynx.'.length)}`;
+    if (state.get(renamed) === undefined) {
+      void state.update(renamed, state.get(key));
+    }
+    void state.update(key, undefined);
+  }
+}
+
+export function activate(context: vscode.ExtensionContext): SphinxApi {
   migrateOldStorage(context.globalStorageUri.fsPath);
   // Progress, quiz scores and exam sessions share one guarded view of the global state.
   const store = new SafeState(context.globalState);
+  migrateSphynxState(store);
   const progress = new Progress(store);
-  const output = vscode.window.createOutputChannel('Sphynx');
-  const diagnostics = vscode.languages.createDiagnosticCollection('sphynx');
+  const output = vscode.window.createOutputChannel('Sphinx');
+  const diagnostics = vscode.languages.createDiagnosticCollection('sphinx');
   let challenges: Challenge[] = [];
   let exams: ExamDefinition[] = [];
   let quizzes: QuizDefinition[] = [];
@@ -101,18 +116,18 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     lessonProgress,
   );
   javaSetup.onDidChange(() => tree.refresh());
-  const GROUP_KEY = 'sphynx.groupBy';
+  const GROUP_KEY = 'sphinx.groupBy';
   tree.mode = context.globalState.get<GroupMode>(GROUP_KEY, 'path');
-  const SUBJECT_KEY = 'sphynx.subject';
+  const SUBJECT_KEY = 'sphinx.subject';
   tree.subject = store.get<string>(SUBJECT_KEY, DEFAULT_SUBJECT);
   /** The units an item needs, with the student's progress in each. */
   const requirementsOf = (requires: string[]) => requirementStatus(requires, challenges, (id) => progress.isSolved(id));
   const quizController = new QuizController(context.extensionUri, quizProgress, examManager, () => quizzes, () => exams, requirementsOf);
   const lessonPanel = new LessonPanel(context.extensionUri, (msg, lesson) => void onLessonMessage(msg.type, lesson));
-  const treeView = vscode.window.createTreeView('sphynx.list', { treeDataProvider: tree });
+  const treeView = vscode.window.createTreeView('sphinx.list', { treeDataProvider: tree });
 
-  // Student or teacher view. Both live in the Sphynx sidebar; a context key shows one of them.
-  const VIEW_KEY = 'sphynx.view';
+  // Student or teacher view. Both live in the Sphinx sidebar; a context key shows one of them.
+  const VIEW_KEY = 'sphinx.view';
   /** Where an item comes from, shown in the teacher view. */
   const origin = (dir: string): Origin => {
     const inside = (parent: string) => path.resolve(dir).startsWith(path.resolve(parent) + path.sep);
@@ -139,25 +154,25 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   context.subscriptions.push({ dispose: () => classPanel.dispose() });
   /** Exams whose preview was started in this session (later sessions find them through their saved state). */
   const previewing = new Set<string>();
-  const teacherView = vscode.window.createTreeView('sphynx.teacher', { treeDataProvider: teacherTree });
+  const teacherView = vscode.window.createTreeView('sphinx.teacher', { treeDataProvider: teacherTree });
   const currentView = (): 'student' | 'teacher' => (store.get<string>(VIEW_KEY) === 'teacher' ? 'teacher' : 'student');
   async function setView(view: 'student' | 'teacher'): Promise<void> {
     await store.update(VIEW_KEY, view);
-    await vscode.commands.executeCommand('setContext', 'sphynx.view', view);
-    await vscode.commands.executeCommand(view === 'teacher' ? 'sphynx.teacher.focus' : 'sphynx.list.focus');
+    await vscode.commands.executeCommand('setContext', 'sphinx.view', view);
+    await vscode.commands.executeCommand(view === 'teacher' ? 'sphinx.teacher.focus' : 'sphinx.list.focus');
   }
-  void vscode.commands.executeCommand('setContext', 'sphynx.view', currentView());
+  void vscode.commands.executeCommand('setContext', 'sphinx.view', currentView());
   const panel = new ChallengePanel(context.extensionUri, progress, (action, c) => handlePanelAction(action, c));
   const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-  status.command = 'sphynx.list.focus';
-  status.tooltip = tr('Sphynx: open the challenge list', 'Sphynx: abrir a lista de desafios');
+  status.command = 'sphinx.list.focus';
+  status.tooltip = tr('Sphinx: open the challenge list', 'Sphinx: abrir a lista de desafios');
   status.show();
 
   panel.examInfo = (c) => panelExamInfo(c);
   panel.requirements = (c) => requirementsOf(c.requires);
   context.subscriptions.push(output, diagnostics, treeView, teacherView, status, examManager, quizController, { dispose: () => panel.dispose() }, { dispose: () => lessonPanel.dispose() });
 
-  const config = () => vscode.workspace.getConfiguration('sphynx');
+  const config = () => vscode.workspace.getConfiguration('sphinx');
   void migrateLegacySettings();
   const javaHome = () => config().get<string>('java.home', '').trim() || undefined;
   const javaStyle = () => config().get<'modern' | 'classic'>('java.style', 'modern');
@@ -223,7 +238,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     if (errors.length) {
       errors.forEach((e) => output.appendLine(`[challenges] ${e}`));
       vscode.window.showWarningMessage(
-        tr('Some challenges, quizzes or exams could not be loaded. See the "Sphynx" output for details.', 'Alguns desafios, quizzes ou provas não puderam ser carregados. Veja os detalhes na saída "Sphynx".'),
+        tr('Some challenges, quizzes or exams could not be loaded. See the "Sphinx" output for details.', 'Alguns desafios, quizzes ou provas não puderam ser carregados. Veja os detalhes na saída "Sphinx".'),
       );
     }
     examManager.setExams(exams);
@@ -238,8 +253,8 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     const solved = progress.solvedCount(mine.map((c) => c.id));
     const subject = findSubject(tree.subject);
     status.text = `$(mortar-board) ${solved}/${mine.length} ${tr('solved', 'resolvidos')}`;
-    status.tooltip = tr(`Sphynx: ${subject ? subjectTitle(subject) : ''}. Click to open the list.`, `Sphynx: ${subject ? subjectTitle(subject) : ''}. Clique para abrir a lista.`);
-    // With several subjects, the header names the one shown ("Sphynx: CS Fundamentals").
+    status.tooltip = tr(`Sphinx: ${subject ? subjectTitle(subject) : ''}. Click to open the list.`, `Sphinx: ${subject ? subjectTitle(subject) : ''}. Clique para abrir a lista.`);
+    // With several subjects, the header names the one shown ("Sphinx: CS Fundamentals").
     treeView.title = allSubjects().length > 1 && subject ? subjectTitle(subject) : tr('Challenges', 'Desafios');
     treeView.message = challenges.length ? undefined : 'No challenges found.';
   }
@@ -252,10 +267,11 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     }
     const ws = vscode.workspace.workspaceFolders?.[0];
     if (ws) {
-      // Before the rename to Sphynx, code was saved in tech-challenges/. Keep using it if it exists.
-      const legacy = path.join(ws.uri.fsPath, 'tech-challenges');
-      const current = path.join(ws.uri.fsPath, 'sphynx');
-      return !fs.existsSync(current) && fs.existsSync(legacy) ? legacy : current;
+      // Code used to be saved in sphynx/ (the old spelling) and, before that, tech-challenges/.
+      // Keep using an old folder if it exists and sphinx/ doesn't.
+      const current = path.join(ws.uri.fsPath, 'sphinx');
+      const legacy = ['sphynx', 'tech-challenges'].map((dir) => path.join(ws.uri.fsPath, dir)).find((dir) => fs.existsSync(dir));
+      return !fs.existsSync(current) && legacy ? legacy : current;
     }
     return path.join(context.globalStorageUri.fsPath, 'solutions');
   }
@@ -581,7 +597,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
       }
     } catch (e) {
       output.appendLine(`[run] ${(e as Error).stack ?? e}`);
-      vscode.window.showErrorMessage(`Sphynx: ${(e as Error).message}`);
+      vscode.window.showErrorMessage(`Sphinx: ${(e as Error).message}`);
     } finally {
       running.delete(c.id);
     }
@@ -630,7 +646,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
       }
     } catch (e) {
       output.appendLine(`[custom] ${(e as Error).stack ?? e}`);
-      vscode.window.showErrorMessage(`Sphynx: ${(e as Error).message}`);
+      vscode.window.showErrorMessage(`Sphinx: ${(e as Error).message}`);
     } finally {
       running.delete(c.id);
     }
@@ -838,7 +854,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   function updateContextKey(): void {
     const editor = vscode.window.activeTextEditor;
     const isChallenge = !!editor && !!challengeForFile(editor.document.uri.fsPath);
-    vscode.commands.executeCommand('setContext', 'sphynx.isChallengeFile', isChallenge);
+    vscode.commands.executeCommand('setContext', 'sphinx.isChallengeFile', isChallenge);
   }
 
   const authoringDeps = {
@@ -934,8 +950,8 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     });
     const ok = files.length - mismatches - failed;
     const summary = tr(
-      `Verified ${files.length} results file(s): ${ok} OK${mismatches ? `, ${mismatches} with a score that doesn't match the code` : ''}${failed ? `, ${failed} unreadable` : ''}. See the "Sphynx" output.`,
-      `${files.length} arquivo(s) verificado(s): ${ok} OK${mismatches ? `, ${mismatches} com nota que não confere com o código` : ''}${failed ? `, ${failed} ilegível(is)` : ''}. Veja a saída "Sphynx".`,
+      `Verified ${files.length} results file(s): ${ok} OK${mismatches ? `, ${mismatches} with a score that doesn't match the code` : ''}${failed ? `, ${failed} unreadable` : ''}. See the "Sphinx" output.`,
+      `${files.length} arquivo(s) verificado(s): ${ok} OK${mismatches ? `, ${mismatches} com nota que não confere com o código` : ''}${failed ? `, ${failed} ilegível(is)` : ''}. Veja a saída "Sphinx".`,
     );
     (mismatches || failed ? vscode.window.showWarningMessage : vscode.window.showInformationMessage)(summary);
   }
@@ -948,21 +964,21 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   };
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('sphynx.open', withChallenge(openChallenge)),
-    vscode.commands.registerCommand('sphynx.openQuiz', (arg?: unknown) => quizController.open(arg)),
-    vscode.commands.registerCommand('sphynx.run', withChallenge((c) => runChallenge(c, 'run'))),
-    vscode.commands.registerCommand('sphynx.submit', withChallenge((c) => runChallenge(c, 'submit'))),
-    vscode.commands.registerCommand('sphynx.runInTerminal', withChallenge(runChallengeInTerminal)),
-    vscode.commands.registerCommand('sphynx.resetCode', withChallenge(resetCode)),
-    vscode.commands.registerCommand('sphynx.resetChallenge', withChallenge(resetChallenge)),
-    vscode.commands.registerCommand('sphynx.resetQuiz', resetQuiz),
-    vscode.commands.registerCommand('sphynx.resetAllChallenges', resetAllChallenges),
-    vscode.commands.registerCommand('sphynx.askAiHint', withChallenge(askAiHint)),
-    vscode.commands.registerCommand('sphynx.setupAi', () => ai.setup()),
-    vscode.commands.registerCommand('sphynx.clearAiKeys', () => ai.clearApiKeys()),
-    vscode.commands.registerCommand('sphynx.refresh', reload),
-    vscode.commands.registerCommand('sphynx.checkJava', () => javaSetup.checkInteractively()),
-    vscode.commands.registerCommand('sphynx.groupBy', async () => {
+    vscode.commands.registerCommand('sphinx.open', withChallenge(openChallenge)),
+    vscode.commands.registerCommand('sphinx.openQuiz', (arg?: unknown) => quizController.open(arg)),
+    vscode.commands.registerCommand('sphinx.run', withChallenge((c) => runChallenge(c, 'run'))),
+    vscode.commands.registerCommand('sphinx.submit', withChallenge((c) => runChallenge(c, 'submit'))),
+    vscode.commands.registerCommand('sphinx.runInTerminal', withChallenge(runChallengeInTerminal)),
+    vscode.commands.registerCommand('sphinx.resetCode', withChallenge(resetCode)),
+    vscode.commands.registerCommand('sphinx.resetChallenge', withChallenge(resetChallenge)),
+    vscode.commands.registerCommand('sphinx.resetQuiz', resetQuiz),
+    vscode.commands.registerCommand('sphinx.resetAllChallenges', resetAllChallenges),
+    vscode.commands.registerCommand('sphinx.askAiHint', withChallenge(askAiHint)),
+    vscode.commands.registerCommand('sphinx.setupAi', () => ai.setup()),
+    vscode.commands.registerCommand('sphinx.clearAiKeys', () => ai.clearApiKeys()),
+    vscode.commands.registerCommand('sphinx.refresh', reload),
+    vscode.commands.registerCommand('sphinx.checkJava', () => javaSetup.checkInteractively()),
+    vscode.commands.registerCommand('sphinx.groupBy', async () => {
       const options: { mode: GroupMode; label: string; detail: string }[] = [
         { mode: 'path', label: tr('$(list-tree) Learning path', '$(list-tree) Trilha de aprendizado'), detail: tr('Units in teaching order, each with its quiz and tests (default).', 'Unidades na ordem de ensino, cada uma com seu quiz e testes (padrão).') },
         { mode: 'difficulty', label: tr('$(flame) Difficulty', '$(flame) Dificuldade'), detail: tr('Easy, Medium and Hard, then the quizzes.', 'Fácil, Médio e Difícil, e depois os quizzes.') },
@@ -978,14 +994,14 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
         tree.refresh();
       }
     }),
-    vscode.commands.registerCommand('sphynx.openLesson', async (arg?: unknown) => {
+    vscode.commands.registerCommand('sphinx.openLesson', async (arg?: unknown) => {
       const id = typeof arg === 'string' ? arg : (arg as { lesson?: LessonDefinition } | undefined)?.lesson?.id;
       const lesson = lessons.find((l) => l.id === id);
       if (lesson) {
         await openLesson(lesson);
       }
     }),
-    vscode.commands.registerCommand('sphynx.switchSubject', async (arg?: string) => {
+    vscode.commands.registerCommand('sphinx.switchSubject', async (arg?: string) => {
       let id = typeof arg === 'string' ? arg : undefined;
       if (!id) {
         const pick = await vscode.window.showQuickPick(
@@ -1009,36 +1025,36 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
         updateStatus();
       }
     }),
-    vscode.commands.registerCommand('sphynx.copyBlocked', () => examManager.copyBlocked()),
-    vscode.commands.registerCommand('sphynx.chooseJdk', () => javaSetup.chooseJdkFolder()),
-    vscode.commands.registerCommand('sphynx.startExam', async (arg?: unknown) => {
+    vscode.commands.registerCommand('sphinx.copyBlocked', () => examManager.copyBlocked()),
+    vscode.commands.registerCommand('sphinx.chooseJdk', () => javaSetup.chooseJdkFolder()),
+    vscode.commands.registerCommand('sphinx.startExam', async (arg?: unknown) => {
       const exam = await resolveExam(arg, tr('Which exam do you want to start?', 'Qual prova você quer começar?'), (t) => !examManager.state(t.id));
       if (exam && (await examManager.start(exam))) {
         const first = exam.questions[0];
         await (first.kind === 'quiz' ? quizController.open(first.quiz.id) : openChallenge(first.challenge));
       }
     }),
-    vscode.commands.registerCommand('sphynx.finishExam', async (arg?: unknown) => {
+    vscode.commands.registerCommand('sphinx.finishExam', async (arg?: unknown) => {
       const exam = await resolveExam(arg, tr('Which exam do you want to finish?', 'Qual prova você quer terminar?'), (t) => examManager.isActive(t.id));
       if (exam) {
         await examManager.confirmFinish(exam);
       }
     }),
-    vscode.commands.registerCommand('sphynx.openExamResults', async (arg?: unknown) => {
+    vscode.commands.registerCommand('sphinx.openExamResults', async (arg?: unknown) => {
       const exam = await resolveExam(arg, tr('Results of which exam?', 'Resultado de qual prova?'), (t) => !!examManager.state(t.id)?.finishedAt);
       if (exam) {
         await examManager.openResults(exam);
       }
     }),
-    vscode.commands.registerCommand('sphynx.saveExamResults', async (arg?: unknown) => {
+    vscode.commands.registerCommand('sphinx.saveExamResults', async (arg?: unknown) => {
       const exam = await resolveExam(arg, tr('Results of which exam?', 'Resultado de qual prova?'), (t) => !!examManager.state(t.id)?.finishedAt);
       if (exam) {
         await examManager.saveResultsCopy(exam);
       }
     }),
-    vscode.commands.registerCommand('sphynx.verifyExamResults', verifyExamResultsCommand),
-    vscode.commands.registerCommand('sphynx.switchToTeacherView', () => setView('teacher')),
-    vscode.commands.registerCommand('sphynx.previewExam', async (node?: { exam?: ExamDefinition }) => {
+    vscode.commands.registerCommand('sphinx.verifyExamResults', verifyExamResultsCommand),
+    vscode.commands.registerCommand('sphinx.switchToTeacherView', () => setView('teacher')),
+    vscode.commands.registerCommand('sphinx.previewExam', async (node?: { exam?: ExamDefinition }) => {
       const exam = node?.exam;
       if (!exam || exam.preview) {
         return;
@@ -1054,9 +1070,9 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
       }
       const first = preview.questions[0];
       const id = examChallengeId(preview.id, first.id);
-      await vscode.commands.executeCommand(first.kind === 'quiz' ? 'sphynx.openQuiz' : 'sphynx.open', id);
+      await vscode.commands.executeCommand(first.kind === 'quiz' ? 'sphinx.openQuiz' : 'sphinx.open', id);
     }),
-    vscode.commands.registerCommand('sphynx.classResults', async (node?: { exam?: ExamDefinition }): Promise<ClassReport | undefined> => {
+    vscode.commands.registerCommand('sphinx.classResults', async (node?: { exam?: ExamDefinition }): Promise<ClassReport | undefined> => {
       const picked = await vscode.window.showOpenDialog({
         title: tr("Class results: choose the folder (or files) with your students' results", 'Resultados da turma: escolha a pasta (ou os arquivos) com os resultados dos alunos'),
         openLabel: tr('Open', 'Abrir'),
@@ -1096,32 +1112,32 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
       classPanel.show(report);
       return report;
     }),
-    vscode.commands.registerCommand('sphynx.exportPack', (node?: TeacherNode) =>
+    vscode.commands.registerCommand('sphinx.exportPack', (node?: TeacherNode) =>
       exportPack({ challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, origin, extensionPath: context.extensionPath }, node),
     ),
-    vscode.commands.registerCommand('sphynx.restartPreview', async (node?: { exam?: ExamDefinition }) => {
+    vscode.commands.registerCommand('sphinx.restartPreview', async (node?: { exam?: ExamDefinition }) => {
       if (node?.exam?.preview) {
         await restartPreview(node.exam);
       }
     }),
-    vscode.commands.registerCommand('sphynx.switchToStudentView', () => setView('student')),
-    vscode.commands.registerCommand('sphynx.editItem', async (node?: TeacherNode) => {
+    vscode.commands.registerCommand('sphinx.switchToStudentView', () => setView('student')),
+    vscode.commands.registerCommand('sphinx.editItem', async (node?: TeacherNode) => {
       const file = node && sourceFile(node);
       if (file) {
         await vscode.window.showTextDocument(vscode.Uri.file(file), { preview: false });
       }
     }),
-    vscode.commands.registerCommand('sphynx.revealItem', async (node?: TeacherNode) => {
+    vscode.commands.registerCommand('sphinx.revealItem', async (node?: TeacherNode) => {
       const file = node && sourceFile(node);
       if (file) {
         await vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(file));
       }
     }),
-    vscode.commands.registerCommand('sphynx.createChallenge', () => createChallenge(authoringDeps)),
-    vscode.commands.registerCommand('sphynx.importContent', () => importContent(importDeps)),
-    vscode.commands.registerCommand('sphynx.removeImported', () => removeImported(importDeps)),
-    vscode.commands.registerCommand('sphynx.validateChallenges', () => validateFolder(authoringDeps)),
-    vscode.commands.registerCommand('sphynx.resetProgress', async () => {
+    vscode.commands.registerCommand('sphinx.createChallenge', () => createChallenge(authoringDeps)),
+    vscode.commands.registerCommand('sphinx.importContent', () => importContent(importDeps)),
+    vscode.commands.registerCommand('sphinx.removeImported', () => removeImported(importDeps)),
+    vscode.commands.registerCommand('sphinx.validateChallenges', () => validateFolder(authoringDeps)),
+    vscode.commands.registerCommand('sphinx.resetProgress', async () => {
       const resetLabel = tr('Reset Progress', 'Zerar progresso');
       const answer = await vscode.window.showWarningMessage(
         tr('Reset progress for all challenges and quizzes? Your code files are kept.', 'Zerar o progresso de todos os desafios e quizzes? Seus arquivos de código são mantidos.'),
@@ -1143,13 +1159,13 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
       quizController.refreshExamStatus();
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {
-      if (e.affectsConfiguration('sphynx.java')) {
+      if (e.affectsConfiguration('sphinx.java')) {
         // A new JDK folder or style: re-check quietly, so the sidebar notice stays accurate.
         clearJavaCache();
         void javaSetup.checkQuietly();
       }
-      if (e.affectsConfiguration('sphynx')) {
-        const languageChanged = e.affectsConfiguration('sphynx.language');
+      if (e.affectsConfiguration('sphinx')) {
+        const languageChanged = e.affectsConfiguration('sphinx.language');
         setLanguage(config().get<string>('language'));
         reload();
         updateContextKey();
@@ -1180,25 +1196,29 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
 export function deactivate(): void {}
 
 /** Settings that were called techChallenges.* before the rename to Sphynx. */
-const LEGACY_SETTINGS = ['java.home', 'java.style', 'codeFolder', 'extraChallengePaths', 'ai.provider', 'ai.model', 'ai.baseUrl', 'ai.responseLanguage'];
+const TECH_CHALLENGES_SETTINGS = ['java.home', 'java.style', 'codeFolder', 'extraChallengePaths', 'ai.provider', 'ai.model', 'ai.baseUrl', 'ai.responseLanguage'];
+/** Settings that were called sphynx.* before the spelling was fixed to Sphinx. */
+const SPHYNX_SETTINGS = ['language', ...TECH_CHALLENGES_SETTINGS];
 
-/** Copies old techChallenges.* settings to sphynx.* once, where the new setting isn't set yet. */
+/** Copies old sphynx.* and techChallenges.* settings to sphinx.* once, where the new setting isn't set yet. */
 async function migrateLegacySettings(): Promise<void> {
-  const legacy = vscode.workspace.getConfiguration('techChallenges');
-  const current = vscode.workspace.getConfiguration('sphynx');
-  const targets: [keyof NonNullable<ReturnType<typeof legacy.inspect>>, vscode.ConfigurationTarget][] = [
+  const current = vscode.workspace.getConfiguration('sphinx');
+  const targets: [keyof NonNullable<ReturnType<typeof current.inspect>>, vscode.ConfigurationTarget][] = [
     ['globalValue', vscode.ConfigurationTarget.Global],
     ['workspaceValue', vscode.ConfigurationTarget.Workspace],
   ];
-  for (const key of LEGACY_SETTINGS) {
-    const old = legacy.inspect(key);
-    const now = current.inspect(key);
-    for (const [scope, target] of targets) {
-      if (old?.[scope] !== undefined && now?.[scope] === undefined) {
-        try {
-          await current.update(key, old[scope], target);
-        } catch {
-          // No workspace open, or the setting can't be written there.
+  // The newer name first, so it wins over the older one.
+  for (const [section, keys] of [['sphynx', SPHYNX_SETTINGS], ['techChallenges', TECH_CHALLENGES_SETTINGS]] as const) {
+    const legacy = vscode.workspace.getConfiguration(section);
+    for (const key of keys) {
+      const old = legacy.inspect(key);
+      for (const [scope, target] of targets) {
+        if (old?.[scope] !== undefined && current.inspect(key)?.[scope] === undefined) {
+          try {
+            await current.update(key, old[scope], target);
+          } catch {
+            // No workspace open, or the setting can't be written there.
+          }
         }
       }
     }

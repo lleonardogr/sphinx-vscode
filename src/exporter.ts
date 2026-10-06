@@ -74,17 +74,17 @@ export async function exportPack(deps: ExportDeps, from?: TeacherNode): Promise<
     }
   }
 
-  const suggested = (items.find((p) => p.item!.kind === 'exam')?.title ?? 'sphynx-pack').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'sphynx-pack';
+  const suggested = (items.find((p) => p.item!.kind === 'exam')?.title ?? 'sphinx-pack').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'sphinx-pack';
   const folder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? os.homedir();
   const target = await vscode.window.showSaveDialog({
     title: tr('Export a pack (3/3): save as', 'Exportar um pacote (3/3): salvar como'),
     defaultUri: vscode.Uri.file(path.join(folder, `${suggested}.zip`)),
-    filters: { [tr('Sphynx pack', 'Pacote do Sphynx')]: ['zip'] },
+    filters: { [tr('Sphinx pack', 'Pacote do Sphinx')]: ['zip'] },
   });
   if (!target) {
     return;
   }
-  const packName = path.basename(target.fsPath).replace(/\.zip$/i, '') || 'sphynx-pack';
+  const packName = path.basename(target.fsPath).replace(/\.zip$/i, '') || 'sphinx-pack';
   const pack = buildPack(packItems, packName, audience.keep);
   fs.writeFileSync(target.fsPath, pack.zip);
 
@@ -95,8 +95,8 @@ export async function exportPack(deps: ExportDeps, from?: TeacherNode): Promise<
   const show = tr('Show in Folder', 'Mostrar na pasta');
   const choice = await vscode.window.showInformationMessage(
     tr(
-      `Exported ${plural(packItems.length, ['item', 'items'], ['item', 'itens'])} to ${path.basename(target.fsPath)}. ${notes.join(' ')} Students import it with the Import button in the Sphynx sidebar.`,
-      `${plural(packItems.length, ['item exportado', 'itens exportados'], ['item exportado', 'itens exportados'])} para ${path.basename(target.fsPath)}. ${notes.join(' ')} Os alunos importam com o botão Importar da barra lateral do Sphynx.`,
+      `Exported ${plural(packItems.length, ['item', 'items'], ['item', 'itens'])} to ${path.basename(target.fsPath)}. ${notes.join(' ')} Students import it with the Import button in the Sphinx sidebar.`,
+      `${plural(packItems.length, ['item exportado', 'itens exportados'], ['item exportado', 'itens exportados'])} para ${path.basename(target.fsPath)}. ${notes.join(' ')} Os alunos importam com o botão Importar da barra lateral do Sphinx.`,
     ),
     show,
   );

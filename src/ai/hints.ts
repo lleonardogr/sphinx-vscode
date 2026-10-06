@@ -7,8 +7,10 @@ import { RunOutcome } from '../runner';
 import { buildHintPrompt } from './prompt';
 import { AiError, DEFAULT_ANTHROPIC_MODEL, PROVIDERS, ProviderId, createProvider, defaultBaseUrl, listOpenAiModels } from './providers';
 
-const secretKey = (id: ProviderId) => `sphynx.ai.apiKey.${id}`;
-const CONSENT_KEY = 'sphynx.ai.consent';
+const secretKey = (id: ProviderId) => `sphinx.ai.apiKey.${id}`;
+/** Where keys were saved while Sphinx was spelled "Sphynx". */
+const oldSecretKey = (id: ProviderId) => `sphynx.ai.apiKey.${id}`;
+const CONSENT_KEY = 'sphinx.ai.consent';
 
 export interface HintCallbacks {
   onStart(label: string): void;
@@ -24,14 +26,14 @@ export class AiHints {
   constructor(private readonly context: vscode.ExtensionContext) {}
 
   private config() {
-    return vscode.workspace.getConfiguration('sphynx.ai');
+    return vscode.workspace.getConfiguration('sphinx.ai');
   }
 
   get providerId(): ProviderId {
     return this.config().get<ProviderId>('provider', 'off');
   }
 
-  /** The language for AI answers: the responseLanguage setting, or else Sphynx's language. */
+  /** The language for AI answers: the responseLanguage setting, or else Sphinx's language. */
   private responseLanguage(): string {
     return this.config().get<string>('responseLanguage', '').trim() || (language() === 'pt-br' ? 'Português (Brasil)' : 'English');
   }
@@ -66,7 +68,7 @@ export class AiHints {
         id,
         model: this.config().get<string>('model', '').trim(),
         baseUrl: this.config().get<string>('baseUrl', '').trim(),
-        apiKey: await this.context.secrets.get(secretKey(id)),
+        apiKey: await this.apiKey(id),
       });
       if (provider.remote && !(await this.confirmRemote(provider.label))) {
         return;
@@ -102,6 +104,20 @@ export class AiHints {
   }
 
   /** Asks once per provider before sending code to a remote service. */
+  /** The saved API key, moved from its old "sphynx." name the first time it's needed. */
+  private async apiKey(id: ProviderId): Promise<string | undefined> {
+    const key = await this.context.secrets.get(secretKey(id));
+    if (key !== undefined) {
+      return key;
+    }
+    const old = await this.context.secrets.get(oldSecretKey(id));
+    if (old !== undefined) {
+      await this.context.secrets.store(secretKey(id), old);
+      await this.context.secrets.delete(oldSecretKey(id));
+    }
+    return old;
+  }
+
   private async confirmRemote(label: string): Promise<boolean> {
     const consented = this.context.globalState.get<string[]>(CONSENT_KEY, []);
     if (consented.includes(this.providerId)) {
@@ -139,7 +155,7 @@ export class AiHints {
           description: current === 'off' ? tr('(current)', '(atual)') : '',
         },
       ],
-      { title: tr('Sphynx: AI hints provider', 'Sphynx: provedor das dicas de IA'), placeHolder: tr('Where should AI hints come from?', 'De onde devem vir as dicas de IA?'), ignoreFocusOut: true },
+      { title: tr('Sphinx: AI hints provider', 'Sphinx: provedor das dicas de IA'), placeHolder: tr('Where should AI hints come from?', 'De onde devem vir as dicas de IA?'), ignoreFocusOut: true },
     );
     if (!pick) {
       return;
@@ -165,7 +181,7 @@ export class AiHints {
     }
 
     if (info?.needsKey) {
-      const existing = await this.context.secrets.get(secretKey(id));
+      const existing = await this.apiKey(id);
       const key = await vscode.window.showInputBox({
         title: tr(`${info.label} API key`, `Chave de API: ${info.label}`),
         prompt: existing
@@ -225,6 +241,7 @@ export class AiHints {
   async clearApiKeys(): Promise<void> {
     for (const p of PROVIDERS) {
       await this.context.secrets.delete(secretKey(p.id));
+      await this.context.secrets.delete(oldSecretKey(p.id));
     }
     await this.context.globalState.update(CONSENT_KEY, undefined);
     vscode.window.showInformationMessage(tr('All saved AI API keys were removed.', 'Todas as chaves de API salvas foram removidas.'));

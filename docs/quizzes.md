@@ -13,7 +13,7 @@ A **quiz** is a set of short questions: multiple choice, true or false, short an
 
 ## Taking a quiz (students)
 
-1. Click the quiz at the end of a unit in the Sphynx sidebar (marked **Quiz**). Quizzes that belong to no unit are in the **Custom** section.
+1. Click the quiz at the end of a unit in the Sphinx sidebar (marked **Quiz**). Quizzes that belong to no unit are in the **Custom** section.
 2. Answer the questions. Click **Check** under a question to see right away whether it's correct, with the right answer and an explanation.
 3. Click **Check all answers** at the end to get your score. Your best score is shown in the sidebar, and a quiz turns green when you get everything right.
 4. **Start over** clears your answers so you can try again.
@@ -82,7 +82,7 @@ Every question can also have:
 | `explanation` | | Shown after a practice check (Markdown). **Never shown during an exam.** |
 | `points` | `1` | Points for the question. Each question is all or nothing. |
 
-To share quizzes, put them next to your challenges and use [Import](creating-challenges.md#sharing-challenges-with-students) or `sphynx.extraChallengePaths`, exactly like challenges. The built-in examples are in [`quizzes/`](../quizzes).
+To share quizzes, put them next to your challenges and use [Import](creating-challenges.md#sharing-challenges-with-students) or `sphinx.extraChallengePaths`, exactly like challenges. The built-in examples are in [`quizzes/`](../quizzes).
 
 ---
 
@@ -144,7 +144,7 @@ Add a `translations` block with one entry per question, in the same order:
 
 ## Checking a quiz
 
-Run **Sphynx: Validate Challenges in a Folder…** on the folder that contains your quizzes. It checks that every quiz loads, and it **compiles and runs every `output` question**:
+Run **Sphinx: Validate Challenges in a Folder…** on the folder that contains your quizzes. It checks that every quiz loads, and it **compiles and runs every `output` question**:
 
 - If the `answer` doesn't match what the code really prints, it says so: `question 3: the answer is "3.5" but the code prints "3"`.
 - With **Validate and fill in expected outputs**, empty answers (`""`) are filled in from the real output, so you never have to work them out by hand.

@@ -13,7 +13,7 @@ function results(student: string, scores: number[], extra: Record<string, unknow
     { id: 'q3', type: 'challenge', title: 'Word Stats', points: 50 },
   ].map((q, i) => ({ ...q, earned: scores[i], passed: 0, total: 5, submissions: scores[i] ? 1 : 0, code: '' }));
   return {
-    format: 'sphynx-exam-results',
+    format: 'sphinx-exam-results',
     version: 1,
     extensionVersion: '1.0.2',
     exam: { id: 'exam-1', title: 'Exam 1', mode: 'closed', durationMinutes: 60, maxSubmissions: 3 },
@@ -45,6 +45,14 @@ function classFolder(): string {
 }
 
 describe('class results', () => {
+  it('accepts results files saved under the old format names', () => {
+    const { isResultsFormat } = require('../../exams') as typeof import('../../exams');
+    for (const format of ['sphinx-exam-results', 'sphynx-exam-results', 'tech-challenges-exam-results']) {
+      assert.equal(isResultsFormat(format), true, format);
+    }
+    assert.equal(isResultsFormat('something-else'), false);
+  });
+
   it('finds results files in a folder and its subfolders, and skips other JSON', () => {
     const dir = classFolder();
     const files = findResultsFiles([dir]);

@@ -249,8 +249,8 @@ export class ChallengePanel {
     ${customInput}
     ${hints}
     <p class="muted style-note">${tr(
-      "Both Java styles are accepted, because only your program's output is checked. You can write modern Java 25+ with <code>void main()</code> and <code>IO.println</code>, or classic Java with <code>public class Main</code> and <code>System.out.println</code>. To get classic starter code, set <code>sphynx.java.style</code> to <code>classic</code>.",
-      'Os dois estilos de Java são aceitos, porque só a saída do programa é verificada. Você pode escrever Java moderno (25+) com <code>void main()</code> e <code>IO.println</code>, ou Java clássico com <code>public class Main</code> e <code>System.out.println</code>. Para receber o código inicial clássico, defina <code>sphynx.java.style</code> como <code>classic</code>.',
+      "Both Java styles are accepted, because only your program's output is checked. You can write modern Java 25+ with <code>void main()</code> and <code>IO.println</code>, or classic Java with <code>public class Main</code> and <code>System.out.println</code>. To get classic starter code, set <code>sphinx.java.style</code> to <code>classic</code>.",
+      'Os dois estilos de Java são aceitos, porque só a saída do programa é verificada. Você pode escrever Java moderno (25+) com <code>void main()</code> e <code>IO.println</code>, ou Java clássico com <code>public class Main</code> e <code>System.out.println</code>. Para receber o código inicial clássico, defina <code>sphinx.java.style</code> como <code>classic</code>.',
     )}</p>
   </main>
 

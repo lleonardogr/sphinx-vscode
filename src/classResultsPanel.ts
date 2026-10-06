@@ -37,7 +37,7 @@ export class ClassResultsPanel {
     this.report = report;
     const title = tr(`Class results: ${report.examTitle}`, `Resultados da turma: ${report.examTitle}`);
     if (!this.panel) {
-      this.panel = vscode.window.createWebviewPanel('sphynxClassResults', title, vscode.ViewColumn.One, {
+      this.panel = vscode.window.createWebviewPanel('sphinxClassResults', title, vscode.ViewColumn.One, {
         enableScripts: true,
         retainContextWhenHidden: true,
         localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, 'media')],

@@ -10,7 +10,7 @@ import { QuizAnswer, QuizDefinition, describeAnswer, gradeQuiz, isCorrect, parse
 import { plural, tr } from './i18n';
 import { Requirement } from './path';
 
-const KEY = 'sphynx.quizzes';
+const KEY = 'sphinx.quizzes';
 
 export interface QuizScore {
   best: number;

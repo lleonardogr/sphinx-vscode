@@ -5,7 +5,7 @@ import { Requirement, unitName } from './path';
 import { requirementsHtml } from './challengePanel';
 import { language, tr } from './i18n';
 
-const KEY = 'sphynx.lessons';
+const KEY = 'sphinx.lessons';
 
 /** Lessons the student marked as read. */
 export class LessonProgress {
@@ -79,7 +79,7 @@ export class LessonPanel {
   async show(lesson: LessonDefinition, view: LessonView): Promise<void> {
     const roots = [vscode.Uri.joinPath(this.extensionUri, 'media'), vscode.Uri.file(lesson.dir)];
     if (!this.panel) {
-      this.panel = vscode.window.createWebviewPanel('sphynxLesson', lesson.title, vscode.ViewColumn.One, { enableScripts: true, retainContextWhenHidden: true, localResourceRoots: roots });
+      this.panel = vscode.window.createWebviewPanel('sphinxLesson', lesson.title, vscode.ViewColumn.One, { enableScripts: true, retainContextWhenHidden: true, localResourceRoots: roots });
       this.panel.iconPath = vscode.Uri.joinPath(this.extensionUri, 'media', 'logo', 'icon.png');
       this.panel.onDidDispose(() => {
         this.panel = undefined;

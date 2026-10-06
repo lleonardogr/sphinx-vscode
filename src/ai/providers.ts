@@ -48,7 +48,7 @@ export function defaultBaseUrl(id: ProviderId): string {
 
 function anthropicProvider(settings: ProviderSettings): HintProvider {
   if (!settings.apiKey) {
-    throw new AiError(tr('No Anthropic API key is set. Run "Sphynx: Set Up AI Hints".', 'Nenhuma chave da Anthropic configurada. Rode "Sphynx: Configurar dicas de IA".'));
+    throw new AiError(tr('No Anthropic API key is set. Run "Sphinx: Set Up AI Hints".', 'Nenhuma chave da Anthropic configurada. Rode "Sphinx: Configurar dicas de IA".'));
   }
   const model = settings.model || DEFAULT_ANTHROPIC_MODEL;
   const client = new Anthropic({ apiKey: settings.apiKey, ...(settings.baseUrl ? { baseURL: settings.baseUrl } : {}) });
@@ -78,11 +78,11 @@ function anthropicProvider(settings: ProviderSettings): HintProvider {
           throw e;
         }
         if (e instanceof Anthropic.AuthenticationError) {
-          throw new AiError(tr('Anthropic rejected the API key. Check it with "Sphynx: Set Up AI Hints".', 'A Anthropic recusou a chave de API. Confira em "Sphynx: Configurar dicas de IA".'));
+          throw new AiError(tr('Anthropic rejected the API key. Check it with "Sphinx: Set Up AI Hints".', 'A Anthropic recusou a chave de API. Confira em "Sphinx: Configurar dicas de IA".'));
         } else if (e instanceof Anthropic.PermissionDeniedError) {
           throw new AiError(tr(`Your Anthropic API key cannot use the model "${model}".`, `Sua chave da Anthropic não pode usar o modelo "${model}".`));
         } else if (e instanceof Anthropic.NotFoundError) {
-          throw new AiError(tr(`Anthropic does not know the model "${model}". Check the sphynx.ai.model setting.`, `A Anthropic não conhece o modelo "${model}". Confira a configuração sphynx.ai.model.`));
+          throw new AiError(tr(`Anthropic does not know the model "${model}". Check the sphinx.ai.model setting.`, `A Anthropic não conhece o modelo "${model}". Confira a configuração sphinx.ai.model.`));
         } else if (e instanceof Anthropic.RateLimitError) {
           throw new AiError(tr('Too many AI requests right now (rate limit). Wait a moment and try again.', 'Muitos pedidos à IA agora (limite de uso). Espere um pouco e tente de novo.'));
         } else if (e instanceof Anthropic.APIConnectionError) {
@@ -134,19 +134,19 @@ function localHelp(id: ProviderId): string {
       'O LM Studio está rodando com um modelo carregado e o servidor local iniciado (aba Developer → Start Server)?',
     );
   }
-  return tr('Check the sphynx.ai.baseUrl setting.', 'Confira a configuração sphynx.ai.baseUrl.');
+  return tr('Check the sphinx.ai.baseUrl setting.', 'Confira a configuração sphinx.ai.baseUrl.');
 }
 
 async function openAiCompatibleProvider(settings: ProviderSettings): Promise<HintProvider> {
   const baseUrl = (settings.baseUrl || defaultBaseUrl(settings.id)).replace(/\/$/, '');
   if (!baseUrl) {
-    throw new AiError(tr("Set sphynx.ai.baseUrl to your provider's API URL (for example https://api.openai.com/v1).", 'Defina sphynx.ai.baseUrl com a URL da API do seu provedor (por exemplo https://api.openai.com/v1).'));
+    throw new AiError(tr("Set sphinx.ai.baseUrl to your provider's API URL (for example https://api.openai.com/v1).", 'Defina sphinx.ai.baseUrl com a URL da API do seu provedor (por exemplo https://api.openai.com/v1).'));
   }
   const local = settings.id === 'ollama' || settings.id === 'lmstudio';
   let model = settings.model;
   if (!model) {
     if (!local) {
-      throw new AiError(tr('Set sphynx.ai.model to the model you want to use.', 'Defina sphynx.ai.model com o modelo que você quer usar.'));
+      throw new AiError(tr('Set sphinx.ai.model to the model you want to use.', 'Defina sphinx.ai.model com o modelo que você quer usar.'));
     }
     let models: string[];
     try {
@@ -188,7 +188,7 @@ async function openAiCompatibleProvider(settings: ProviderSettings): Promise<Hin
       if (!res.ok || !res.body) {
         const text = await res.text().catch(() => '');
         if (res.status === 401 || res.status === 403) {
-          throw new AiError(tr('The API key was rejected. Check it with "Sphynx: Set Up AI Hints".', 'A chave de API foi recusada. Confira em "Sphynx: Configurar dicas de IA".'));
+          throw new AiError(tr('The API key was rejected. Check it with "Sphinx: Set Up AI Hints".', 'A chave de API foi recusada. Confira em "Sphinx: Configurar dicas de IA".'));
         }
         if (res.status === 404 && local) {
           throw new AiError(`${tr(`The model "${model}" is not available.`, `O modelo "${model}" não está disponível.`)} ${localHelp(settings.id)}`);

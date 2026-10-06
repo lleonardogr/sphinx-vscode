@@ -1,12 +1,12 @@
 # AI hints
 
-Sphynx can ask an AI tutor for a hint about **your current code**. The tutor is told never to write the solution. It gives one hint at a time and gets more specific each time you ask.
+Sphinx can ask an AI tutor for a hint about **your current code**. The tutor is told never to write the solution. It gives one hint at a time and gets more specific each time you ask.
 
 AI hints are **off by default**. Nothing is sent anywhere until you choose a provider.
 
 ## Choosing a provider
 
-Run **Sphynx: Set Up AI Hints** from the Command Palette, or click **AI settings** under the hints in the problem panel. You have three kinds of options:
+Run **Sphinx: Set Up AI Hints** from the Command Palette, or click **AI settings** under the hints in the problem panel. You have three kinds of options:
 
 | Provider | Cost | Privacy | What you need |
 |----------|------|---------|---------------|
@@ -38,7 +38,7 @@ Why not a model built into the extension? Even a small model is a 1–4 GB downl
 
 ### Your own API key
 
-Choose **Anthropic** or **OpenAI-compatible** in **Set Up AI Hints** and paste your key. Keys are stored in VS Code's encrypted **secret storage**, never in `settings.json`, so they aren't shared when you sync or commit settings. To delete them, run **Sphynx: Remove Saved AI API Keys**.
+Choose **Anthropic** or **OpenAI-compatible** in **Set Up AI Hints** and paste your key. Keys are stored in VS Code's encrypted **secret storage**, never in `settings.json`, so they aren't shared when you sync or commit settings. To delete them, run **Sphinx: Remove Saved AI API Keys**.
 
 - **Anthropic:** the default model is `claude-opus-5-5`. You can choose another one, for example `claude-sonnet-5-5` or `claude-haiku-4-5`, to lower the cost. On models that support it, if Claude's safety checks decline a request, it is retried automatically on Anthropic's recommended fallback model.
 - **OpenAI-compatible:** enter the base URL ending in `/v1` (for OpenAI: `https://api.openai.com/v1`) and the model name exactly as your provider spells it.
@@ -59,15 +59,15 @@ For each hint, the extension sends:
 
 | Setting | Description |
 |---------|-------------|
-| `sphynx.ai.provider` | `off` (default), `ollama`, `lmstudio`, `anthropic`, `openai-compatible` or `vscode`. |
-| `sphynx.ai.model` | Model name. If empty: `claude-opus-5-5` for Anthropic, the first installed model for Ollama and LM Studio, and any available model for VS Code. |
-| `sphynx.ai.baseUrl` | API URL. Required for `openai-compatible`. Optional otherwise, for example to point at Ollama on another computer. |
-| `sphynx.ai.responseLanguage` | Language for the hints, for example `Português`. If empty, VS Code's display language is used. |
+| `sphinx.ai.provider` | `off` (default), `ollama`, `lmstudio`, `anthropic`, `openai-compatible` or `vscode`. |
+| `sphinx.ai.model` | Model name. If empty: `claude-opus-5-5` for Anthropic, the first installed model for Ollama and LM Studio, and any available model for VS Code. |
+| `sphinx.ai.baseUrl` | API URL. Required for `openai-compatible`. Optional otherwise, for example to point at Ollama on another computer. |
+| `sphinx.ai.responseLanguage` | Language for the hints, for example `Português`. If empty, VS Code's display language is used. |
 
 ## For teachers
 
 - **Disable AI for one challenge** (for example in an exam): add `"aiHints": false` to its `challenge.json`.
-- **A shared school server:** run Ollama (or any OpenAI-compatible server, such as vLLM) on one machine. Students then set the provider to `openai-compatible` (or `ollama`) and `sphynx.ai.baseUrl` to `http://<server>:11434/v1`.
+- **A shared school server:** run Ollama (or any OpenAI-compatible server, such as vLLM) on one machine. Students then set the provider to `openai-compatible` (or `ollama`) and `sphinx.ai.baseUrl` to `http://<server>:11434/v1`.
 - The tutor's instructions are in [`src/ai/prompt.ts`](../src/ai/prompt.ts). It is told to never write the solution, to use at most two short illustrative lines of code, and to escalate from a guiding question to pointing at the exact line.
 
 AI hints can be wrong. Encourage students to check them against their own reasoning, and to use the built-in hints and test feedback first.
