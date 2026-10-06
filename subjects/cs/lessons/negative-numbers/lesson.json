@@ -1,0 +1,10 @@
+{
+  "title": "Negative Numbers: Two's Complement",
+  "topic": "NumberRepresentation",
+  "order": 1,
+  "translations": {
+    "pt-br": {
+      "title": "Números negativos: complemento de dois"
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "title": "Binary Fractions",
+  "topic": "NumberRepresentation",
+  "requires": [
+    "Loops",
+    "Strings"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "After the binary point, the places are worth 1/2, 1/4, 1/8, … To find the first bit, double the number: if it reaches 1, the bit is 1 (subtract 1 and go on); otherwise it is 0.",
+    "Repeat the doubling for each new bit. Stop when the number becomes exactly 0, or after 12 bits.",
+    "Doubling a double and subtracting 1 are exact operations, so the bits you get are the real bits the computer stores."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Frações em binário",
+      "hints": [
+        "Depois da vírgula binária, as posições valem 1/2, 1/4, 1/8, … Para achar o primeiro bit, dobre o número: se ele chegar a 1, o bit é 1 (subtraia 1 e continue); senão, é 0.",
+        "Repita a dobra para cada bit novo. Pare quando o número ficar exatamente 0, ou depois de 12 bits.",
+        "Dobrar um double e subtrair 1 são operações exatas, então os bits que você obtém são os bits de verdade que o computador guarda."
+      ],
+      "mustContain": [
+        "Use um laço que dobra o número, um bit de cada vez."
+      ],
+      "mustNotContain": [
+        "Ache os bits dobrando: nada de métodos prontos que mostram os bits de um double."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop that doubles the number, one bit at a time."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "toBinaryString|toHexString|doubleToLongBits|doubleToRawLongBits|BigDecimal",
+      "message": "Find the bits by doubling: no library methods that show the bits of a double."
+    }
+  ],
+  "tests": [
+    {
+      "input": "0.625\n",
+      "output": "0.101\n"
+    },
+    {
+      "input": "0.1\n",
+      "output": "0.000110011001...\n"
+    },
+    {
+      "input": "0.5\n",
+      "output": "0.1\n",
+      "hidden": true
+    },
+    {
+      "input": "0\n",
+      "output": "0.0\n",
+      "hidden": true
+    },
+    {
+      "input": "0.75\n",
+      "output": "0.11\n",
+      "hidden": true
+    },
+    {
+      "input": "0.3\n",
+      "output": "0.010011001100...\n",
+      "hidden": true
+    },
+    {
+      "input": "0.0625\n",
+      "output": "0.0001\n",
+      "hidden": true
+    },
+    {
+      "input": "0.000244140625\n",
+      "output": "0.000000000001\n",
+      "hidden": true
+    },
+    {
+      "input": "0.0001220703125\n",
+      "output": "0.000000000000...\n",
+      "hidden": true
+    },
+    {
+      "input": "0.999\n",
+      "output": "0.111111111011...\n",
+      "hidden": true
+    }
+  ]
+}

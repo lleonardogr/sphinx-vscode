@@ -1,0 +1,87 @@
+{
+  "title": "Overflow Detector",
+  "topic": "NumberRepresentation",
+  "requires": [
+    "Conditionals"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Do the calculation with long instead of int: the result of two ints always fits in a long.",
+    "Then check whether the long result is between Integer.MIN_VALUE and Integer.MAX_VALUE.",
+    "Convert the numbers to long before calculating: (long) a * b. If you multiply two ints first, the result overflows before you can check it."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Detector de overflow",
+      "hints": [
+        "Faça a conta com long em vez de int: o resultado de dois ints sempre cabe num long.",
+        "Depois verifique se o resultado long está entre Integer.MIN_VALUE e Integer.MAX_VALUE.",
+        "Converta os números para long antes de calcular: (long) a * b. Se você multiplicar dois ints primeiro, o resultado estoura antes de você conseguir verificar."
+      ],
+      "mustContain": [
+        "Calcule com long, para ver quando o resultado não cabe num int."
+      ],
+      "mustNotContain": [
+        "Detecte o overflow você mesmo: Math.addExact e parecidos não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\blong\\b",
+      "message": "Calculate with long, so you can see when the result doesn't fit in an int."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "Exact\\s*\\(|BigInteger",
+      "message": "Detect the overflow yourself: Math.addExact and friends aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2147483647 + 1\n",
+      "output": "Overflow\n"
+    },
+    {
+      "input": "100 * 200\n",
+      "output": "20000\n"
+    },
+    {
+      "input": "-2147483648 - 1\n",
+      "output": "Overflow\n",
+      "hidden": true
+    },
+    {
+      "input": "-2147483648 * -1\n",
+      "output": "Overflow\n",
+      "hidden": true
+    },
+    {
+      "input": "46341 * 46341\n",
+      "output": "Overflow\n",
+      "hidden": true
+    },
+    {
+      "input": "46340 * 46340\n",
+      "output": "2147395600\n",
+      "hidden": true
+    },
+    {
+      "input": "2000000000 + 2000000000\n",
+      "output": "Overflow\n",
+      "hidden": true
+    },
+    {
+      "input": "-5 - 7\n",
+      "output": "-12\n",
+      "hidden": true
+    },
+    {
+      "input": "2147483647 - 2147483647\n",
+      "output": "0\n",
+      "hidden": true
+    }
+  ]
+}
