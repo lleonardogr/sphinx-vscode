@@ -57,8 +57,8 @@ jobs:
 
       - name: Publish to the VS Code Marketplace
         if: env.VSCE_PAT != ''
-        run: npx vsce publish --packagePath *.vsix
+        run: npx vsce publish --packagePath *.vsix --skip-duplicate
 
       - name: Publish to Open VSX
         if: env.OVSX_PAT != ''
-        run: npx --yes ovsx publish *.vsix
+        run: npx --yes ovsx publish *.vsix --skip-duplicate
