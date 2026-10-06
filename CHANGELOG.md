@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-10-06
+
 ### Added
 
 - **Take an exam again**: 6 hours after finishing (by default), a student can retake an exam with **Take Exam Again**. Each attempt starts fresh; the previous one is kept in its own folder with its results file, and results files say which attempt they are. Teachers set the wait with `"retakeAfterHours"` in `exam.json` (`0` for right away, `false` for a single attempt).
@@ -252,7 +254,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.0.1...v1.0.2
