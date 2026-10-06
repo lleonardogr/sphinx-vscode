@@ -6,6 +6,7 @@ import { createChallenge, validateFolder } from './authoring';
 import { ChallengePanel, PanelAction, PanelExamInfo, examStatusText } from './challengePanel';
 import { Challenge, loadChallenges } from './challenges';
 import { Progress } from './progress';
+import { SafeState } from './safeState';
 import { RunOutcome, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
 import { runInTerminal } from './terminalRunner';
 import { ExamManager } from './examSession';
@@ -26,7 +27,7 @@ const CODE_FILE = 'Main.java';
  * Until 1.0.0 the extension id was class-plugin.sphynx. VS Code gives the new id an empty storage
  * folder, so bring the old one's imported library and saved solutions along (once, best effort).
  */
-function migrateOldStorage(storage: string): void {
+export function migrateOldStorage(storage: string): void {
   const old = path.join(path.dirname(storage), 'class-plugin.sphynx');
   for (const dir of ['library', 'solutions']) {
     const from = path.join(old, dir);
@@ -42,21 +43,35 @@ function migrateOldStorage(storage: string): void {
   }
 }
 
-export function activate(context: vscode.ExtensionContext): void {
+/** What activate() returns. Used by the integration tests to check the extension's state. */
+export interface SphynxApi {
+  progress: Progress;
+  quizProgress: QuizProgress;
+  examManager: ExamManager;
+  tree: ChallengeTreeProvider;
+  challenges(): Challenge[];
+  quizzes(): QuizDefinition[];
+  exams(): ExamDefinition[];
+  codePath(c: Challenge): string;
+}
+
+export function activate(context: vscode.ExtensionContext): SphynxApi {
   migrateOldStorage(context.globalStorageUri.fsPath);
-  const progress = new Progress(context.globalState);
+  // Progress, quiz scores and exam sessions share one guarded view of the global state.
+  const store = new SafeState(context.globalState);
+  const progress = new Progress(store);
   const output = vscode.window.createOutputChannel('Sphynx');
   const diagnostics = vscode.languages.createDiagnosticCollection('sphynx');
   let challenges: Challenge[] = [];
   let exams: ExamDefinition[] = [];
   let quizzes: QuizDefinition[] = [];
-  const quizProgress = new QuizProgress(context.globalState);
+  const quizProgress = new QuizProgress(store);
   const running = new Set<string>();
   /** Last (redacted) Run/Submit result per challenge, used as context for AI hints. */
   const lastOutcome = new Map<string, RunOutcome>();
   const ai = new AiHints(context);
 
-  const examManager = new ExamManager(context, (examId) => examCodeDir(examId), (exam, q) => gradeExamQuestion(exam, q));
+  const examManager = new ExamManager(context, (examId) => examCodeDir(examId), (exam, q) => gradeExamQuestion(exam, q), store);
   const javaSetup = new JavaSetup(output, () => javaHome(), () => javaStyle());
   const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams, examManager, () => quizzes, quizProgress, () => javaSetup.problems());
   javaSetup.onDidChange(() => tree.refresh());
@@ -910,6 +925,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(javaSetup);
   void javaSetup.checkQuietly();
   updateContextKey();
+  return { progress, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath };
 }
 
 export function deactivate(): void {}

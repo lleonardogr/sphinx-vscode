@@ -90,8 +90,22 @@ The full guide is **[docs/creating-challenges.md](docs/creating-challenges.md)**
 ## Code changes
 
 - Keep `src/runner.ts`, `src/validator.ts` and `src/ai/prompt.ts` free of `vscode` imports. The validator script and tests reuse them.
-- Run `npm run validate` before opening a pull request.
+- Run `npm run validate` and `npm test` before opening a pull request.
 - Add a line under **Unreleased** in [CHANGELOG.md](CHANGELOG.md).
+
+## Tests
+
+```bash
+npm test                  # compile, then unit and integration tests
+npm run test:unit         # fast, no VS Code needed
+npm run test:integration  # starts VS Code with the extension
+```
+
+- **Unit tests** (`src/test/unit/`) use Node's built-in test runner. They cover the code that doesn't depend on VS Code: quiz grading, exam rules and scoring, the learning path, the built-in content, import, and the Java runner (these compile and run real programs, and are skipped when no JDK is installed).
+- **Integration tests** (`src/test/integration/`) start a real VS Code and use the extension the way students and teachers do: open and submit challenges, reset, group the sidebar, switch the language, take an exam from start to results file, and import a teacher's folder. Dialogs are answered automatically through `dialogs` in `harness.ts`, and the tests read the extension's state through the object `activate()` returns.
+  - The first run downloads VS Code into `.vscode-test/`. To use an installed VS Code instead, set `SPHYNX_TEST_VSCODE` to its executable (on macOS: `"/Applications/Visual Studio Code.app/Contents/MacOS/Code"`).
+  - They need JDK 25+, because the built-in starters are modern Java.
+- CI runs the unit tests on every job and the integration tests on the JDK 25 jobs (with `xvfb` on Linux).
 
 ## Releasing (maintainers)
 

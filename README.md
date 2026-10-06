@@ -200,7 +200,7 @@ npm install        # dependencies + the commit-message hook
 npm run compile    # type-check and build to out/
 ```
 
-Open the folder in VS Code and press **F5** to launch a window with the extension loaded. Then `npm run validate` checks every challenge, and `npm run package` builds the `.vsix`.
+Open the folder in VS Code and press **F5** to launch a window with the extension loaded. Then `npm run validate` checks every challenge, `npm test` runs the unit and integration tests, and `npm run package` builds the `.vsix`.
 
 - `main` is protected. Work on a branch, open a pull request, and wait for CI (Linux, macOS and Windows; JDK 17 and 25) before merging.
 - Commits and PR titles follow [Conventional Commits](https://www.conventionalcommits.org): `feat(panel): …`, `fix(terminal): …`, `docs: …`.
