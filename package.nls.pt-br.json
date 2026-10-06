@@ -52,5 +52,7 @@
   "command.switchToTeacherView": "Mudar para a visão do professor",
   "command.switchToStudentView": "Mudar para a visão do aluno",
   "command.editItem": "Editar",
-  "command.revealItem": "Mostrar na pasta"
+  "command.revealItem": "Mostrar na pasta",
+  "command.previewExam": "Testar a prova (prévia)",
+  "command.restartPreview": "Recomeçar prévia"
 }

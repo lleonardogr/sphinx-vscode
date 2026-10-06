@@ -16,7 +16,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Challenge, loadChallenge } from './challenges';
 import { QuizDefinition, loadQuiz } from './quizzes';
-import { language } from './i18n';
+import { language, tr } from './i18n';
 import { RunOutcome } from './runner';
 
 export type ExamMode = 'open' | 'closed';
@@ -103,6 +103,28 @@ export interface ExamDefinition {
   restrictions: ExamRestrictions;
   questions: ExamQuestion[];
   dir: string;
+  /** A teacher's practice attempt of another exam (see previewOf). */
+  preview?: boolean;
+}
+
+/** Suffix of a preview exam's id: "exam-1" is previewed as "exam-1--preview". */
+export const PREVIEW_SUFFIX = '--preview';
+
+/**
+ * A teacher's practice attempt of an exam: the same questions, rules and timer, under its own id, so
+ * its answers and results never mix with a real attempt (and the verifier rejects its results file).
+ */
+export function previewOf(exam: ExamDefinition): ExamDefinition {
+  const id = exam.id + PREVIEW_SUFFIX;
+  return {
+    ...exam,
+    id,
+    title: tr(`${exam.title} (preview)`, `${exam.title} (prévia)`),
+    preview: true,
+    questions: exam.questions.map((q) =>
+      q.kind === 'quiz' ? { ...q, quiz: { ...q.quiz, id: examChallengeId(id, q.id) } } : { ...q, challenge: { ...q.challenge, id: examChallengeId(id, q.id) } },
+    ),
+  };
 }
 
 export function examChallengeId(examId: string, questionId: string): string {

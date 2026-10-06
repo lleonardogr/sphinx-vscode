@@ -206,6 +206,34 @@ test('the teacher view lists the teacher\'s exams, own content and tools, and sw
   assert.equal(api.view(), 'student');
 });
 
+test('a teacher previews an exam without touching the real attempt, and can restart it', async () => {
+  await vscode.commands.executeCommand('sphynx.switchToTeacherView');
+  const exam = api.exams().find((e) => e.id === 'exam-2')!;
+  dialogs.inputBox = 'Teacher';
+  dialogs.answer = (m, buttons) => (m.startsWith('Start') ? buttons[0] : undefined);
+  await vscode.commands.executeCommand('sphynx.previewExam', { kind: 'exam', exam });
+  assert.ok(api.examManager.state('exam-2--preview'), 'the preview did not start');
+  assert.equal(api.examManager.state('exam-2'), undefined, 'the real exam must not start');
+
+  // Listed under the exam in the teacher view, never in the student view.
+  const t = api.teacherTree;
+  const examNode = t.getChildren(t.getChildren()[0]).find((n) => String(t.getTreeItem(n as never).label) === 'Exam 2: Building Blocks')!;
+  const [previewNode] = t.getChildren(examNode);
+  assert.equal(String(t.getTreeItem(previewNode as never).label), 'Your preview attempt');
+  assert.equal(t.getTreeItem(previewNode as never).contextValue, 'teacherPreviewActive');
+  assert.equal(t.getChildren(previewNode).length, exam.questions.length);
+  const studentExams = api.tree.getChildren(api.tree.getChildren().find((n) => (n as { kind: string }).kind === 'examsRoot'));
+  assert.ok(studentExams.every((n) => !(n as { exam: { preview?: boolean } }).exam.preview));
+
+  // Restarting clears the preview (state and answers) only.
+  const answers = path.join(path.dirname(api.examManager.answerFile(api.exams().find((e) => e.id === 'exam-2--preview')!, exam.questions[1])));
+  dialogs.answer = (_m, buttons) => buttons.find((b) => b === 'Restart Preview');
+  await vscode.commands.executeCommand('sphynx.restartPreview', { kind: 'preview', exam: api.exams().find((e) => e.id === 'exam-2--preview') });
+  assert.equal(api.examManager.state('exam-2--preview'), undefined);
+  assert.equal(fs.existsSync(path.dirname(answers)), false, 'the preview answers were not removed');
+  await vscode.commands.executeCommand('sphynx.switchToStudentView');
+});
+
 test('the imported library and saved solutions move over from the old extension id', () => {
   const storageRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-storage-'));
   const old = path.join(storageRoot, 'class-plugin.sphynx');

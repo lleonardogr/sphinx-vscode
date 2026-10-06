@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Added
 
 - **Teacher view**: a second view of the Sphynx sidebar for teachers, opened with the 💼 button (**Switch to Teacher View**). It lists **My Exams** with their questions (click one to edit it), **My Challenges & Quizzes** (only the teacher's own imported or folder content; click one to try it) and the **Tools** (create, import, validate, verify exam results, AI setup). Right-click an item to **Edit** it or **Show in Folder**. The 🎓 button switches back to the **student view**, which no longer shows the authoring buttons. The choice is remembered.
+- **Try Exam (Preview)**: in the teacher view, ▶ next to an exam starts a preview attempt with the real questions, timer and restrictions. It has its own answers and results, never counts as a real attempt, appears under the exam with the score per question, and can be finished, opened or restarted from its right-click menu.
 
 ### Fixed
 

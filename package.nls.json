@@ -52,5 +52,7 @@
   "command.switchToTeacherView": "Switch to Teacher View",
   "command.switchToStudentView": "Switch to Student View",
   "command.editItem": "Edit",
-  "command.revealItem": "Show in Folder"
+  "command.revealItem": "Show in Folder",
+  "command.previewExam": "Try Exam (Preview)",
+  "command.restartPreview": "Restart Preview"
 }

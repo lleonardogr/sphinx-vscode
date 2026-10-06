@@ -18,7 +18,7 @@ import { plural, setLanguage, tr } from './i18n';
 import { JavaSetup } from './javaSetup';
 import { clearJavaCache } from './runner';
 import { formatVerification, verifyResults } from './examVerify';
-import { ExamDefinition, ExamQuestion, loadExams, parseExamChallengeId } from './exams';
+import { ExamDefinition, ExamQuestion, PREVIEW_SUFFIX, examChallengeId, loadExams, parseExamChallengeId, previewOf } from './exams';
 import { ChallengeNode, ChallengeTreeProvider, GroupMode } from './treeView';
 import { Origin, TeacherNode, TeacherTreeProvider, sourceFile } from './teacherView';
 
@@ -76,7 +76,8 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
 
   const examManager = new ExamManager(context, (examId) => examCodeDir(examId), (exam, q) => gradeExamQuestion(exam, q), store);
   const javaSetup = new JavaSetup(output, () => javaHome(), () => javaStyle());
-  const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams, examManager, () => quizzes, quizProgress, () => javaSetup.problems());
+  // Teachers' preview attempts (see previewOf) are listed in the teacher view only.
+  const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams.filter((e) => !e.preview), examManager, () => quizzes, quizProgress, () => javaSetup.problems());
   javaSetup.onDidChange(() => tree.refresh());
   const GROUP_KEY = 'sphynx.groupBy';
   tree.mode = context.globalState.get<GroupMode>(GROUP_KEY, 'path');
@@ -93,7 +94,9 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     }
     return inside(libraryDir()) ? 'imported' : 'folder';
   };
-  const teacherTree = new TeacherTreeProvider(() => challenges, () => quizzes, () => exams, origin);
+  const teacherTree = new TeacherTreeProvider(() => challenges, () => quizzes, () => exams, origin, examManager, (exam) => exams.find((e) => e.id === exam.id + PREVIEW_SUFFIX));
+  /** Exams whose preview was started in this session (later sessions find them through their saved state). */
+  const previewing = new Set<string>();
   const teacherView = vscode.window.createTreeView('sphynx.teacher', { treeDataProvider: teacherTree });
   const currentView = (): 'student' | 'teacher' => (store.get<string>(VIEW_KEY) === 'teacher' ? 'teacher' : 'student');
   async function setView(view: 'student' | 'teacher'): Promise<void> {
@@ -162,7 +165,8 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     const quizResult = loadQuizzes([...builtIn, ...extra]);
     quizzes = quizResult.quizzes;
     const examResult = loadExams([...builtIn, ...extra], challenges, quizzes);
-    exams = examResult.exams;
+    const previews = examResult.exams.filter((e) => previewing.has(e.id) || examManager.state(e.id + PREVIEW_SUFFIX)).map(previewOf);
+    exams = [...examResult.exams, ...previews];
     const errors = [...result.errors.filter((e) => !e.endsWith('folder not found')), ...quizResult.errors, ...examResult.errors];
     if (errors.length) {
       errors.forEach((e) => output.appendLine(`[challenges] ${e}`));
@@ -776,7 +780,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     if (arg && typeof arg === 'object' && 'exam' in (arg as object)) {
       return (arg as { exam: ExamDefinition }).exam;
     }
-    const candidates = exams.filter(filter);
+    const candidates = exams.filter((t) => !t.preview || examManager.state(t.id)).filter(filter);
     if (candidates.length === 0) {
       vscode.window.showInformationMessage(tr('No matching exam.', 'Nenhuma prova encontrada.'));
       return undefined;
@@ -789,6 +793,26 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
       { placeHolder },
     );
     return pick?.exam;
+  }
+
+  /** Clears a teacher's preview attempt (state and answers) after asking. Real attempts are never cleared. */
+  async function restartPreview(preview: ExamDefinition): Promise<boolean> {
+    if (!preview.preview || !preview.id.endsWith(PREVIEW_SUFFIX)) {
+      return false;
+    }
+    const restartLabel = tr('Restart Preview', 'Recomeçar prévia');
+    const answer = await vscode.window.showWarningMessage(
+      tr(`Restart your preview of "${preview.title}"?`, `Recomeçar sua prévia de "${preview.title}"?`),
+      { modal: true, detail: tr('Its answers and score are cleared. Real attempts are not affected.', 'As respostas e a nota dela são apagadas. Tentativas de verdade não são afetadas.') },
+      restartLabel,
+    );
+    if (answer !== restartLabel) {
+      return false;
+    }
+    await examManager.reset(preview);
+    fs.rmSync(examCodeDir(preview.id), { recursive: true, force: true });
+    teacherTree.refresh();
+    return true;
   }
 
   /** Teachers: re-grade one or more results files and compare with the scores they claim. */
@@ -898,6 +922,29 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     }),
     vscode.commands.registerCommand('sphynx.verifyExamResults', verifyExamResultsCommand),
     vscode.commands.registerCommand('sphynx.switchToTeacherView', () => setView('teacher')),
+    vscode.commands.registerCommand('sphynx.previewExam', async (node?: { exam?: ExamDefinition }) => {
+      const exam = node?.exam;
+      if (!exam || exam.preview) {
+        return;
+      }
+      previewing.add(exam.id);
+      reload();
+      const preview = exams.find((e) => e.id === exam.id + PREVIEW_SUFFIX)!;
+      if (examManager.state(preview.id)?.finishedAt && !(await restartPreview(preview))) {
+        return;
+      }
+      if (!examManager.state(preview.id) && !(await examManager.start(preview))) {
+        return;
+      }
+      const first = preview.questions[0];
+      const id = examChallengeId(preview.id, first.id);
+      await vscode.commands.executeCommand(first.kind === 'quiz' ? 'sphynx.openQuiz' : 'sphynx.open', id);
+    }),
+    vscode.commands.registerCommand('sphynx.restartPreview', async (node?: { exam?: ExamDefinition }) => {
+      if (node?.exam?.preview) {
+        await restartPreview(node.exam);
+      }
+    }),
     vscode.commands.registerCommand('sphynx.switchToStudentView', () => setView('student')),
     vscode.commands.registerCommand('sphynx.editItem', async (node?: TeacherNode) => {
       const file = node && sourceFile(node);

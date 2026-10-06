@@ -141,6 +141,14 @@ Copy the built-in example from the repository's [`exams/sample-exam`](../exams/s
 
 ---
 
+## Trying an exam before giving it
+
+In the **teacher view** (💼 at the top of the Sphynx sidebar), every exam under **My Exams** has a ▶ **Try Exam (Preview)** button. It starts a **preview attempt**: the same questions, timer and restrictions your students get, so you can check that everything works and how long it takes.
+
+- The preview has its own answers and results (its id ends in `--preview`). It never counts as, or blocks, a real attempt, and **Verify Exam Results** rejects a preview's results file.
+- It appears under the exam as **Your preview attempt**, with your score per question. Right-click it to **Finish** it, **Open Results**, or **Restart Preview** (clears its answers so you can try again).
+- Previews are only listed in the teacher view, never in the student view.
+
 ## Giving the exam to your class
 
 The simplest way is to **zip the exam folder** and send it. **Remove the `Solution*.java` files** first. Students click **Import** (⤓) at the top of the Sphynx sidebar and choose the zip. If they forget, the import offers to remove any solutions it finds. See [Sharing challenges with students](creating-challenges.md#sharing-challenges-with-students).
