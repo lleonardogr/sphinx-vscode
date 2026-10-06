@@ -1,0 +1,157 @@
+// Subjects: what students study (Java Programming, CS Fundamentals, …). Each subject is a folder with a
+// subject.json that lists its units in teaching order, with their names and sidebar icons. Content
+// picks its unit with "topic" (or "unit" for tests); a unit belongs to exactly one subject, so the
+// unit decides the subject. No vscode dependency.
+import * as fs from 'fs';
+import * as path from 'path';
+import { Lang, language } from './i18n';
+
+export interface UnitDef {
+  key: string;
+  /** Names by language; English is required. */
+  titles: Partial<Record<Lang, string>> & { en: string };
+  /** A codicon name for the sidebar. */
+  icon: string;
+  /** Older names still accepted as "topic" (e.g. "Variables" for "Basics"). */
+  aliases: string[];
+}
+
+export interface SubjectDef {
+  id: string;
+  titles: Partial<Record<Lang, string>> & { en: string };
+  kind: 'programming' | 'theory';
+  /** Position in the subject switcher. */
+  order: number;
+  units: UnitDef[];
+  dir: string;
+}
+
+/** Content without a unit or subject (custom challenges, older teacher packs) belongs here. */
+export const DEFAULT_SUBJECT = 'java';
+
+/** Folders inside a subject folder that hold its content. */
+export const SUBJECT_CONTENT_FOLDERS = ['challenges', 'quizzes', 'lessons', 'tests'];
+
+let registry: SubjectDef[] = [];
+
+/** Makes `subjects` the ones the learning path, unit names and validator use. */
+export function setSubjects(subjects: SubjectDef[]): void {
+  registry = [...subjects].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
+}
+
+export function allSubjects(): SubjectDef[] {
+  return registry;
+}
+
+export function findSubject(id: string | undefined): SubjectDef | undefined {
+  return registry.find((s) => s.id === id);
+}
+
+/** The subject's name in the current language. */
+export function subjectTitle(s: SubjectDef): string {
+  return s.titles[language()] ?? s.titles.en;
+}
+
+/** The unit with this key (or alias), its subject and its 0-based position in that subject. */
+export function findUnit(key: string | undefined): { subject: SubjectDef; unit: UnitDef; index: number } | undefined {
+  if (!key) {
+    return undefined;
+  }
+  for (const subject of registry) {
+    const index = subject.units.findIndex((u) => u.key === key || u.aliases.includes(key));
+    if (index !== -1) {
+      return { subject, unit: subject.units[index], index };
+    }
+  }
+  return undefined;
+}
+
+/** Sorting rank of a unit across all subjects: subjects in switcher order, units in teaching order. */
+export function unitRank(key: string | undefined): number {
+  const found = findUnit(key);
+  return found ? registry.indexOf(found.subject) * 1000 + found.index : Number.MAX_SAFE_INTEGER - 1;
+}
+
+/** Folders with this subject's challenges, quizzes, lessons and tests (those that exist). */
+export function subjectContentRoots(s: SubjectDef): string[] {
+  return SUBJECT_CONTENT_FOLDERS.map((f) => path.join(s.dir, f)).filter((d) => fs.existsSync(d));
+}
+
+function parseSubject(dir: string): SubjectDef {
+  const meta = JSON.parse(fs.readFileSync(path.join(dir, 'subject.json'), 'utf8'));
+  const id = meta.id ?? path.basename(dir);
+  if (typeof meta.title !== 'string' || !meta.title.trim()) {
+    throw new Error('subject.json needs a "title"');
+  }
+  if (!Array.isArray(meta.units)) {
+    throw new Error('subject.json needs "units": a list of { "key", "title", "icon" }');
+  }
+  const translations: Record<string, { title?: string; units?: Record<string, string> }> = meta.translations ?? {};
+  const titlesFor = (en: string, pick: (t: { title?: string; units?: Record<string, string> }) => string | undefined) => {
+    const titles: Partial<Record<Lang, string>> & { en: string } = { en };
+    for (const [lang, t] of Object.entries(translations)) {
+      const v = pick(t ?? {});
+      if (typeof v === 'string' && v.trim()) {
+        titles[lang as Lang] = v;
+      }
+    }
+    return titles;
+  };
+  const units: UnitDef[] = meta.units.map((u: Record<string, unknown>, i: number) => {
+    if (typeof u?.key !== 'string' || !u.key.trim() || typeof u.title !== 'string') {
+      throw new Error(`unit ${i + 1} needs a "key" and a "title"`);
+    }
+    const key = u.key;
+    return {
+      key,
+      titles: titlesFor(u.title, (t) => t.units?.[key]),
+      icon: typeof u.icon === 'string' && u.icon ? u.icon : 'folder',
+      aliases: Array.isArray(u.aliases) ? u.aliases.filter((a): a is string => typeof a === 'string') : [],
+    };
+  });
+  return {
+    id,
+    titles: titlesFor(meta.title, (t) => t.title),
+    kind: meta.kind === 'theory' ? 'theory' : 'programming',
+    order: typeof meta.order === 'number' ? meta.order : 100,
+    units,
+    dir,
+  };
+}
+
+/** Loads every <root>/<subject>/subject.json. Unit keys must be unique across subjects. */
+export function loadSubjects(roots: string[]): { subjects: SubjectDef[]; errors: string[] } {
+  const subjects: SubjectDef[] = [];
+  const errors: string[] = [];
+  const unitOwner = new Map<string, string>();
+  for (const root of roots) {
+    if (!fs.existsSync(root)) {
+      continue;
+    }
+    for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+      const dir = path.join(root, entry.name);
+      if (!entry.isDirectory() || !fs.existsSync(path.join(dir, 'subject.json'))) {
+        continue;
+      }
+      try {
+        const subject = parseSubject(dir);
+        if (subjects.some((s) => s.id === subject.id)) {
+          throw new Error(`a subject with id "${subject.id}" already exists`);
+        }
+        for (const u of subject.units) {
+          for (const key of [u.key, ...u.aliases]) {
+            const owner = unitOwner.get(key);
+            if (owner) {
+              throw new Error(`unit "${key}" is already a unit of "${owner}" (unit keys must be unique across subjects)`);
+            }
+            unitOwner.set(key, subject.id);
+          }
+        }
+        subjects.push(subject);
+      } catch (e) {
+        errors.push(`${dir}: ${(e as Error).message}`);
+      }
+    }
+  }
+  return { subjects, errors };
+}

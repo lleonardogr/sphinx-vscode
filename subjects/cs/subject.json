@@ -1,0 +1,31 @@
+{
+  "id": "cs",
+  "title": "CS Fundamentals",
+  "kind": "theory",
+  "order": 2,
+  "units": [
+    { "key": "Computers", "title": "How Computers Work", "icon": "server" },
+    { "key": "NumberSystems", "title": "Number Systems", "icon": "symbol-numeric" },
+    { "key": "BitsBytes", "title": "Bits and Bytes", "icon": "database" },
+    { "key": "NumberRepresentation", "title": "Representing Numbers", "icon": "symbol-operator" },
+    { "key": "TextMedia", "title": "Text, Images and Sound", "icon": "file-media" },
+    { "key": "Logic", "title": "Logic and Bitwise Operations", "icon": "circuit-board" },
+    { "key": "Algorithms", "title": "Algorithms and Complexity", "icon": "graph-line" },
+    { "key": "Networks", "title": "Networks and the Internet", "icon": "globe" }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Fundamentos da Computação",
+      "units": {
+        "Computers": "Como o computador funciona",
+        "NumberSystems": "Sistemas de numeração",
+        "BitsBytes": "Bits e bytes",
+        "NumberRepresentation": "Representação de números",
+        "TextMedia": "Texto, imagens e som",
+        "Logic": "Lógica e operações bit a bit",
+        "Algorithms": "Algoritmos e complexidade",
+        "Networks": "Redes e internet"
+      }
+    }
+  }
+}

@@ -75,6 +75,17 @@
         "Streams"
       ]
     },
+    "requires": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Units the student should know first, by unit key (for example \"Loops\" from Java Programming). Shown with the student's progress in each unit; never enforced."
+    },
+    "subject": {
+      "type": "string",
+      "description": "The subject (for example \"cs\"), for content without a unit. Otherwise the unit decides the subject."
+    },
     "difficulty": {
       "type": "string",
       "enum": [

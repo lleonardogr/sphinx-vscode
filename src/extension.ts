@@ -13,7 +13,10 @@ import { ExamManager } from './examSession';
 import { importContent, libraryRoots, removeImported } from './importer';
 import { QuizController, QuizProgress } from './quizController';
 import { QuizDefinition, loadQuizzes } from './quizzes';
-import { PathItem, buildPath, nextInPath } from './path';
+import { PathItem, buildPath, nextInPath, pathItemTitle, requirementStatus, subjectOf } from './path';
+import { DEFAULT_SUBJECT, allSubjects, findSubject, loadSubjects, setSubjects, subjectContentRoots, subjectTitle } from './subjects';
+import { LessonDefinition, loadLessons } from './lessons';
+import { LessonPanel, LessonProgress } from './lessonPanel';
 import { plural, setLanguage, tr } from './i18n';
 import { JavaSetup } from './javaSetup';
 import { clearJavaCache } from './runner';
@@ -50,6 +53,8 @@ export function migrateOldStorage(storage: string): void {
 /** What activate() returns. Used by the integration tests to check the extension's state. */
 export interface SphynxApi {
   progress: Progress;
+  lessonProgress: LessonProgress;
+  lessons(): LessonDefinition[];
   teacherTree: TeacherTreeProvider;
   /** Re-grades results files (the class dashboard's "Verify all"). */
   verifyFiles(files: string[]): Promise<{ file: string; matches: boolean; recomputed?: number; error?: string }[]>;
@@ -73,7 +78,9 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   let challenges: Challenge[] = [];
   let exams: ExamDefinition[] = [];
   let quizzes: QuizDefinition[] = [];
+  let lessons: LessonDefinition[] = [];
   const quizProgress = new QuizProgress(store);
+  const lessonProgress = new LessonProgress(store);
   const running = new Set<string>();
   /** Last (redacted) Run/Submit result per challenge, used as context for AI hints. */
   const lastOutcome = new Map<string, RunOutcome>();
@@ -82,11 +89,26 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   const examManager = new ExamManager(context, (examId) => examCodeDir(examId), (exam, q) => gradeExamQuestion(exam, q), store);
   const javaSetup = new JavaSetup(output, () => javaHome(), () => javaStyle());
   // Teachers' preview attempts (see previewOf) are listed in the teacher view only.
-  const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams.filter((e) => !e.preview), examManager, () => quizzes, quizProgress, () => javaSetup.problems());
+  const tree = new ChallengeTreeProvider(
+    () => challenges,
+    progress,
+    () => exams.filter((e) => !e.preview),
+    examManager,
+    () => quizzes,
+    quizProgress,
+    () => javaSetup.problems(),
+    () => lessons,
+    lessonProgress,
+  );
   javaSetup.onDidChange(() => tree.refresh());
   const GROUP_KEY = 'sphynx.groupBy';
   tree.mode = context.globalState.get<GroupMode>(GROUP_KEY, 'path');
-  const quizController = new QuizController(context.extensionUri, quizProgress, examManager, () => quizzes, () => exams);
+  const SUBJECT_KEY = 'sphynx.subject';
+  tree.subject = store.get<string>(SUBJECT_KEY, DEFAULT_SUBJECT);
+  /** The units an item needs, with the student's progress in each. */
+  const requirementsOf = (requires: string[]) => requirementStatus(requires, challenges, (id) => progress.isSolved(id));
+  const quizController = new QuizController(context.extensionUri, quizProgress, examManager, () => quizzes, () => exams, requirementsOf);
+  const lessonPanel = new LessonPanel(context.extensionUri, (msg, lesson) => void onLessonMessage(msg.type, lesson));
   const treeView = vscode.window.createTreeView('sphynx.list', { treeDataProvider: tree });
 
   // Student or teacher view. Both live in the Sphynx sidebar; a context key shows one of them.
@@ -132,7 +154,8 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   status.show();
 
   panel.examInfo = (c) => panelExamInfo(c);
-  context.subscriptions.push(output, diagnostics, treeView, teacherView, status, examManager, quizController, { dispose: () => panel.dispose() });
+  panel.requirements = (c) => requirementsOf(c.requires);
+  context.subscriptions.push(output, diagnostics, treeView, teacherView, status, examManager, quizController, { dispose: () => panel.dispose() }, { dispose: () => lessonPanel.dispose() });
 
   const config = () => vscode.workspace.getConfiguration('sphynx');
   void migrateLegacySettings();
@@ -175,19 +198,28 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   }
 
   function reload(): void {
+    // Subjects first: they define the units the rest of the content is sorted into.
+    const subjectLoad = loadSubjects([path.join(context.extensionPath, 'subjects')]);
+    setSubjects(subjectLoad.subjects);
+    if (!findSubject(tree.subject)) {
+      tree.subject = DEFAULT_SUBJECT;
+    }
     const extra = config().get<string[]>('extraChallengePaths', []);
     const builtIn = [
       ...['challenges', 'custom', 'tests', 'exams', 'quizzes'].map((dir) => path.join(context.extensionPath, dir)),
+      ...allSubjects().flatMap(subjectContentRoots),
       ...libraryRoots(libraryDir()),
     ];
     const result = loadChallenges([...builtIn, ...extra]);
     challenges = result.challenges;
     const quizResult = loadQuizzes([...builtIn, ...extra]);
     quizzes = quizResult.quizzes;
+    const lessonResult = loadLessons([...builtIn, ...extra]);
+    lessons = lessonResult.lessons;
     const examResult = loadExams([...builtIn, ...extra], challenges, quizzes);
     const previews = examResult.exams.filter((e) => previewing.has(e.id) || examManager.state(e.id + PREVIEW_SUFFIX)).map(previewOf);
     exams = [...examResult.exams, ...previews];
-    const errors = [...result.errors.filter((e) => !e.endsWith('folder not found')), ...quizResult.errors, ...examResult.errors];
+    const errors = [...subjectLoad.errors, ...result.errors.filter((e) => !e.endsWith('folder not found')), ...quizResult.errors, ...lessonResult.errors, ...examResult.errors];
     if (errors.length) {
       errors.forEach((e) => output.appendLine(`[challenges] ${e}`));
       vscode.window.showWarningMessage(
@@ -201,8 +233,14 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   }
 
   function updateStatus(): void {
-    const solved = progress.solvedCount(challenges.map((c) => c.id));
-    status.text = `$(mortar-board) ${solved}/${challenges.length} ${tr('solved', 'resolvidos')}`;
+    // Progress of the subject shown in the sidebar.
+    const mine = challenges.filter((c) => subjectOf(c) === tree.subject);
+    const solved = progress.solvedCount(mine.map((c) => c.id));
+    const subject = findSubject(tree.subject);
+    status.text = `$(mortar-board) ${solved}/${mine.length} ${tr('solved', 'resolvidos')}`;
+    status.tooltip = tr(`Sphynx: ${subject ? subjectTitle(subject) : ''}. Click to open the list.`, `Sphynx: ${subject ? subjectTitle(subject) : ''}. Clique para abrir a lista.`);
+    // With several subjects, the header names the one shown ("Sphynx: CS Fundamentals").
+    treeView.title = allSubjects().length > 1 && subject ? subjectTitle(subject) : tr('Challenges', 'Desafios');
     treeView.message = challenges.length ? undefined : 'No challenges found.';
   }
 
@@ -405,15 +443,41 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   }
 
   /** The challenge, quiz or test after `c` in the learning path. */
-  function nextItem(c: Challenge): PathItem | undefined {
-    return nextInPath(buildPath(challenges, quizzes), c.id);
+  function nextItem(item: { id: string; topic?: string; unit?: string; subject?: string }): PathItem | undefined {
+    return nextInPath(buildPath(challenges, quizzes, lessons, subjectOf(item)), item.id);
   }
 
   async function openPathItem(item: PathItem): Promise<void> {
-    await (item.kind === 'quiz' ? quizController.open(item.quiz.id) : openChallenge(item.challenge));
+    if (item.kind === 'quiz') {
+      await quizController.open(item.quiz.id);
+    } else if (item.kind === 'lesson') {
+      await openLesson(item.lesson);
+    } else {
+      await openChallenge(item.challenge);
+    }
   }
 
-  const itemTitle = (item: PathItem) => (item.kind === 'quiz' ? item.quiz.title : item.challenge.title);
+  const itemTitle = pathItemTitle;
+
+  async function openLesson(lesson: LessonDefinition): Promise<void> {
+    const next = nextItem(lesson);
+    await lessonPanel.show(lesson, {
+      read: lessonProgress.isRead(lesson.id),
+      next: next && { title: pathItemTitle(next), kind: next.kind },
+      requirements: requirementsOf(lesson.requires),
+    });
+  }
+
+  async function onLessonMessage(type: 'done' | 'next', lesson: LessonDefinition): Promise<void> {
+    await lessonProgress.markRead(lesson.id);
+    lessonPanel.post({ type: 'read' });
+    if (type === 'next') {
+      const next = nextItem(lesson);
+      if (next) {
+        await openPathItem(next);
+      }
+    }
+  }
 
   async function runChallenge(c: Challenge, mode: 'run' | 'submit'): Promise<void> {
     if (running.has(c.id)) {
@@ -686,6 +750,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     }
     await progress.reset();
     await quizProgress.reset();
+    await lessonProgress.reset();
     updateStatus();
     const current = panel.current;
     if (current && !parseExamChallengeId(current.id)) {
@@ -913,6 +978,37 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
         tree.refresh();
       }
     }),
+    vscode.commands.registerCommand('sphynx.openLesson', async (arg?: unknown) => {
+      const id = typeof arg === 'string' ? arg : (arg as { lesson?: LessonDefinition } | undefined)?.lesson?.id;
+      const lesson = lessons.find((l) => l.id === id);
+      if (lesson) {
+        await openLesson(lesson);
+      }
+    }),
+    vscode.commands.registerCommand('sphynx.switchSubject', async (arg?: string) => {
+      let id = typeof arg === 'string' ? arg : undefined;
+      if (!id) {
+        const pick = await vscode.window.showQuickPick(
+          allSubjects().map((s) => {
+            const mine = challenges.filter((c) => subjectOf(c) === s.id);
+            return {
+              label: `${s.kind === 'theory' ? '$(book)' : '$(code)'} ${subjectTitle(s)}`,
+              description: s.id === tree.subject ? tr('(current)', '(atual)') : '',
+              detail: `${plural(s.units.length, ['unit', 'units'], ['unidade', 'unidades'])} · ${progress.solvedCount(mine.map((c) => c.id))}/${mine.length} ${tr('challenges solved', 'desafios resolvidos')}`,
+              id: s.id,
+            };
+          }),
+          { title: tr('Choose a subject', 'Escolha uma matéria') },
+        );
+        id = pick?.id;
+      }
+      if (id && findSubject(id)) {
+        tree.subject = id;
+        await store.update(SUBJECT_KEY, id);
+        tree.refresh();
+        updateStatus();
+      }
+    }),
     vscode.commands.registerCommand('sphynx.copyBlocked', () => examManager.copyBlocked()),
     vscode.commands.registerCommand('sphynx.chooseJdk', () => javaSetup.chooseJdkFolder()),
     vscode.commands.registerCommand('sphynx.startExam', async (arg?: unknown) => {
@@ -1035,6 +1131,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
       if (answer === resetLabel) {
         await progress.reset();
         await quizProgress.reset();
+        await lessonProgress.reset();
         updateStatus();
       }
     }),
@@ -1063,6 +1160,10 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
             void panel.show(current).then(() => postExamStatus(current));
           }
           void quizController.refresh();
+          const lesson = lessonPanel.current && lessons.find((l) => l.id === lessonPanel.current!.id);
+          if (lesson) {
+            void openLesson(lesson);
+          }
         }
       }
     }),
@@ -1073,7 +1174,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   context.subscriptions.push(javaSetup);
   void javaSetup.checkQuietly();
   updateContextKey();
-  return { progress, teacherTree, verifyFiles, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath };
+  return { progress, lessonProgress, lessons: () => lessons, teacherTree, verifyFiles, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath };
 }
 
 export function deactivate(): void {}

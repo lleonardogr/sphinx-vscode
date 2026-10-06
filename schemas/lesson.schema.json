@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Sphynx lesson",
+  "description": "A lesson: lesson.json plus lesson.md (and lesson.<lang>.md for translations) in one folder. See docs/creating-challenges.md#lessons.",
+  "type": "object",
+  "required": [
+    "title"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "description": "Defaults to the folder name."
+    },
+    "title": {
+      "type": "string"
+    },
+    "topic": {
+      "type": "string",
+      "description": "The unit key this lesson belongs to (from a subject.json), e.g. \"NumberSystems\"."
+    },
+    "order": {
+      "type": "number",
+      "description": "Position among the unit's lessons."
+    },
+    "minutes": {
+      "type": "number",
+      "description": "Reading time. Defaults to an estimate from the text."
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Units the student should know first, by unit key (for example \"Loops\" from Java Programming). Shown with the student's progress in each unit; never enforced."
+    },
+    "subject": {
+      "type": "string",
+      "description": "The subject (for example \"cs\"), for content without a unit. Otherwise the unit decides the subject."
+    },
+    "translations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "By language, e.g. { \"pt-br\": { \"title\": \"…\" } }. The text goes in lesson.<lang>.md."
+    }
+  }
+}

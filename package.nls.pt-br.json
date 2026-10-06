@@ -56,5 +56,7 @@
   "command.previewExam": "Testar a prova (prévia)",
   "command.restartPreview": "Recomeçar prévia",
   "command.exportPack": "Exportar um pacote para os alunos…",
-  "command.classResults": "Resultados da turma… (professores)"
+  "command.classResults": "Resultados da turma… (professores)",
+  "command.switchSubject": "Trocar de matéria…",
+  "command.openLesson": "Abrir lição"
 }

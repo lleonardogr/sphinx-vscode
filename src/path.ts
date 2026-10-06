@@ -1,12 +1,11 @@
-// The learning path: the built-in units in teaching order, each with its challenges, its quiz and
-// the tests that close a stage. Challenges, quizzes and tests that belong to no unit (written by a
-// teacher or imported) go to a Custom section at the end. No vscode dependency.
+// The learning path of a subject: its units in teaching order (from the subject's subject.json), each
+// with its lessons, challenges, quiz and the tests that close a stage. Content that belongs to no
+// unit (written by a teacher or imported) goes to a Custom section at the end. No vscode dependency.
 import type { Challenge } from './challenges';
+import type { LessonDefinition } from './lessons';
 import type { QuizDefinition } from './quizzes';
-import { language, tr } from './i18n';
-
-/** Unit keys, in teaching order. They are the "topic" values in challenge.json and quiz.json. */
-export const UNITS = ['Basics', 'Conditionals', 'Loops', 'Strings', 'Methods', 'Arrays', 'Collections', 'OOP', 'Exceptions', 'Recursion', 'Streams'] as const;
+import { tr } from './i18n';
+import { DEFAULT_SUBJECT, findSubject, findUnit } from './subjects';
 
 /** Group for challenges, quizzes and tests that belong to no unit. Always listed last. */
 export const CUSTOM_TOPIC = 'Custom';
@@ -14,29 +13,9 @@ export const CUSTOM_TOPIC = 'Custom';
 /** Mixed challenges that check several units; they name the unit they close with "unit". */
 export const TESTS_TOPIC = 'Tests';
 
-/** Topic names used before the 0.7 restructure, still accepted in custom content. */
-const ALIASES: Record<string, string> = { Variables: 'Basics' };
-
-const UNIT_NAMES: Record<string, [string, string]> = {
-  Basics: ['Basics', 'Fundamentos'],
-  Conditionals: ['Conditionals', 'Condicionais'],
-  Loops: ['Loops', 'Laços de repetição'],
-  Strings: ['Strings & Characters', 'Strings e caracteres'],
-  Methods: ['Methods', 'Métodos'],
-  Arrays: ['Arrays', 'Arrays'],
-  Collections: ['Collections', 'Coleções'],
-  OOP: ['Object-Oriented Programming', 'Orientação a objetos'],
-  Exceptions: ['Exceptions', 'Exceções'],
-  Recursion: ['Recursion', 'Recursão'],
-  Streams: ['Lambdas & Streams', 'Lambdas e streams'],
-};
-
+/** The unit key for a "topic" (accepting older aliases), or undefined when it is not a unit of any subject. */
 export function unitKey(topic: string | undefined): string | undefined {
-  if (!topic) {
-    return undefined;
-  }
-  const key = ALIASES[topic] ?? topic;
-  return (UNITS as readonly string[]).includes(key) ? key : undefined;
+  return findUnit(topic)?.unit.key;
 }
 
 /** "3 · Loops" for a unit; other topics are shown as they are written. */
@@ -49,73 +28,139 @@ export function groupLabel(group: PathGroup): string {
 
 /** The unit's name in the current language; other topics are returned as they are. */
 export function unitName(key: string): string {
-  const names = UNIT_NAMES[unitKey(key) ?? key];
-  return names ? names[language() === 'pt-br' ? 1 : 0] : key;
+  const found = findUnit(key);
+  return found ? (found.unit.titles[currentLang()] ?? found.unit.titles.en) : key;
+}
+
+const currentLang = () => (tr('en', 'pt-br') as 'en' | 'pt-br');
+
+/** The sidebar icon of a unit, or undefined for other topics. */
+export function unitIcon(key: string): string | undefined {
+  return findUnit(key)?.unit.icon;
+}
+
+/** Which subject an item belongs to: its unit's subject, else its "subject", else the default (Java). */
+export function subjectOf(item: { topic?: string; unit?: string; subject?: string }): string {
+  const unit = item.topic === TESTS_TOPIC ? item.unit : item.topic;
+  return findUnit(unit)?.subject.id ?? (item.subject && findSubject(item.subject) ? item.subject : DEFAULT_SUBJECT);
 }
 
 export interface PathGroup {
   kind: 'unit' | 'topic' | 'custom';
   key: string;
-  /** 1-based position among the built-in units (stable even when a unit has no content yet). */
+  /** 1-based position among the subject's units (stable even when a unit has no content yet). */
   number?: number;
+  lessons: LessonDefinition[];
   challenges: Challenge[];
   quizzes: QuizDefinition[];
   tests: Challenge[];
 }
 
-const byOrder = (a: Challenge, b: Challenge) => a.order - b.order || a.title.localeCompare(b.title);
+const byOrder = (a: { order: number; title: string }, b: { order: number; title: string }) => a.order - b.order || a.title.localeCompare(b.title);
 
-export function buildPath(challenges: Challenge[], quizzes: QuizDefinition[]): PathGroup[] {
-  const units = new Map<string, PathGroup>(UNITS.map((key, i) => [key, { kind: 'unit', key, number: i + 1, challenges: [], quizzes: [], tests: [] }]));
+/** The learning path of one subject: its units, then other topics, then Custom. Empty groups are left out. */
+export function buildPath(challenges: Challenge[], quizzes: QuizDefinition[], lessons: LessonDefinition[] = [], subjectId: string = DEFAULT_SUBJECT): PathGroup[] {
+  const subject = findSubject(subjectId);
+  const empty = () => ({ lessons: [], challenges: [], quizzes: [], tests: [] });
+  const units = new Map<string, PathGroup>((subject?.units ?? []).map((u, i) => [u.key, { kind: 'unit', key: u.key, number: i + 1, ...empty() }]));
   const topics = new Map<string, PathGroup>();
-  const custom: PathGroup = { kind: 'custom', key: CUSTOM_TOPIC, challenges: [], quizzes: [], tests: [] };
+  const custom: PathGroup = { kind: 'custom', key: CUSTOM_TOPIC, ...empty() };
+  const mine = <T extends { topic?: string; unit?: string; subject?: string }>(items: T[]) => items.filter((it) => subjectOf(it) === subjectId);
+  const groupFor = (topic: string | undefined): PathGroup => {
+    const unit = unitKey(topic);
+    if (unit && units.has(unit)) {
+      return units.get(unit)!;
+    }
+    if (!topic || topic === CUSTOM_TOPIC) {
+      return custom;
+    }
+    if (!topics.has(topic)) {
+      topics.set(topic, { kind: 'topic', key: topic, ...empty() });
+    }
+    return topics.get(topic)!;
+  };
 
-  for (const c of challenges) {
+  for (const c of mine(challenges)) {
     if (c.topic === TESTS_TOPIC) {
       const unit = unitKey(c.unit);
-      (unit ? units.get(unit)! : custom).tests.push(c);
-      continue;
-    }
-    const unit = unitKey(c.topic);
-    if (unit) {
-      units.get(unit)!.challenges.push(c);
-    } else if (c.topic === CUSTOM_TOPIC) {
-      custom.challenges.push(c);
+      (unit && units.has(unit) ? units.get(unit)! : custom).tests.push(c);
     } else {
-      if (!topics.has(c.topic)) {
-        topics.set(c.topic, { kind: 'topic', key: c.topic, challenges: [], quizzes: [], tests: [] });
-      }
-      topics.get(c.topic)!.challenges.push(c);
+      groupFor(c.topic).challenges.push(c);
     }
   }
-  for (const q of quizzes) {
+  for (const q of mine(quizzes)) {
     const unit = unitKey(q.topic);
-    (unit ? units.get(unit)! : (q.topic && topics.get(q.topic)) || custom).quizzes.push(q);
+    (unit && units.has(unit) ? units.get(unit)! : (q.topic && topics.get(q.topic)) || custom).quizzes.push(q);
+  }
+  for (const l of mine(lessons)) {
+    groupFor(l.topic).lessons.push(l);
   }
 
   const groups = [...units.values(), ...[...topics.values()].sort((a, b) => a.key.localeCompare(b.key)), custom];
   for (const g of groups) {
+    g.lessons.sort(byOrder);
     g.challenges.sort(byOrder);
     g.tests.sort(byOrder);
     g.quizzes.sort((a, b) => a.title.localeCompare(b.title));
   }
-  return groups.filter((g) => g.challenges.length + g.quizzes.length + g.tests.length > 0);
+  return groups.filter((g) => g.lessons.length + g.challenges.length + g.quizzes.length + g.tests.length > 0);
 }
 
-export type PathItem = { kind: 'challenge'; challenge: Challenge } | { kind: 'quiz'; quiz: QuizDefinition };
+export type PathItem =
+  | { kind: 'lesson'; lesson: LessonDefinition }
+  | { kind: 'challenge'; challenge: Challenge }
+  | { kind: 'quiz'; quiz: QuizDefinition };
 
-/** Everything in path order: each group's challenges, then its quizzes, then its tests. */
+export function pathItemId(item: PathItem): string {
+  return item.kind === 'quiz' ? item.quiz.id : item.kind === 'lesson' ? item.lesson.id : item.challenge.id;
+}
+
+export function pathItemTitle(item: PathItem): string {
+  return item.kind === 'quiz' ? item.quiz.title : item.kind === 'lesson' ? item.lesson.title : item.challenge.title;
+}
+
+/** Everything in path order: each group's lessons, then its challenges, its quiz and its tests. */
 export function pathSequence(groups: PathGroup[]): PathItem[] {
   return groups.flatMap((g) => [
+    ...g.lessons.map((lesson) => ({ kind: 'lesson' as const, lesson })),
     ...g.challenges.map((challenge) => ({ kind: 'challenge' as const, challenge })),
     ...g.quizzes.map((quiz) => ({ kind: 'quiz' as const, quiz })),
     ...g.tests.map((challenge) => ({ kind: 'challenge' as const, challenge })),
   ]);
 }
 
-/** The item after `id` in the path (a challenge or quiz id), or undefined at the end. */
+/** The item after `id` in the path (a lesson, challenge or quiz id), or undefined at the end. */
 export function nextInPath(groups: PathGroup[], id: string): PathItem | undefined {
   const seq = pathSequence(groups);
-  const i = seq.findIndex((it) => (it.kind === 'quiz' ? it.quiz.id : it.challenge.id) === id);
+  const i = seq.findIndex((it) => pathItemId(it) === id);
   return i === -1 ? undefined : seq[i + 1];
+}
+
+export interface Requirement {
+  /** The unit key, e.g. "Loops". */
+  unit: string;
+  /** "Java Programming · Loops" in the current language (or the key, when it is not a known unit). */
+  label: string;
+  solved: number;
+  total: number;
+}
+
+/**
+ * The units an item needs, with how many of each unit's challenges are solved (prerequisites are
+ * shown, never enforced: teachers decide the order).
+ */
+export function requirementStatus(requires: string[], challenges: Challenge[], isSolved: (id: string) => boolean): Requirement[] {
+  return requires.map((key) => {
+    const found = findUnit(key);
+    const unit = found?.unit.key ?? key;
+    // Like the sidebar's "solved/total" for the unit: its challenges plus the tests that close it.
+    const inUnit = challenges.filter((c) => unitKey(c.topic === TESTS_TOPIC ? c.unit : c.topic) === unit);
+    const subjectName = found ? (found.subject.titles[currentLang()] ?? found.subject.titles.en) : '';
+    return {
+      unit,
+      label: found ? `${subjectName} · ${unitName(unit)}` : key,
+      solved: inUnit.filter((c) => isSolved(c.id)).length,
+      total: inUnit.length,
+    };
+  });
 }

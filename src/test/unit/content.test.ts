@@ -3,23 +3,29 @@ import * as path from 'path';
 import { describe, it } from 'node:test';
 import { loadChallenge, loadChallenges } from '../../challenges';
 import { loadExams } from '../../exams';
-import { PathItem, UNITS, buildPath, nextInPath, pathSequence } from '../../path';
+import { buildPath, nextInPath, pathItemId, pathSequence, subjectOf } from '../../path';
+import { findSubject } from '../../subjects';
+import { loadLessons } from '../../lessons';
 import { loadQuizzes } from '../../quizzes';
-import { CONTENT_ROOTS, ROOT } from './helpers';
+import { CONTENT_ROOTS, ROOT, SUBJECT_ERRORS } from './helpers';
 
 const { challenges, errors } = loadChallenges(CONTENT_ROOTS);
 const quizLoad = loadQuizzes(CONTENT_ROOTS);
 const examLoad = loadExams([path.join(ROOT, 'exams')], challenges, quizLoad.quizzes);
+const lessonLoad = loadLessons(CONTENT_ROOTS);
+const java = challenges.filter((c) => subjectOf(c) === 'java');
 
 describe('built-in content', () => {
-  it('loads every challenge, quiz and exam without errors', () => {
+  it('loads every subject, challenge, quiz, lesson and exam without errors', () => {
+    assert.deepEqual(SUBJECT_ERRORS, []);
+    assert.deepEqual(lessonLoad.errors, []);
     assert.deepEqual(errors, []);
     assert.deepEqual(quizLoad.errors, []);
     assert.deepEqual(examLoad.errors, []);
   });
 
-  it('has the 100 challenges of the learning path', () => {
-    assert.equal(challenges.length, 100);
+  it('has the 100 challenges of the Java learning path', () => {
+    assert.equal(java.length, 100);
   });
 
   it('uses unique ids', () => {
@@ -49,11 +55,17 @@ describe('built-in content', () => {
 });
 
 describe('learning path', () => {
-  const groups = buildPath(challenges, quizLoad.quizzes);
+  const groups = buildPath(challenges, quizLoad.quizzes, lessonLoad.lessons, 'java');
   const units = groups.filter((g) => g.kind === 'unit');
 
-  it('lists the 11 units in teaching order', () => {
-    assert.deepEqual(units.map((g) => g.key), UNITS);
+  it('lists the 11 Java units in teaching order', () => {
+    assert.deepEqual(units.map((g) => g.key), findSubject('java')!.units.map((u) => u.key));
+    assert.equal(units.length, 11);
+  });
+
+  it('keeps other subjects out of the Java path', () => {
+    const ids = new Set(pathSequence(groups).map(pathItemId));
+    assert.ok(challenges.filter((c) => subjectOf(c) !== 'java').every((c) => !ids.has(c.id)));
   });
 
   it('gives every unit challenges and exactly one quiz', () => {
@@ -79,7 +91,7 @@ describe('learning path', () => {
   });
 
   it('suggests the next item after each one', () => {
-    const id = (it: PathItem | undefined) => (it ? (it.kind === 'quiz' ? it.quiz.id : it.challenge.id) : undefined);
+    const id = (it: Parameters<typeof pathItemId>[0] | undefined) => (it ? pathItemId(it) : undefined);
     const sequence = pathSequence(groups);
     assert.equal(id(nextInPath(groups, 'hello-world')), id(sequence[1]));
     const lastChallenge = units[0].challenges.at(-1)!;

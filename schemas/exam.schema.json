@@ -70,6 +70,10 @@
       "default": 3,
       "description": "Submissions allowed per question. The best one counts. Run (sample tests) is unlimited."
     },
+    "subject": {
+      "type": "string",
+      "description": "The subject whose sidebar lists the exam, e.g. \"java\" or \"cs\" (a subject id from subjects/<id>/subject.json). By default, the subject most of the questions come from."
+    },
     "restrictions": {
       "type": "object",
       "additionalProperties": false,

@@ -124,6 +124,17 @@
         "icon": "$(list-filter)"
       },
       {
+        "command": "sphynx.switchSubject",
+        "title": "%command.switchSubject%",
+        "category": "Sphynx",
+        "icon": "$(library)"
+      },
+      {
+        "command": "sphynx.openLesson",
+        "title": "%command.openLesson%",
+        "category": "Sphynx"
+      },
+      {
         "command": "sphynx.switchToTeacherView",
         "title": "%command.switchToTeacherView%",
         "category": "Sphynx",
@@ -278,6 +289,11 @@
           "group": "navigation@0"
         },
         {
+          "command": "sphynx.switchSubject",
+          "when": "view == sphynx.list",
+          "group": "navigation@1"
+        },
+        {
           "command": "sphynx.groupBy",
           "when": "view == sphynx.list",
           "group": "navigation@1"
@@ -290,7 +306,7 @@
         {
           "command": "sphynx.resetAllChallenges",
           "when": "view == sphynx.list",
-          "group": "navigation@2"
+          "group": "reset"
         },
         {
           "command": "sphynx.switchToTeacherView",
@@ -505,6 +521,10 @@
       ],
       "commandPalette": [
         {
+          "command": "sphynx.openLesson",
+          "when": "false"
+        },
+        {
           "command": "sphynx.previewExam",
           "when": "false"
         },
@@ -672,6 +692,14 @@
       {
         "fileMatch": "quiz.json",
         "url": "./schemas/quiz.schema.json"
+      },
+      {
+        "fileMatch": "lesson.json",
+        "url": "./schemas/lesson.schema.json"
+      },
+      {
+        "fileMatch": "subject.json",
+        "url": "./schemas/subject.schema.json"
       }
     ]
   },

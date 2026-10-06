@@ -12,7 +12,12 @@ export type QuizQuestion =
   | { type: 'truefalse'; prompt: string; code?: string; answer: boolean; explanation: string; points: number }
   | { type: 'short'; prompt: string; code?: string; answer: string[]; caseSensitive: boolean; explanation: string; points: number }
   /** "What does this code print?": typed, or picked from `options` when given. */
-  | { type: 'output'; prompt: string; code: string; answer: string; options?: string[]; explanation: string; points: number };
+  | { type: 'output'; prompt: string; code: string; answer: string; options?: string[]; explanation: string; points: number }
+  /** A number typed in `base` (2, 8, 10 or 16), compared by value; decimal answers can have a `tolerance`. */
+  | { type: 'number'; prompt: string; code?: string; answer: string; value: number; base: NumberBase; tolerance: number; explanation: string; points: number };
+
+export type NumberBase = 2 | 8 | 10 | 16;
+const BASES: NumberBase[] = [2, 8, 10, 16];
 
 export interface QuizDefinition {
   id: string;
@@ -21,7 +26,50 @@ export interface QuizDefinition {
   /** Sidebar hint, e.g. "Variables". Optional. */
   topic: string;
   questions: QuizQuestion[];
+  /** Units the student should know first (shown, not enforced). */
+  requires: string[];
+  /** The subject, for quizzes without a unit. */
+  subject?: string;
   dir: string;
+}
+
+const PREFIX: Partial<Record<NumberBase, string>> = { 2: '0b', 8: '0o', 16: '0x' };
+
+/**
+ * Reads a number typed by a student in `base`. Spaces and underscores are ignored ("0000 1011"),
+ * and so is the usual prefix ("0b1011", "0x1F", "#1F"); digits are case-insensitive. In base 10,
+ * "1,024" and "1.024" are 1024 when `integer` is true; otherwise "3,5" and "3.5" are both 3.5.
+ */
+export function parseNumberAnswer(text: string, base: NumberBase, integer = true): number | undefined {
+  let s = text.trim().replace(/[\s_]/g, '').toLowerCase();
+  let sign = 1;
+  if (s.startsWith('-') || s.startsWith('+')) {
+    sign = s.startsWith('-') ? -1 : 1;
+    s = s.slice(1);
+  }
+  const prefix = PREFIX[base];
+  if (prefix && s.startsWith(prefix)) {
+    s = s.slice(prefix.length);
+  } else if (base === 16 && s.startsWith('#')) {
+    s = s.slice(1);
+  }
+  if (!s) {
+    return undefined;
+  }
+  if (base === 10) {
+    if (integer && /^\d{1,3}([.,]\d{3})+$/.test(s)) {
+      s = s.replace(/[.,]/g, '');
+    } else if (s.includes('.') && s.includes(',')) {
+      // The last separator is the decimal point: "1,234.5" or "1.234,5".
+      const decimal = s.lastIndexOf('.') > s.lastIndexOf(',') ? '.' : ',';
+      s = s.split(decimal === '.' ? ',' : '.').join('').replace(',', '.');
+    } else {
+      s = s.replace(',', '.');
+    }
+    return /^\d+(\.\d+)?$|^\.\d+$/.test(s) ? sign * Number(s) : undefined;
+  }
+  const digits = '0123456789abcdef'.slice(0, base);
+  return [...s].every((ch) => digits.includes(ch)) ? sign * parseInt(s, base) : undefined;
 }
 
 /** What the student answered, by question index: chosen option indexes, true/false, or typed text. */
@@ -77,8 +125,19 @@ function parseQuestion(raw: Record<string, unknown>, i: number): QuizQuestion {
       }
       return { type: 'output', prompt: prompt || tr('What does this code print?', 'O que este código imprime?'), code, answer, options, explanation, points };
     }
+    case 'number': {
+      if (!prompt) fail(i, 'needs a "prompt"');
+      const base = (raw.base ?? 10) as NumberBase;
+      if (!BASES.includes(base)) fail(i, '"base" must be 2, 8, 10 or 16');
+      const tolerance = typeof raw.tolerance === 'number' && raw.tolerance >= 0 ? raw.tolerance : 0;
+      const answer = typeof raw.answer === 'number' ? String(raw.answer) : typeof raw.answer === 'string' ? raw.answer.trim() : '';
+      // The teacher's answer is a plain number: "2.125" is two and a bit, not 2125.
+      const value = parseNumberAnswer(answer, base, false);
+      if (!answer || value === undefined) fail(i, `a "number" question needs "answer": a number written in base ${base}`);
+      return { type: 'number', prompt, code, answer, value, base, tolerance, explanation, points };
+    }
     default:
-      fail(i, '"type" must be "choice", "truefalse", "short" or "output"');
+      fail(i, '"type" must be "choice", "truefalse", "short", "output" or "number"');
   }
 }
 
@@ -127,6 +186,8 @@ export function loadQuiz(dir: string, lang: Lang = language()): QuizDefinition {
     description: (typeof t.description === 'string' && t.description.trim()) || (meta.description ?? ''),
     topic: typeof meta.topic === 'string' ? meta.topic : '',
     questions: meta.questions.map((q: Record<string, unknown>, i: number) => parseQuestion(translateQuestion(q ?? {}, t.questions?.[i]), i)),
+    requires: Array.isArray(meta.requires) ? meta.requires.filter((r: unknown): r is string => typeof r === 'string' && r.trim() !== '') : [],
+    subject: typeof meta.subject === 'string' && meta.subject.trim() ? meta.subject.trim() : undefined,
     dir,
   };
 }
@@ -182,6 +243,14 @@ export function isCorrect(q: QuizQuestion, answer: QuizAnswer): boolean {
       return answer === q.answer;
     case 'short':
       return typeof answer === 'string' && q.answer.some((a) => normalizeShort(a, q.caseSensitive) === normalizeShort(answer, q.caseSensitive));
+    case 'number': {
+      if (typeof answer !== 'string') {
+        return false;
+      }
+      // A whole answer allows thousands separators ("1,024" or "1.024").
+      const v = parseNumberAnswer(answer, q.base, Number.isInteger(q.value));
+      return v !== undefined && Math.abs(v - q.value) <= q.tolerance;
+    }
     case 'output':
       if (q.options) {
         return Array.isArray(answer) && answer.length === 1 && q.options[answer[0]] === q.answer;
@@ -216,6 +285,10 @@ export function describeAnswer(q: QuizQuestion): string {
       return q.answer.join(' / ');
     case 'output':
       return q.answer;
+    case 'number': {
+      const names: Record<NumberBase, [string, string]> = { 2: ['binary', 'binário'], 8: ['octal', 'octal'], 10: ['decimal', 'decimal'], 16: ['hexadecimal', 'hexadecimal'] };
+      return q.base === 10 ? q.answer : `${q.answer} (${tr(...names[q.base])})`;
+    }
   }
 }
 

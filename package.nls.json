@@ -56,5 +56,7 @@
   "command.previewExam": "Try Exam (Preview)",
   "command.restartPreview": "Restart Preview",
   "command.exportPack": "Export a Pack for Students…",
-  "command.classResults": "Class Results… (Teachers)"
+  "command.classResults": "Class Results… (Teachers)",
+  "command.switchSubject": "Switch Subject…",
+  "command.openLesson": "Open Lesson"
 }

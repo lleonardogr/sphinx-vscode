@@ -48,7 +48,7 @@ describe('isCorrect', () => {
 });
 
 describe('gradeQuiz', () => {
-  const quiz: QuizDefinition = { id: 'q', title: 'Q', description: '', topic: '', dir: '', questions: [choice, many, tf] };
+  const quiz: QuizDefinition = { id: 'q', title: 'Q', description: '', topic: '', dir: '', requires: [], questions: [choice, many, tf] };
 
   it('adds the points of the right answers', () => {
     const g = gradeQuiz(quiz, [[1], [0, 2], true]);

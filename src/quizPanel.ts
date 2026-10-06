@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import { QuizAnswer, QuizDefinition, QuizQuestion } from './quizzes';
 import { language, plural, tr } from './i18n';
-import { unitName } from './path';
+import { Requirement, unitName } from './path';
+import { requirementsHtml } from './challengePanel';
 
 /** Shown when the quiz is a question of an exam: answers are saved as you go and submitted once, without feedback. */
 export interface QuizExamInfo {
@@ -65,6 +66,14 @@ const TYPE_LABEL: Record<QuizQuestion['type'], [string, string]> = {
   truefalse: ['True or false', 'Verdadeiro ou falso'],
   short: ['Short answer', 'Resposta curta'],
   output: ['What does it print?', 'O que ele imprime?'],
+  number: ['Number', 'Número'],
+};
+
+const NUMBER_HINT: Record<number, [string, string]> = {
+  2: ['Binary number, e.g. 1011', 'Número binário, ex.: 1011'],
+  8: ['Octal number, e.g. 17', 'Número octal, ex.: 17'],
+  10: ['A number', 'Um número'],
+  16: ['Hexadecimal number, e.g. 1F', 'Número hexadecimal, ex.: 1F'],
 };
 
 /** The single quiz panel, reused as the student moves between quizzes. */
@@ -83,7 +92,7 @@ export class QuizPanel {
     return this.quiz;
   }
 
-  async show(quiz: QuizDefinition, opts: { exam?: QuizExamInfo; answers?: QuizAnswer[]; best?: string } = {}): Promise<void> {
+  async show(quiz: QuizDefinition, opts: { exam?: QuizExamInfo; answers?: QuizAnswer[]; best?: string; requirements?: Requirement[] } = {}): Promise<void> {
     if (!this.panel) {
       this.panel = vscode.window.createWebviewPanel('sphynxQuiz', quiz.title, vscode.ViewColumn.One, {
         enableScripts: true,
@@ -149,6 +158,8 @@ export class QuizPanel {
       input = `<div class="quiz-options quiz-inline">
         <label class="quiz-option"><input type="radio" name="${name}" value="true"${checked(answer === true)}><span>${tr('True', 'Verdadeiro')}</span></label>
         <label class="quiz-option"><input type="radio" name="${name}" value="false"${checked(answer === false)}><span>${tr('False', 'Falso')}</span></label></div>`;
+    } else if (q.type === 'number') {
+      input = `<input class="quiz-text quiz-number" type="text" inputmode="${q.base === 10 ? 'decimal' : 'text'}" name="${name}" spellcheck="false" autocomplete="off" aria-label="${tr(...NUMBER_HINT[q.base])}" placeholder="${tr(...NUMBER_HINT[q.base])}" value="${escapeHtml(typeof answer === 'string' ? answer : '')}">`;
     } else if (q.type === 'short') {
       input = `<input class="quiz-text" type="text" name="${name}" spellcheck="false" autocomplete="off" aria-label="${tr('Your answer', 'Sua resposta')}" value="${escapeHtml(typeof answer === 'string' ? answer : '')}">`;
     } else {
@@ -165,7 +176,7 @@ export class QuizPanel {
     </section>`;
   }
 
-  private async render(quiz: QuizDefinition, opts: { exam?: QuizExamInfo; answers?: QuizAnswer[]; best?: string }): Promise<string> {
+  private async render(quiz: QuizDefinition, opts: { exam?: QuizExamInfo; answers?: QuizAnswer[]; best?: string; requirements?: Requirement[] }): Promise<string> {
     const webview = this.panel!.webview;
     const media = (file: string) => webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', file));
     const n = nonce();
@@ -198,7 +209,7 @@ export class QuizPanel {
     <div class="meta">
       <span class="badge topic">Quiz</span>${quiz.topic ? `<span class="badge">${escapeHtml(unitName(quiz.topic))}</span>` : ''}
       <span class="badge">${plural(quiz.questions.length, ['question', 'questions'], ['questão', 'questões'])} · ${plural(total, ['point', 'points'], ['ponto', 'pontos'])}</span>
-    </div>
+    </div>${requirementsHtml(opts.requirements ?? [])}
   </header>
   ${banner}
   <main>

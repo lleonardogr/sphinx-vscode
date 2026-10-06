@@ -5,6 +5,7 @@ challenges/**/Solution*.java
 custom/**/Solution*.java
 tests/**/Solution*.java
 exams/**/Solution*.java
+subjects/**/Solution*.java
 custom/README.md
 **/*.map
 **/tsconfig.json

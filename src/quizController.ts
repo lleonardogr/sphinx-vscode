@@ -8,6 +8,7 @@ import { ExamDefinition, ExamQuestion, parseExamChallengeId } from './exams';
 import { QuizExamInfo, QuizMessage, QuizPanel, examQuizStatus, renderMarkdown } from './quizPanel';
 import { QuizAnswer, QuizDefinition, describeAnswer, gradeQuiz, isCorrect, parseAnswers, scaleQuizGrade } from './quizzes';
 import { plural, tr } from './i18n';
+import { Requirement } from './path';
 
 const KEY = 'sphynx.quizzes';
 
@@ -63,6 +64,8 @@ export class QuizController implements vscode.Disposable {
     private readonly examManager: ExamManager,
     private readonly quizzes: () => QuizDefinition[],
     private readonly exams: () => ExamDefinition[],
+    /** The units a quiz needs, with the student's progress (prerequisites are shown in practice only). */
+    private readonly requirements: (requires: string[]) => Requirement[] = () => [],
   ) {
     this.panel = new QuizPanel(extensionUri, (msg, quiz) => void this.onMessage(msg, quiz));
   }
@@ -130,7 +133,7 @@ export class QuizController implements vscode.Disposable {
       return;
     }
     const score = this.progress.get(quiz.id);
-    await this.panel.show(quiz, { best: score ? `${score.best} / ${score.total}` : undefined });
+    await this.panel.show(quiz, { best: score ? `${score.best} / ${score.total}` : undefined, requirements: this.requirements(quiz.requires ?? []) });
   }
 
   /** Whether the quiz panel is showing this quiz. */

@@ -5,6 +5,7 @@
 //     "durationMinutes": 45,
 //     "mode": "closed",            // "open": hints, AI hints and the internet allowed; "closed": no hints, integrity warnings recorded
 //     "maxSubmissions": 3,         // per question
+//     "subject": "java",           // optional: by default, the subject most of the questions come from
 //     "questions": [
 //       { "id": "even-or-odd", "points": 20 },   // a built-in challenge id...
 //       { "id": "sum-of-evens", "points": 50 }   // ...or a challenge or quiz folder inside the exam folder
@@ -17,7 +18,9 @@ import * as path from 'path';
 import { Challenge, loadChallenge } from './challenges';
 import { QuizDefinition, loadQuiz } from './quizzes';
 import { language, tr } from './i18n';
+import { subjectOf } from './path';
 import { RunOutcome } from './runner';
+import { DEFAULT_SUBJECT, findSubject } from './subjects';
 
 export type ExamMode = 'open' | 'closed';
 
@@ -102,6 +105,8 @@ export interface ExamDefinition {
   maxSubmissions: number;
   restrictions: ExamRestrictions;
   questions: ExamQuestion[];
+  /** The subject whose sidebar lists it (see examSubject). */
+  subject: string;
   dir: string;
   /** A teacher's practice attempt of another exam (see previewOf). */
   preview?: boolean;
@@ -150,6 +155,20 @@ export function scoreOutcome(outcome: RunOutcome, points: number): { earned: num
   return { earned: Math.round((points * passed * 100) / total) / 100, passed, total };
 }
 
+/** "subject" in exam.json when it names a subject, else the subject most of the questions come from. */
+function examSubject(subject: unknown, sources: { topic?: string; unit?: string; subject?: string }[]): string {
+  const own = typeof subject === 'string' ? subject.trim() : '';
+  if (findSubject(own)) {
+    return own;
+  }
+  const counts = new Map<string, number>();
+  for (const source of sources) {
+    const id = subjectOf(source);
+    counts.set(id, (counts.get(id) ?? 0) + 1);
+  }
+  return [...counts].sort((a, b) => b[1] - a[1])[0]?.[0] ?? DEFAULT_SUBJECT;
+}
+
 function loadExam(dir: string, challenges: Challenge[], quizzes: QuizDefinition[]): ExamDefinition {
   const lang = language();
   const meta = JSON.parse(fs.readFileSync(path.join(dir, 'exam.json'), 'utf8'));
@@ -158,6 +177,7 @@ function loadExam(dir: string, challenges: Challenge[], quizzes: QuizDefinition[
     throw new Error('exam.json needs a "title" and at least one entry in "questions"');
   }
   const mode: ExamMode = meta.mode === 'open' ? 'open' : 'closed';
+  const sources: (Challenge | QuizDefinition)[] = [];
   const questions: ExamQuestion[] = meta.questions.map((q: { id?: string; points?: number }, i: number) => {
     if (!q?.id) {
       throw new Error(`question ${i + 1} needs an "id"`);
@@ -175,11 +195,13 @@ function loadExam(dir: string, challenges: Challenge[], quizzes: QuizDefinition[
       quiz = base ? undefined : quizzes.find((z) => z.id === q.id);
     }
     if (quiz) {
+      sources.push(quiz);
       return { kind: 'quiz', id: q.id, points, quiz: { ...quiz, id: examChallengeId(id, q.id) } };
     }
     if (!base) {
       throw new Error(`question "${q.id}" is neither a folder in this exam nor a known challenge or quiz id`);
     }
+    sources.push(base);
     const challenge: Challenge = {
       ...base,
       id: examChallengeId(id, q.id),
@@ -206,6 +228,7 @@ function loadExam(dir: string, challenges: Challenge[], quizzes: QuizDefinition[
     maxSubmissions: typeof meta.maxSubmissions === 'number' && meta.maxSubmissions > 0 ? Math.floor(meta.maxSubmissions) : 3,
     restrictions: examRestrictions(mode, meta.restrictions),
     questions,
+    subject: examSubject(meta.subject, sources),
     dir,
   };
 }
