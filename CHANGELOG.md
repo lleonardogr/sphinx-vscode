@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Take an exam again**: 6 hours after finishing (by default), a student can retake an exam with **Take Exam Again**. Each attempt starts fresh; the previous one is kept in its own folder with its results file, and results files say which attempt they are. Teachers set the wait with `"retakeAfterHours"` in `exam.json` (`0` for right away, `false` for a single attempt).
+- **Delete** in the teacher view: right-click one of your own exams, challenges, tests or quizzes to delete it. Imported items are removed from the library; items from your own folders go to the Trash. Built-in content can't be deleted.
 - **CS Fundamentals, unit 3 · Bits and Bytes**, in English and Portuguese: two lessons (Bits and Bytes, with a diagram; Kilobytes and Kibibytes), a quiz, and four challenges solved in Java: How Many Values?, Bits Needed, Storage Units (the same size in MB and MiB) and Download Time.
 
 ## [1.2.0] - 2026-10-06

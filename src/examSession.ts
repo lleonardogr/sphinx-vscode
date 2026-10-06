@@ -37,6 +37,8 @@ export interface SessionState {
   questions: Record<string, QuestionState>;
   warnings: IntegrityWarning[];
   resultsFile?: string;
+  /** 2 for the first retake, and so on (missing: the first attempt). */
+  attempt?: number;
 }
 
 export interface ExamResultsFile {
@@ -45,6 +47,8 @@ export interface ExamResultsFile {
   extensionVersion: string;
   exam: { id: string; title: string; mode: string; durationMinutes: number; maxSubmissions: number };
   student: string;
+  /** Which attempt this is, when the exam was taken again (missing: the first). */
+  attempt?: number;
   startedAt: string;
   finishedAt: string;
   finishedBy: 'student' | 'time' | 'away';
@@ -72,6 +76,14 @@ const LARGE_INSERTION = 80; // characters inserted in a single edit, recorded wh
 const AWAY_THRESHOLD_MS = 15_000;
 
 const hash = (s: string) => createHash('sha256').update(s).digest('hex');
+
+/** A wait such as "3h 20m" or "45 min", rounded up to the minute. */
+export function formatWait(ms: number): string {
+  const minutes = Math.max(1, Math.ceil(ms / 60_000));
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return h ? `${h}h ${String(m).padStart(2, '0')}m` : `${m} min`;
+}
 
 export function formatDuration(ms: number): string {
   const total = Math.max(0, Math.round(ms / 1000));
@@ -185,11 +197,37 @@ export class ExamManager implements vscode.Disposable {
 
   // ------------------------------------------------------------------ start / finish
 
+  /**
+   * When a finished exam can be taken again (a timestamp), or undefined: not finished yet, a teacher's
+   * preview (restarted instead), or an exam that can be taken only once.
+   */
+  retakeAt(exam: ExamDefinition): number | undefined {
+    const s = this.state(exam.id);
+    if (!s?.finishedAt || exam.preview || exam.retakeAfterHours === null) {
+      return undefined;
+    }
+    return s.finishedAt + exam.retakeAfterHours * 3_600_000;
+  }
+
+  canRetake(exam: ExamDefinition): boolean {
+    const at = this.retakeAt(exam);
+    return at !== undefined && Date.now() >= at;
+  }
+
   async start(exam: ExamDefinition): Promise<boolean> {
-    if (this.state(exam.id)?.finishedAt) {
-      vscode.window.showInformationMessage(tr(`You already finished "${exam.title}". Score: ${this.formatScore(exam)}.`, `Você já terminou "${exam.title}". Nota: ${this.formatScore(exam)}.`));
+    const previous = this.state(exam.id);
+    if (previous?.finishedAt && !this.canRetake(exam)) {
+      const at = this.retakeAt(exam);
+      const when =
+        at === undefined
+          ? tr('This exam can be taken only once.', 'Esta prova só pode ser feita uma vez.')
+          : tr(`You can take it again in ${formatWait(at - Date.now())}.`, `Você pode fazê-la de novo em ${formatWait(at - Date.now())}.`);
+      vscode.window.showInformationMessage(
+        `${tr(`You already finished "${exam.title}". Score: ${this.formatScore(exam)}.`, `Você já terminou "${exam.title}". Nota: ${this.formatScore(exam)}.`)} ${when}`,
+      );
       return false;
     }
+    const attempt = previous?.finishedAt ? (previous.attempt ?? 1) + 1 : 1;
     if (this.isActive(exam.id)) {
       return true;
     }
@@ -200,6 +238,14 @@ export class ExamManager implements vscode.Disposable {
     }
 
     const rules = [
+      ...(attempt > 1
+        ? [
+            tr(
+              `This is attempt ${attempt}. It starts from the beginning, with new answers. Your previous attempt (${this.formatScore(exam)}) and its results file are kept in the folder "${path.basename(this.codeDir(exam.id))}-attempt-${attempt - 1}".`,
+              `Esta é a tentativa ${attempt}. Ela começa do zero, com respostas novas. Sua tentativa anterior (${this.formatScore(exam)}) e o arquivo de resultado dela ficam guardados na pasta "${path.basename(this.codeDir(exam.id))}-attempt-${attempt - 1}".`,
+            ),
+          ]
+        : []),
       tr(`Time limit: ${exam.durationMinutes} minutes, starting now.`, `Tempo limite: ${exam.durationMinutes} minutos, a partir de agora.`),
       tr(`${exam.questions.length} question(s), ${maxScore(exam)} points in total.`, `${exam.questions.length} questão(ões), ${maxScore(exam)} pontos no total.`),
       tr(
@@ -215,8 +261,9 @@ export class ExamManager implements vscode.Disposable {
       tr('When the time is up, your answers are submitted automatically and the exam is locked.', 'Quando o tempo acabar, suas respostas são enviadas automaticamente e a prova é bloqueada.'),
       ...this.restrictionRules(exam),
     ];
-    const startLabel = tr('Start Exam', 'Começar prova');
-    const ok = await vscode.window.showWarningMessage(tr(`Start "${exam.title}"?`, `Começar "${exam.title}"?`), { modal: true, detail: rules.join('\n\n') }, startLabel);
+    const startLabel = attempt > 1 ? tr('Take Exam Again', 'Fazer a prova de novo') : tr('Start Exam', 'Começar prova');
+    const title = attempt > 1 ? tr(`Take "${exam.title}" again?`, `Fazer "${exam.title}" de novo?`) : tr(`Start "${exam.title}"?`, `Começar "${exam.title}"?`);
+    const ok = await vscode.window.showWarningMessage(title, { modal: true, detail: rules.join('\n\n') }, startLabel);
     if (ok !== startLabel) {
       return false;
     }
@@ -235,8 +282,11 @@ export class ExamManager implements vscode.Disposable {
     }
     await this.store.update('sphinx.studentName', student);
 
+    if (attempt > 1) {
+      this.archiveAttempt(exam, attempt - 1);
+    }
     const now = Date.now();
-    const state: SessionState = { student, startedAt: now, endsAt: now + exam.durationMinutes * 60_000, questions: {}, warnings: [] };
+    const state: SessionState = { student, startedAt: now, endsAt: now + exam.durationMinutes * 60_000, questions: {}, warnings: [], ...(attempt > 1 ? { attempt } : {}) };
     if (exam.restrictions.record) {
       for (const id of ['GitHub.copilot', 'GitHub.copilot-chat']) {
         if (vscode.extensions.getExtension(id)) {
@@ -247,6 +297,19 @@ export class ExamManager implements vscode.Disposable {
     await this.save(exam.id, state);
     this.ensureTimer();
     return true;
+  }
+
+  /** Moves a finished attempt's answers and results file to "<exam>-attempt-N", so a retake starts fresh. */
+  private archiveAttempt(exam: ExamDefinition, attempt: number): void {
+    const dir = this.codeDir(exam.id);
+    if (!fs.existsSync(dir)) {
+      return;
+    }
+    let target = `${dir}-attempt-${attempt}`;
+    for (let i = 2; fs.existsSync(target); i++) {
+      target = `${dir}-attempt-${attempt}-${i}`;
+    }
+    fs.renameSync(dir, target);
   }
 
   /** The anti-cheating rules of this exam, as lines for the start dialog. */
@@ -594,6 +657,7 @@ export class ExamManager implements vscode.Disposable {
       extensionVersion: String(this.context.extension.packageJSON.version ?? ''),
       exam: { id: exam.id, title: exam.title, mode: exam.mode, durationMinutes: exam.durationMinutes, maxSubmissions: exam.maxSubmissions },
       student: s.student,
+      ...(s.attempt ? { attempt: s.attempt } : {}),
       startedAt: new Date(s.startedAt).toISOString(),
       finishedAt: new Date(finishedAt).toISOString(),
       finishedBy: s.finishedBy ?? 'student',

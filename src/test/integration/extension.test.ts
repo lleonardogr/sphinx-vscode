@@ -215,6 +215,7 @@ test('an exam: start, submit a question, finish, and hand in a results file', as
   assert.equal(results.student, 'Test Student');
   assert.equal(results.questions.find((q: { id: string }) => q.id === 'parking-fee').earned, 20);
   assert.equal(results.score.earned, 20);
+
 });
 
 test('importing a teacher\'s folder adds its challenge and can strip the solutions', async () => {
@@ -325,6 +326,47 @@ test('the class results dashboard summarizes the files students handed in, and c
   assert.equal(byName['results-edited.json'].matches, false);
   assert.equal(byName['results-edited.json'].recomputed, 20);
   fs.rmSync(folder, { recursive: true, force: true });
+});
+
+test('a finished exam can be taken again after 6 hours, starting fresh and keeping the first attempt', async () => {
+  const exam = api.exams().find((e) => e.id === 'exam-1')!;
+  const question = exam.questions.find((q) => q.id === 'parking-fee')!;
+  const answer = api.examManager.answerFile(exam, question);
+  const state = api.examManager.state('exam-1');
+  assert.ok(state?.finishedAt, 'the exam test finished it');
+  // Not before 6 hours have passed (the default)...
+  dialogs.messages.length = 0;
+  dialogs.answer = (m, buttons) => (m.startsWith('Take') ? buttons[0] : undefined);
+  await vscode.commands.executeCommand('sphinx.startExam', 'exam-1');
+  assert.ok(dialogs.messages.some((m) => m.includes('You can take it again in 6h 00m')), dialogs.messages.join('\n'));
+  assert.equal(api.examManager.state('exam-1')?.finishedAt, state!.finishedAt, 'the finished attempt is kept');
+  // ...then it starts fresh, and the first attempt is kept in its own folder. (Pretend 7 hours went by.)
+  const manager = api.examManager as unknown as { save(id: string, s: unknown): Promise<void> };
+  await manager.save('exam-1', { ...state, finishedAt: Date.now() - 7 * 3_600_000 });
+  assert.equal(api.examManager.canRetake(exam), true);
+  await vscode.commands.executeCommand('sphinx.retakeExam', 'exam-1');
+  const retake = api.examManager.state('exam-1');
+  assert.equal(retake?.attempt, 2);
+  assert.equal(retake?.finishedAt, undefined);
+  const archived = `${path.dirname(state!.resultsFile!)}-attempt-1`;
+  assert.ok(fs.existsSync(path.join(archived, path.basename(state!.resultsFile!))), 'the first results file is kept');
+  assert.ok(fs.existsSync(path.join(archived, 'parking-fee', 'Main.java')), 'the first answers are kept');
+  assert.ok(!fs.existsSync(answer), 'the retake starts without the old answers');
+  dialogs.answer = (m, buttons) => buttons.find((b) => b === 'Finish Exam');
+  await vscode.commands.executeCommand('sphinx.finishExam', 'exam-1');
+  assert.equal(JSON.parse(read(api.examManager.state('exam-1')!.resultsFile!)).attempt, 2);
+});
+
+test('a teacher deletes an imported challenge, but never built-in content', async () => {
+  const demo = api.challenges().find((c) => c.title === 'Class Demo')!;
+  assert.ok(demo, 'the challenge imported earlier is there');
+  const builtIn = api.exams().find((e) => e.id === 'exam-1')!;
+  dialogs.answer = (m, buttons) => (m.startsWith('Delete') ? buttons.find((b) => b === 'Delete') : undefined);
+  await vscode.commands.executeCommand('sphinx.deleteItem', { kind: 'exam', exam: builtIn });
+  assert.ok(fs.existsSync(builtIn.dir), 'built-in exams are never deleted');
+  await vscode.commands.executeCommand('sphinx.deleteItem', { kind: 'challenge', challenge: demo });
+  assert.equal(fs.existsSync(demo.dir), false, 'the imported copy is removed');
+  assert.equal(api.challenges().some((c) => c.title === 'Class Demo'), false, 'it left the sidebar');
 });
 
 test('state saved under the old "sphynx." keys moves to "sphinx." keys, once', () => {

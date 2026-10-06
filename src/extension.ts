@@ -916,6 +916,54 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     return true;
   }
 
+  /**
+   * Teachers: deletes one of their own exams, challenges, tests or quizzes. Imported items are removed
+   * from the library (a copy); items from the teacher's own folders go to the Trash. Built-in content can't be deleted.
+   */
+  async function deleteItem(node?: TeacherNode): Promise<void> {
+    const item =
+      node?.kind === 'exam'
+        ? { dir: node.exam.dir, title: node.exam.title }
+        : node?.kind === 'challenge'
+          ? { dir: node.challenge.dir, title: node.challenge.title }
+          : node?.kind === 'quiz'
+            ? { dir: node.quiz.dir, title: node.quiz.title }
+            : undefined;
+    if (!item || origin(item.dir) === 'builtIn') {
+      return;
+    }
+    const imported = origin(item.dir) === 'imported';
+    // Exams that use this challenge or quiz by id stop loading without it.
+    const usedBy = exams
+      .filter((e) => !e.preview && e.dir !== item.dir && e.questions.some((q) => (q.kind === 'quiz' ? q.quiz.dir : q.challenge.dir) === item.dir))
+      .map((e) => `"${e.title}"`);
+    const detail = [
+      imported
+        ? tr("It's removed from Sphinx's library. The pack you imported it from isn't changed.", 'Ele é removido da biblioteca do Sphinx. O pacote de onde você o importou não muda.')
+        : tr(`Its folder is moved to the Trash:\n${item.dir}`, `A pasta dele vai para a Lixeira:\n${item.dir}`),
+      ...(usedBy.length
+        ? [tr(`It's a question in ${usedBy.join(', ')}, which won't load until you remove that question.`, `Ele é uma questão de ${usedBy.join(', ')}, que não vai carregar até você remover essa questão.`)]
+        : []),
+      tr("Students' code and results files are kept.", 'O código e os arquivos de resultado dos alunos são mantidos.'),
+    ].join('\n\n');
+    const deleteLabel = tr('Delete', 'Excluir');
+    const answer = await vscode.window.showWarningMessage(tr(`Delete "${item.title}"?`, `Excluir "${item.title}"?`), { modal: true, detail }, deleteLabel);
+    if (answer !== deleteLabel) {
+      return;
+    }
+    try {
+      if (imported) {
+        fs.rmSync(item.dir, { recursive: true, force: true });
+      } else {
+        await vscode.workspace.fs.delete(vscode.Uri.file(item.dir), { recursive: true, useTrash: true });
+      }
+      output.appendLine(`[teacher] deleted ${item.dir}`);
+    } catch (e) {
+      vscode.window.showErrorMessage(tr(`Could not delete "${item.title}": ${(e as Error).message}`, `Não foi possível excluir "${item.title}": ${(e as Error).message}`));
+    }
+    reload();
+  }
+
   /** Teachers: re-grade one or more results files and compare with the scores they claim. */
   async function verifyExamResultsCommand(): Promise<void> {
     const files = await vscode.window.showOpenDialog({
@@ -1034,6 +1082,13 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
         await (first.kind === 'quiz' ? quizController.open(first.quiz.id) : openChallenge(first.challenge));
       }
     }),
+    vscode.commands.registerCommand('sphinx.retakeExam', async (arg?: unknown) => {
+      const exam = await resolveExam(arg, tr('Which exam do you want to take again?', 'Qual prova você quer fazer de novo?'), (t) => examManager.canRetake(t));
+      if (exam && (await examManager.start(exam))) {
+        const first = exam.questions[0];
+        await (first.kind === 'quiz' ? quizController.open(first.quiz.id) : openChallenge(first.challenge));
+      }
+    }),
     vscode.commands.registerCommand('sphinx.finishExam', async (arg?: unknown) => {
       const exam = await resolveExam(arg, tr('Which exam do you want to finish?', 'Qual prova você quer terminar?'), (t) => examManager.isActive(t.id));
       if (exam) {
@@ -1133,6 +1188,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
         await vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(file));
       }
     }),
+    vscode.commands.registerCommand('sphinx.deleteItem', (node?: TeacherNode) => deleteItem(node)),
     vscode.commands.registerCommand('sphinx.createChallenge', () => createChallenge(authoringDeps)),
     vscode.commands.registerCommand('sphinx.importContent', () => importContent(importDeps)),
     vscode.commands.registerCommand('sphinx.removeImported', () => removeImported(importDeps)),

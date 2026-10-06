@@ -6,6 +6,7 @@
 //     "mode": "closed",            // "open": hints, AI hints and the internet allowed; "closed": no hints, integrity warnings recorded
 //     "maxSubmissions": 3,         // per question
 //     "subject": "java",           // optional: by default, the subject most of the questions come from
+//     "retakeAfterHours": 6,       // optional: hours before a finished exam can be taken again (default 6); false: never
 //     "questions": [
 //       { "id": "even-or-odd", "points": 20 },   // a built-in challenge id...
 //       { "id": "sum-of-evens", "points": 50 }   // ...or a challenge or quiz folder inside the exam folder
@@ -105,6 +106,8 @@ export interface ExamDefinition {
   maxSubmissions: number;
   restrictions: ExamRestrictions;
   questions: ExamQuestion[];
+  /** Hours after finishing before the exam can be taken again; null: never (exam.json "retakeAfterHours": false). */
+  retakeAfterHours: number | null;
   /** The subject whose sidebar lists it (see examSubject). */
   subject: string;
   dir: string;
@@ -164,6 +167,17 @@ export function scoreOutcome(outcome: RunOutcome, points: number): { earned: num
   const passed = outcome.results.filter((r) => r.passed).length;
   const total = outcome.results.length;
   return { earned: Math.round((points * passed * 100) / total) / 100, passed, total };
+}
+
+/** Default wait before a finished exam can be taken again. */
+export const DEFAULT_RETAKE_HOURS = 6;
+
+/** exam.json "retakeAfterHours": hours (0 = right away), false = never, anything else = the default. */
+export function retakeHours(raw: unknown): number | null {
+  if (raw === false) {
+    return null;
+  }
+  return typeof raw === 'number' && raw >= 0 ? raw : DEFAULT_RETAKE_HOURS;
 }
 
 /** "subject" in exam.json when it names a subject, else the subject most of the questions come from. */
@@ -239,6 +253,7 @@ function loadExam(dir: string, challenges: Challenge[], quizzes: QuizDefinition[
     maxSubmissions: typeof meta.maxSubmissions === 'number' && meta.maxSubmissions > 0 ? Math.floor(meta.maxSubmissions) : 3,
     restrictions: examRestrictions(mode, meta.restrictions),
     questions,
+    retakeAfterHours: retakeHours(meta.retakeAfterHours),
     subject: examSubject(meta.subject, sources),
     dir,
   };
