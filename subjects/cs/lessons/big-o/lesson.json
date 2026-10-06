@@ -1,0 +1,10 @@
+{
+  "title": "Big O: How Algorithms Grow",
+  "topic": "Algorithms",
+  "order": 2,
+  "translations": {
+    "pt-br": {
+      "title": "Big O: como os algoritmos crescem"
+    }
+  }
+}
