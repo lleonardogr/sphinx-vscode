@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { Challenge } from './challenges';
 import { Progress } from './progress';
-import { ExamManager, formatDuration } from './examSession';
+import { ExamManager, formatDuration, formatWait } from './examSession';
 import { ExamDefinition, ExamQuestion, maxScore, questionKey, questionTitle } from './exams';
 import { QuizProgress } from './quizController';
 import { QuizDefinition } from './quizzes';
@@ -290,9 +290,12 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
       item.iconPath = new vscode.ThemeIcon('watch', new vscode.ThemeColor('testing.iconQueued'));
       item.contextValue = 'exam-active';
     } else {
-      item.description = `✓ ${this.exams.formatScore(exam)}`;
+      const at = this.exams.retakeAt(exam);
+      const retake =
+        at === undefined ? '' : Date.now() >= at ? ` · ${tr('can retake', 'pode refazer')}` : ` · ${tr(`retake in ${formatWait(at - Date.now())}`, `refazer em ${formatWait(at - Date.now())}`)}`;
+      item.description = `✓ ${this.exams.formatScore(exam)}${retake}`;
       item.iconPath = new vscode.ThemeIcon('pass-filled', new vscode.ThemeColor('testing.iconPassed'));
-      item.contextValue = 'exam-finished';
+      item.contextValue = this.exams.canRetake(exam) ? 'exam-finished-retake' : 'exam-finished';
     }
     item.tooltip = new vscode.MarkdownString(
       `**${exam.title}**\n\n${exam.description ? `${exam.description}\n\n` : ''}` +

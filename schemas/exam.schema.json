@@ -70,6 +70,14 @@
       "default": 3,
       "description": "Submissions allowed per question. The best one counts. Run (sample tests) is unlimited."
     },
+    "retakeAfterHours": {
+      "oneOf": [
+        { "type": "number", "minimum": 0 },
+        { "const": false }
+      ],
+      "default": 6,
+      "description": "Hours after finishing before a student can take the exam again (0: right away). Each attempt starts fresh, and the previous one is kept in its own folder. Use false for an exam that can be taken only once."
+    },
     "subject": {
       "type": "string",
       "description": "The subject whose sidebar lists the exam, e.g. \"java\" or \"cs\" (a subject id from subjects/<id>/subject.json). By default, the subject most of the questions come from."

@@ -54,6 +54,8 @@
   "command.editItem": "Editar",
   "command.revealItem": "Mostrar na pasta",
   "command.previewExam": "Testar a prova (prévia)",
+  "command.retakeExam": "Fazer a prova de novo",
+  "command.deleteItem": "Excluir…",
   "command.restartPreview": "Recomeçar prévia",
   "command.exportPack": "Exportar um pacote para os alunos…",
   "command.classResults": "Resultados da turma… (professores)",

@@ -153,7 +153,8 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         item.tooltip = new vscode.MarkdownString(
           `**${e.title}**\n\n${e.description}\n\n${e.mode === 'closed' ? tr('Closed exam', 'Prova fechada') : tr('Open exam', 'Prova aberta')} · ${tr('restrictions', 'restrições')}: ${e.restrictions.level}\n\n\`${e.dir}\``,
         );
-        item.contextValue = 'teacherExam';
+        // Built-in exams can't be deleted; the teacher's own can.
+        item.contextValue = this.origin(e.dir) === 'builtIn' ? 'teacherExam' : 'teacherExamOwn';
         return item;
       }
       case 'preview': {

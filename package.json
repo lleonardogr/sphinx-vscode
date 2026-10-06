@@ -279,6 +279,18 @@
         "command": "sphinx.copyBlocked",
         "title": "%command.copyBlocked%",
         "category": "Sphinx"
+      },
+      {
+        "command": "sphinx.retakeExam",
+        "title": "%command.retakeExam%",
+        "category": "Sphinx",
+        "icon": "$(debug-restart)"
+      },
+      {
+        "command": "sphinx.deleteItem",
+        "title": "%command.deleteItem%",
+        "category": "Sphinx",
+        "icon": "$(trash)"
       }
     ],
     "menus": {
@@ -430,40 +442,49 @@
         },
         {
           "command": "sphinx.openExamResults",
-          "when": "view == sphinx.list && viewItem == exam-finished",
+          "when": "view == sphinx.list && viewItem =~ /^exam-finished/",
           "group": "inline"
         },
         {
           "command": "sphinx.openExamResults",
-          "when": "view == sphinx.list && viewItem == exam-finished"
+          "when": "view == sphinx.list && viewItem =~ /^exam-finished/"
         },
         {
           "command": "sphinx.saveExamResults",
-          "when": "view == sphinx.list && viewItem == exam-finished"
+          "when": "view == sphinx.list && viewItem =~ /^exam-finished/"
+        },
+        {
+          "command": "sphinx.retakeExam",
+          "when": "view == sphinx.list && viewItem == exam-finished-retake",
+          "group": "inline"
+        },
+        {
+          "command": "sphinx.retakeExam",
+          "when": "view == sphinx.list && viewItem == exam-finished-retake"
         },
         {
           "command": "sphinx.editItem",
-          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|ExamOwn|Item|Question)$/",
           "group": "inline"
         },
         {
           "command": "sphinx.editItem",
-          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|ExamOwn|Item|Question)$/",
           "group": "teacher@1"
         },
         {
           "command": "sphinx.revealItem",
-          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|ExamOwn|Item|Question)$/",
           "group": "teacher@2"
         },
         {
           "command": "sphinx.previewExam",
-          "when": "view == sphinx.teacher && viewItem == teacherExam",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacherExam/",
           "group": "inline@0"
         },
         {
           "command": "sphinx.previewExam",
-          "when": "view == sphinx.teacher && viewItem == teacherExam",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacherExam/",
           "group": "teacher@0"
         },
         {
@@ -493,13 +514,18 @@
         },
         {
           "command": "sphinx.exportPack",
-          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|Item)$/",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|ExamOwn|Item)$/",
           "group": "teacher@3"
         },
         {
           "command": "sphinx.classResults",
-          "when": "view == sphinx.teacher && viewItem == teacherExam",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacherExam/",
           "group": "teacher@4"
+        },
+        {
+          "command": "sphinx.deleteItem",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(ExamOwn|Item)$/",
+          "group": "teacher@9"
         }
       ],
       "editor/title": [
@@ -554,6 +580,10 @@
         },
         {
           "command": "sphinx.copyBlocked",
+          "when": "false"
+        },
+        {
+          "command": "sphinx.deleteItem",
           "when": "false"
         }
       ]

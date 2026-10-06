@@ -22,6 +22,7 @@ An **exam** is a timed, graded set of challenges. Teachers write exams, and stud
 4. Click **Finish Exam** (the stop button next to the exam) when you're done. When the time is up, the exam finishes on its own.
 5. When an exam finishes, answers that changed since their last submission are **submitted automatically**, if submissions remain. Then the exam is **locked**, and a results file is written to `sphinx/exams/<exam>/results-<your-name>.json`.
 6. Hand in that file: use **Save a Copy…** to put it wherever your teacher asks.
+7. Want another go? **6 hours** after finishing (unless your teacher set a different time, or allows only one attempt), the sidebar shows **can retake** and the ↻ button (**Take Exam Again**). The new attempt starts from the beginning, with new answers. The previous one is kept in `sphinx/exams/<exam>-attempt-1/`, with its results file, and the new results file says which attempt it is.
 
 Closing VS Code doesn't stop the clock. If the time runs out while VS Code is closed, the exam is finished and graded the next time you open it.
 
@@ -130,6 +131,7 @@ week-3-exam/
 | `mode` | `"closed"` | `"open"` or `"closed"` (see above). |
 | `maxSubmissions` | `3` | Submissions per question. The best one counts. |
 | `questions` | required | Each has an `id` and `points` (default `10`). |
+| `retakeAfterHours` | `6` | Hours after finishing before a student can take the exam again (`0`: right away). Use `false` for an exam that can be taken only once, such as a graded exam in class. |
 | `subject` | | The [subject](creating-challenges.md#subjects-lessons-and-prerequisites) whose sidebar lists the exam, such as `"cs"`. By default, the subject most of its questions come from. |
 
 A question `id` is either:

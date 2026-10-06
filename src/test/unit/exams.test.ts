@@ -105,3 +105,15 @@ describe('exam subjects', () => {
     assert.deepEqual(subjects, { 'mostly-cs': 'cs', named: 'cs', 'unknown-subject': 'java' });
   });
 });
+
+describe('retakes', () => {
+  it('reads "retakeAfterHours": 6 by default, 0 for right away, false for never', () => {
+    const { retakeHours } = require('../../exams') as typeof import('../../exams');
+    assert.equal(retakeHours(undefined), 6);
+    assert.equal(retakeHours(0), 0);
+    assert.equal(retakeHours(24), 24);
+    assert.equal(retakeHours(false), null);
+    assert.equal(retakeHours(-1), 6, 'invalid values fall back to the default');
+    assert.equal(retakeHours('2'), 6);
+  });
+});
