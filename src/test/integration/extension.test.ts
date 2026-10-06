@@ -5,6 +5,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import type { SphynxApi } from '../../extension';
 import { migrateOldStorage } from '../../extension';
+import { javacMajorVersion } from '../../runner';
 import { dialogs, test, waitFor } from './harness';
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
@@ -36,6 +37,12 @@ test('activates and registers every command it contributes', async () => {
   const registered = new Set(await vscode.commands.getCommands(true));
   const missing = contributed.map((c) => c.command).filter((c) => !registered.has(c));
   assert.deepEqual(missing, []);
+});
+
+test('Java 25+ is available to the extension', async () => {
+  const javaHome = vscode.workspace.getConfiguration('sphynx').get<string>('java.home') || undefined;
+  const version = await javacMajorVersion(javaHome);
+  assert.ok(version !== undefined && version >= 25, `found javac ${version} (sphynx.java.home: ${javaHome ?? 'not set'}); the built-in starters need JDK 25+`);
 });
 
 test('loads the built-in challenges, quizzes and exams', () => {
@@ -104,14 +111,17 @@ test('Reset All Challenges: progress only keeps the code, progress and code rest
 test('the sidebar groups by learning path, difficulty and progress', async () => {
   await submit('hello-world', solution('hello-world'));
   const labels = () => api.tree.getChildren().map((n) => String(api.tree.getTreeItem(n as never).label));
-  api.tree.mode = 'path';
-  assert.ok(labels().includes('1 · Basics'));
-  assert.ok(labels().includes('11 · Lambdas & Streams'));
-  api.tree.mode = 'difficulty';
-  assert.ok(['Easy', 'Medium', 'Hard'].every((d) => labels().includes(d)), labels().join(', '));
-  api.tree.mode = 'progress';
-  assert.ok(labels().some((l) => /Solved/.test(l)), labels().join(', '));
-  api.tree.mode = 'path';
+  try {
+    api.tree.mode = 'path';
+    assert.ok(labels().includes('1 · Basics'));
+    assert.ok(labels().includes('11 · Lambdas & Streams'));
+    api.tree.mode = 'difficulty';
+    assert.ok(['Easy', 'Medium', 'Hard'].every((d) => labels().includes(d)), labels().join(', '));
+    api.tree.mode = 'progress';
+    assert.ok(labels().some((l) => /Solved/.test(l)), labels().join(', '));
+  } finally {
+    api.tree.mode = 'path';
+  }
 });
 
 test('switching the language to Portuguese translates the content', async () => {

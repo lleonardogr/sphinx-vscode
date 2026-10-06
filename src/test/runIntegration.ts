@@ -13,10 +13,13 @@ async function main(): Promise<void> {
   const userData = path.join(temp, 'user-data');
   fs.mkdirSync(workspace, { recursive: true });
   fs.mkdirSync(path.join(userData, 'User'), { recursive: true });
-  fs.writeFileSync(
-    path.join(userData, 'User', 'settings.json'),
-    JSON.stringify({ 'security.workspace.trust.enabled': false, 'sphynx.language': 'en', 'update.mode': 'none', 'telemetry.telemetryLevel': 'off' }),
-  );
+  // On macOS, VS Code takes PATH from the login shell, which may find an older JDK than the one
+  // the tests run with: point Sphynx at JAVA_HOME, like a student would with sphynx.java.home.
+  const settings: Record<string, unknown> = { 'security.workspace.trust.enabled': false, 'sphynx.language': 'en', 'update.mode': 'none', 'telemetry.telemetryLevel': 'off' };
+  if (process.env.JAVA_HOME) {
+    settings['sphynx.java.home'] = process.env.JAVA_HOME;
+  }
+  fs.writeFileSync(path.join(userData, 'User', 'settings.json'), JSON.stringify(settings));
   // When run from VS Code's own terminal, these make the downloaded VS Code behave like Node.
   delete process.env.ELECTRON_RUN_AS_NODE;
   delete process.env.VSCODE_IPC_HOOK_CLI;
