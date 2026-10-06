@@ -363,9 +363,11 @@ On a JDK older than 25, only `*.classic.java` files are checked, and the validat
 
 You don't have to rebuild the extension to hand out challenges.
 
-### The easy way: Import
+### The easy way: Export a pack, then Import
 
-1. Put your challenge, test, [quiz](quizzes.md) and exam folders in one parent folder, for example `java-week-3/`, and zip it. (Zipping a single challenge or exam folder works too.)
+1. In the **teacher view** (💼 at the top of the Sphynx sidebar), run **Export a Pack for Students…** (in **Tools**, or right-click an exam, challenge or quiz). Choose what goes in it, then **For students** (reference solutions are left out) or **For teachers** (solutions kept), and save the `.zip`. When an exam uses one of your own challenges by id, that challenge is added to the pack automatically, so the import works.
+
+   You can also build the zip by hand: put your challenge, test, [quiz](quizzes.md) and exam folders in one parent folder, for example `java-week-3/`, and zip it. (Zipping a single challenge or exam folder works too.)
 2. Send the zip to your class: email, your school's learning platform, a shared drive or a USB stick.
 3. Students click the **Import** button (⤓) at the top of the Sphynx sidebar, or run **Sphynx: Import Challenges, Quizzes, Tests or Exams…**, and choose the zip or the folder.
 

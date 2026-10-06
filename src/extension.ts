@@ -21,6 +21,7 @@ import { formatVerification, verifyResults } from './examVerify';
 import { ExamDefinition, ExamQuestion, PREVIEW_SUFFIX, examChallengeId, loadExams, parseExamChallengeId, previewOf } from './exams';
 import { ChallengeNode, ChallengeTreeProvider, GroupMode } from './treeView';
 import { Origin, TeacherNode, TeacherTreeProvider, sourceFile } from './teacherView';
+import { exportPack } from './exporter';
 
 const CODE_FILE = 'Main.java';
 
@@ -940,6 +941,9 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
       const id = examChallengeId(preview.id, first.id);
       await vscode.commands.executeCommand(first.kind === 'quiz' ? 'sphynx.openQuiz' : 'sphynx.open', id);
     }),
+    vscode.commands.registerCommand('sphynx.exportPack', (node?: TeacherNode) =>
+      exportPack({ challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, origin, extensionPath: context.extensionPath }, node),
+    ),
     vscode.commands.registerCommand('sphynx.restartPreview', async (node?: { exam?: ExamDefinition }) => {
       if (node?.exam?.preview) {
         await restartPreview(node.exam);

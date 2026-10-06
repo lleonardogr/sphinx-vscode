@@ -6,6 +6,7 @@ import * as vscode from 'vscode';
 import type { SphynxApi } from '../../extension';
 import { migrateOldStorage } from '../../extension';
 import { javacMajorVersion } from '../../runner';
+import { extractZip, findImportables, findSolutions } from '../../importCore';
 import { dialogs, test, waitFor } from './harness';
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
@@ -232,6 +233,23 @@ test('a teacher previews an exam without touching the real attempt, and can rest
   assert.equal(api.examManager.state('exam-2--preview'), undefined);
   assert.equal(fs.existsSync(path.dirname(answers)), false, 'the preview answers were not removed');
   await vscode.commands.executeCommand('sphynx.switchToStudentView');
+});
+
+test('a teacher exports an exam as a pack for students, without the solutions', async () => {
+  const exam = api.exams().find((e) => e.id === 'exam-1')!;
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-export-'));
+  dialogs.quickPick = 0; // the preselected exam, then "For students"
+  dialogs.saveDialog = vscode.Uri.file(path.join(out, 'class-7b.zip'));
+  dialogs.answer = () => undefined;
+  await vscode.commands.executeCommand('sphynx.exportPack', { kind: 'exam', exam });
+  const zip = path.join(out, 'class-7b.zip');
+  assert.ok(fs.existsSync(zip), 'no pack was written');
+  const dest = path.join(out, 'extracted');
+  extractZip(zip, dest);
+  assert.deepEqual(findImportables(dest, 'class-7b').map((f) => `${f.kind}:${f.name}`), ['exam:exam-1']);
+  assert.deepEqual(findSolutions(dest), []);
+  assert.ok(dialogs.messages.some((m) => /Exported 1 item to class-7b\.zip/.test(m)), dialogs.messages.slice(-2).join(' | '));
+  fs.rmSync(out, { recursive: true, force: true });
 });
 
 test('the imported library and saved solutions move over from the old extension id', () => {

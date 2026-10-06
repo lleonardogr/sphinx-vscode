@@ -160,6 +160,12 @@
         "icon": "$(debug-restart)"
       },
       {
+        "command": "sphynx.exportPack",
+        "title": "%command.exportPack%",
+        "category": "Sphynx",
+        "icon": "$(package)"
+      },
+      {
         "command": "sphynx.checkJava",
         "title": "%command.checkJava%",
         "category": "Sphynx",
@@ -344,6 +350,11 @@
           "command": "sphynx.checkJava",
           "when": "view == sphynx.teacher",
           "group": "java"
+        },
+        {
+          "command": "sphynx.exportPack",
+          "when": "view == sphynx.teacher",
+          "group": "authoring"
         }
       ],
       "view/item/context": [
@@ -452,6 +463,11 @@
           "command": "sphynx.restartPreview",
           "when": "view == sphynx.teacher && viewItem =~ /^teacherPreview/",
           "group": "preview@2"
+        },
+        {
+          "command": "sphynx.exportPack",
+          "when": "view == sphynx.teacher && viewItem =~ /^teacher(Exam|Item)$/",
+          "group": "teacher@3"
         }
       ],
       "editor/title": [
