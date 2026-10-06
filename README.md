@@ -4,6 +4,8 @@
 
 # Sphynx for VS Code
 
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/lleonardogr.sphynx?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/lleonardogr.sphynx)](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)
 [![CI](https://github.com/lleonardogr/sphynx-vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/lleonardogr/sphynx-vscode/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/lleonardogr/sphynx-vscode)](https://github.com/lleonardogr/sphynx-vscode/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -15,6 +17,10 @@ HackerRank / LeetCode-style coding challenges right inside VS Code, in **English
 📘 **Guides:** [Creating your own challenges](docs/creating-challenges.md) · [Tests](docs/creating-challenges.md#tests-mixed-challenges) · [Quizzes](docs/quizzes.md) · [Exams](docs/exams.md) · [AI hints](docs/ai-hints.md)
 
 Students pick a challenge from the **Sphynx** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
+
+**[Install from the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)**, or search for **Sphynx** in the Extensions view.
+
+![Solving FizzBuzz in Sphynx: write the code, run the sample tests, submit, and the challenge is marked as solved](media/screenshots/demo.gif)
 
 ## The learning path (100 challenges)
 
@@ -36,6 +42,15 @@ The sidebar lists numbered **units** in teaching order. Each unit runs from easy
 | Custom | Word Counter · Grade Report · Caesar Cipher: [example custom challenges](custom/) to copy when writing your own | |
 
 Three exams close the stages, each with a quiz and three private coding questions: **Exam 1: Basics to Strings** (units 1–4, 60 minutes), **Exam 2: Building Blocks** (units 5–7, 75 minutes) and the **Final Exam** (the whole course, focused on units 8–11, 120 minutes).
+
+## Screenshots
+
+| | |
+|---|---|
+| ![The learning path in the sidebar, a solved challenge with all tests passing, and the code](media/screenshots/learning-path.png) | ![A quiz with "what does this code print?" questions](media/screenshots/quiz.png) |
+| **Learning path**: 11 units from the basics to streams, with progress | **Quizzes**: multiple choice, true or false, short answer and code output |
+| ![A closed exam in progress, with a countdown in the sidebar and status bar](media/screenshots/exam.png) | ![The same interface in Portuguese](media/screenshots/portuguese.png) |
+| **Exams**: timed, graded, with restriction levels | **English or Portuguese**: challenges, quizzes, exams and the interface |
 
 ## Features
 
@@ -74,11 +89,12 @@ Sphynx checks Java when it starts. If something is wrong, it warns you and shows
 
 ### 2. Install the extension
 
-1. Open the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) and download **`sphynx-x.y.z.vsix`**.
-2. In VS Code, open the **Extensions** view, click the **`...`** menu at the top, and choose **Install from VSIX…**. Then select the downloaded file.
+1. Install **Sphynx** from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx): open the **Extensions** view (`Ctrl+Shift+X` / `Cmd+Shift+X`), search for **Sphynx**, and click **Install**.
 
-   Or, in a terminal: `code --install-extension sphynx-x.y.z.vsix`
-3. Open a folder for your work (**File → Open Folder…**). Your code is saved in `sphynx/<challenge>/Main.java` inside it.
+   Or, in a terminal: `code --install-extension lleonardogr.sphynx`
+
+   No internet in the classroom? Download **`sphynx-x.y.z.vsix`** from the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) and use **Install from VSIX…** in the Extensions view's **`...`** menu.
+2. Open a folder for your work (**File → Open Folder…**). Your code is saved in `sphynx/<challenge>/Main.java` inside it.
 
 ### 3. Solve your first challenge
 
@@ -139,7 +155,7 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 
 ### Share the extension with your class
 
-Point students to the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) and the [Getting started](#getting-started-students) steps above. Reference solutions (`Solution*.java`) are **never** included in the `.vsix`, but they are visible in this public repository.
+Point students to the [Marketplace page](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx) (or the `.vsix` in the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) for offline classrooms) and the [Getting started](#getting-started-students) steps above. Reference solutions (`Solution*.java`) are **never** included in the `.vsix`, but they are visible in this public repository.
 
 To build the `.vsix` yourself:
 
@@ -163,12 +179,14 @@ Write an `exam.json` (title, duration, open or closed, submissions per question,
 
 ## Roadmap
 
-- [x] Object-oriented programming challenges
-- [ ] Support more languages (Python, JavaScript, C, …) through a pluggable runner per language
-- [ ] More topics (collections, recursion, exceptions, algorithms)
+- [x] A complete Java learning path: 11 units, from the basics to OOP, exceptions, recursion and streams, with quizzes, tests and exams
 - [x] AI hints tailored to the student's code (local model or your own API key)
+- [x] English and Portuguese
+- [x] Publish to the VS Code Marketplace
+- [ ] A class dashboard for teachers that reads many exam results at once
+- [ ] An algorithms and data structures unit
 - [ ] AI help for writing new challenges
-- [ ] Publish to the VS Code Marketplace
+- [ ] Support more languages (Python, JavaScript, C, …) through a pluggable runner per language
 
 ## Development
 

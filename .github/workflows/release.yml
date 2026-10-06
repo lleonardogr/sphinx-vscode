@@ -46,9 +46,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" *.vsix \
-            --title "$GITHUB_REF_NAME" \
-            --generate-notes
+          # On a re-run (for example after a failed publish), keep the release and refresh its .vsix.
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" *.vsix --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" *.vsix \
+              --title "$GITHUB_REF_NAME" \
+              --generate-notes
+          fi
 
       - name: Publish to the VS Code Marketplace
         if: env.VSCE_PAT != ''

@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- Sphynx is on the **[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)**: the README now installs from there (the `.vsix` is still attached to every release for offline classrooms), and it has a demo GIF and screenshots of the learning path, quizzes, exams and the Portuguese interface.
+- The release workflow can be re-run after a failed Marketplace publish: it keeps the existing GitHub Release instead of failing.
+
 ## [1.0.1] - 2026-10-05
 
 ### Changed
