@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-06
+
 ### Changed
 
 - **Sphynx is now Sphinx**, spelled like the creature of the legend. It's listed as **Sphinx Challenges** on the Marketplace and Open VSX, and the sidebar, commands and messages say Sphinx. Settings are now `sphinx.*` (for example `sphinx.java.home`), and new code is saved in `sphinx/`.
@@ -244,7 +246,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.0...v1.0.1
