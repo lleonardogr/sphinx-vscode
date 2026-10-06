@@ -1,0 +1,77 @@
+{
+  "title": "Binary to Decimal",
+  "topic": "NumberSystems",
+  "requires": [
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Each digit is worth twice the digit to its right: 1, 2, 4, 8, … Start from the rightmost digit, worth 1.",
+    "If you read the number as a long, digits % 10 is the last digit and digits / 10 removes it.",
+    "Keep a variable with the current place value and double it after each digit."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Binário para decimal",
+      "hints": [
+        "Cada dígito vale o dobro do dígito à sua direita: 1, 2, 4, 8, … Comece pelo dígito mais à direita, que vale 1.",
+        "Se você ler o número como long, digits % 10 é o último dígito e digits / 10 o remove.",
+        "Guarde numa variável o valor da posição atual e dobre-o depois de cada dígito."
+      ],
+      "mustContain": [
+        "Use um laço para percorrer os dígitos."
+      ],
+      "mustNotContain": [
+        "Faça a conversão você mesmo: nada de métodos prontos que leem um número em outra base."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to go through the digits."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "(parse(Int|Long|UnsignedInt|UnsignedLong)|valueOf)\\s*\\([^;]*,\\s*\\w+\\s*\\)|BigInteger|\\.decode\\s*\\(|HexFormat",
+      "message": "Do the conversion yourself: no library methods that read a number in another base."
+    }
+  ],
+  "tests": [
+    {
+      "input": "1011\n",
+      "output": "11\n"
+    },
+    {
+      "input": "0\n",
+      "output": "0\n"
+    },
+    {
+      "input": "1\n",
+      "output": "1\n",
+      "hidden": true
+    },
+    {
+      "input": "11111111\n",
+      "output": "255\n",
+      "hidden": true
+    },
+    {
+      "input": "100000000\n",
+      "output": "256\n",
+      "hidden": true
+    },
+    {
+      "input": "101010101010101010\n",
+      "output": "174762\n",
+      "hidden": true
+    },
+    {
+      "input": "000101\n",
+      "output": "5\n",
+      "hidden": true
+    }
+  ]
+}

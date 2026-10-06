@@ -1,0 +1,77 @@
+{
+  "title": "Decimal to Binary",
+  "topic": "NumberSystems",
+  "requires": [
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "Divide by 2 again and again: n % 2 is the next bit and n / 2 is what is left to convert.",
+    "The first remainder is the rightmost bit, so put each new bit in front of the ones you have: bits = (n % 2) + bits;",
+    "Zero is a special case: the loop never runs, but the answer is 0."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Decimal para binário",
+      "hints": [
+        "Divida por 2 de novo e de novo: n % 2 é o próximo bit e n / 2 é o que falta converter.",
+        "O primeiro resto é o bit mais à direita, então coloque cada bit novo na frente dos que você já tem: bits = (n % 2) + bits;",
+        "Zero é um caso especial: o laço nunca roda, mas a resposta é 0."
+      ],
+      "mustContain": [
+        "Use um laço para percorrer os dígitos."
+      ],
+      "mustNotContain": [
+        "Faça a conversão você mesmo: nada de métodos prontos que escrevem um número em outra base."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to go through the digits."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "toBinaryString|toString\\s*\\([^;]*,\\s*\\w+\\s*\\)|BigInteger",
+      "message": "Do the conversion yourself: no library methods that write a number in another base."
+    }
+  ],
+  "tests": [
+    {
+      "input": "13\n",
+      "output": "1101\n"
+    },
+    {
+      "input": "0\n",
+      "output": "0\n"
+    },
+    {
+      "input": "1\n",
+      "output": "1\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n",
+      "output": "10\n",
+      "hidden": true
+    },
+    {
+      "input": "255\n",
+      "output": "11111111\n",
+      "hidden": true
+    },
+    {
+      "input": "256\n",
+      "output": "100000000\n",
+      "hidden": true
+    },
+    {
+      "input": "1000000000\n",
+      "output": "111011100110101100101000000000\n",
+      "hidden": true
+    }
+  ]
+}

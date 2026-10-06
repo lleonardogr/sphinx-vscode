@@ -80,3 +80,28 @@ describe('previewOf', () => {
     assert.deepEqual(p.restrictions, exam.restrictions);
   });
 });
+
+describe('exam subjects', () => {
+  it('lists an exam under the subject of most of its questions, unless exam.json names one', () => {
+    const fs = require('fs') as typeof import('fs');
+    const path = require('path') as typeof import('path');
+    const { loadChallenges } = require('../../challenges') as typeof import('../../challenges');
+    const { loadQuizzes } = require('../../quizzes') as typeof import('../../quizzes');
+    const { loadExams } = require('../../exams') as typeof import('../../exams');
+    const { CONTENT_ROOTS, ROOT, tempDir } = require('./helpers') as typeof import('./helpers');
+    const challenges = loadChallenges(CONTENT_ROOTS).challenges;
+    const quizzes = loadQuizzes(CONTENT_ROOTS).quizzes;
+    const builtIn = loadExams([path.join(ROOT, 'exams')], challenges, quizzes).exams;
+    assert.deepEqual([...new Set(builtIn.map((e) => e.subject))], ['java']);
+    const root = tempDir();
+    const exam = (id: string, meta: object) => {
+      fs.mkdirSync(path.join(root, id));
+      fs.writeFileSync(path.join(root, id, 'exam.json'), JSON.stringify({ title: id, ...meta }));
+    };
+    exam('mostly-cs', { questions: [{ id: 'binary-to-decimal' }, { id: 'hex-to-decimal' }, { id: 'hello-world' }] });
+    exam('named', { subject: 'cs', questions: [{ id: 'hello-world' }] });
+    exam('unknown-subject', { subject: 'sql', questions: [{ id: 'hello-world' }] });
+    const subjects = Object.fromEntries(loadExams([root], challenges, quizzes).exams.map((e) => [e.id, e.subject]));
+    assert.deepEqual(subjects, { 'mostly-cs': 'cs', named: 'cs', 'unknown-subject': 'java' });
+  });
+});

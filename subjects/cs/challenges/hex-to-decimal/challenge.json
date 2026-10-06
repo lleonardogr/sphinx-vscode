@@ -1,0 +1,87 @@
+{
+  "title": "Hex to Decimal",
+  "topic": "NumberSystems",
+  "requires": [
+    "Strings"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Remove a \"0x\" or \"0X\" prefix first, then look at the digits one by one with charAt.",
+    "The value of a digit is its position in \"0123456789ABCDEF\" (use Character.toUpperCase first); -1 means it isn't a hex digit.",
+    "Going left to right, each new digit multiplies what you have by 16: value = value * 16 + digit;"
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Hexadecimal para decimal",
+      "hints": [
+        "Tire primeiro um prefixo \"0x\" ou \"0X\" e depois olhe os dígitos um a um com charAt.",
+        "O valor de um dígito é a posição dele em \"0123456789ABCDEF\" (use Character.toUpperCase antes); -1 quer dizer que não é um dígito hex.",
+        "Da esquerda para a direita, cada dígito novo multiplica o que você tem por 16: value = value * 16 + digit;"
+      ],
+      "mustContain": [
+        "Use um laço para percorrer os dígitos."
+      ],
+      "mustNotContain": [
+        "Faça a conversão você mesmo: nada de métodos prontos que leem um número em outra base."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to go through the digits."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "(parse(Int|Long|UnsignedInt|UnsignedLong)|valueOf)\\s*\\([^;]*,\\s*\\w+\\s*\\)|BigInteger|\\.decode\\s*\\(|HexFormat",
+      "message": "Do the conversion yourself: no library methods that read a number in another base."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2F\n",
+      "output": "47\n"
+    },
+    {
+      "input": "ff\n",
+      "output": "255\n"
+    },
+    {
+      "input": "0\n",
+      "output": "0\n",
+      "hidden": true
+    },
+    {
+      "input": "1A3\n",
+      "output": "419\n",
+      "hidden": true
+    },
+    {
+      "input": "0x7FFFFFFF\n",
+      "output": "2147483647\n",
+      "hidden": true
+    },
+    {
+      "input": "FFFFFFFFFFFF\n",
+      "output": "281474976710655\n",
+      "hidden": true
+    },
+    {
+      "input": "12G4\n",
+      "output": "Invalid hex digit: G\n",
+      "hidden": true
+    },
+    {
+      "input": "cafe\n",
+      "output": "51966\n",
+      "hidden": true
+    },
+    {
+      "input": "0Xbeef\n",
+      "output": "48879\n",
+      "hidden": true
+    }
+  ]
+}

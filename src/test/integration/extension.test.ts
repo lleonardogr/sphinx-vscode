@@ -47,9 +47,11 @@ test('Java 25+ is available to the extension', async () => {
   assert.ok(version !== undefined && version >= 25, `found javac ${version} (sphynx.java.home: ${javaHome ?? 'not set'}); the built-in starters need JDK 25+`);
 });
 
-test('loads the built-in challenges, quizzes and exams', () => {
-  assert.equal(api.challenges().length, 100);
-  assert.equal(api.quizzes().length, 11);
+test('loads the built-in challenges, quizzes, lessons and exams', () => {
+  assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
+  assert.equal(api.challenges().length, 104);
+  assert.equal(api.quizzes().length, 12);
+  assert.equal(api.lessons().length, 2);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['exam-1', 'exam-2', 'final-exam', 'sample-exam']);
 });
 
@@ -124,6 +126,41 @@ test('the sidebar groups by learning path, difficulty and progress', async () =>
   } finally {
     api.tree.mode = 'path';
   }
+});
+
+test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then back to Java', async () => {
+  const label = (n: unknown) => String(api.tree.getTreeItem(n as never).label);
+  await vscode.commands.executeCommand('sphynx.switchSubject', 'cs');
+  try {
+    assert.equal(api.tree.subject, 'cs');
+    assert.ok(!api.tree.getChildren().some((n) => (n as { kind: string }).kind === 'examsRoot'), 'the Java exams are not listed under CS');
+    const groups = api.tree.getChildren().filter((n) => (n as { kind: string }).kind === 'group');
+    assert.deepEqual(groups.map(label), ['2 · Number Systems']);
+    const items = api.tree.getChildren(groups[0]);
+    assert.deepEqual(items.map(label), [
+      'Place Value and Binary',
+      'Hexadecimal and Octal',
+      'Binary to Decimal',
+      'Decimal to Binary',
+      'Hex to Decimal',
+      'Base Converter',
+      'Number Systems Quiz',
+    ]);
+    // A lesson gets its ✓ once read.
+    const lesson = items[0];
+    assert.equal(String(api.tree.getTreeItem(lesson as never).description), 'Lesson · 4 min');
+    await vscode.commands.executeCommand('sphynx.openLesson', 'place-value-and-binary');
+    await api.lessonProgress.markRead('place-value-and-binary');
+    assert.equal((api.tree.getTreeItem(api.tree.getChildren(groups[0])[0] as never).iconPath as vscode.ThemeIcon).id, 'pass-filled');
+    // Prerequisites: in the description, and with progress in the tooltip.
+    const b2d = api.tree.getTreeItem(items[2] as never);
+    assert.equal(b2d.description, 'Easy · needs Loops');
+    assert.match((b2d.tooltip as vscode.MarkdownString).value, /Needs:\n- Java Programming · Loops \(\d+\/12 solved\)/);
+  } finally {
+    await vscode.commands.executeCommand('sphynx.switchSubject', 'java');
+  }
+  assert.ok(api.tree.getChildren().map(label).includes('1 · Basics'));
+  assert.ok(api.tree.getChildren().map(label).includes('Exams'));
 });
 
 test('switching the language to Portuguese translates the content', async () => {
