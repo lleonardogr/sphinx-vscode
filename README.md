@@ -6,6 +6,7 @@
 
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/lleonardogr.sphynx?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/lleonardogr.sphynx)](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)
+[![Open VSX](https://img.shields.io/open-vsx/v/lleonardogr/sphynx?label=Open%20VSX)](https://open-vsx.org/extension/lleonardogr/sphynx)
 [![CI](https://github.com/lleonardogr/sphynx-vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/lleonardogr/sphynx-vscode/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/lleonardogr/sphynx-vscode)](https://github.com/lleonardogr/sphynx-vscode/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -18,7 +19,7 @@ HackerRank / LeetCode-style coding challenges right inside VS Code, in **English
 
 Students pick a challenge from the **Sphynx** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
 
-**[Install from the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)**, or search for **Sphynx** in the Extensions view.
+**[Install from the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)**, or search for **Sphynx** in the Extensions view. Using **Cursor**, VSCodium or Windsurf? It's on **[Open VSX](https://open-vsx.org/extension/lleonardogr/sphynx)** too.
 
 ![Solving FizzBuzz in Sphynx: write the code, run the sample tests, submit, and the challenge is marked as solved](media/screenshots/demo.gif)
 
@@ -92,6 +93,8 @@ Sphynx checks Java when it starts. If something is wrong, it warns you and shows
 1. Install **Sphynx** from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx): open the **Extensions** view (`Ctrl+Shift+X` / `Cmd+Shift+X`), search for **Sphynx**, and click **Install**.
 
    Or, in a terminal: `code --install-extension lleonardogr.sphynx`
+
+   In **Cursor**, VSCodium or Windsurf, search for **Sphynx** the same way: it comes from [Open VSX](https://open-vsx.org/extension/lleonardogr/sphynx).
 
    No internet in the classroom? Download **`sphynx-x.y.z.vsix`** from the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) and use **Install from VSIX…** in the Extensions view's **`...`** menu.
 2. Open a folder for your work (**File → Open Folder…**). Your code is saved in `sphynx/<challenge>/Main.java` inside it.
