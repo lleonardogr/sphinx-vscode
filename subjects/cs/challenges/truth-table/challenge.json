@@ -1,0 +1,69 @@
+{
+  "title": "Truth Table",
+  "topic": "Logic",
+  "requires": [
+    "Loops",
+    "Conditionals"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Two nested loops, each from 0 to 1, give the four rows: 0 0, 0 1, 1 0, 1 1.",
+    "Turn the 0/1 values into booleans (a == 1) and use &&, || and ^. NAND is !(a && b) and NOR is !(a || b).",
+    "Check the gate name before printing anything, so an unknown gate prints only its message."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Tabela-verdade",
+      "hints": [
+        "Dois laços aninhados, cada um de 0 a 1, dão as quatro linhas: 0 0, 0 1, 1 0, 1 1.",
+        "Transforme os valores 0/1 em booleanos (a == 1) e use &&, || e ^. NAND é !(a && b) e NOR é !(a || b).",
+        "Confira o nome da porta antes de imprimir qualquer coisa, para que uma porta desconhecida imprima só a mensagem."
+      ],
+      "mustContain": [
+        "Use laços para percorrer as entradas."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use loops to go through the inputs."
+    }
+  ],
+  "tests": [
+    {
+      "input": "AND\n",
+      "output": ""
+    },
+    {
+      "input": "XOR\n",
+      "output": ""
+    },
+    {
+      "input": "OR\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "NAND\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "NOR\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "XNOR\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "and\n",
+      "output": "",
+      "hidden": true
+    }
+  ]
+}

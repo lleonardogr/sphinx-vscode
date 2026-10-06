@@ -1,0 +1,78 @@
+{
+  "title": "8-bit Register",
+  "topic": "Logic",
+  "requires": [
+    "Methods",
+    "Loops"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Keep the register in an int and use masks: set k is value | (1 << k), clear k is value & ~(1 << k), toggle k is value ^ (1 << k).",
+    "Shifting left can push bits past position 7, and ~ turns on all the high bits: after every command keep only 8 bits with value & 0xFF.",
+    "A method String bits(int value) that writes exactly 8 bits, from bit 7 down to bit 0, keeps main short."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Registrador de 8 bits",
+      "hints": [
+        "Guarde o registrador num int e use máscaras: set k é valor | (1 << k), clear k é valor & ~(1 << k), toggle k é valor ^ (1 << k).",
+        "Deslocar para a esquerda pode empurrar bits além da posição 7, e ~ liga todos os bits altos: depois de cada comando mantenha só 8 bits com valor & 0xFF.",
+        "Um método String bits(int valor) que escreve exatamente 8 bits, do bit 7 até o bit 0, deixa o main curto."
+      ],
+      "mustContain": [
+        "Use operadores bit a bit (&, |, ^, << ou >>)."
+      ],
+      "mustNotContain": [
+        "Trabalhe direto com os bits: nada de métodos que transformam um número em texto binário."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "[&|^]|<<|>>",
+      "message": "Use bitwise operators (&, |, ^, << or >>)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "toBinaryString|toString\\s*\\([^;]*,\\s*\\w+\\s*\\)|BigInteger",
+      "message": "Work with the bits directly: no methods that turn a number into binary text."
+    }
+  ],
+  "tests": [
+    {
+      "input": "set 0\nset 3\nshl 2\ntoggle 7\nnot\nshr 1\nclear 2\nend\n",
+      "output": "00000001\n00001001\n00100100\n10100100\n01011011\n00101101\n00101001\n"
+    },
+    {
+      "input": "toggle 4\ntoggle 4\nend\n",
+      "output": "00010000\n00000000\n"
+    },
+    {
+      "input": "shr 1\nend\n",
+      "output": "00000000\n",
+      "hidden": true
+    },
+    {
+      "input": "not\nshl 7\nshl 1\nend\n",
+      "output": "11111111\n10000000\n00000000\n",
+      "hidden": true
+    },
+    {
+      "input": "set 7\nset 0\nshr 3\nshl 3\nend\n",
+      "output": "10000000\n10000001\n00010000\n10000000\n",
+      "hidden": true
+    },
+    {
+      "input": "flip 3\nset 3\nend\n",
+      "output": "Unknown command: flip 3\n00001000\n",
+      "hidden": true
+    },
+    {
+      "input": "set 1\nset 2\nset 3\nclear 2\ntoggle 0\nnot\nend\n",
+      "output": "00000010\n00000110\n00001110\n00001010\n00001011\n11110100\n",
+      "hidden": true
+    }
+  ]
+}
