@@ -7,7 +7,7 @@ Releases are published by the **Release** workflow when a `vX.Y.Z` tag is pushed
 ### 1. Create the publisher
 
 1. Sign in at <https://marketplace.visualstudio.com/manage> with a Microsoft account.
-2. Click **Create publisher** and choose an **ID** (Sphynx uses `lleonardogr`). The ID is permanent and becomes part of the extension ID (`<publisher>.sphynx`).
+2. Click **Create publisher** and choose an **ID** (Sphinx uses `lleonardogr`). The ID is permanent and becomes part of the extension ID (`<publisher>.sphinx`).
 3. The `publisher` field in `package.json` must be exactly this ID.
 
 ### 2. Create a Personal Access Token (PAT)

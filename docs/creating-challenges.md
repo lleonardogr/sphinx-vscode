@@ -1,6 +1,6 @@
 # Creating your own challenges
 
-This guide is for anyone who wants to write challenges for Sphynx: teachers preparing a class, students practising, or contributors to this repository. You don't need to know TypeScript or build the extension. A JDK and VS Code are enough.
+This guide is for anyone who wants to write challenges for Sphinx: teachers preparing a class, students practising, or contributors to this repository. You don't need to know TypeScript or build the extension. A JDK and VS Code are enough.
 
 - [Quick start: your first challenge in 5 minutes](#quick-start-your-first-challenge-in-5-minutes)
 - [How a challenge works](#how-a-challenge-works)
@@ -20,9 +20,9 @@ This guide is for anyone who wants to write challenges for Sphynx: teachers prep
 
 ## Quick start: your first challenge in 5 minutes
 
-You need VS Code with the Sphynx extension and a **JDK 25+** (`javac -version`).
+You need VS Code with the Sphinx extension and a **JDK 25+** (`javac -version`).
 
-1. **Create it.** Open the Command Palette (`Ctrl/Cmd+Shift+P`) and run **Sphynx: Create New Challenge…**, or click the **+** button at the top of the Sphynx sidebar. Then choose:
+1. **Create it.** Open the Command Palette (`Ctrl/Cmd+Shift+P`) and run **Sphinx: Create New Challenge…**, or click the **+** button at the top of the Sphinx sidebar. Then choose:
    - **Folder**: where your challenges live, such as `my-challenges` in your workspace. You can choose an existing folder or a new one.
    - **Title**: for example *Sum of Even Numbers*.
    - **Topic** and **difficulty**.
@@ -33,7 +33,7 @@ You need VS Code with the Sphynx extension and a **JDK 25+** (`javac -version`).
 3. **Write the reference solutions** in `Solution.java` (modern Java) and `Solution.classic.java` (classic Java).
 4. **Write the starter code** in `Starter.java` and `Starter.classic.java`: what the student sees first.
 5. **Write test inputs** in `challenge.json`. Leave every `"output"` empty.
-6. **Generate the expected outputs.** Run **Sphynx: Validate Challenges in a Folder…** and choose **Validate and fill in expected outputs**. Your `Solution.java` runs on each input, and its output is saved into `challenge.json`.
+6. **Generate the expected outputs.** Run **Sphinx: Validate Challenges in a Folder…** and choose **Validate and fill in expected outputs**. Your `Solution.java` runs on each input, and its output is saved into `challenge.json`.
 7. **Check the generated outputs**, then try the challenge yourself from the sidebar, the way a student would.
 
 That's it. The rest of this guide explains each part in detail.
@@ -164,7 +164,7 @@ void main() {
 
 Modern starters read input with `IO.readln()`, which returns one line as a `String`. Use `Integer.parseInt` / `Double.parseDouble` for numbers, and `split(" ")` when a line holds several values. `Scanner` also works in compact source files, without an import, if you prefer it.
 
-`Starter.classic.java` is the same starter as a classic class. Students who set `sphynx.java.style` to `classic` get this one:
+`Starter.classic.java` is the same starter as a classic class. Students who set `sphinx.java.style` to `classic` get this one:
 
 ```java
 import java.util.Scanner;
@@ -256,7 +256,7 @@ Tests can also be questions in an [exam](exams.md).
 
 ## Subjects, lessons and prerequisites
 
-Sphynx teaches more than one **subject**. Each has its own units, learning path and progress counter, and students switch between them with **Switch Subject…** (📚) at the top of the sidebar, whose header shows the subject they're in. Two subjects ship with the extension:
+Sphinx teaches more than one **subject**. Each has its own units, learning path and progress counter, and students switch between them with **Switch Subject…** (📚) at the top of the sidebar, whose header shows the subject they're in. Two subjects ship with the extension:
 
 | Subject | Id | Units (the keys for `topic`), in teaching order |
 |---------|----|-------------------------------------------------|
@@ -367,7 +367,7 @@ Validation also checks that your own solutions follow your rules, so a broken re
 
 ## Translating content
 
-Sphynx speaks **English** (the default) and **Portuguese (Brazil)**: students choose with the `sphynx.language` setting. A challenge carries its translation next to the original, and anything not translated yet falls back to English.
+Sphinx speaks **English** (the default) and **Portuguese (Brazil)**: students choose with the `sphinx.language` setting. A challenge carries its translation next to the original, and anything not translated yet falls back to English.
 
 ```
 fizzbuzz/
@@ -408,7 +408,7 @@ Always validate before sharing. Validation checks that:
 - every `Solution*.java` follows the rules and passes every test;
 - `challenge.json` is readable and has the required fields.
 
-**In VS Code (no Node.js needed):** run **Sphynx: Validate Challenges in a Folder…**. Results appear in the **Sphynx** output panel. A typical problem looks like this:
+**In VS Code (no Node.js needed):** run **Sphinx: Validate Challenges in a Folder…**. Results appear in the **Sphinx** output panel. A typical problem looks like this:
 
 ```
 ✗ sum-of-evens
@@ -433,17 +433,17 @@ You don't have to rebuild the extension to hand out challenges.
 
 ### The easy way: Export a pack, then Import
 
-1. In the **teacher view** (💼 at the top of the Sphynx sidebar), run **Export a Pack for Students…** (in **Tools**, or right-click an exam, challenge or quiz). Choose what goes in it, then **For students** (reference solutions are left out) or **For teachers** (solutions kept), and save the `.zip`. When an exam uses one of your own challenges by id, that challenge is added to the pack automatically, so the import works.
+1. In the **teacher view** (💼 at the top of the Sphinx sidebar), run **Export a Pack for Students…** (in **Tools**, or right-click an exam, challenge or quiz). Choose what goes in it, then **For students** (reference solutions are left out) or **For teachers** (solutions kept), and save the `.zip`. When an exam uses one of your own challenges by id, that challenge is added to the pack automatically, so the import works.
 
    You can also build the zip by hand: put your challenge, test, [quiz](quizzes.md) and exam folders in one parent folder, for example `java-week-3/`, and zip it. (Zipping a single challenge or exam folder works too.)
 2. Send the zip to your class: email, your school's learning platform, a shared drive or a USB stick.
-3. Students click the **Import** button (⤓) at the top of the Sphynx sidebar, or run **Sphynx: Import Challenges, Quizzes, Tests or Exams…**, and choose the zip or the folder.
+3. Students click the **Import** button (⤓) at the top of the Sphinx sidebar, or run **Sphinx: Import Challenges, Quizzes, Tests or Exams…**, and choose the zip or the folder.
 
 The extension finds every folder with a `challenge.json`, `quiz.json` or `exam.json` inside, checks that each one loads, and **copies** them into its own library. They keep working after the zip is deleted. Importing the same package again offers to replace the older version, and progress is kept.
 
 - If the package contains `Solution*.java` files, the import asks whether to **remove** them (students) or **keep** them (teachers, who need them to validate). You can still remove them from the zip before sharing, which is safer.
 - An imported item with the same id as a built-in one is renamed (for example `fizzbuzz-imported`), so both stay available.
-- **Sphynx: Remove Imported Challenges, Quizzes, Tests or Exams…** takes them out of the sidebar again. Students' own code files are kept.
+- **Sphinx: Remove Imported Challenges, Quizzes, Tests or Exams…** takes them out of the sidebar again. Students' own code files are kept.
 
 ### Sharing a live folder
 
@@ -452,10 +452,10 @@ Use this when you want students to get your changes without importing again, for
 1. Put your challenge folders in one parent folder, for example `java-week-3/`.
 2. **Remove the `Solution*.java` files** from the copy you share. If the folder is a git repository, keep the solutions in a separate private branch or repository.
 3. Share the folder with your class: a shared drive, or a git repository they clone.
-4. Students add the folder to their settings, then click the refresh button in the Sphynx sidebar:
+4. Students add the folder to their settings, then click the refresh button in the Sphinx sidebar:
 
    ```json
-   "sphynx.extraChallengePaths": ["/path/to/java-week-3"]
+   "sphinx.extraChallengePaths": ["/path/to/java-week-3"]
    ```
 
 With a live folder, a challenge with the same id as a built-in one replaces it. You can use that to adapt a built-in challenge for your class.
@@ -497,7 +497,7 @@ Not sure if your idea fits? Open a **Challenge proposal** issue first.
 ## FAQ and troubleshooting
 
 **My challenge doesn't appear in the sidebar.**
-Check that the folder is listed in `sphynx.extraChallengePaths` and that each challenge has its own sub-folder containing `challenge.json`. Click the refresh button in the sidebar. Problems loading a challenge are listed in the **Sphynx** output panel.
+Check that the folder is listed in `sphinx.extraChallengePaths` and that each challenge has its own sub-folder containing `challenge.json`. Click the refresh button in the sidebar. Problems loading a challenge are listed in the **Sphinx** output panel.
 
 **"No Solution.java" during validation.**
 Validation needs at least one reference solution to check the tests. Add `Solution.java` (or `Solution.classic.java`).

@@ -94,7 +94,7 @@ export class QuizPanel {
 
   async show(quiz: QuizDefinition, opts: { exam?: QuizExamInfo; answers?: QuizAnswer[]; best?: string; requirements?: Requirement[] } = {}): Promise<void> {
     if (!this.panel) {
-      this.panel = vscode.window.createWebviewPanel('sphynxQuiz', quiz.title, vscode.ViewColumn.One, {
+      this.panel = vscode.window.createWebviewPanel('sphinxQuiz', quiz.title, vscode.ViewColumn.One, {
         enableScripts: true,
         retainContextWhenHidden: true,
         localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, 'media')],

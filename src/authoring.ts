@@ -15,7 +15,7 @@ interface AuthoringDeps {
   reload: () => void;
 }
 
-const config = () => vscode.workspace.getConfiguration('sphynx');
+const config = () => vscode.workspace.getConfiguration('sphinx');
 
 export function slugify(title: string): string {
   return title
@@ -73,7 +73,7 @@ async function ensureRegistered(folder: string, deps: AuthoringDeps): Promise<vo
   // Inside a repository checkout the built-in folder is loaded only when running the dev build,
   // so register it anyway; duplicates by id are harmless (last one wins).
   await config().update('extraChallengePaths', [...paths, folder], vscode.ConfigurationTarget.Global);
-  vscode.window.showInformationMessage(tr(`Added ${folder} to sphynx.extraChallengePaths so its challenges appear in the sidebar.`, `${folder} foi adicionada a sphynx.extraChallengePaths para os desafios aparecerem na barra lateral.`));
+  vscode.window.showInformationMessage(tr(`Added ${folder} to sphinx.extraChallengePaths so its challenges appear in the sidebar.`, `${folder} foi adicionada a sphinx.extraChallengePaths para os desafios aparecerem na barra lateral.`));
 }
 
 /** `topic` undefined writes no "topic", so the challenge appears under Custom. */
@@ -286,8 +286,8 @@ export async function validateFolder(deps: AuthoringDeps): Promise<void> {
   } else {
     vscode.window.showErrorMessage(
       tr(
-        `${report.challenges.length - ok + report.loadErrors.length} challenge(s) have problems. See the "Sphynx" output for details.`,
-        `${report.challenges.length - ok + report.loadErrors.length} desafio(s) com problemas. Veja os detalhes na saída "Sphynx".`,
+        `${report.challenges.length - ok + report.loadErrors.length} challenge(s) have problems. See the "Sphinx" output for details.`,
+        `${report.challenges.length - ok + report.loadErrors.length} desafio(s) com problemas. Veja os detalhes na saída "Sphinx".`,
       ),
     );
   }

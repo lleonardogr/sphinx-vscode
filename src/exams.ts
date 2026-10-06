@@ -112,6 +112,17 @@ export interface ExamDefinition {
   preview?: boolean;
 }
 
+/**
+ * The "format" of an exam results file. Files written before Sphinx was spelled correctly say
+ * "sphynx-exam-results", and before the rename from Tech Challenges "tech-challenges-exam-results".
+ */
+export const RESULTS_FORMAT = 'sphinx-exam-results';
+const OLD_RESULTS_FORMATS = ['sphynx-exam-results', 'tech-challenges-exam-results'];
+
+export function isResultsFormat(format: unknown): boolean {
+  return format === RESULTS_FORMAT || OLD_RESULTS_FORMATS.includes(format as string);
+}
+
 /** Suffix of a preview exam's id: "exam-1" is previewed as "exam-1--preview". */
 export const PREVIEW_SUFFIX = '--preview';
 

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/lleonardogr/sphynx-vscode/blob/main/schemas/exam.schema.json",
-  "title": "Sphynx exam",
+  "title": "Sphinx exam",
   "description": "A timed, graded set of challenges. Lives in <exams folder>/<exam-id>/exam.json; question folders can sit next to it. Guide: docs/exams.md",
   "type": "object",
   "required": [

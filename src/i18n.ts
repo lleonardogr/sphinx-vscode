@@ -1,7 +1,7 @@
 // Interface and content language. English is the default; "pt-br" switches to Portuguese (Brazil).
 // Strings are written in place as tr('English', 'Português'), so a translation always sits next to
 // its original. Content files carry their own translations (see challenges.ts and quizzes.ts).
-// No vscode dependency: the extension sets the language from the sphynx.language setting.
+// No vscode dependency: the extension sets the language from the sphinx.language setting.
 
 export type Lang = 'en' | 'pt-br';
 export const LANGUAGES: Lang[] = ['en', 'pt-br'];

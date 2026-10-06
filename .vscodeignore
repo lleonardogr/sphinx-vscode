@@ -15,7 +15,7 @@ node_modules/**
 .github/**
 CONTRIBUTING.md
 tech-challenges/**
-sphynx/**
+sphinx/**
 java-challenges/**
 out/**
 !out/extension.js

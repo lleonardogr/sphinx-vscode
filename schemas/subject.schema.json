@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Sphynx subject",
+  "title": "Sphinx subject",
   "description": "A subject (what students study) and its units in teaching order. Content picks a unit with \"topic\".",
   "type": "object",
   "required": [

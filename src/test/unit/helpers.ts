@@ -16,7 +16,7 @@ export const SUBJECT_ERRORS = subjectLoad.errors;
 export const CONTENT_ROOTS = [...['challenges', 'custom', 'tests', 'exams', 'quizzes'].map((d) => path.join(ROOT, d)), ...allSubjects().flatMap(subjectContentRoots)];
 
 /** A fresh temporary folder, removed when the process exits. */
-export function tempDir(prefix = 'sphynx-test-'): string {
+export function tempDir(prefix = 'sphinx-test-'): string {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
   process.on('exit', () => fs.rmSync(dir, { recursive: true, force: true }));
   return dir;

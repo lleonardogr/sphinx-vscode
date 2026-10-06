@@ -1,7 +1,7 @@
 {
   "name": "sphynx",
-  "displayName": "Sphynx",
-  "description": "LeetCode/HackerRank-style coding challenges inside VS Code, with mixed-skill tests, quizzes, timed exams and optional AI hints from a local model or your own API key. Starts with Java: variables, conditionals, loops, arrays, strings, methods and OOP.",
+  "displayName": "Sphinx Challenges",
+  "description": "LeetCode/HackerRank-style coding challenges inside VS Code, with mixed-skill tests, quizzes, timed exams and optional AI hints from a local model or your own API key. Java Programming from variables to streams, and CS Fundamentals with lessons.",
   "version": "1.1.0",
   "publisher": "lleonardogr",
   "license": "MIT",
@@ -42,562 +42,562 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "sphynx",
+          "id": "sphinx",
           "title": "%viewContainer.title%",
           "icon": "media/icon.svg"
         }
       ]
     },
     "views": {
-      "sphynx": [
+      "sphinx": [
         {
-          "id": "sphynx.list",
+          "id": "sphinx.list",
           "name": "%view.name%",
-          "when": "sphynx.view != teacher"
+          "when": "sphinx.view != teacher"
         },
         {
-          "id": "sphynx.teacher",
+          "id": "sphinx.teacher",
           "name": "%view.teacher%",
-          "when": "sphynx.view == teacher"
+          "when": "sphinx.view == teacher"
         }
       ]
     },
     "commands": [
       {
-        "command": "sphynx.open",
+        "command": "sphinx.open",
         "title": "%command.open%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(go-to-file)"
       },
       {
-        "command": "sphynx.run",
+        "command": "sphinx.run",
         "title": "%command.run%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(play)"
       },
       {
-        "command": "sphynx.submit",
+        "command": "sphinx.submit",
         "title": "%command.submit%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(check-all)"
       },
       {
-        "command": "sphynx.runInTerminal",
+        "command": "sphinx.runInTerminal",
         "title": "%command.runInTerminal%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(terminal)"
       },
       {
-        "command": "sphynx.resetCode",
+        "command": "sphinx.resetCode",
         "title": "%command.resetCode%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(discard)"
       },
       {
-        "command": "sphynx.resetChallenge",
+        "command": "sphinx.resetChallenge",
         "title": "%command.resetChallenge%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(discard)"
       },
       {
-        "command": "sphynx.resetQuiz",
+        "command": "sphinx.resetQuiz",
         "title": "%command.resetQuiz%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(discard)"
       },
       {
-        "command": "sphynx.resetAllChallenges",
+        "command": "sphinx.resetAllChallenges",
         "title": "%command.resetAllChallenges%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(clear-all)"
       },
       {
-        "command": "sphynx.refresh",
+        "command": "sphinx.refresh",
         "title": "%command.refresh%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(refresh)"
       },
       {
-        "command": "sphynx.groupBy",
+        "command": "sphinx.groupBy",
         "title": "%command.groupBy%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(list-filter)"
       },
       {
-        "command": "sphynx.switchSubject",
+        "command": "sphinx.switchSubject",
         "title": "%command.switchSubject%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(library)"
       },
       {
-        "command": "sphynx.openLesson",
+        "command": "sphinx.openLesson",
         "title": "%command.openLesson%",
-        "category": "Sphynx"
+        "category": "Sphinx"
       },
       {
-        "command": "sphynx.switchToTeacherView",
+        "command": "sphinx.switchToTeacherView",
         "title": "%command.switchToTeacherView%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(briefcase)"
       },
       {
-        "command": "sphynx.switchToStudentView",
+        "command": "sphinx.switchToStudentView",
         "title": "%command.switchToStudentView%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(mortar-board)"
       },
       {
-        "command": "sphynx.editItem",
+        "command": "sphinx.editItem",
         "title": "%command.editItem%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(edit)"
       },
       {
-        "command": "sphynx.revealItem",
+        "command": "sphinx.revealItem",
         "title": "%command.revealItem%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(folder-opened)"
       },
       {
-        "command": "sphynx.previewExam",
+        "command": "sphinx.previewExam",
         "title": "%command.previewExam%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(play)"
       },
       {
-        "command": "sphynx.restartPreview",
+        "command": "sphinx.restartPreview",
         "title": "%command.restartPreview%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(debug-restart)"
       },
       {
-        "command": "sphynx.exportPack",
+        "command": "sphinx.exportPack",
         "title": "%command.exportPack%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(package)"
       },
       {
-        "command": "sphynx.classResults",
+        "command": "sphinx.classResults",
         "title": "%command.classResults%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(table)"
       },
       {
-        "command": "sphynx.checkJava",
+        "command": "sphinx.checkJava",
         "title": "%command.checkJava%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(pulse)"
       },
       {
-        "command": "sphynx.chooseJdk",
+        "command": "sphinx.chooseJdk",
         "title": "%command.chooseJdk%",
-        "category": "Sphynx"
+        "category": "Sphinx"
       },
       {
-        "command": "sphynx.resetProgress",
+        "command": "sphinx.resetProgress",
         "title": "%command.resetProgress%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(clear-all)"
       },
       {
-        "command": "sphynx.askAiHint",
+        "command": "sphinx.askAiHint",
         "title": "%command.askAiHint%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(sparkle)"
       },
       {
-        "command": "sphynx.setupAi",
+        "command": "sphinx.setupAi",
         "title": "%command.setupAi%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(settings-gear)"
       },
       {
-        "command": "sphynx.clearAiKeys",
+        "command": "sphinx.clearAiKeys",
         "title": "%command.clearAiKeys%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(trash)"
       },
       {
-        "command": "sphynx.createChallenge",
+        "command": "sphinx.createChallenge",
         "title": "%command.createChallenge%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(new-file)"
       },
       {
-        "command": "sphynx.openQuiz",
+        "command": "sphinx.openQuiz",
         "title": "%command.openQuiz%",
-        "category": "Sphynx"
+        "category": "Sphinx"
       },
       {
-        "command": "sphynx.importContent",
+        "command": "sphinx.importContent",
         "title": "%command.importContent%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(desktop-download)"
       },
       {
-        "command": "sphynx.removeImported",
+        "command": "sphinx.removeImported",
         "title": "%command.removeImported%",
-        "category": "Sphynx"
+        "category": "Sphinx"
       },
       {
-        "command": "sphynx.validateChallenges",
+        "command": "sphinx.validateChallenges",
         "title": "%command.validateChallenges%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(checklist)"
       },
       {
-        "command": "sphynx.startExam",
+        "command": "sphinx.startExam",
         "title": "%command.startExam%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(play)"
       },
       {
-        "command": "sphynx.finishExam",
+        "command": "sphinx.finishExam",
         "title": "%command.finishExam%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(debug-stop)"
       },
       {
-        "command": "sphynx.openExamResults",
+        "command": "sphinx.openExamResults",
         "title": "%command.openExamResults%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(output)"
       },
       {
-        "command": "sphynx.saveExamResults",
+        "command": "sphinx.saveExamResults",
         "title": "%command.saveExamResults%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(save-as)"
       },
       {
-        "command": "sphynx.verifyExamResults",
+        "command": "sphinx.verifyExamResults",
         "title": "%command.verifyExamResults%",
-        "category": "Sphynx",
+        "category": "Sphinx",
         "icon": "$(verified)"
       },
       {
-        "command": "sphynx.copyBlocked",
+        "command": "sphinx.copyBlocked",
         "title": "%command.copyBlocked%",
-        "category": "Sphynx"
+        "category": "Sphinx"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "sphynx.importContent",
-          "when": "view == sphynx.list",
+          "command": "sphinx.importContent",
+          "when": "view == sphinx.list",
           "group": "navigation@0"
         },
         {
-          "command": "sphynx.switchSubject",
-          "when": "view == sphynx.list",
+          "command": "sphinx.switchSubject",
+          "when": "view == sphinx.list",
           "group": "navigation@1"
         },
         {
-          "command": "sphynx.groupBy",
-          "when": "view == sphynx.list",
+          "command": "sphinx.groupBy",
+          "when": "view == sphinx.list",
           "group": "navigation@1"
         },
         {
-          "command": "sphynx.refresh",
-          "when": "view == sphynx.list",
+          "command": "sphinx.refresh",
+          "when": "view == sphinx.list",
           "group": "navigation@1"
         },
         {
-          "command": "sphynx.resetAllChallenges",
-          "when": "view == sphynx.list",
+          "command": "sphinx.resetAllChallenges",
+          "when": "view == sphinx.list",
           "group": "reset"
         },
         {
-          "command": "sphynx.switchToTeacherView",
-          "when": "view == sphynx.list",
+          "command": "sphinx.switchToTeacherView",
+          "when": "view == sphinx.list",
           "group": "navigation@3"
         },
         {
-          "command": "sphynx.removeImported",
-          "when": "view == sphynx.list",
+          "command": "sphinx.removeImported",
+          "when": "view == sphinx.list",
           "group": "import"
         },
         {
-          "command": "sphynx.setupAi",
-          "when": "view == sphynx.list",
+          "command": "sphinx.setupAi",
+          "when": "view == sphinx.list",
           "group": "ai"
         },
         {
-          "command": "sphynx.checkJava",
-          "when": "view == sphynx.list",
+          "command": "sphinx.checkJava",
+          "when": "view == sphinx.list",
           "group": "java"
         },
         {
-          "command": "sphynx.createChallenge",
-          "when": "view == sphynx.teacher",
+          "command": "sphinx.createChallenge",
+          "when": "view == sphinx.teacher",
           "group": "navigation@0"
         },
         {
-          "command": "sphynx.importContent",
-          "when": "view == sphynx.teacher",
+          "command": "sphinx.importContent",
+          "when": "view == sphinx.teacher",
           "group": "navigation@0"
         },
         {
-          "command": "sphynx.refresh",
-          "when": "view == sphynx.teacher",
+          "command": "sphinx.refresh",
+          "when": "view == sphinx.teacher",
           "group": "navigation@1"
         },
         {
-          "command": "sphynx.switchToStudentView",
-          "when": "view == sphynx.teacher",
+          "command": "sphinx.switchToStudentView",
+          "when": "view == sphinx.teacher",
           "group": "navigation@3"
         },
         {
-          "command": "sphynx.validateChallenges",
-          "when": "view == sphynx.teacher",
+          "command": "sphinx.validateChallenges",
+          "when": "view == sphinx.teacher",
           "group": "authoring"
         },
         {
-          "command": "sphynx.verifyExamResults",
-          "when": "view == sphynx.teacher",
+          "command": "sphinx.verifyExamResults",
+          "when": "view == sphinx.teacher",
           "group": "authoring"
         },
         {
-          "command": "sphynx.removeImported",
-          "when": "view == sphynx.teacher",
+          "command": "sphinx.removeImported",
+          "when": "view == sphinx.teacher",
           "group": "import"
         },
         {
-          "command": "sphynx.setupAi",
-          "when": "view == sphynx.teacher",
+          "command": "sphinx.setupAi",
+          "when": "view == sphinx.teacher",
           "group": "ai"
         },
         {
-          "command": "sphynx.checkJava",
-          "when": "view == sphynx.teacher",
+          "command": "sphinx.checkJava",
+          "when": "view == sphinx.teacher",
           "group": "java"
         },
         {
-          "command": "sphynx.exportPack",
-          "when": "view == sphynx.teacher",
+          "command": "sphinx.exportPack",
+          "when": "view == sphinx.teacher",
           "group": "authoring"
         },
         {
-          "command": "sphynx.classResults",
-          "when": "view == sphynx.teacher",
+          "command": "sphinx.classResults",
+          "when": "view == sphinx.teacher",
           "group": "authoring"
         }
       ],
       "view/item/context": [
         {
-          "command": "sphynx.resetChallenge",
-          "when": "view == sphynx.list && viewItem == challenge",
+          "command": "sphinx.resetChallenge",
+          "when": "view == sphinx.list && viewItem == challenge",
           "group": "inline"
         },
         {
-          "command": "sphynx.resetChallenge",
-          "when": "view == sphynx.list && viewItem == challenge",
+          "command": "sphinx.resetChallenge",
+          "when": "view == sphinx.list && viewItem == challenge",
           "group": "reset@2"
         },
         {
-          "command": "sphynx.resetCode",
-          "when": "view == sphynx.list && viewItem == challenge",
+          "command": "sphinx.resetCode",
+          "when": "view == sphinx.list && viewItem == challenge",
           "group": "reset@1"
         },
         {
-          "command": "sphynx.resetQuiz",
-          "when": "view == sphynx.list && viewItem == quiz",
+          "command": "sphinx.resetQuiz",
+          "when": "view == sphinx.list && viewItem == quiz",
           "group": "inline"
         },
         {
-          "command": "sphynx.resetQuiz",
-          "when": "view == sphynx.list && viewItem == quiz",
+          "command": "sphinx.resetQuiz",
+          "when": "view == sphinx.list && viewItem == quiz",
           "group": "reset"
         },
         {
-          "command": "sphynx.startExam",
-          "when": "view == sphynx.list && viewItem == exam-notStarted",
+          "command": "sphinx.startExam",
+          "when": "view == sphinx.list && viewItem == exam-notStarted",
           "group": "inline"
         },
         {
-          "command": "sphynx.startExam",
-          "when": "view == sphynx.list && viewItem == exam-notStarted"
+          "command": "sphinx.startExam",
+          "when": "view == sphinx.list && viewItem == exam-notStarted"
         },
         {
-          "command": "sphynx.finishExam",
-          "when": "view == sphynx.list && viewItem == exam-active",
+          "command": "sphinx.finishExam",
+          "when": "view == sphinx.list && viewItem == exam-active",
           "group": "inline"
         },
         {
-          "command": "sphynx.finishExam",
-          "when": "view == sphynx.list && viewItem == exam-active"
+          "command": "sphinx.finishExam",
+          "when": "view == sphinx.list && viewItem == exam-active"
         },
         {
-          "command": "sphynx.openExamResults",
-          "when": "view == sphynx.list && viewItem == exam-finished",
+          "command": "sphinx.openExamResults",
+          "when": "view == sphinx.list && viewItem == exam-finished",
           "group": "inline"
         },
         {
-          "command": "sphynx.openExamResults",
-          "when": "view == sphynx.list && viewItem == exam-finished"
+          "command": "sphinx.openExamResults",
+          "when": "view == sphinx.list && viewItem == exam-finished"
         },
         {
-          "command": "sphynx.saveExamResults",
-          "when": "view == sphynx.list && viewItem == exam-finished"
+          "command": "sphinx.saveExamResults",
+          "when": "view == sphinx.list && viewItem == exam-finished"
         },
         {
-          "command": "sphynx.editItem",
-          "when": "view == sphynx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
+          "command": "sphinx.editItem",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
           "group": "inline"
         },
         {
-          "command": "sphynx.editItem",
-          "when": "view == sphynx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
+          "command": "sphinx.editItem",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
           "group": "teacher@1"
         },
         {
-          "command": "sphynx.revealItem",
-          "when": "view == sphynx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
+          "command": "sphinx.revealItem",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
           "group": "teacher@2"
         },
         {
-          "command": "sphynx.previewExam",
-          "when": "view == sphynx.teacher && viewItem == teacherExam",
+          "command": "sphinx.previewExam",
+          "when": "view == sphinx.teacher && viewItem == teacherExam",
           "group": "inline@0"
         },
         {
-          "command": "sphynx.previewExam",
-          "when": "view == sphynx.teacher && viewItem == teacherExam",
+          "command": "sphinx.previewExam",
+          "when": "view == sphinx.teacher && viewItem == teacherExam",
           "group": "teacher@0"
         },
         {
-          "command": "sphynx.finishExam",
-          "when": "view == sphynx.teacher && viewItem == teacherPreviewActive",
+          "command": "sphinx.finishExam",
+          "when": "view == sphinx.teacher && viewItem == teacherPreviewActive",
           "group": "inline"
         },
         {
-          "command": "sphynx.finishExam",
-          "when": "view == sphynx.teacher && viewItem == teacherPreviewActive",
+          "command": "sphinx.finishExam",
+          "when": "view == sphinx.teacher && viewItem == teacherPreviewActive",
           "group": "preview@1"
         },
         {
-          "command": "sphynx.openExamResults",
-          "when": "view == sphynx.teacher && viewItem == teacherPreviewFinished",
+          "command": "sphinx.openExamResults",
+          "when": "view == sphinx.teacher && viewItem == teacherPreviewFinished",
           "group": "inline"
         },
         {
-          "command": "sphynx.openExamResults",
-          "when": "view == sphynx.teacher && viewItem == teacherPreviewFinished",
+          "command": "sphinx.openExamResults",
+          "when": "view == sphinx.teacher && viewItem == teacherPreviewFinished",
           "group": "preview@1"
         },
         {
-          "command": "sphynx.restartPreview",
-          "when": "view == sphynx.teacher && viewItem =~ /^teacherPreview/",
+          "command": "sphinx.restartPreview",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacherPreview/",
           "group": "preview@2"
         },
         {
-          "command": "sphynx.exportPack",
-          "when": "view == sphynx.teacher && viewItem =~ /^teacher(Exam|Item)$/",
+          "command": "sphinx.exportPack",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|Item)$/",
           "group": "teacher@3"
         },
         {
-          "command": "sphynx.classResults",
-          "when": "view == sphynx.teacher && viewItem == teacherExam",
+          "command": "sphinx.classResults",
+          "when": "view == sphinx.teacher && viewItem == teacherExam",
           "group": "teacher@4"
         }
       ],
       "editor/title": [
         {
-          "command": "sphynx.run",
-          "when": "sphynx.isChallengeFile",
+          "command": "sphinx.run",
+          "when": "sphinx.isChallengeFile",
           "group": "navigation@1"
         },
         {
-          "command": "sphynx.runInTerminal",
-          "when": "sphynx.isChallengeFile",
+          "command": "sphinx.runInTerminal",
+          "when": "sphinx.isChallengeFile",
           "group": "navigation@2"
         },
         {
-          "command": "sphynx.submit",
-          "when": "sphynx.isChallengeFile",
+          "command": "sphinx.submit",
+          "when": "sphinx.isChallengeFile",
           "group": "navigation@3"
         }
       ],
       "commandPalette": [
         {
-          "command": "sphynx.openLesson",
+          "command": "sphinx.openLesson",
           "when": "false"
         },
         {
-          "command": "sphynx.previewExam",
+          "command": "sphinx.previewExam",
           "when": "false"
         },
         {
-          "command": "sphynx.restartPreview",
+          "command": "sphinx.restartPreview",
           "when": "false"
         },
         {
-          "command": "sphynx.editItem",
+          "command": "sphinx.editItem",
           "when": "false"
         },
         {
-          "command": "sphynx.revealItem",
+          "command": "sphinx.revealItem",
           "when": "false"
         },
         {
-          "command": "sphynx.resetCode",
-          "when": "sphynx.isChallengeFile"
+          "command": "sphinx.resetCode",
+          "when": "sphinx.isChallengeFile"
         },
         {
-          "command": "sphynx.askAiHint",
-          "when": "sphynx.isChallengeFile"
+          "command": "sphinx.askAiHint",
+          "when": "sphinx.isChallengeFile"
         },
         {
-          "command": "sphynx.resetQuiz",
+          "command": "sphinx.resetQuiz",
           "when": "false"
         },
         {
-          "command": "sphynx.copyBlocked",
+          "command": "sphinx.copyBlocked",
           "when": "false"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "sphynx.run",
+        "command": "sphinx.run",
         "key": "ctrl+alt+r",
         "mac": "cmd+alt+r",
-        "when": "sphynx.isChallengeFile"
+        "when": "sphinx.isChallengeFile"
       },
       {
-        "command": "sphynx.submit",
+        "command": "sphinx.submit",
         "key": "ctrl+alt+enter",
         "mac": "cmd+alt+enter",
-        "when": "sphynx.isChallengeFile"
+        "when": "sphinx.isChallengeFile"
       },
       {
-        "command": "sphynx.copyBlocked",
+        "command": "sphinx.copyBlocked",
         "key": "ctrl+c",
-        "when": "editorFocus && sphynx.examNoCopy",
+        "when": "editorFocus && sphinx.examNoCopy",
         "mac": "cmd+c"
       },
       {
-        "command": "sphynx.copyBlocked",
+        "command": "sphinx.copyBlocked",
         "key": "ctrl+x",
-        "when": "editorFocus && sphynx.examNoCopy",
+        "when": "editorFocus && sphinx.examNoCopy",
         "mac": "cmd+x"
       },
       {
-        "command": "sphynx.copyBlocked",
+        "command": "sphinx.copyBlocked",
         "key": "ctrl+insert",
-        "when": "editorFocus && sphynx.examNoCopy"
+        "when": "editorFocus && sphinx.examNoCopy"
       },
       {
-        "command": "sphynx.copyBlocked",
+        "command": "sphinx.copyBlocked",
         "key": "shift+delete",
-        "when": "editorFocus && sphynx.examNoCopy"
+        "when": "editorFocus && sphinx.examNoCopy"
       }
     ],
     "configuration": {
       "title": "%config.title%",
       "properties": {
-        "sphynx.language": {
+        "sphinx.language": {
           "type": "string",
           "enum": [
             "en",
@@ -611,12 +611,12 @@
           "markdownDescription": "%config.language%",
           "order": 0
         },
-        "sphynx.java.home": {
+        "sphinx.java.home": {
           "type": "string",
           "default": "",
           "markdownDescription": "%config.java.home.description%"
         },
-        "sphynx.java.style": {
+        "sphinx.java.style": {
           "type": "string",
           "enum": [
             "modern",
@@ -629,12 +629,12 @@
           ],
           "markdownDescription": "%config.java.style.description%"
         },
-        "sphynx.codeFolder": {
+        "sphinx.codeFolder": {
           "type": "string",
           "default": "",
           "markdownDescription": "%config.codeFolder.description%"
         },
-        "sphynx.extraChallengePaths": {
+        "sphinx.extraChallengePaths": {
           "type": "array",
           "items": {
             "type": "string"
@@ -642,7 +642,7 @@
           "default": [],
           "markdownDescription": "%config.extraChallengePaths.description%"
         },
-        "sphynx.ai.provider": {
+        "sphinx.ai.provider": {
           "type": "string",
           "default": "off",
           "enum": [
@@ -663,17 +663,17 @@
           ],
           "markdownDescription": "%config.ai.provider.description%"
         },
-        "sphynx.ai.model": {
+        "sphinx.ai.model": {
           "type": "string",
           "default": "",
           "markdownDescription": "%config.ai.model.description%"
         },
-        "sphynx.ai.baseUrl": {
+        "sphinx.ai.baseUrl": {
           "type": "string",
           "default": "",
           "markdownDescription": "%config.ai.baseUrl.description%"
         },
-        "sphynx.ai.responseLanguage": {
+        "sphinx.ai.responseLanguage": {
           "type": "string",
           "default": "",
           "markdownDescription": "%config.ai.responseLanguage.description%"

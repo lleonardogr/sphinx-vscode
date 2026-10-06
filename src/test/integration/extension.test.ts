@@ -3,15 +3,15 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import type { SphynxApi } from '../../extension';
+import type { SphinxApi } from '../../extension';
 import type { ClassReport } from '../../classResults';
-import { migrateOldStorage } from '../../extension';
+import { migrateOldStorage, migrateSphynxState } from '../../extension';
 import { javacMajorVersion } from '../../runner';
 import { extractZip, findImportables, findSolutions } from '../../importCore';
 import { dialogs, test, waitFor } from './harness';
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
-let api: SphynxApi;
+let api: SphinxApi;
 
 const challenge = (id: string) => {
   const c = api.challenges().find((x) => x.id === id);
@@ -26,13 +26,13 @@ const isStarter = (id: string) => {
 const solution = (id: string) => read(path.join(ROOT, 'challenges', id, 'Solution.java'));
 /** Opens a challenge, replaces its code and submits it. */
 async function submit(id: string, code: string): Promise<void> {
-  await vscode.commands.executeCommand('sphynx.open', id);
+  await vscode.commands.executeCommand('sphinx.open', id);
   fs.writeFileSync(api.codePath(challenge(id)), code);
-  await vscode.commands.executeCommand('sphynx.submit', id);
+  await vscode.commands.executeCommand('sphinx.submit', id);
 }
 
 test('activates and registers every command it contributes', async () => {
-  const ext = vscode.extensions.getExtension<SphynxApi>('lleonardogr.sphynx');
+  const ext = vscode.extensions.getExtension<SphinxApi>('lleonardogr.sphynx');
   assert.ok(ext, 'extension not found');
   api = await ext.activate();
   const contributed: { command: string }[] = ext.packageJSON.contributes.commands;
@@ -42,9 +42,9 @@ test('activates and registers every command it contributes', async () => {
 });
 
 test('Java 25+ is available to the extension', async () => {
-  const javaHome = vscode.workspace.getConfiguration('sphynx').get<string>('java.home') || undefined;
+  const javaHome = vscode.workspace.getConfiguration('sphinx').get<string>('java.home') || undefined;
   const version = await javacMajorVersion(javaHome);
-  assert.ok(version !== undefined && version >= 25, `found javac ${version} (sphynx.java.home: ${javaHome ?? 'not set'}); the built-in starters need JDK 25+`);
+  assert.ok(version !== undefined && version >= 25, `found javac ${version} (sphinx.java.home: ${javaHome ?? 'not set'}); the built-in starters need JDK 25+`);
 });
 
 test('loads the built-in challenges, quizzes, lessons and exams', () => {
@@ -56,7 +56,7 @@ test('loads the built-in challenges, quizzes, lessons and exams', () => {
 });
 
 test('opening a challenge creates Main.java with the starter code', async () => {
-  await vscode.commands.executeCommand('sphynx.open', 'fizzbuzz');
+  await vscode.commands.executeCommand('sphinx.open', 'fizzbuzz');
   assert.ok(fs.existsSync(api.codePath(challenge('fizzbuzz'))));
   assert.ok(isStarter('fizzbuzz'));
 });
@@ -75,12 +75,12 @@ test('submitting a wrong solution counts an attempt without solving it', async (
 test('Reset Challenge brings back the starter code and clears its progress, unless cancelled', async () => {
   fs.writeFileSync(api.codePath(challenge('fizzbuzz')), '// my own work\n');
   dialogs.answer = () => undefined;
-  await vscode.commands.executeCommand('sphynx.resetChallenge', 'fizzbuzz');
+  await vscode.commands.executeCommand('sphinx.resetChallenge', 'fizzbuzz');
   assert.equal(read(api.codePath(challenge('fizzbuzz'))), '// my own work\n', 'cancel must change nothing');
   assert.equal(api.progress.isSolved('fizzbuzz'), true);
 
   dialogs.answer = (_m, buttons) => buttons.find((b) => b === 'Reset Challenge');
-  await vscode.commands.executeCommand('sphynx.resetChallenge', 'fizzbuzz');
+  await vscode.commands.executeCommand('sphinx.resetChallenge', 'fizzbuzz');
   assert.ok(isStarter('fizzbuzz'));
   assert.equal(api.progress.get('fizzbuzz'), undefined);
   assert.equal(api.progress.get('factorial')?.status, 'attempted', 'other challenges keep their progress');
@@ -90,7 +90,7 @@ test('Reset Quiz Score clears only that quiz', async () => {
   await api.quizProgress.record('loops-quiz', 6, 8);
   await api.quizProgress.record('strings-quiz', 8, 8);
   dialogs.answer = (_m, buttons) => buttons.find((b) => b === 'Reset Quiz');
-  await vscode.commands.executeCommand('sphynx.resetQuiz', 'loops-quiz');
+  await vscode.commands.executeCommand('sphinx.resetQuiz', 'loops-quiz');
   assert.equal(api.quizProgress.get('loops-quiz'), undefined);
   assert.equal(api.quizProgress.get('strings-quiz')?.best, 8);
 });
@@ -100,13 +100,13 @@ test('Reset All Challenges: progress only keeps the code, progress and code rest
   fs.writeFileSync(api.codePath(challenge('fizzbuzz')), '// kept\n');
 
   dialogs.answer = (_m, buttons) => buttons.find((b) => b === 'Progress Only');
-  await vscode.commands.executeCommand('sphynx.resetAllChallenges');
+  await vscode.commands.executeCommand('sphinx.resetAllChallenges');
   assert.equal(api.progress.solvedCount(api.challenges().map((c) => c.id)), 0);
   assert.equal(api.quizProgress.get('strings-quiz'), undefined);
   assert.equal(read(api.codePath(challenge('fizzbuzz'))), '// kept\n');
 
   dialogs.answer = (_m, buttons) => buttons.find((b) => b === 'Progress and Code');
-  await vscode.commands.executeCommand('sphynx.resetAllChallenges');
+  await vscode.commands.executeCommand('sphinx.resetAllChallenges');
   assert.ok(isStarter('fizzbuzz'));
   assert.ok(isStarter('hello-world'));
   assert.equal(fs.existsSync(api.codePath(challenge('array-sum'))), false, 'challenges never opened are not created');
@@ -130,7 +130,7 @@ test('the sidebar groups by learning path, difficulty and progress', async () =>
 
 test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then back to Java', async () => {
   const label = (n: unknown) => String(api.tree.getTreeItem(n as never).label);
-  await vscode.commands.executeCommand('sphynx.switchSubject', 'cs');
+  await vscode.commands.executeCommand('sphinx.switchSubject', 'cs');
   try {
     assert.equal(api.tree.subject, 'cs');
     assert.ok(!api.tree.getChildren().some((n) => (n as { kind: string }).kind === 'examsRoot'), 'the Java exams are not listed under CS');
@@ -149,7 +149,7 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
     // A lesson gets its ✓ once read.
     const lesson = items[0];
     assert.equal(String(api.tree.getTreeItem(lesson as never).description), 'Lesson · 4 min');
-    await vscode.commands.executeCommand('sphynx.openLesson', 'place-value-and-binary');
+    await vscode.commands.executeCommand('sphinx.openLesson', 'place-value-and-binary');
     await api.lessonProgress.markRead('place-value-and-binary');
     assert.equal((api.tree.getTreeItem(api.tree.getChildren(groups[0])[0] as never).iconPath as vscode.ThemeIcon).id, 'pass-filled');
     // Prerequisites: in the description, and with progress in the tooltip.
@@ -157,14 +157,14 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
     assert.equal(b2d.description, 'Easy · needs Loops');
     assert.match((b2d.tooltip as vscode.MarkdownString).value, /Needs:\n- Java Programming · Loops \(\d+\/12 solved\)/);
   } finally {
-    await vscode.commands.executeCommand('sphynx.switchSubject', 'java');
+    await vscode.commands.executeCommand('sphinx.switchSubject', 'java');
   }
   assert.ok(api.tree.getChildren().map(label).includes('1 · Basics'));
   assert.ok(api.tree.getChildren().map(label).includes('Exams'));
 });
 
 test('switching the language to Portuguese translates the content', async () => {
-  const config = vscode.workspace.getConfiguration('sphynx');
+  const config = vscode.workspace.getConfiguration('sphinx');
   await config.update('language', 'pt-br', vscode.ConfigurationTarget.Global);
   try {
     await waitFor(() => challenge('password-checker').title === 'Verificador de senha', 'Portuguese titles');
@@ -180,7 +180,7 @@ test('an exam: start, submit a question, finish, and hand in a results file', as
   const question = exam.questions.find((q) => q.id === 'parking-fee')!;
   dialogs.inputBox = 'Test Student';
   dialogs.answer = (m, buttons) => (m.startsWith('Start') ? buttons[0] : undefined);
-  await vscode.commands.executeCommand('sphynx.startExam', 'exam-1');
+  await vscode.commands.executeCommand('sphinx.startExam', 'exam-1');
   assert.ok(api.examManager.state('exam-1'), 'the exam did not start');
   assert.equal(api.examManager.state('exam-1')?.student, 'Test Student');
 
@@ -189,17 +189,17 @@ test('an exam: start, submit a question, finish, and hand in a results file', as
   const answer = api.examManager.answerFile(exam, question);
   fs.mkdirSync(path.dirname(answer), { recursive: true });
   fs.writeFileSync(answer, read(path.join(ROOT, 'exams', 'exam-1', 'parking-fee', 'Solution.java')));
-  await vscode.commands.executeCommand('sphynx.open', 'exam:exam-1:parking-fee');
+  await vscode.commands.executeCommand('sphinx.open', 'exam:exam-1:parking-fee');
   // Exams confirm before using up one of the limited submissions.
   dialogs.answer = (m, buttons) => (m.startsWith('Submit your answer') ? buttons.find((b) => b === 'Submit') : undefined);
-  await vscode.commands.executeCommand('sphynx.submit', 'exam:exam-1:parking-fee');
+  await vscode.commands.executeCommand('sphinx.submit', 'exam:exam-1:parking-fee');
   assert.equal(api.examManager.state('exam-1')?.questions['parking-fee']?.bestEarned, 20);
   assert.equal(api.examManager.state('exam-1')?.questions['parking-fee']?.submissions, 1);
   assert.equal(api.progress.get('exam:exam-1:parking-fee'), undefined, 'exam questions do not count as practice');
   assert.deepEqual(api.examManager.state('exam-1')?.warnings, [], 'nothing suspicious was recorded');
 
   dialogs.answer = (m, buttons) => buttons.find((b) => b === 'Finish Exam');
-  await vscode.commands.executeCommand('sphynx.finishExam', 'exam-1');
+  await vscode.commands.executeCommand('sphinx.finishExam', 'exam-1');
   const state = api.examManager.state('exam-1');
   assert.ok(state?.finishedAt, 'the exam did not finish');
   const results = JSON.parse(read(state!.resultsFile!));
@@ -209,7 +209,7 @@ test('an exam: start, submit a question, finish, and hand in a results file', as
 });
 
 test('importing a teacher\'s folder adds its challenge and can strip the solutions', async () => {
-  const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-share-'));
+  const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-share-'));
   const dir = path.join(folder, 'class-demo');
   fs.cpSync(path.join(ROOT, 'challenges', 'fizzbuzz'), dir, { recursive: true });
   const meta = JSON.parse(read(path.join(dir, 'challenge.json')));
@@ -217,7 +217,7 @@ test('importing a teacher\'s folder adds its challenge and can strip the solutio
   dialogs.openDialog = [vscode.Uri.file(folder)];
   dialogs.quickPick = 0; // Remove the solutions
   dialogs.answer = () => undefined;
-  await vscode.commands.executeCommand('sphynx.importContent');
+  await vscode.commands.executeCommand('sphinx.importContent');
   const imported = api.challenges().find((c) => c.title === 'Class Demo');
   assert.ok(imported, 'the challenge was not imported');
   assert.equal(fs.readdirSync(imported.dir).some((f) => f.startsWith('Solution')), false, 'solutions were not removed');
@@ -226,7 +226,7 @@ test('importing a teacher\'s folder adds its challenge and can strip the solutio
 
 test('the teacher view lists the teacher\'s exams, own content and tools, and switches back', async () => {
   assert.equal(api.view(), 'student');
-  await vscode.commands.executeCommand('sphynx.switchToTeacherView');
+  await vscode.commands.executeCommand('sphinx.switchToTeacherView');
   assert.equal(api.view(), 'teacher');
   const t = api.teacherTree;
   const label = (n: unknown) => String(t.getTreeItem(n as never).label);
@@ -240,17 +240,17 @@ test('the teacher view lists the teacher\'s exams, own content and tools, and sw
   assert.ok(t.getChildren(tools).map(label).includes("Verify Students' Exam Results…"));
   // Questions open their source file for editing.
   const question = t.getChildren(t.getChildren(exams)[0]!)[0]!;
-  assert.equal(t.getTreeItem(question as never).command?.command, 'sphynx.editItem');
-  await vscode.commands.executeCommand('sphynx.switchToStudentView');
+  assert.equal(t.getTreeItem(question as never).command?.command, 'sphinx.editItem');
+  await vscode.commands.executeCommand('sphinx.switchToStudentView');
   assert.equal(api.view(), 'student');
 });
 
 test('a teacher previews an exam without touching the real attempt, and can restart it', async () => {
-  await vscode.commands.executeCommand('sphynx.switchToTeacherView');
+  await vscode.commands.executeCommand('sphinx.switchToTeacherView');
   const exam = api.exams().find((e) => e.id === 'exam-2')!;
   dialogs.inputBox = 'Teacher';
   dialogs.answer = (m, buttons) => (m.startsWith('Start') ? buttons[0] : undefined);
-  await vscode.commands.executeCommand('sphynx.previewExam', { kind: 'exam', exam });
+  await vscode.commands.executeCommand('sphinx.previewExam', { kind: 'exam', exam });
   assert.ok(api.examManager.state('exam-2--preview'), 'the preview did not start');
   assert.equal(api.examManager.state('exam-2'), undefined, 'the real exam must not start');
 
@@ -267,19 +267,19 @@ test('a teacher previews an exam without touching the real attempt, and can rest
   // Restarting clears the preview (state and answers) only.
   const answers = path.join(path.dirname(api.examManager.answerFile(api.exams().find((e) => e.id === 'exam-2--preview')!, exam.questions[1])));
   dialogs.answer = (_m, buttons) => buttons.find((b) => b === 'Restart Preview');
-  await vscode.commands.executeCommand('sphynx.restartPreview', { kind: 'preview', exam: api.exams().find((e) => e.id === 'exam-2--preview') });
+  await vscode.commands.executeCommand('sphinx.restartPreview', { kind: 'preview', exam: api.exams().find((e) => e.id === 'exam-2--preview') });
   assert.equal(api.examManager.state('exam-2--preview'), undefined);
   assert.equal(fs.existsSync(path.dirname(answers)), false, 'the preview answers were not removed');
-  await vscode.commands.executeCommand('sphynx.switchToStudentView');
+  await vscode.commands.executeCommand('sphinx.switchToStudentView');
 });
 
 test('a teacher exports an exam as a pack for students, without the solutions', async () => {
   const exam = api.exams().find((e) => e.id === 'exam-1')!;
-  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-export-'));
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-export-'));
   dialogs.quickPick = 0; // the preselected exam, then "For students"
   dialogs.saveDialog = vscode.Uri.file(path.join(out, 'class-7b.zip'));
   dialogs.answer = () => undefined;
-  await vscode.commands.executeCommand('sphynx.exportPack', { kind: 'exam', exam });
+  await vscode.commands.executeCommand('sphinx.exportPack', { kind: 'exam', exam });
   const zip = path.join(out, 'class-7b.zip');
   assert.ok(fs.existsSync(zip), 'no pack was written');
   const dest = path.join(out, 'extracted');
@@ -293,7 +293,7 @@ test('a teacher exports an exam as a pack for students, without the solutions', 
 test('the class results dashboard summarizes the files students handed in, and catches an edited score', async () => {
   // The real results file from the exam test, plus a copy whose quiz score was edited by hand.
   const real = api.examManager.state('exam-1')!.resultsFile!;
-  const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-class-'));
+  const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-class-'));
   fs.copyFileSync(real, path.join(folder, 'results-test-student.json'));
   const tampered = JSON.parse(read(real));
   tampered.student = 'Edited Score';
@@ -304,7 +304,7 @@ test('the class results dashboard summarizes the files students handed in, and c
 
   dialogs.openDialog = [vscode.Uri.file(folder)];
   const exam = api.exams().find((e) => e.id === 'exam-1')!;
-  const report = (await vscode.commands.executeCommand('sphynx.classResults', { kind: 'exam', exam })) as ClassReport;
+  const report = (await vscode.commands.executeCommand('sphinx.classResults', { kind: 'exam', exam })) as ClassReport;
   assert.ok(report, 'the dashboard did not open');
   assert.deepEqual(report.rows.map((r) => `${r.student}:${r.earned}`), ['Edited Score:40', 'Test Student:20']);
   assert.deepEqual(report.stats, { count: 2, average: 30, median: 30, highest: 40, lowest: 20 });
@@ -318,8 +318,29 @@ test('the class results dashboard summarizes the files students handed in, and c
   fs.rmSync(folder, { recursive: true, force: true });
 });
 
+test('state saved under the old "sphynx." keys moves to "sphinx." keys, once', () => {
+  const data = new Map<string, unknown>([
+    ['sphynx.progress', { 'hello-world': { solved: true } }],
+    ['sphynx.subject', 'cs'],
+    ['sphinx.subject', 'java'],
+  ]);
+  const memento = {
+    keys: () => [...data.keys()],
+    get: (key: string, fallback?: unknown) => (data.has(key) ? data.get(key) : fallback),
+    update: (key: string, value: unknown) => {
+      if (value === undefined) data.delete(key);
+      else data.set(key, value);
+      return Promise.resolve();
+    },
+  } as unknown as vscode.Memento;
+  migrateSphynxState(memento);
+  assert.deepEqual(data.get('sphinx.progress'), { 'hello-world': { solved: true } });
+  assert.equal(data.get('sphinx.subject'), 'java', 'a value already saved under the new key wins');
+  assert.deepEqual([...data.keys()].filter((k) => k.startsWith('sphynx.')), [], 'old keys are removed, so a reset stays a reset');
+});
+
 test('the imported library and saved solutions move over from the old extension id', () => {
-  const storageRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-storage-'));
+  const storageRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-storage-'));
   const old = path.join(storageRoot, 'class-plugin.sphynx');
   fs.mkdirSync(path.join(old, 'library', 'challenges', 'x'), { recursive: true });
   fs.writeFileSync(path.join(old, 'library', 'challenges', 'x', 'challenge.json'), '{}');

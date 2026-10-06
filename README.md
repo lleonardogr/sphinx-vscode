@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="media/logo/banner.png" alt="Sphynx: a geometric sphinx sitting between code brackets" width="100%">
+  <img src="media/logo/banner.png" alt="Sphinx: a geometric sphinx sitting between code brackets" width="100%">
 </p>
 
-# Sphynx for VS Code
+# Sphinx Challenges for VS Code
 
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/lleonardogr.sphynx?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/lleonardogr.sphynx)](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)
@@ -11,17 +11,17 @@
 [![Release](https://img.shields.io/github/v/release/lleonardogr/sphynx-vscode)](https://github.com/lleonardogr/sphynx-vscode/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-> *Like the sphinx of the legend, Sphynx asks you questions, and you only pass if you answer them right.*
+> *Like the sphinx of the legend, Sphinx asks you questions, and you only pass if you answer them right.*
 
 HackerRank / LeetCode-style coding challenges right inside VS Code, in **English or Portuguese**, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. Two subjects ship with it: **Java Programming**, from the basic syntax to data structures, object-oriented programming and the Stream API, and **CS Fundamentals**, the theory new students need about how computers work, starting with number systems.
 
 📘 **Guides:** [Creating your own challenges](docs/creating-challenges.md) · [Tests](docs/creating-challenges.md#tests-mixed-challenges) · [Quizzes](docs/quizzes.md) · [Exams](docs/exams.md) · [AI hints](docs/ai-hints.md)
 
-Students pick a challenge from the **Sphynx** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
+Students pick a challenge from the **Sphinx** sidebar. The problem statement opens on the left and a `Main.java` file on the right. **Run** checks the sample tests, **Run with this input** and **Run in Terminal** let them try their own input, and **Submit** also runs the hidden tests and marks the challenge as solved.
 
-**[Install from the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)**, or search for **Sphynx** in the Extensions view. Using **Cursor**, VSCodium or Windsurf? It's on **[Open VSX](https://open-vsx.org/extension/lleonardogr/sphynx)** too.
+**[Install from the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)**, or search for **Sphinx** in the Extensions view. Using **Cursor**, VSCodium or Windsurf? It's on **[Open VSX](https://open-vsx.org/extension/lleonardogr/sphynx)** too.
 
-![Solving FizzBuzz in Sphynx: write the code, run the sample tests, submit, and the challenge is marked as solved](media/screenshots/demo.gif)
+![Solving FizzBuzz in Sphinx: write the code, run the sample tests, submit, and the challenge is marked as solved](media/screenshots/demo.gif)
 
 ## The learning path (100 challenges)
 
@@ -73,7 +73,7 @@ Each item shows the Java it needs, with your progress: for example **Needs: Java
 - **Run in Terminal** compiles the program and runs it in an interactive terminal, so students can type input while it runs and see exactly what it prints.
 - **Clear feedback**: compiler errors show as red squiggles and link to the line, each test shows Expected vs. Your output with the first differing line, and the panel reports runtime exceptions and time-limit (infinite loop) failures.
 - **Hidden tests** catch edge cases like negative numbers, zero and overflow, without revealing their input.
-- **Modern Java by default, classic on request**: starter code uses Java 25+ compact source files (`void main()`, `IO.println`). Set `sphynx.java.style` to `classic` for `public class Main` starter code. Either style is **always accepted**, because only the output is checked.
+- **Modern Java by default, classic on request**: starter code uses Java 25+ compact source files (`void main()`, `IO.println`). Set `sphinx.java.style` to `classic` for `public class Main` starter code. Either style is **always accepted**, because only the output is checked.
 - **Syntax requirements**: a challenge can require constructs (for example "use a `switch`", "create `class Square extends Shape`" or "keep `balance` private") or forbid shortcuts (`Math.max`, `reverse()`, `Math.pow`).
 - **AI hints (optional, off by default)**: an AI tutor gives one hint at a time about your current code, without writing the solution. It works with a **local model** (Ollama, LM Studio: free and private), **your own API key** (Anthropic Claude or any OpenAI-compatible API), or VS Code's language models (GitHub Copilot). API keys are stored in VS Code's encrypted secret storage. See [AI hints](docs/ai-hints.md).
 - **Tests**: bigger challenges that **mix several units** in one program, listed at the end of the unit they close, such as a console app with a menu (`1. Add`, `2. List`, `0. Exit`). Each one shows the skills it combines, and is graded by feeding it whole sequences of menu choices.
@@ -87,7 +87,7 @@ Each item shows the Java it needs, with your progress: for example **Needs: Java
 - **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/100 solved` counter for the current subject in the status bar.
 - **Group by**: the filter button at the top of the sidebar groups challenges by **learning path** (units, the default), **difficulty** (Easy, Medium, Hard, then quizzes) or **progress** (not started, in progress, solved). The choice is remembered.
 
-> **Upgrading from Tech Challenges?** Sphynx is the same extension with a new name. Install Sphynx and uninstall Tech Challenges. Your settings (`techChallenges.*` → `sphynx.*`) are copied over automatically, and your code in `tech-challenges/` keeps being used. Solved-challenge progress and saved AI keys start fresh.
+> **Upgrading from Tech Challenges?** Sphinx is the same extension with a new name. Install Sphinx and uninstall Tech Challenges. Your settings (`techChallenges.*` → `sphinx.*`) are copied over automatically, and your code in `tech-challenges/` keeps being used. Solved-challenge progress and saved AI keys start fresh.
 
 ## Getting started (students)
 
@@ -101,22 +101,22 @@ javac -version   # should print javac 25 or newer
 
 If you can only use JDK 17–24, that works too: the extension offers to switch to classic Java.
 
-Sphynx checks Java when it starts. If something is wrong, it warns you and shows **Java isn't ready** at the top of the sidebar. Run **Sphynx: Check Java Setup** at any time for a full report: which `javac` and `java` were found, their versions, whether modern and classic Java really compile and run, and how to fix each problem. If your JDK isn't on the PATH, **Sphynx: Choose JDK Folder…** points Sphynx at it. After installing Java, restart VS Code so it sees the new PATH.
+Sphinx checks Java when it starts. If something is wrong, it warns you and shows **Java isn't ready** at the top of the sidebar. Run **Sphinx: Check Java Setup** at any time for a full report: which `javac` and `java` were found, their versions, whether modern and classic Java really compile and run, and how to fix each problem. If your JDK isn't on the PATH, **Sphinx: Choose JDK Folder…** points Sphinx at it. After installing Java, restart VS Code so it sees the new PATH.
 
 ### 2. Install the extension
 
-1. Install **Sphynx** from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx): open the **Extensions** view (`Ctrl+Shift+X` / `Cmd+Shift+X`), search for **Sphynx**, and click **Install**.
+1. Install **Sphinx** from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx): open the **Extensions** view (`Ctrl+Shift+X` / `Cmd+Shift+X`), search for **Sphinx**, and click **Install**.
 
    Or, in a terminal: `code --install-extension lleonardogr.sphynx`
 
-   In **Cursor**, VSCodium or Windsurf, search for **Sphynx** the same way: it comes from [Open VSX](https://open-vsx.org/extension/lleonardogr/sphynx).
+   In **Cursor**, VSCodium or Windsurf, search for **Sphinx** the same way: it comes from [Open VSX](https://open-vsx.org/extension/lleonardogr/sphynx).
 
    No internet in the classroom? Download **`sphynx-x.y.z.vsix`** from the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) and use **Install from VSIX…** in the Extensions view's **`...`** menu.
-2. Open a folder for your work (**File → Open Folder…**). Your code is saved in `sphynx/<challenge>/Main.java` inside it.
+2. Open a folder for your work (**File → Open Folder…**). Your code is saved in `sphinx/<challenge>/Main.java` inside it.
 
 ### 3. Solve your first challenge
 
-1. Click the **Sphynx** icon in the Activity Bar (left side) and choose **Hello, World!** The problem opens on the left and your `Main.java` on the right.
+1. Click the **Sphinx** icon in the Activity Bar (left side) and choose **Hello, World!** The problem opens on the left and your `Main.java` on the right.
 2. Read the description and examples, then write your code.
 3. Check your work, in whichever way suits you:
 
@@ -162,16 +162,16 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 
 | Setting | Default | Description |
 | ------- | ------- | ----------- |
-| `sphynx.language` | `en` | Language of Sphynx: `en` (English) or `pt-br` (Português do Brasil). Challenges, quizzes, exams, panels and messages switch at once; the program's output stays the same in both. |
-| `sphynx.java.style` | `modern` | Starter code style for new challenges: `modern` (JDK 25+) or `classic` (JDK 17+). Use **Reset Code to Starter** to switch a challenge you already opened. |
-| `sphynx.java.home` | (empty) | The JDK folder, if `javac` is not on your PATH. |
-| `sphynx.codeFolder` | (empty) | Where solutions are saved. |
-| `sphynx.extraChallengePaths` | `[]` | Extra challenge folders provided by your teacher. |
-| `sphynx.ai.provider` | `off` | AI hints provider: `ollama`, `lmstudio`, `anthropic`, `openai-compatible` or `vscode`. Run **Set Up AI Hints** for a guided setup. |
+| `sphinx.language` | `en` | Language of Sphinx: `en` (English) or `pt-br` (Português do Brasil). Challenges, quizzes, exams, panels and messages switch at once; the program's output stays the same in both. |
+| `sphinx.java.style` | `modern` | Starter code style for new challenges: `modern` (JDK 25+) or `classic` (JDK 17+). Use **Reset Code to Starter** to switch a challenge you already opened. |
+| `sphinx.java.home` | (empty) | The JDK folder, if `javac` is not on your PATH. |
+| `sphinx.codeFolder` | (empty) | Where solutions are saved. |
+| `sphinx.extraChallengePaths` | `[]` | Extra challenge folders provided by your teacher. |
+| `sphinx.ai.provider` | `off` | AI hints provider: `ollama`, `lmstudio`, `anthropic`, `openai-compatible` or `vscode`. Run **Set Up AI Hints** for a guided setup. |
 
 ## For teachers
 
-Click the 💼 button at the top of the Sphynx sidebar (**Switch to Teacher View**) to open the **teacher view**. It lists **My Exams** (with their questions; click one to edit it, or press ▶ **Try Exam (Preview)** to take the exam yourself with the real timer and rules, in a practice attempt you can restart that never counts as a real one), **My Challenges & Quizzes** (what you created or imported; click one to try it), and the **Tools**: create, import, **export a pack** for your class (a `.zip` they import with one click, without the solutions), validate, and open your class's results as a **dashboard** (scores per question, time away, warnings, verification, CSV export). The 🎓 button switches back to the **student view**, where you can practise the learning path like your students.
+Click the 💼 button at the top of the Sphinx sidebar (**Switch to Teacher View**) to open the **teacher view**. It lists **My Exams** (with their questions; click one to edit it, or press ▶ **Try Exam (Preview)** to take the exam yourself with the real timer and rules, in a practice attempt you can restart that never counts as a real one), **My Challenges & Quizzes** (what you created or imported; click one to try it), and the **Tools**: create, import, **export a pack** for your class (a `.zip` they import with one click, without the solutions), validate, and open your class's results as a **dashboard** (scores per question, time away, warnings, verification, CSV export). The 🎓 button switches back to the **student view**, where you can practise the learning path like your students.
 
 ### Share the extension with your class
 
@@ -182,7 +182,7 @@ To build the `.vsix` yourself:
 ```bash
 npm install
 npm run validate   # compiles the extension and checks every challenge against its reference solutions
-npm run package    # creates sphynx-<version>.vsix
+npm run package    # creates sphinx-<version>.vsix
 ```
 
 For a classroom without internet access, AI hints can use a model running on each computer, or on a school server. See [AI hints → For teachers](docs/ai-hints.md#for-teachers).
@@ -191,7 +191,7 @@ For a classroom without internet access, AI hints can use a model running on eac
 
 Everything you need is in **[docs/creating-challenges.md](docs/creating-challenges.md)**: a 5-minute quick start, the file format, writing tests, the rules cookbook, validating, and sharing challenges with your class without rebuilding the extension.
 
-In short: run **Sphynx: Create New Challenge…**, edit the generated files, then run **Sphynx: Validate Challenges in a Folder…** to check everything and fill in the expected outputs. Challenges without a `topic` appear in the **Custom** group. The [`custom/`](custom/) folder has three examples you can copy.
+In short: run **Sphinx: Create New Challenge…**, edit the generated files, then run **Sphinx: Validate Challenges in a Folder…** to check everything and fill in the expected outputs. Challenges without a `topic` appear in the **Custom** group. The [`custom/`](custom/) folder has three examples you can copy.
 
 ### Give an exam
 
@@ -214,7 +214,7 @@ Write an `exam.json` (title, duration, open or closed, submissions per question,
 
 ```bash
 git clone https://github.com/lleonardogr/sphynx-vscode.git
-cd sphynx-vscode
+cd sphinx-vscode
 npm install        # dependencies + the commit-message hook
 npm run compile    # type-check and build to out/
 ```

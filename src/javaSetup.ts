@@ -1,5 +1,5 @@
 // "Check Java Setup": runs the Java check, explains each problem with its fix, and lets the
-// student point Sphynx at a JDK folder. A silent check also runs when Sphynx starts, so a missing
+// student point Sphinx at a JDK folder. A silent check also runs when Sphinx starts, so a missing
 // or broken Java shows up before the first Run, not after it.
 import * as fs from 'fs';
 import * as path from 'path';
@@ -26,7 +26,7 @@ export function problemText(p: JavaProblem): { title: string; fix: string } {
       };
     case 'tooOld':
       return {
-        title: tr(`Your JDK is version ${p.version}, which is too old for Sphynx.`, `Seu JDK é a versão ${p.version}, antiga demais para o Sphynx.`),
+        title: tr(`Your JDK is version ${p.version}, which is too old for Sphinx.`, `Seu JDK é a versão ${p.version}, antiga demais para o Sphinx.`),
         fix: tr(
           `Install JDK ${MIN_MODERN} or newer (at least ${MIN_CLASSIC} for classic Java), then restart VS Code or use "Choose JDK Folder…".`,
           `Instale o JDK ${MIN_MODERN} ou mais novo (pelo menos o ${MIN_CLASSIC} para Java clássico) e reinicie o VS Code, ou use "Escolher a pasta do JDK…".`,
@@ -51,7 +51,7 @@ export function problemText(p: JavaProblem): { title: string; fix: string } {
     case 'noModern':
       return {
         title: tr(`Your JDK ${p.version} can't run the modern Java starters (they need JDK ${MIN_MODERN}).`, `Seu JDK ${p.version} não roda os códigos iniciais em Java moderno (eles precisam do JDK ${MIN_MODERN}).`),
-        fix: tr('Install JDK 25 or newer, or set sphynx.java.style to "classic". Classic Java works with your JDK.', 'Instale o JDK 25 ou mais novo, ou defina sphynx.java.style como "classic". O Java clássico funciona com o seu JDK.'),
+        fix: tr('Install JDK 25 or newer, or set sphinx.java.style to "classic". Classic Java works with your JDK.', 'Instale o JDK 25 ou mais novo, ou defina sphinx.java.style como "classic". O Java clássico funciona com o seu JDK.'),
       };
   }
 }
@@ -85,13 +85,13 @@ export class JavaSetup implements vscode.Disposable {
     return this.report;
   }
 
-  /** Runs in the background when Sphynx starts: warns once per session if Java can't run code. */
+  /** Runs in the background when Sphinx starts: warns once per session if Java can't run code. */
   async checkQuietly(): Promise<void> {
     const report = await this.run();
     if (blocking(report).length && !this.warned) {
       this.warned = true;
       const first = problemText(blocking(report)[0]);
-      void this.offerFixes(`${tr('Sphynx can\'t run Java yet.', 'O Sphynx ainda não consegue rodar Java.')} ${first.title}`);
+      void this.offerFixes(`${tr('Sphinx can\'t run Java yet.', 'O Sphinx ainda não consegue rodar Java.')} ${first.title}`);
     }
   }
 
@@ -113,7 +113,7 @@ export class JavaSetup implements vscode.Disposable {
       const p = problemText(report.problems[0]);
       vscode.window.showWarningMessage(`${tr('Java works, with one limit:', 'O Java funciona, com uma limitação:')} ${p.title} ${p.fix}`);
     } else {
-      await this.offerFixes(`${problemText(blocking(report)[0]).title} ${tr('See the "Sphynx" output for details.', 'Veja os detalhes na saída "Sphynx".')}`);
+      await this.offerFixes(`${problemText(blocking(report)[0]).title} ${tr('See the "Sphinx" output for details.', 'Veja os detalhes na saída "Sphinx".')}`);
     }
   }
 
@@ -133,7 +133,7 @@ export class JavaSetup implements vscode.Disposable {
     }
   }
 
-  /** Lets the student pick a JDK folder, checks it has bin/javac, saves it as sphynx.java.home and checks again. */
+  /** Lets the student pick a JDK folder, checks it has bin/javac, saves it as sphinx.java.home and checks again. */
   async chooseJdkFolder(): Promise<void> {
     const picked = await vscode.window.showOpenDialog({
       canSelectFolders: true,
@@ -154,7 +154,7 @@ export class JavaSetup implements vscode.Disposable {
       vscode.window.showErrorMessage(tr(`${folder} is not a JDK: it has no bin/javac.`, `${folder} não é um JDK: não tem bin/javac.`));
       return;
     }
-    await vscode.workspace.getConfiguration('sphynx').update('java.home', folder, vscode.ConfigurationTarget.Global);
+    await vscode.workspace.getConfiguration('sphinx').update('java.home', folder, vscode.ConfigurationTarget.Global);
     await this.checkInteractively();
   }
 
@@ -166,7 +166,7 @@ export class JavaSetup implements vscode.Disposable {
       tr('=== Java setup ===', '=== Instalação do Java ==='),
       `javac: ${r.javacPath ?? r.javacCommand} ${r.javacVersion !== undefined ? `(JDK ${r.javacVersion})` : tr('(not found)', '(não encontrado)')}`,
       `java:  ${r.javaPath ?? r.javaCommand} ${r.javaVersion !== undefined ? `(${r.javaVersion})` : tr('(not found)', '(não encontrado)')}`,
-      `sphynx.java.home: ${r.javaHomeSetting ?? tr('(not set: using the PATH)', '(não definido: usando o PATH)')}`,
+      `sphinx.java.home: ${r.javaHomeSetting ?? tr('(not set: using the PATH)', '(não definido: usando o PATH)')}`,
       `JAVA_HOME: ${r.javaHomeEnv ?? tr('(not set)', '(não definido)')}`,
       `${tr('Classic Java runs', 'Java clássico roda')}: ${r.classicWorks ? yes : no}`,
       `${tr(`Modern Java (JDK ${MIN_MODERN}+) runs`, `Java moderno (JDK ${MIN_MODERN}+) roda`)}: ${r.modernWorks ? yes : no}`,

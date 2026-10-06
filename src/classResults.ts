@@ -3,6 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import type { ExamResultsFile } from './examSession';
+import { isResultsFormat } from './exams';
 
 export interface StudentRow {
   file: string;
@@ -36,7 +37,7 @@ export interface ClassReport {
 
 const round = (n: number, digits = 2) => Math.round(n * 10 ** digits) / 10 ** digits;
 
-/** Results files (*.json with format "sphynx-exam-results") in the given files and folders, two levels deep. */
+/** Results files (*.json with format "sphinx-exam-results") in the given files and folders, two levels deep. */
 export function findResultsFiles(paths: string[]): string[] {
   const out: string[] = [];
   const visit = (p: string, depth: number) => {
@@ -68,7 +69,7 @@ export function readResults(files: string[]): { results: { file: string; data: E
   for (const file of files) {
     try {
       const data = JSON.parse(fs.readFileSync(file, 'utf8')) as ExamResultsFile;
-      if (data?.format !== 'sphynx-exam-results' || !data.exam?.id || !Array.isArray(data.questions)) {
+      if (!isResultsFormat(data?.format) || !data.exam?.id || !Array.isArray(data.questions)) {
         continue; // not a results file (other JSON in the folder)
       }
       results.push({ file, data });

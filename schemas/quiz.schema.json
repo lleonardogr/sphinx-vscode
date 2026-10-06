@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/lleonardogr/sphynx-vscode/blob/main/schemas/quiz.schema.json",
-  "title": "Sphynx quiz",
+  "title": "Sphinx quiz",
   "description": "A set of questions about Java. Lives in <folder>/<quiz-id>/quiz.json. Guide: docs/quizzes.md",
   "type": "object",
   "required": [

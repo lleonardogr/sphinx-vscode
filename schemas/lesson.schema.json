@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Sphynx lesson",
+  "title": "Sphinx lesson",
   "description": "A lesson: lesson.json plus lesson.md (and lesson.<lang>.md for translations) in one folder. See docs/creating-challenges.md#lessons.",
   "type": "object",
   "required": [

@@ -2,7 +2,7 @@ node_modules/
 out/
 *.vsix
 tech-challenges/
-sphynx/
+sphinx/
 java-challenges/
 .vscode-test/
 .DS_Store
