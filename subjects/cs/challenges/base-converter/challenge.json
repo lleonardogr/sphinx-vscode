@@ -1,0 +1,92 @@
+{
+  "title": "Base Converter",
+  "topic": "NumberSystems",
+  "requires": [
+    "Methods"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Split the work in two methods: toValue (from any base to a long) and inBase (from a long to any base). Every conversion goes through the long in the middle.",
+    "Keep the digits in one String, \"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ\": a digit's value is its index, and a digit is valid for base b when its index is less than b.",
+    "Check the bases first, then every digit of the number, before converting. Remember that 0 is \"0\" in every base."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Conversor de bases",
+      "hints": [
+        "Divida o trabalho em dois métodos: toValue (de qualquer base para um long) e inBase (de um long para qualquer base). Toda conversão passa pelo long no meio.",
+        "Guarde os dígitos numa String, \"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ\": o valor de um dígito é o índice dele, e um dígito vale na base b quando o índice é menor que b.",
+        "Confira primeiro as bases e depois cada dígito do número, antes de converter. Lembre que 0 é \"0\" em qualquer base."
+      ],
+      "mustContain": [
+        "Use um laço para percorrer os dígitos."
+      ],
+      "mustNotContain": [
+        "Escreva as conversões e a tabela de dígitos você mesmo, sem atalhos prontos."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to go through the digits."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "(parse(Int|Long|UnsignedInt|UnsignedLong)|valueOf)\\s*\\([^;]*,\\s*\\w+\\s*\\)|BigInteger|\\.decode\\s*\\(|HexFormat|toString\\s*\\([^;]*,\\s*\\w+\\s*\\)|Character\\s*\\.\\s*(digit|forDigit)",
+      "message": "Write the conversions and the digit table yourself, without library shortcuts."
+    }
+  ],
+  "tests": [
+    {
+      "input": "255 10 16\n",
+      "output": "FF\n"
+    },
+    {
+      "input": "1101 2 10\n",
+      "output": "13\n"
+    },
+    {
+      "input": "ZZ 36 10\n",
+      "output": "1295\n",
+      "hidden": true
+    },
+    {
+      "input": "777 8 2\n",
+      "output": "111111111\n",
+      "hidden": true
+    },
+    {
+      "input": "0 10 2\n",
+      "output": "0\n",
+      "hidden": true
+    },
+    {
+      "input": "1A 10 2\n",
+      "output": "Invalid digit A for base 10\n",
+      "hidden": true
+    },
+    {
+      "input": "12 1 10\n",
+      "output": "Invalid base\n",
+      "hidden": true
+    },
+    {
+      "input": "7FFFFFFFFFFFFFFF 16 36\n",
+      "output": "1Y2P0IJ32E8E7\n",
+      "hidden": true
+    },
+    {
+      "input": "zz 36 16\n",
+      "output": "50F\n",
+      "hidden": true
+    },
+    {
+      "input": "10 2 37\n",
+      "output": "Invalid base\n",
+      "hidden": true
+    }
+  ]
+}

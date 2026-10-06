@@ -9,6 +9,7 @@
 // Requires `npm run compile` first (it reuses the extension's validator).
 const path = require('path');
 const { validateChallenges, formatReport, reportPassed } = require('../out/validator');
+const { loadSubjects, setSubjects, allSubjects, subjectContentRoots } = require('../out/subjects');
 
 async function main() {
   const args = process.argv.slice(2);
@@ -17,10 +18,16 @@ async function main() {
   const strict = args.includes('--strict');
   // --lang=pt-br: also report missing translations in that language (repeatable).
   const languages = args.filter((a) => a.startsWith('--lang=')).map((a) => a.slice('--lang='.length));
-  const roots = args.filter((a) => !a.startsWith('--'));
-  if (roots.length === 0) roots.push(...['challenges', 'custom', 'tests', 'exams', 'quizzes'].map((dir) => path.join(__dirname, '..', dir)));
+  // Subjects first: they define the units that "topic", "unit" and "requires" refer to.
+  const subjects = loadSubjects([path.join(__dirname, '..', 'subjects')]);
+  subjects.errors.forEach((e) => console.error(`✗ ${e}`));
+  setSubjects(subjects.subjects);
+  const subjectRoots = allSubjects().flatMap(subjectContentRoots);
 
-  const builtIn = ['challenges', 'custom', 'tests', 'quizzes'].map((dir) => path.join(__dirname, '..', dir));
+  const roots = args.filter((a) => !a.startsWith('--'));
+  if (roots.length === 0) roots.push(...['challenges', 'custom', 'tests', 'exams', 'quizzes'].map((dir) => path.join(__dirname, '..', dir)), ...subjectRoots);
+
+  const builtIn = [...['challenges', 'custom', 'tests', 'quizzes'].map((dir) => path.join(__dirname, '..', dir)), ...subjectRoots];
   const report = await validateChallenges(roots, {
     generate,
     strict,
@@ -30,7 +37,7 @@ async function main() {
   });
   process.stdout.write('\n');
   console.log(formatReport(report, generate).join('\n'));
-  process.exit(reportPassed(report) ? 0 : 1);
+  process.exit(reportPassed(report) && subjects.errors.length === 0 ? 0 : 1);
 }
 
 main();

@@ -9,10 +9,13 @@ import { Challenge, loadChallenges } from './challenges';
 import { RunOutcome, RunRequest, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
 import { findExamDirs, loadExams } from './exams';
 import { findQuizDirs, isWholeProgram, loadQuiz, loadQuizzes, quizProgram } from './quizzes';
+import { findLessonDirs, loadLesson } from './lessons';
+import { unitKey } from './path';
+import { findSubject } from './subjects';
 
 export interface ChallengeReport {
-  /** "quiz" reports count questions in `tests` and code snippets run in `solutions`. */
-  kind?: 'quiz';
+  /** "quiz" reports count questions in `tests` and code snippets run in `solutions`; "lesson" reports count words in `tests`. */
+  kind?: 'quiz' | 'lesson';
   id: string;
   dir: string;
   ok: boolean;
@@ -69,8 +72,26 @@ function describe(outcome: RunOutcome): string {
   }
 }
 
+/** Prerequisites must name units that exist in some subject, and "subject" a subject (see subjects.ts). */
+function referenceProblems(item: { requires: string[]; subject?: string }): string[] {
+  return [
+    ...item.requires.filter((r) => !unitKey(r)).map((r) => `"requires" lists "${r}", which is not a unit of any subject`),
+    ...(item.subject && !findSubject(item.subject) ? [`"subject" is "${item.subject}", which is not a subject`] : []),
+  ];
+}
+
+/** An exam's optional "subject" must name a subject (without one, its questions decide). */
+function examSubjectProblems(dir: string): string[] {
+  try {
+    const { subject } = JSON.parse(fs.readFileSync(path.join(dir, 'exam.json'), 'utf8'));
+    return typeof subject === 'string' && subject.trim() && !findSubject(subject.trim()) ? [`${dir}: "subject" is "${subject}", which is not a subject`] : [];
+  } catch {
+    return []; // reported by loadExams
+  }
+}
+
 async function validateOne(c: Challenge, javacVersion: number | undefined, opts: ValidateOptions, counters: { checked: number; skipped: number }): Promise<ChallengeReport> {
-  const problems: string[] = [];
+  const problems: string[] = [...referenceProblems(c)];
   const files = fs.readdirSync(c.dir).sort();
   const runnable = (f: string) => f.includes('.classic.') || (javacVersion ?? 0) >= 25;
 
@@ -143,6 +164,7 @@ async function validateQuiz(dir: string, javacVersion: number | undefined, opts:
   const metaPath = path.join(dir, 'quiz.json');
   const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
   const quiz = loadQuiz(dir);
+  problems.push(...referenceProblems(quiz));
   let ran = 0;
   let changed = false;
   for (const [i, q] of quiz.questions.entries()) {
@@ -176,6 +198,32 @@ async function validateQuiz(dir: string, javacVersion: number | undefined, opts:
     fs.writeFileSync(metaPath, JSON.stringify(meta, null, 2) + '\n');
   }
   return { kind: 'quiz', id: quiz.id, dir, ok: problems.length === 0, tests: quiz.questions.length, solutions: ran, problems };
+}
+
+/** Lessons: they load, their unit and prerequisites exist, and (strict) they are long enough to teach. */
+function validateLesson(dir: string): ChallengeReport {
+  const problems: string[] = [];
+  const warnings: string[] = [];
+  let words = 0;
+  let id = path.basename(dir);
+  try {
+    const lesson = loadLesson(dir, 'en');
+    id = lesson.id;
+    words = lesson.body.split(/\s+/).filter(Boolean).length;
+    if (lesson.topic && !unitKey(lesson.topic)) {
+      problems.push(`"topic" is "${lesson.topic}", which is not a unit of any subject`);
+    }
+    problems.push(...referenceProblems(lesson));
+    if (words < 250) {
+      warnings.push(`lesson.md is short (${words} words; aim for 250 or more)`);
+    }
+    if (!/^##\s/m.test(lesson.body)) {
+      warnings.push('lesson.md has no "##" sections');
+    }
+  } catch (e) {
+    problems.push((e as Error).message);
+  }
+  return { kind: 'lesson', id, dir, ok: problems.length === 0, tests: words, solutions: 0, problems, warnings };
 }
 
 /**
@@ -222,6 +270,7 @@ export async function validateChallenges(roots: string[], opts: ValidateOptions 
     ...questions.errors,
     ...quizLoad.errors,
     ...loadExams(roots, [...references, ...practice.challenges], [...referenceQuizzes, ...loadQuizzes(roots).quizzes]).errors,
+    ...examDirs.flatMap(examSubjectProblems),
   ];
   const javacVersion = await javacMajorVersion(opts.javaHome);
   const counters = { checked: 0, skipped: 0 };
@@ -249,6 +298,17 @@ export async function validateChallenges(roots: string[], opts: ValidateOptions 
     reports.push(report);
     opts.onChallenge?.(report);
   }
+  for (const dir of findLessonDirs(roots)) {
+    const report = validateLesson(dir);
+    for (const lang of opts.languages ?? []) {
+      report.warnings = [...(report.warnings ?? []), ...translationProblems(dir, lang).map((p) => `${lang}: ${p}`)];
+    }
+    if (opts.strict && report.warnings?.length) {
+      report.ok = false;
+    }
+    reports.push(report);
+    opts.onChallenge?.(report);
+  }
   return { javacVersion, loadErrors: errors, challenges: reports, checkedSolutions: counters.checked, skippedSolutions: counters.skipped };
 }
 
@@ -258,13 +318,18 @@ export function formatReport(report: ValidationReport, generate = false): string
   for (const c of report.challenges) {
     const summary = c.kind === 'quiz'
       ? `quiz, ${c.tests} questions, ${c.solutions} code snippet${c.solutions === 1 ? '' : 's'} run`
-      : `${c.tests} tests × ${c.solutions} solution${c.solutions === 1 ? '' : 's'}`;
+      : c.kind === 'lesson'
+        ? `lesson, ${c.tests} words`
+        : `${c.tests} tests × ${c.solutions} solution${c.solutions === 1 ? '' : 's'}`;
     const warn = (c.warnings ?? []).map((w) => `\n  ⚠ ${w}`).join('');
     lines.push(c.problems.length ? `✗ ${c.id}\n  ${c.problems.join('\n  ')}${warn}` : `${c.ok ? '✓' : '✗'} ${c.id} (${summary})${generate ? ', outputs written' : ''}${warn}`);
   }
   const ok = report.challenges.filter((c) => c.ok).length;
   const quizzes = report.challenges.filter((c) => c.kind === 'quiz').length;
-  lines.push('', `${ok}/${report.challenges.length} ${quizzes ? 'challenges and quizzes' : 'challenges'} OK (${report.checkedSolutions} solutions${quizzes ? ' and snippets' : ''} checked)`);
+  const lessons = report.challenges.filter((c) => c.kind === 'lesson').length;
+  const what = ['challenges', quizzes ? 'quizzes' : '', lessons ? 'lessons' : ''].filter(Boolean);
+  const kinds = what.length > 1 ? `${what.slice(0, -1).join(', ')} and ${what[what.length - 1]}` : what[0];
+  lines.push('', `${ok}/${report.challenges.length} ${kinds} OK (${report.checkedSolutions} solutions${quizzes ? ' and snippets' : ''} checked)`);
   const warned = report.challenges.filter((c) => c.warnings?.length).length;
   if (warned) {
     lines.push(`⚠ ${warned} challenge(s) don't meet the content standard yet (see the ⚠ lines).`);
@@ -307,6 +372,10 @@ export function translationProblems(dir: string, lang: string): string[] {
       if (q.explanation && !tq.explanation) problems.push(`question ${i + 1}: no ${lang} explanation`);
       if (q.type === 'choice' && count(tq.options) !== count(q.options)) problems.push(`question ${i + 1}: options not translated`);
     });
+  } else if (fs.existsSync(path.join(dir, 'lesson.json'))) {
+    const meta = read('lesson.json');
+    if (!meta.translations?.[lang]?.title) problems.push(`no ${lang} title`);
+    if (!fs.existsSync(path.join(dir, `lesson.${lang}.md`))) problems.push(`no lesson.${lang}.md`);
   } else if (fs.existsSync(path.join(dir, 'exam.json'))) {
     const meta = read('exam.json');
     if (!meta.translations?.[lang]?.title) problems.push(`no ${lang} title`);

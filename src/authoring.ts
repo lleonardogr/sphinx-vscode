@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { CUSTOM_TOPIC, Challenge, TOPIC_ORDER } from './challenges';
+import { CUSTOM_TOPIC, Challenge, topicOrder } from './challenges';
 import { formatReport, reportPassed, validateChallenges } from './validator';
 import { tr } from './i18n';
 
@@ -191,7 +191,7 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
   const id = slugify(title);
 
   const NO_TOPIC = `$(star-empty) ${tr('Custom (no topic)', 'Personalizado (sem unidade)')}`;
-  const existingTopics = [...new Set([...TOPIC_ORDER, ...deps.challenges().map((c) => c.topic)])].filter((t) => t !== CUSTOM_TOPIC);
+  const existingTopics = [...new Set([...topicOrder(), ...deps.challenges().map((c) => c.topic)])].filter((t) => t !== CUSTOM_TOPIC);
   const NEW_TOPIC = `$(add) ${tr('New topic…', 'Nova unidade…')}`;
   const topicPick = await vscode.window.showQuickPick([NO_TOPIC, ...existingTopics, NEW_TOPIC], {
     title: tr('New challenge (3/4): unit', 'Novo desafio (3/4): unidade'),

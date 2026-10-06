@@ -7,6 +7,7 @@ This guide is for anyone who wants to write challenges for Sphynx: teachers prep
 - [The files](#the-files)
 - [Writing tests](#writing-tests)
 - [Tests: mixed challenges](#tests-mixed-challenges)
+- [Subjects, lessons and prerequisites](#subjects-lessons-and-prerequisites)
 - [Translating content](#translating-content)
 - [Rules: requiring or forbidding code](#rules-requiring-or-forbidding-code)
 - [Validating](#validating)
@@ -101,9 +102,11 @@ VS Code gives you **autocomplete, hover documentation and error checking** for t
 | Field | Required | Description |
 |-------|----------|-------------|
 | `title` | yes | Name shown in the sidebar and panel. |
-| `topic` | no | The unit it belongs to. The built-in units, in teaching order: `Basics`, `Conditionals`, `Loops`, `Strings`, `Methods`, `Arrays`, `Collections`, `OOP`, `Exceptions`, `Recursion` and `Streams`. Use `Tests` for a [mixed challenge](#tests-mixed-challenges). Any other name (for example `Recursion Extras`) gets its own group after the units. **Leave it out** to put the challenge in the **Custom** section at the bottom. See the examples in [`custom/`](../custom). |
+| `topic` | no | The unit it belongs to. The Java units, in teaching order: `Basics`, `Conditionals`, `Loops`, `Strings`, `Methods`, `Arrays`, `Collections`, `OOP`, `Exceptions`, `Recursion` and `Streams`; the unit also decides the subject (see [Subjects](#subjects-lessons-and-prerequisites) for the CS Fundamentals units). Use `Tests` for a [mixed challenge](#tests-mixed-challenges). Any other name (for example `Recursion Extras`) gets its own group after the units. **Leave it out** to put the challenge in the **Custom** section at the bottom. See the examples in [`custom/`](../custom). |
 | `skills` | no | Units the challenge combines, shown as badges in the panel and the sidebar tooltip. Meant for [mixed challenges](#tests-mixed-challenges). |
 | `unit` | no | For `"topic": "Tests"` only: the unit the test closes. It's listed at the end of that unit, after its quiz. Without it, the test goes to the Custom section. |
+| `requires` | no | Units the student should know first, such as `["Loops"]`. Shown with the student's progress; nothing is locked. See [Prerequisites](#prerequisites). |
+| `subject` | no | For a challenge without a unit: the subject whose Custom section lists it, such as `"cs"`. Default: `java`. |
 | `difficulty` | no | `Easy` (default), `Medium` or `Hard`. |
 | `order` | no | Position inside the topic; lower comes first. |
 | `hints` | no | Hints revealed one at a time when the student clicks **Show a hint**. Order them from gentle to specific. |
@@ -248,6 +251,71 @@ The built-in tests close a stage of the path: [Calculator Menu](../tests/calcula
 5. Add a few `mustContain` rules for the structures the test is about, such as a loop, a `List<Integer>` or a method `String letter(int grade)`. Don't make the rules too strict: there are many good ways to write a menu.
 
 Tests can also be questions in an [exam](exams.md).
+
+---
+
+## Subjects, lessons and prerequisites
+
+Sphynx teaches more than one **subject**. Each has its own units, learning path and progress counter, and students switch between them with **Switch Subject…** (📚) at the top of the sidebar, whose header shows the subject they're in. Two subjects ship with the extension:
+
+| Subject | Id | Units (the keys for `topic`), in teaching order |
+|---------|----|-------------------------------------------------|
+| Java Programming | `java` | `Basics`, `Conditionals`, `Loops`, `Strings`, `Methods`, `Arrays`, `Collections`, `OOP`, `Exceptions`, `Recursion`, `Streams` |
+| CS Fundamentals | `cs` | `Computers`, `NumberSystems`, `BitsBytes`, `NumberRepresentation`, `TextMedia`, `Logic`, `Algorithms`, `Networks` |
+
+**The unit decides the subject.** A challenge with `"topic": "NumberSystems"` is listed in CS Fundamentals and one with `"topic": "Loops"` in Java Programming. Unit keys are unique across subjects, so nothing else is needed. Content without a unit goes to the **Custom** section of Java Programming, or of the subject named in `"subject"` (for example `"subject": "cs"`). An exam is listed under the subject most of its questions come from, unless its `exam.json` has a `"subject"`.
+
+A unit appears as soon as it has content, and keeps its number: CS Fundamentals starts at **2 · Number Systems**.
+
+Subjects are defined in `subjects/<id>/subject.json` and ship with the extension, with their content in `subjects/<id>/challenges`, `quizzes`, `lessons` and `tests`. To propose a new one (C, SQL, graph theory…), open an issue.
+
+### Lessons
+
+A **lesson** is a short page to read before the quiz and challenges of its unit: the idea, why it matters, and worked examples. Lessons come first in their unit and show a reading time. When the student clicks **Mark as read**, the lesson gets a ✓ in the sidebar. A button at the end opens the next item in the path.
+
+A lesson is a folder:
+
+```
+place-value-and-binary/
+├── lesson.json
+├── lesson.md          ← the text, in Markdown
+├── lesson.pt-br.md    ← the Portuguese text
+└── place-values.svg   ← an image, used with a relative path: ![The byte 10110010](place-values.svg)
+```
+
+```json
+{
+  "title": "Place Value and Binary",
+  "topic": "NumberSystems",
+  "order": 1,
+  "translations": { "pt-br": { "title": "Valor posicional e binário" } }
+}
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `title` | yes | Shown in the sidebar and at the top of the lesson. |
+| `topic` | no | The unit it belongs to. |
+| `order` | no | Position among the unit's lessons; lower comes first. |
+| `minutes` | no | The reading time. By default it's worked out from the text, at about 180 words a minute. |
+| `requires` | no | [Prerequisites](#prerequisites), as for challenges. |
+| `subject` | no | For a lesson without a unit, as for challenges. |
+| `translations` | no | Translated titles, such as `{ "pt-br": { "title": "…" } }`. The translated text goes in `lesson.pt-br.md`. |
+
+Write for a beginner: short sections with `##` headings, a table or a diagram where it helps, and examples worked out step by step. Images must be inside the lesson's folder. The validator checks that the unit exists and warns when a lesson has fewer than 250 words or no `##` sections, or (with `--lang=pt-br`) no translation.
+
+Share your lessons through a [live folder](#sharing-a-live-folder) for now: **Import** and **Export a Pack** don't carry lessons yet.
+
+### Prerequisites
+
+Challenges, quizzes and lessons can list the units a student should know first:
+
+```json
+"topic": "NumberSystems",
+"requires": ["Loops"],
+```
+
+The sidebar shows *needs Loops* next to the item, and the panel shows **Needs: Java Programming · Loops · 7/12**, with the student's progress in that unit (green once every challenge in it is solved). Prerequisites are advice: nothing is locked. They can name a unit of any subject, which is how a CS Fundamentals challenge says which Java it needs. The validator rejects unit names that don't exist.
 
 ---
 
@@ -401,7 +469,7 @@ Students' progress is stored per challenge id, so keep ids stable after sharing.
 Challenges in this repository's `challenges/` folder ship with the extension. To add one:
 
 1. Fork the repository and run `npm install`.
-2. Create the challenge in `challenges/<id>/`, with the `topic` of its [unit](../README.md#the-learning-path-52-challenges) and an `order` that keeps the unit going from easy to hard. **Create New Challenge** offers this folder when you have the repository open.
+2. Create the challenge in `challenges/<id>/` (CS Fundamentals: `subjects/cs/challenges/<id>/`), with the `topic` of its [unit](../README.md#the-learning-path-100-challenges) and an `order` that keeps the unit going from easy to hard. **Create New Challenge** offers this folder when you have the repository open.
 3. Add the Portuguese translation (see [Translating content](#translating-content)): built-in content ships in both languages.
 4. Run `npm run validate`. It is **strict** for the built-in content: besides compiling and running everything, it fails on the content standard in the checklist below (a "Things to know" section, at least 3 hidden tests and 2 hints, a description of 40 words or more) and on missing Portuguese translations. CI also validates on Linux, macOS and Windows, with JDK 17 and JDK 25.
 5. Add a line to `CHANGELOG.md` and open a pull request. See [CONTRIBUTING.md](../CONTRIBUTING.md).

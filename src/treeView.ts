@@ -5,7 +5,10 @@ import { ExamManager, formatDuration } from './examSession';
 import { ExamDefinition, ExamQuestion, maxScore, questionKey, questionTitle } from './exams';
 import { QuizProgress } from './quizController';
 import { QuizDefinition } from './quizzes';
-import { PathGroup, PathItem, TESTS_TOPIC, buildPath, groupLabel, pathSequence, unitName } from './path';
+import { PathGroup, PathItem, TESTS_TOPIC, buildPath, groupLabel, pathSequence, requirementStatus, unitIcon, unitName } from './path';
+import { LessonDefinition } from './lessons';
+import { LessonProgress } from './lessonPanel';
+import { DEFAULT_SUBJECT } from './subjects';
 import { difficultyName, plural, tr } from './i18n';
 import { JavaProblem } from './javaCheck';
 import { problemText } from './javaSetup';
@@ -24,28 +27,16 @@ export type ChallengeNode =
   | { kind: 'examStart'; exam: ExamDefinition }
   | { kind: 'examQuestion'; exam: ExamDefinition; question: ExamQuestion }
   | { kind: 'quiz'; quiz: QuizDefinition; view?: GroupMode }
+  | { kind: 'lesson'; lesson: LessonDefinition; view?: GroupMode }
   | { kind: 'javaNotice'; problem: JavaProblem };
-
-const GROUP_ICONS: Record<string, string> = {
-  Basics: 'symbol-variable',
-  Conditionals: 'git-compare',
-  Loops: 'sync',
-  Strings: 'symbol-string',
-  Methods: 'symbol-method',
-  Arrays: 'symbol-array',
-  Collections: 'list-tree',
-  OOP: 'symbol-class',
-  Exceptions: 'warning',
-  Recursion: 'debug-restart',
-  Streams: 'filter',
-  Custom: 'star-empty',
-};
 
 export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeNode> {
   private readonly changed = new vscode.EventEmitter<void>();
   readonly onDidChangeTreeData = this.changed.event;
   /** Set by the "Group by" command; the extension remembers it. */
   mode: GroupMode = 'path';
+  /** The subject shown (see subjects.ts); the extension remembers it. */
+  subject: string = DEFAULT_SUBJECT;
 
   constructor(
     private readonly getChallenges: () => Challenge[],
@@ -56,7 +47,10 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     private readonly quizProgress: QuizProgress,
     /** Problems that stop Java from running; shown as a notice at the top of the list. */
     private readonly javaProblems: () => JavaProblem[] = () => [],
+    private readonly getLessons: () => LessonDefinition[] = () => [],
+    private readonly lessonProgress?: LessonProgress,
   ) {
+    lessonProgress?.onDidChange(() => this.refresh());
     progress.onDidChange(() => this.refresh());
     exams.onDidChange(() => this.refresh());
     quizProgress.onDidChange(() => this.refresh());
@@ -70,9 +64,9 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     if (!node) {
       return [
         ...this.javaProblems().slice(0, 1).map((problem): ChallengeNode => ({ kind: 'javaNotice', problem })),
-        ...(this.getExams().length ? [{ kind: 'examsRoot' } as ChallengeNode] : []),
+        ...(this.visibleExams().length ? [{ kind: 'examsRoot' } as ChallengeNode] : []),
         ...(this.mode === 'path'
-          ? buildPath(this.getChallenges(), this.getQuizzes()).map((group): ChallengeNode => ({ kind: 'group', group }))
+          ? this.path().map((group): ChallengeNode => ({ kind: 'group', group }))
           : this.buckets(this.mode)),
       ];
     }
@@ -80,14 +74,15 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
       case 'bucket':
         return node.items;
       case 'group':
-        // A unit lists its challenges, then its quiz, then the tests that close the stage.
+        // A unit lists its lessons, its challenges, then its quiz, then the tests that close the stage.
         return [
+          ...node.group.lessons.map((lesson): ChallengeNode => ({ kind: 'lesson', lesson })),
           ...node.group.challenges.map((challenge): ChallengeNode => ({ kind: 'challenge', challenge })),
           ...node.group.quizzes.map((quiz): ChallengeNode => ({ kind: 'quiz', quiz })),
           ...node.group.tests.map((challenge): ChallengeNode => ({ kind: 'challenge', challenge })),
         ];
       case 'examsRoot':
-        return this.getExams().map((exam) => ({ kind: 'exam', exam }));
+        return this.visibleExams().map((exam) => ({ kind: 'exam', exam }));
       case 'exam':
         return this.exams.state(node.exam.id)
           ? node.exam.questions.map((question) => ({ kind: 'examQuestion', exam: node.exam, question }))
@@ -97,10 +92,16 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     }
   }
 
+  /** The learning path of the subject shown. */
+  path(): PathGroup[] {
+    return buildPath(this.getChallenges(), this.getQuizzes(), this.getLessons(), this.subject);
+  }
+
   /** Groups for the difficulty and progress views, keeping the learning-path order inside each group. */
   private buckets(mode: 'difficulty' | 'progress'): ChallengeNode[] {
-    const items = pathSequence(buildPath(this.getChallenges(), this.getQuizzes()));
-    const node = (it: PathItem): ChallengeNode => (it.kind === 'quiz' ? { kind: 'quiz', quiz: it.quiz, view: mode } : { kind: 'challenge', challenge: it.challenge, view: mode });
+    const items = pathSequence(this.path());
+    const node = (it: PathItem): ChallengeNode =>
+      it.kind === 'quiz' ? { kind: 'quiz', quiz: it.quiz, view: mode } : it.kind === 'lesson' ? { kind: 'lesson', lesson: it.lesson, view: mode } : { kind: 'challenge', challenge: it.challenge, view: mode };
     const groups: { id: string; label: string; icon: string; test: (it: PathItem) => boolean }[] =
       mode === 'difficulty'
         ? [
@@ -108,6 +109,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
             { id: 'Medium', label: tr('Medium', 'Médio'), icon: 'circle-filled', test: (it) => it.kind === 'challenge' && it.challenge.difficulty === 'Medium' },
             { id: 'Hard', label: tr('Hard', 'Difícil'), icon: 'flame', test: (it) => it.kind === 'challenge' && it.challenge.difficulty === 'Hard' },
             { id: 'Other', label: tr('Other', 'Outros'), icon: 'circle-outline', test: (it) => it.kind === 'challenge' && !['Easy', 'Medium', 'Hard'].includes(it.challenge.difficulty) },
+            { id: 'Lessons', label: tr('Lessons', 'Lições'), icon: 'book', test: (it) => it.kind === 'lesson' },
             { id: 'Quizzes', label: 'Quizzes', icon: 'question', test: (it) => it.kind === 'quiz' },
           ]
         : [
@@ -121,6 +123,9 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
   }
 
   private status(it: PathItem): 'todo' | 'doing' | 'done' {
+    if (it.kind === 'lesson') {
+      return this.lessonProgress?.isRead(it.lesson.id) ? 'done' : 'todo';
+    }
     if (it.kind === 'quiz') {
       const score = this.quizProgress.get(it.quiz.id);
       return !score ? 'todo' : this.perfect(it.quiz) ? 'done' : 'doing';
@@ -133,7 +138,9 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     const item = new vscode.TreeItem(node.label, vscode.TreeItemCollapsibleState.Expanded);
     item.id = `bucket:${node.id}`;
     item.iconPath = new vscode.ThemeIcon(node.icon);
-    const done = node.items.filter((n) => (n.kind === 'challenge' ? this.status({ kind: 'challenge', challenge: n.challenge }) : n.kind === 'quiz' ? this.status({ kind: 'quiz', quiz: n.quiz }) : 'todo') === 'done').length;
+    const statusOf = (n: ChallengeNode) =>
+      n.kind === 'challenge' ? this.status({ kind: 'challenge', challenge: n.challenge }) : n.kind === 'quiz' ? this.status({ kind: 'quiz', quiz: n.quiz }) : n.kind === 'lesson' ? this.status({ kind: 'lesson', lesson: n.lesson }) : 'todo';
+    const done = node.items.filter((n) => statusOf(n) === 'done').length;
     item.description = node.id.startsWith('progress:') ? `${node.items.length}` : `${done}/${node.items.length}`;
     return item;
   }
@@ -150,7 +157,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
         const item = new vscode.TreeItem(tr('Exams', 'Provas'), vscode.TreeItemCollapsibleState.Expanded);
         item.id = 'exams';
         item.iconPath = new vscode.ThemeIcon('checklist');
-        item.description = `${this.getExams().length}`;
+        item.description = `${this.visibleExams().length}`;
         return item;
       }
       case 'exam':
@@ -166,6 +173,8 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
         return this.questionItem(node.exam, node.question);
       case 'quiz':
         return this.quizItem(node.quiz, node.view);
+      case 'lesson':
+        return this.lessonItem(node.lesson, node.view);
       case 'javaNotice': {
         const text = problemText(node.problem);
         const item = new vscode.TreeItem(tr("Java isn't ready", 'O Java não está pronto'), vscode.TreeItemCollapsibleState.None);
@@ -182,12 +191,13 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
   private groupItem(group: PathGroup): vscode.TreeItem {
     const ids = [...group.challenges, ...group.tests].map((c) => c.id);
     const solved = this.progress.solvedCount(ids);
-    const done = ids.length > 0 && solved === ids.length && group.quizzes.every((q) => this.perfect(q));
+    const lessonsRead = group.lessons.every((l) => this.lessonProgress?.isRead(l.id));
+    const done = ids.length + group.lessons.length > 0 && solved === ids.length && lessonsRead && group.quizzes.every((q) => this.perfect(q));
     const item = new vscode.TreeItem(groupLabel(group), vscode.TreeItemCollapsibleState.Expanded);
     item.id = `group:${group.kind}:${group.key}`;
     item.description = ids.length ? `${solved}/${ids.length}` : undefined;
     item.iconPath = new vscode.ThemeIcon(
-      done ? 'pass-filled' : GROUP_ICONS[group.key] ?? 'folder',
+      done ? 'pass-filled' : (unitIcon(group.key) ?? (group.kind === 'custom' ? 'star-empty' : 'folder')),
       done ? new vscode.ThemeColor('testing.iconPassed') : undefined,
     );
     if (group.kind === 'custom') {
@@ -214,6 +224,9 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
           : isTest
             ? `${tr('Test', 'Teste')} · ${difficultyName(c.difficulty)}`
             : difficultyName(c.difficulty);
+    if (c.requires.length) {
+      item.description += ` · ${tr('needs', 'precisa de')} ${c.requires.map(unitName).join(', ')}`;
+    }
     item.contextValue = 'challenge';
     item.command = { command: 'sphynx.open', title: tr('Open Challenge', 'Abrir desafio'), arguments: [c.id] };
     if (p?.status === 'solved') {
@@ -226,9 +239,41 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     item.tooltip = new vscode.MarkdownString(
       `**${c.title}** · ${isTest ? tr('Test', 'Teste') : unitName(c.topic)} · ${difficultyName(c.difficulty)}\n\n` +
         (c.skills.length ? `${tr('Mixes', 'Combina')}: ${c.skills.map(unitName).join(', ')}\n\n` : '') +
-        (p?.status === 'solved' ? tr('✅ Solved', '✅ Resolvido') : p ? `${tr('Attempts', 'Tentativas')}: ${p.attempts}` : tr('Not started', 'Não iniciado')),
+        (p?.status === 'solved' ? tr('✅ Solved', '✅ Resolvido') : p ? `${tr('Attempts', 'Tentativas')}: ${p.attempts}` : tr('Not started', 'Não iniciado')) +
+        this.requirementsText(c.requires),
     );
     return item;
+  }
+
+  /** "Needs: Java Programming · Loops (4/12 solved)" lines for a tooltip. */
+  private requirementsText(requires: string[]): string {
+    if (!requires.length) {
+      return '';
+    }
+    const lines = requirementStatus(requires, this.getChallenges(), (id) => this.progress.isSolved(id)).map(
+      (r) => `- ${r.label}${r.total ? ` (${tr(`${r.solved}/${r.total} solved`, `${r.solved}/${r.total} resolvidos`)})` : ''}`,
+    );
+    return `\n\n${tr('Needs', 'Precisa de')}:\n${lines.join('\n')}`;
+  }
+
+  private lessonItem(lesson: LessonDefinition, view: GroupMode = 'path'): vscode.TreeItem {
+    const read = this.lessonProgress?.isRead(lesson.id);
+    const item = new vscode.TreeItem(lesson.title, vscode.TreeItemCollapsibleState.None);
+    item.id = `lesson:${lesson.id}`;
+    item.contextValue = 'lesson';
+    item.description = `${tr('Lesson', 'Lição')} · ${lesson.minutes} min${view !== 'path' && lesson.topic ? ` · ${unitName(lesson.topic)}` : ''}`;
+    item.iconPath = read ? new vscode.ThemeIcon('pass-filled', new vscode.ThemeColor('testing.iconPassed')) : new vscode.ThemeIcon('book');
+    item.command = { command: 'sphynx.openLesson', title: tr('Open Lesson', 'Abrir lição'), arguments: [lesson.id] };
+    item.tooltip = new vscode.MarkdownString(
+      `**${lesson.title}** · ${tr('Lesson', 'Lição')}${lesson.topic ? ` · ${unitName(lesson.topic)}` : ''}\n\n${tr(`About ${lesson.minutes} min to read.`, `Cerca de ${lesson.minutes} min de leitura.`)} ${read ? tr('✅ Read', '✅ Lida') : ''}` +
+        this.requirementsText(lesson.requires),
+    );
+    return item;
+  }
+
+  /** The exams of the subject shown, and an exam in progress wherever it's from. */
+  private visibleExams(): ExamDefinition[] {
+    return this.getExams().filter((exam) => exam.subject === this.subject || this.exams.isActive(exam.id));
   }
 
   private examItem(exam: ExamDefinition): vscode.TreeItem {
@@ -288,7 +333,8 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     item.tooltip = new vscode.MarkdownString(
       `**${quiz.title}** · Quiz${quiz.topic ? ` · ${unitName(quiz.topic)}` : ''}\n\n${quiz.description ? `${quiz.description}\n\n` : ''}` +
         plural(quiz.questions.length, ['question', 'questions'], ['questão', 'questões']) +
-        (score ? `\n\n${tr('Best score', 'Melhor nota')}: ${score.best} / ${score.total} (${plural(score.attempts, ['attempt', 'attempts'], ['tentativa', 'tentativas'])})` : ''),
+        (score ? `\n\n${tr('Best score', 'Melhor nota')}: ${score.best} / ${score.total} (${plural(score.attempts, ['attempt', 'attempts'], ['tentativa', 'tentativas'])})` : '') +
+        this.requirementsText(quiz.requires ?? []),
     );
     return item;
   }

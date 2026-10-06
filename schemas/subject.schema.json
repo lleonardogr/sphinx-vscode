@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Sphynx subject",
+  "description": "A subject (what students study) and its units in teaching order. Content picks a unit with \"topic\".",
+  "type": "object",
+  "required": [
+    "title",
+    "units"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "description": "Defaults to the folder name."
+    },
+    "title": {
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "programming",
+        "theory"
+      ]
+    },
+    "order": {
+      "type": "number",
+      "description": "Position in the subject switcher."
+    },
+    "units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "key",
+          "title"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Used as \"topic\" in challenges, quizzes and lessons. Unique across subjects."
+          },
+          "title": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string",
+            "description": "A codicon name, e.g. \"symbol-numeric\"."
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Older names still accepted as \"topic\"."
+          }
+        }
+      }
+    },
+    "translations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "units": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

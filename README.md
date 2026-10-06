@@ -13,7 +13,7 @@
 
 > *Like the sphinx of the legend, Sphynx asks you questions, and you only pass if you answer them right.*
 
-HackerRank / LeetCode-style coding challenges right inside VS Code, in **English or Portuguese**, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. It starts with **Java**: from the basic syntax to data structures, object-oriented programming and the Stream API.
+HackerRank / LeetCode-style coding challenges right inside VS Code, in **English or Portuguese**, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. Two subjects ship with it: **Java Programming**, from the basic syntax to data structures, object-oriented programming and the Stream API, and **CS Fundamentals**, the theory new students need about how computers work, starting with number systems.
 
 📘 **Guides:** [Creating your own challenges](docs/creating-challenges.md) · [Tests](docs/creating-challenges.md#tests-mixed-challenges) · [Quizzes](docs/quizzes.md) · [Exams](docs/exams.md) · [AI hints](docs/ai-hints.md)
 
@@ -44,6 +44,18 @@ The sidebar lists numbered **units** in teaching order. Each unit runs from easy
 
 Three exams close the stages, each with a quiz and three private coding questions: **Exam 1: Basics to Strings** (units 1–4, 60 minutes), **Exam 2: Building Blocks** (units 5–7, 75 minutes) and the **Final Exam** (the whole course, focused on units 8–11, 120 minutes).
 
+## CS Fundamentals
+
+The second subject covers what new students should know about **how a computer works**, from number systems to networks. Switch to it with the 📚 button at the top of the sidebar (**Switch Subject…**). Each unit starts with short **lessons** to read, with tables and diagrams, then a quiz and challenges solved in Java:
+
+| Unit | Lessons | Quiz and challenges |
+|------|---------|---------------------|
+| 2 · Number Systems | Place Value and Binary · Hexadecimal and Octal | Number Systems Quiz (answers typed in binary, decimal or hexadecimal) · Binary to Decimal · Decimal to Binary · Hex to Decimal · Base Converter (any base from 2 to 36) |
+
+![A CS Fundamentals lesson, Place Value and Binary, with a diagram of the byte 10110010 adding up to 178, and the Number Systems unit in the sidebar](media/screenshots/lesson.png)
+
+Each item shows the Java it needs, with your progress: for example **Needs: Java Programming · Loops · 7/12**. Nothing is locked. More units are on the way: how a computer works, bits and bytes, number representation, text and media, logic and bitwise operations, algorithms and complexity, and networks.
+
 ## Screenshots
 
 | | |
@@ -65,11 +77,14 @@ Three exams close the stages, each with a quiz and three private coding question
 - **Syntax requirements**: a challenge can require constructs (for example "use a `switch`", "create `class Square extends Shape`" or "keep `balance` private") or forbid shortcuts (`Math.max`, `reverse()`, `Math.pow`).
 - **AI hints (optional, off by default)**: an AI tutor gives one hint at a time about your current code, without writing the solution. It works with a **local model** (Ollama, LM Studio: free and private), **your own API key** (Anthropic Claude or any OpenAI-compatible API), or VS Code's language models (GitHub Copilot). API keys are stored in VS Code's encrypted secret storage. See [AI hints](docs/ai-hints.md).
 - **Tests**: bigger challenges that **mix several units** in one program, listed at the end of the unit they close, such as a console app with a menu (`1. Add`, `2. List`, `0. Exit`). Each one shows the skills it combines, and is graded by feeding it whole sequences of menu choices.
-- **Quizzes**: short question sets about Java (multiple choice, true or false, short answer, and "what does this code print?"), with instant feedback and explanations in practice. Exams can include them as graded questions, and the validator runs every code question to make sure its answer is right. See [Quizzes](docs/quizzes.md).
+- **Quizzes**: short question sets (multiple choice, true or false, short answer, numbers typed in binary, decimal or hexadecimal, and "what does this code print?"), with instant feedback and explanations in practice. Exams can include them as graded questions, and the validator runs every code question to make sure its answer is right. See [Quizzes](docs/quizzes.md).
 - **Exams**: timed, graded sets of questions with a countdown, limited submissions, partial credit and a results file to hand in. An exam can be **open** (hints, AI and the internet allowed) or **closed** (hints and AI off, copying and pasting blocked, time outside VS Code recorded or limited). Teachers re-grade the results files with **Verify Exam Results**. See [Exams](docs/exams.md).
 - **Import**: one button in the sidebar imports the challenges, tests and exams a teacher shared, as a `.zip` or a folder. They're copied into the extension's library, solutions can be stripped for students, and **Remove Imported…** takes them out again. See [Sharing challenges with students](docs/creating-challenges.md#sharing-challenges-with-students).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
-- **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/100 solved` counter in the status bar.
+- **Subjects**: Java Programming and CS Fundamentals, each with its own learning path. **Switch Subject…** (📚) changes the one in the sidebar, and its name is shown in the sidebar header.
+- **Lessons**: short pages to read before a unit's quiz and challenges, with a reading time, a ✓ once read, and a button to the next item.
+- **Prerequisites**: an item can list the units it builds on, shown with the student's progress in each one. They're advice; nothing is locked.
+- **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/100 solved` counter for the current subject in the status bar.
 - **Group by**: the filter button at the top of the sidebar groups challenges by **learning path** (units, the default), **difficulty** (Easy, Medium, Hard, then quizzes) or **progress** (not started, in progress, solved). The choice is remembered.
 
 > **Upgrading from Tech Challenges?** Sphynx is the same extension with a new name. Install Sphynx and uninstall Tech Challenges. Your settings (`techChallenges.*` → `sphynx.*`) are copied over automatically, and your code in `tech-challenges/` keeps being used. Solved-challenge progress and saved AI keys start fresh.
@@ -114,7 +129,7 @@ Sphynx checks Java when it starts. If something is wrong, it warns you and shows
 
 4. Stuck? Click **Show a hint**, or **✨ Ask AI for a hint** if your teacher or you set up [AI hints](docs/ai-hints.md).
 5. Made a mess? **Reset code** brings back the starter code.
-6. Want to start over? The ↺ button next to a challenge in the sidebar (**Reset Challenge**) brings back the starter code and clears its progress; next to a quiz it clears the best score. The ⨯ button at the top of the sidebar (**Reset All Challenges…**) resets everything, either progress and code or progress only. Exams are never reset.
+6. Want to start over? The ↺ button next to a challenge in the sidebar (**Reset Challenge**) brings back the starter code and clears its progress; next to a quiz it clears the best score. **Reset All Challenges…**, in the **…** menu at the top of the sidebar, resets everything, either progress and code or progress only. Exams are never reset.
 
 Your program reads its input and prints the answer, exactly like HackerRank. Both styles work:
 
@@ -187,8 +202,10 @@ Write an `exam.json` (title, duration, open or closed, submissions per question,
 - [x] A complete Java learning path: 11 units, from the basics to OOP, exceptions, recursion and streams, with quizzes, tests and exams
 - [x] AI hints tailored to the student's code (local model or your own API key)
 - [x] English and Portuguese
-- [x] Publish to the VS Code Marketplace
-- [ ] A class dashboard for teachers that reads many exam results at once
+- [x] Publish to the VS Code Marketplace and Open VSX
+- [x] A class results dashboard for teachers that reads many exam results at once
+- [x] Subjects, lessons and prerequisites, with CS Fundamentals starting at unit 2 (Number Systems)
+- [ ] The rest of CS Fundamentals: units 1 and 3–8, tests and exams
 - [ ] An algorithms and data structures unit
 - [ ] AI help for writing new challenges
 - [ ] Support more languages (Python, JavaScript, C, …) through a pluggable runner per language

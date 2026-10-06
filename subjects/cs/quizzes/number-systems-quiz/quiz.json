@@ -1,0 +1,131 @@
+{
+  "title": "Number Systems Quiz",
+  "topic": "NumberSystems",
+  "requires": [
+    "Basics"
+  ],
+  "description": "Binary, hexadecimal and octal: reading, writing and converting numbers. Answers can be typed with or without prefixes like `0b` and `0x`.",
+  "questions": [
+    {
+      "type": "number",
+      "prompt": "Convert **1011₂** to decimal.",
+      "answer": "11",
+      "explanation": "The 1s are in the places worth 8, 2 and 1: 8 + 2 + 1 = 11."
+    },
+    {
+      "type": "number",
+      "prompt": "Convert **13** to binary.",
+      "answer": "1101",
+      "base": 2,
+      "explanation": "13 ÷ 2 = 6 r **1**, 6 ÷ 2 = 3 r **0**, 3 ÷ 2 = 1 r **1**, 1 ÷ 2 = 0 r **1**. Reading the remainders upward gives 1101."
+    },
+    {
+      "type": "number",
+      "prompt": "What is the largest number one byte (8 bits) can store, counting from 0?",
+      "answer": "255",
+      "explanation": "8 bits give 2⁸ = 256 values: 0 to 255."
+    },
+    {
+      "type": "choice",
+      "prompt": "How many different values can **5 bits** represent?",
+      "options": [
+        "5",
+        "10",
+        "25",
+        "32"
+      ],
+      "answer": 3,
+      "explanation": "Each bit doubles the combinations: 2⁵ = 32."
+    },
+    {
+      "type": "number",
+      "prompt": "Convert **1011 0010₂** to hexadecimal.",
+      "answer": "B2",
+      "base": 16,
+      "explanation": "Groups of 4 bits: 1011 is B (11) and 0010 is 2."
+    },
+    {
+      "type": "number",
+      "prompt": "Convert **2F₁₆** to decimal.",
+      "answer": "47",
+      "explanation": "2 × 16 + F (15) × 1 = 32 + 15 = 47."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "Each hexadecimal digit corresponds to exactly 4 bits.",
+      "answer": true,
+      "explanation": "Because 16 = 2⁴. That is why one byte is always two hex digits."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(0b1010 + 0x10);",
+      "answer": "26",
+      "explanation": "`0b1010` is 10 and `0x10` is 16, so Java prints 26."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(010 + 1);",
+      "answer": "9",
+      "explanation": "A leading zero makes a Java number **octal**: `010` is 8, so it prints 9. Never pad decimal numbers with zeros in code."
+    },
+    {
+      "type": "number",
+      "prompt": "Convert **3E₁₆** to binary.",
+      "answer": "111110",
+      "base": 2,
+      "explanation": "3 is 0011 and E (14) is 1110: 0011 1110, which is 111110 without the leading zeros."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de sistemas de numeração",
+      "description": "Binário, hexadecimal e octal: ler, escrever e converter números. As respostas podem ser digitadas com ou sem prefixos como `0b` e `0x`.",
+      "questions": [
+        {
+          "prompt": "Converta **1011₂** para decimal.",
+          "explanation": "Os 1s estão nas posições que valem 8, 2 e 1: 8 + 2 + 1 = 11."
+        },
+        {
+          "prompt": "Converta **13** para binário.",
+          "explanation": "13 ÷ 2 = 6 resto **1**, 6 ÷ 2 = 3 resto **0**, 3 ÷ 2 = 1 resto **1**, 1 ÷ 2 = 0 resto **1**. Lendo os restos de baixo para cima: 1101."
+        },
+        {
+          "prompt": "Qual é o maior número que um byte (8 bits) consegue guardar, contando a partir de 0?",
+          "explanation": "8 bits dão 2⁸ = 256 valores: de 0 a 255."
+        },
+        {
+          "prompt": "Quantos valores diferentes **5 bits** conseguem representar?",
+          "options": [
+            "5",
+            "10",
+            "25",
+            "32"
+          ],
+          "explanation": "Cada bit dobra as combinações: 2⁵ = 32."
+        },
+        {
+          "prompt": "Converta **1011 0010₂** para hexadecimal.",
+          "explanation": "Grupos de 4 bits: 1011 é B (11) e 0010 é 2."
+        },
+        {
+          "prompt": "Converta **2F₁₆** para decimal.",
+          "explanation": "2 × 16 + F (15) × 1 = 32 + 15 = 47."
+        },
+        {
+          "prompt": "Cada dígito hexadecimal corresponde a exatamente 4 bits.",
+          "explanation": "Porque 16 = 2⁴. É por isso que um byte é sempre dois dígitos hex."
+        },
+        {
+          "explanation": "`0b1010` é 10 e `0x10` é 16, então o Java imprime 26."
+        },
+        {
+          "explanation": "Um zero à esquerda deixa um número do Java **octal**: `010` é 8, então ele imprime 9. Nunca complete números decimais com zeros no código."
+        },
+        {
+          "prompt": "Converta **3E₁₆** para binário.",
+          "explanation": "3 é 0011 e E (14) é 1110: 0011 1110, que é 111110 sem os zeros à esquerda."
+        }
+      ]
+    }
+  }
+}

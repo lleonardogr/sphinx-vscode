@@ -1,0 +1,37 @@
+{
+  "id": "java",
+  "title": "Java Programming",
+  "kind": "programming",
+  "order": 1,
+  "units": [
+    { "key": "Basics", "title": "Basics", "icon": "symbol-variable", "aliases": ["Variables"] },
+    { "key": "Conditionals", "title": "Conditionals", "icon": "git-compare" },
+    { "key": "Loops", "title": "Loops", "icon": "sync" },
+    { "key": "Strings", "title": "Strings & Characters", "icon": "symbol-string" },
+    { "key": "Methods", "title": "Methods", "icon": "symbol-method" },
+    { "key": "Arrays", "title": "Arrays", "icon": "symbol-array" },
+    { "key": "Collections", "title": "Collections", "icon": "list-tree" },
+    { "key": "OOP", "title": "Object-Oriented Programming", "icon": "symbol-class" },
+    { "key": "Exceptions", "title": "Exceptions", "icon": "warning" },
+    { "key": "Recursion", "title": "Recursion", "icon": "debug-restart" },
+    { "key": "Streams", "title": "Lambdas & Streams", "icon": "filter" }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Programação em Java",
+      "units": {
+        "Basics": "Fundamentos",
+        "Conditionals": "Condicionais",
+        "Loops": "Laços de repetição",
+        "Strings": "Strings e caracteres",
+        "Methods": "Métodos",
+        "Arrays": "Arrays",
+        "Collections": "Coleções",
+        "OOP": "Orientação a objetos",
+        "Exceptions": "Exceções",
+        "Recursion": "Recursão",
+        "Streams": "Lambdas e streams"
+      }
+    }
+  }
+}

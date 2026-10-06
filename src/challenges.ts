@@ -7,8 +7,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Lang, language } from './i18n';
-import { CUSTOM_TOPIC, UNITS, unitKey } from './path';
+import { CUSTOM_TOPIC } from './path';
 import { Rule, TestCase } from './runner';
+import { allSubjects, unitRank } from './subjects';
 
 export interface Challenge {
   id: string;
@@ -30,20 +31,22 @@ export interface Challenge {
   timeLimitMs: number;
   /** Teachers can set "aiHints": false to disable AI hints for a challenge. */
   aiHints: boolean;
+  /** Units the student should know first, e.g. ["Loops"] (shown, not enforced). */
+  requires: string[];
+  /** The subject, for challenges without a unit (otherwise the unit decides). */
+  subject?: string;
   dir: string;
 }
 
-/** The built-in units in teaching order (see path.ts). */
-export const TOPIC_ORDER: readonly string[] = UNITS;
-
 export { CUSTOM_TOPIC };
 
+/** Every unit key of every subject, in teaching order (see subjects.ts). */
+export function topicOrder(): string[] {
+  return allSubjects().flatMap((s) => s.units.map((u) => u.key));
+}
+
 export function topicRank(topic: string): number {
-  if (topic === CUSTOM_TOPIC) {
-    return TOPIC_ORDER.length + 1;
-  }
-  const i = TOPIC_ORDER.indexOf(unitKey(topic) ?? topic);
-  return i === -1 ? TOPIC_ORDER.length : i;
+  return topic === CUSTOM_TOPIC ? Number.MAX_SAFE_INTEGER : unitRank(topic);
 }
 
 function readOptional(dir: string, file: string): string {
@@ -94,6 +97,8 @@ export function loadChallenge(dir: string, lang: Lang = language()): Challenge {
     unit: typeof meta.unit === 'string' && meta.unit.trim() ? meta.unit.trim() : undefined,
     timeLimitMs: meta.timeLimitMs ?? 5000,
     aiHints: meta.aiHints !== false,
+    requires: Array.isArray(meta.requires) ? meta.requires.filter((r: unknown): r is string => typeof r === 'string' && r.trim() !== '').map((r: string) => r.trim()) : [],
+    subject: typeof meta.subject === 'string' && meta.subject.trim() ? meta.subject.trim() : undefined,
     dir,
   };
 }

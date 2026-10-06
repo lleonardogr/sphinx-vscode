@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { Challenge } from './challenges';
 import { Progress } from './progress';
-import { TESTS_TOPIC, unitName } from './path';
+import { Requirement, TESTS_TOPIC, unitName } from './path';
 import { difficultyName, language, tr } from './i18n';
 
 export type PanelAction =
@@ -71,6 +71,8 @@ export class ChallengePanel {
   private queue: unknown[] = [];
   /** Returns exam details when the challenge belongs to an exam. Set by the extension. */
   examInfo: (c: Challenge) => PanelExamInfo | undefined = () => undefined;
+  /** The units a challenge needs, with the student's progress in each (set by the extension). */
+  requirements: (c: Challenge) => Requirement[] = () => [];
 
   constructor(
     private readonly extensionUri: vscode.Uri,
@@ -224,7 +226,7 @@ export class ChallengePanel {
       <span class="badge">${t.points} ${tr('points', 'pontos')}</span>` : ''}
       <span class="badge difficulty ${escapeHtml(c.difficulty.toLowerCase())}">${escapeHtml(difficultyName(c.difficulty))}</span>${c.skills.length ? `
       <span class="skills" title="${tr('Topics this challenge combines', 'Assuntos que este desafio combina')}">${tr('Mixes', 'Combina')}: ${c.skills.map((s) => `<span class="badge skill">${escapeHtml(unitName(s))}</span>`).join('')}</span>` : ''}
-    </div>
+    </div>${requirementsHtml(t ? [] : this.requirements(c))}
     <div class="toolbar">
       <button data-action="run" title="${tr('Compile and run the sample tests (Cmd/Ctrl+Alt+R)', 'Compilar e executar os testes de exemplo (Cmd/Ctrl+Alt+R)')}">${tr('▶ Run', '▶ Executar')}</button>
       <button data-action="submit" class="primary" title="${tr('Run all tests, including hidden ones (Cmd/Ctrl+Alt+Enter)', 'Executar todos os testes, inclusive os ocultos (Cmd/Ctrl+Alt+Enter)')}" ${submitDisabled}>${submitLabel}</button>
@@ -256,4 +258,19 @@ export class ChallengePanel {
 </body>
 </html>`;
   }
+}
+
+/** "Needs: Java Programming · Loops · 4/12" badges under the title; green when the unit is done. */
+export function requirementsHtml(reqs: Requirement[]): string {
+  if (!reqs.length) {
+    return '';
+  }
+  const esc = (v: string) => v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return `
+    <p class="prerequisites">${tr('Needs', 'Precisa de')}: ${reqs
+      .map(
+        (r) =>
+          `<span class="badge${r.total && r.solved === r.total ? ' done' : ''}" title="${tr(`${r.solved} of ${r.total} challenges solved`, `${r.solved} de ${r.total} desafios resolvidos`)}">${esc(r.label)}${r.total ? ` · ${r.solved}/${r.total}` : ''}</span>`,
+      )
+      .join(' ')}</p>`;
 }
