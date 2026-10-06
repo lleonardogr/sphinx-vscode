@@ -2,7 +2,7 @@
   "name": "sphynx",
   "displayName": "Sphynx",
   "description": "LeetCode/HackerRank-style coding challenges inside VS Code, with mixed-skill tests, quizzes, timed exams and optional AI hints from a local model or your own API key. Starts with Java: variables, conditionals, loops, arrays, strings, methods and OOP.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "lleonardogr",
   "license": "MIT",
   "icon": "media/logo/icon.png",
