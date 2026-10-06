@@ -233,7 +233,7 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
     tr('Open Guide', 'Abrir o guia'),
   );
   if (choice) {
-    vscode.env.openExternal(vscode.Uri.parse('https://github.com/lleonardogr/sphynx-vscode/blob/main/docs/creating-challenges.md'));
+    vscode.env.openExternal(vscode.Uri.parse('https://github.com/lleonardogr/sphinx-vscode/blob/main/docs/creating-challenges.md'));
   }
 }
 
