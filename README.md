@@ -156,6 +156,8 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 
 ## For teachers
 
+Click the 💼 button at the top of the Sphynx sidebar (**Switch to Teacher View**) to open the **teacher view**. It lists **My Exams** (with their questions; click one to edit it), **My Challenges & Quizzes** (what you created or imported; click one to try it), and the **Tools**: create, import, validate, and verify your students' exam results. The 🎓 button switches back to the **student view**, where you can practise the learning path like your students.
+
 ### Share the extension with your class
 
 Point students to the [Marketplace page](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx) (or the `.vsix` in the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) for offline classrooms) and the [Getting started](#getting-started-students) steps above. Reference solutions (`Solution*.java`) are **never** included in the `.vsix`, but they are visible in this public repository.

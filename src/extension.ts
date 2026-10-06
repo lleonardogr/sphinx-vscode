@@ -20,6 +20,7 @@ import { clearJavaCache } from './runner';
 import { formatVerification, verifyResults } from './examVerify';
 import { ExamDefinition, ExamQuestion, loadExams, parseExamChallengeId } from './exams';
 import { ChallengeNode, ChallengeTreeProvider, GroupMode } from './treeView';
+import { Origin, TeacherNode, TeacherTreeProvider, sourceFile } from './teacherView';
 
 const CODE_FILE = 'Main.java';
 
@@ -46,6 +47,8 @@ export function migrateOldStorage(storage: string): void {
 /** What activate() returns. Used by the integration tests to check the extension's state. */
 export interface SphynxApi {
   progress: Progress;
+  teacherTree: TeacherTreeProvider;
+  view(): 'student' | 'teacher';
   quizProgress: QuizProgress;
   examManager: ExamManager;
   tree: ChallengeTreeProvider;
@@ -79,6 +82,26 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   tree.mode = context.globalState.get<GroupMode>(GROUP_KEY, 'path');
   const quizController = new QuizController(context.extensionUri, quizProgress, examManager, () => quizzes, () => exams);
   const treeView = vscode.window.createTreeView('sphynx.list', { treeDataProvider: tree });
+
+  // Student or teacher view. Both live in the Sphynx sidebar; a context key shows one of them.
+  const VIEW_KEY = 'sphynx.view';
+  /** Where an item comes from, shown in the teacher view. */
+  const origin = (dir: string): Origin => {
+    const inside = (parent: string) => path.resolve(dir).startsWith(path.resolve(parent) + path.sep);
+    if (inside(context.extensionPath)) {
+      return 'builtIn';
+    }
+    return inside(libraryDir()) ? 'imported' : 'folder';
+  };
+  const teacherTree = new TeacherTreeProvider(() => challenges, () => quizzes, () => exams, origin);
+  const teacherView = vscode.window.createTreeView('sphynx.teacher', { treeDataProvider: teacherTree });
+  const currentView = (): 'student' | 'teacher' => (store.get<string>(VIEW_KEY) === 'teacher' ? 'teacher' : 'student');
+  async function setView(view: 'student' | 'teacher'): Promise<void> {
+    await store.update(VIEW_KEY, view);
+    await vscode.commands.executeCommand('setContext', 'sphynx.view', view);
+    await vscode.commands.executeCommand(view === 'teacher' ? 'sphynx.teacher.focus' : 'sphynx.list.focus');
+  }
+  void vscode.commands.executeCommand('setContext', 'sphynx.view', currentView());
   const panel = new ChallengePanel(context.extensionUri, progress, (action, c) => handlePanelAction(action, c));
   const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
   status.command = 'sphynx.list.focus';
@@ -86,7 +109,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   status.show();
 
   panel.examInfo = (c) => panelExamInfo(c);
-  context.subscriptions.push(output, diagnostics, treeView, status, examManager, quizController, { dispose: () => panel.dispose() });
+  context.subscriptions.push(output, diagnostics, treeView, teacherView, status, examManager, quizController, { dispose: () => panel.dispose() });
 
   const config = () => vscode.workspace.getConfiguration('sphynx');
   void migrateLegacySettings();
@@ -149,6 +172,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     }
     examManager.setExams(exams);
     tree.refresh();
+    teacherTree.refresh();
     updateStatus();
   }
 
@@ -873,6 +897,20 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
       }
     }),
     vscode.commands.registerCommand('sphynx.verifyExamResults', verifyExamResultsCommand),
+    vscode.commands.registerCommand('sphynx.switchToTeacherView', () => setView('teacher')),
+    vscode.commands.registerCommand('sphynx.switchToStudentView', () => setView('student')),
+    vscode.commands.registerCommand('sphynx.editItem', async (node?: TeacherNode) => {
+      const file = node && sourceFile(node);
+      if (file) {
+        await vscode.window.showTextDocument(vscode.Uri.file(file), { preview: false });
+      }
+    }),
+    vscode.commands.registerCommand('sphynx.revealItem', async (node?: TeacherNode) => {
+      const file = node && sourceFile(node);
+      if (file) {
+        await vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(file));
+      }
+    }),
     vscode.commands.registerCommand('sphynx.createChallenge', () => createChallenge(authoringDeps)),
     vscode.commands.registerCommand('sphynx.importContent', () => importContent(importDeps)),
     vscode.commands.registerCommand('sphynx.removeImported', () => removeImported(importDeps)),
@@ -925,7 +963,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   context.subscriptions.push(javaSetup);
   void javaSetup.checkQuietly();
   updateContextKey();
-  return { progress, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath };
+  return { progress, teacherTree, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath };
 }
 
 export function deactivate(): void {}

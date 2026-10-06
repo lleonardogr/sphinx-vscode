@@ -47,5 +47,10 @@
   "command.checkJava": "Check Java Setup",
   "command.chooseJdk": "Choose JDK Folder…",
   "command.copyBlocked": "Copy (blocked during the exam)",
-  "command.groupBy": "Group Challenges By…"
+  "command.groupBy": "Group Challenges By…",
+  "view.teacher": "Teacher",
+  "command.switchToTeacherView": "Switch to Teacher View",
+  "command.switchToStudentView": "Switch to Student View",
+  "command.editItem": "Edit",
+  "command.revealItem": "Show in Folder"
 }
