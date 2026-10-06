@@ -47,5 +47,10 @@
   "command.checkJava": "Verificar a instalação do Java",
   "command.chooseJdk": "Escolher a pasta do JDK…",
   "command.copyBlocked": "Copiar (bloqueado durante a prova)",
-  "command.groupBy": "Agrupar desafios por…"
+  "command.groupBy": "Agrupar desafios por…",
+  "view.teacher": "Professor",
+  "command.switchToTeacherView": "Mudar para a visão do professor",
+  "command.switchToStudentView": "Mudar para a visão do aluno",
+  "command.editItem": "Editar",
+  "command.revealItem": "Mostrar na pasta"
 }

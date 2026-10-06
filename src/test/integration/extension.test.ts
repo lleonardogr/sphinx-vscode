@@ -185,6 +185,27 @@ test('importing a teacher\'s folder adds its challenge and can strip the solutio
   fs.rmSync(folder, { recursive: true, force: true });
 });
 
+test('the teacher view lists the teacher\'s exams, own content and tools, and switches back', async () => {
+  assert.equal(api.view(), 'student');
+  await vscode.commands.executeCommand('sphynx.switchToTeacherView');
+  assert.equal(api.view(), 'teacher');
+  const t = api.teacherTree;
+  const label = (n: unknown) => String(t.getTreeItem(n as never).label);
+  const [exams, content, tools] = t.getChildren();
+  assert.deepEqual([exams, content, tools].map(label), ['My Exams', 'My Challenges & Quizzes', 'Tools']);
+  assert.deepEqual(t.getChildren(exams).map(label).sort(), ['Exam 1: Basics to Strings', 'Exam 2: Building Blocks', 'Final Exam', 'Sample Exam: Java Basics']);
+  assert.match(String(t.getTreeItem(t.getChildren(exams)[0] as never).description), /^Built-in · 4 questions · 100 pts · \d+ min$/);
+  // Only the teacher's own content: the challenge imported by the previous test, none of the built-in ones.
+  assert.deepEqual(t.getChildren(content).map(label), ['Class Demo']);
+  assert.match(String(t.getTreeItem(t.getChildren(content)[0] as never).description), /^Imported · /);
+  assert.ok(t.getChildren(tools).map(label).includes("Verify Students' Exam Results…"));
+  // Questions open their source file for editing.
+  const question = t.getChildren(t.getChildren(exams)[0]!)[0]!;
+  assert.equal(t.getTreeItem(question as never).command?.command, 'sphynx.editItem');
+  await vscode.commands.executeCommand('sphynx.switchToStudentView');
+  assert.equal(api.view(), 'student');
+});
+
 test('the imported library and saved solutions move over from the old extension id', () => {
   const storageRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-storage-'));
   const old = path.join(storageRoot, 'class-plugin.sphynx');

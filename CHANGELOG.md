@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Teacher view**: a second view of the Sphynx sidebar for teachers, opened with the 💼 button (**Switch to Teacher View**). It lists **My Exams** with their questions (click one to edit it), **My Challenges & Quizzes** (only the teacher's own imported or folder content; click one to try it) and the **Tools** (create, import, validate, verify exam results, AI setup). Right-click an item to **Edit** it or **Show in Folder**. The 🎓 button switches back to the **student view**, which no longer shows the authoring buttons. The choice is remembered.
+
 ### Fixed
 
 - Starting an exam could lose the exam a moment later ("Start the exam first" on the first submit), because of a race in how VS Code stores extension state: when two saves happen close together, the older one could replace the newer. Progress, quiz scores and exam sessions are now protected against it.

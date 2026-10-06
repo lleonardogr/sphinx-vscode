@@ -52,7 +52,13 @@
       "sphynx": [
         {
           "id": "sphynx.list",
-          "name": "%view.name%"
+          "name": "%view.name%",
+          "when": "sphynx.view != teacher"
+        },
+        {
+          "id": "sphynx.teacher",
+          "name": "%view.teacher%",
+          "when": "sphynx.view == teacher"
         }
       ]
     },
@@ -116,6 +122,30 @@
         "title": "%command.groupBy%",
         "category": "Sphynx",
         "icon": "$(list-filter)"
+      },
+      {
+        "command": "sphynx.switchToTeacherView",
+        "title": "%command.switchToTeacherView%",
+        "category": "Sphynx",
+        "icon": "$(briefcase)"
+      },
+      {
+        "command": "sphynx.switchToStudentView",
+        "title": "%command.switchToStudentView%",
+        "category": "Sphynx",
+        "icon": "$(mortar-board)"
+      },
+      {
+        "command": "sphynx.editItem",
+        "title": "%command.editItem%",
+        "category": "Sphynx",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "sphynx.revealItem",
+        "title": "%command.revealItem%",
+        "category": "Sphynx",
+        "icon": "$(folder-opened)"
       },
       {
         "command": "sphynx.checkJava",
@@ -219,24 +249,14 @@
     "menus": {
       "view/title": [
         {
-          "command": "sphynx.groupBy",
-          "when": "view == sphynx.list",
-          "group": "navigation@1"
-        },
-        {
           "command": "sphynx.importContent",
           "when": "view == sphynx.list",
           "group": "navigation@0"
         },
         {
-          "command": "sphynx.removeImported",
+          "command": "sphynx.groupBy",
           "when": "view == sphynx.list",
-          "group": "import"
-        },
-        {
-          "command": "sphynx.createChallenge",
-          "when": "view == sphynx.list",
-          "group": "navigation@0"
+          "group": "navigation@1"
         },
         {
           "command": "sphynx.refresh",
@@ -249,9 +269,14 @@
           "group": "navigation@2"
         },
         {
-          "command": "sphynx.validateChallenges",
+          "command": "sphynx.switchToTeacherView",
           "when": "view == sphynx.list",
-          "group": "authoring"
+          "group": "navigation@3"
+        },
+        {
+          "command": "sphynx.removeImported",
+          "when": "view == sphynx.list",
+          "group": "import"
         },
         {
           "command": "sphynx.setupAi",
@@ -259,13 +284,53 @@
           "group": "ai"
         },
         {
-          "command": "sphynx.verifyExamResults",
+          "command": "sphynx.checkJava",
           "when": "view == sphynx.list",
+          "group": "java"
+        },
+        {
+          "command": "sphynx.createChallenge",
+          "when": "view == sphynx.teacher",
+          "group": "navigation@0"
+        },
+        {
+          "command": "sphynx.importContent",
+          "when": "view == sphynx.teacher",
+          "group": "navigation@0"
+        },
+        {
+          "command": "sphynx.refresh",
+          "when": "view == sphynx.teacher",
+          "group": "navigation@1"
+        },
+        {
+          "command": "sphynx.switchToStudentView",
+          "when": "view == sphynx.teacher",
+          "group": "navigation@3"
+        },
+        {
+          "command": "sphynx.validateChallenges",
+          "when": "view == sphynx.teacher",
           "group": "authoring"
         },
         {
+          "command": "sphynx.verifyExamResults",
+          "when": "view == sphynx.teacher",
+          "group": "authoring"
+        },
+        {
+          "command": "sphynx.removeImported",
+          "when": "view == sphynx.teacher",
+          "group": "import"
+        },
+        {
+          "command": "sphynx.setupAi",
+          "when": "view == sphynx.teacher",
+          "group": "ai"
+        },
+        {
           "command": "sphynx.checkJava",
-          "when": "view == sphynx.list",
+          "when": "view == sphynx.teacher",
           "group": "java"
         }
       ],
@@ -325,6 +390,21 @@
         {
           "command": "sphynx.saveExamResults",
           "when": "view == sphynx.list && viewItem == exam-finished"
+        },
+        {
+          "command": "sphynx.editItem",
+          "when": "view == sphynx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
+          "group": "inline"
+        },
+        {
+          "command": "sphynx.editItem",
+          "when": "view == sphynx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
+          "group": "teacher@1"
+        },
+        {
+          "command": "sphynx.revealItem",
+          "when": "view == sphynx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
+          "group": "teacher@2"
         }
       ],
       "editor/title": [
@@ -345,6 +425,14 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "sphynx.editItem",
+          "when": "false"
+        },
+        {
+          "command": "sphynx.revealItem",
+          "when": "false"
+        },
         {
           "command": "sphynx.resetCode",
           "when": "sphynx.isChallengeFile"
