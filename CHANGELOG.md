@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-06
+
 ### Added
 
 - **CS Fundamentals**, a second subject about how computers work, in English and Portuguese. Its first unit, **2 · Number Systems**, has two lessons (Place Value and Binary; Hexadecimal and Octal), a quiz and four challenges solved in Java: Binary to Decimal, Decimal to Binary, Hex to Decimal and Base Converter (any base from 2 to 36).
@@ -15,13 +17,6 @@ All notable changes to this project are documented here. The format follows [Kee
 - **Export a Pack for Students…**: in the teacher view (Tools, or right-click an item), choose exams, challenges and quizzes and save them as a `.zip` that students import with one click. **For students** leaves the reference solutions out; **For teachers** keeps them. The teacher's own challenges an exam uses are added automatically.
 - **Class Results…**: in the teacher view (Tools, or right-click an exam), open a folder of your class's results files as one dashboard: average, median, highest, lowest and the hardest question; one sortable row per student with points per question, time taken, time away, how the exam ended and the integrity warnings; **Verify all** re-grades every file and flags edited scores; **Export CSV** for a spreadsheet.
 - **Try Exam (Preview)**: in the teacher view, ▶ next to an exam starts a preview attempt with the real questions, timer and restrictions. It has its own answers and results, never counts as a real attempt, appears under the exam with the score per question, and can be finished, opened or restarted from its right-click menu.
-
-### Fixed
-
-- Starting an exam could lose the exam a moment later ("Start the exam first" on the first submit), because of a race in how VS Code stores extension state: when two saves happen close together, the older one could replace the newer. Progress, quiz scores and exam sessions are now protected against it.
-
-### Added
-
 - Automated tests: unit tests for grading, exams, the learning path, content, import and the Java runner, and integration tests that start VS Code and go through challenges, resets, grouping, languages, a full exam and an import. CI runs them on every pull request.
 
 ### Changed
@@ -29,6 +24,10 @@ All notable changes to this project are documented here. The format follows [Kee
 - **Reset All Challenges…** moved from a button at the top of the student sidebar to its **…** menu, so it isn't clicked by accident. It also clears the lessons marked as read.
 - Releases are also published to **[Open VSX](https://open-vsx.org/extension/lleonardogr/sphynx)**, so Sphynx can be installed in Cursor, VSCodium, Windsurf and Gitpod.
 - Both publish steps skip a version that is already published, so a release can be re-run safely.
+
+### Fixed
+
+- Starting an exam could lose the exam a moment later ("Start the exam first" on the first submit), because of a race in how VS Code stores extension state: when two saves happen close together, the older one could replace the newer. Progress, quiz scores and exam sessions are now protected against it.
 
 ## [1.0.2] - 2026-10-06
 
@@ -239,7 +238,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.9.0...v1.0.0
