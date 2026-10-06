@@ -100,6 +100,8 @@ export class ExamManager implements vscode.Disposable {
     private readonly codeDir: (examId: string) => string,
     /** Runs every test of a question against the student's current code (used for auto-submit). */
     private readonly gradeQuestion: (exam: ExamDefinition, q: ExamQuestion) => Promise<RunOutcome | undefined>,
+    /** Where sessions are saved: the extension's global state (see SafeState). */
+    private readonly store: vscode.Memento = context.globalState,
   ) {
     this.timerItem.command = 'sphynx.list.focus';
     this.disposables.push(
@@ -122,7 +124,7 @@ export class ExamManager implements vscode.Disposable {
   // ------------------------------------------------------------------ state
 
   private all(): Record<string, SessionState> {
-    return this.context.globalState.get<Record<string, SessionState>>(STATE_KEY, {});
+    return this.store.get<Record<string, SessionState>>(STATE_KEY, {});
   }
 
   state(examId: string): SessionState | undefined {
@@ -136,7 +138,7 @@ export class ExamManager implements vscode.Disposable {
     } else {
       delete all[examId];
     }
-    await this.context.globalState.update(STATE_KEY, all);
+    await this.store.update(STATE_KEY, all);
     this.changed.fire();
   }
 
@@ -218,7 +220,7 @@ export class ExamManager implements vscode.Disposable {
     if (ok !== startLabel) {
       return false;
     }
-    const previousName = this.context.globalState.get<string>('sphynx.studentName', '');
+    const previousName = this.store.get<string>('sphynx.studentName', '');
     const student = (
       await vscode.window.showInputBox({
         title: exam.title,
@@ -231,7 +233,7 @@ export class ExamManager implements vscode.Disposable {
     if (!student) {
       return false;
     }
-    await this.context.globalState.update('sphynx.studentName', student);
+    await this.store.update('sphynx.studentName', student);
 
     const now = Date.now();
     const state: SessionState = { student, startedAt: now, endsAt: now + exam.durationMinutes * 60_000, questions: {}, warnings: [] };

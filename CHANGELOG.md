@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Fixed
+
+- Starting an exam could lose the exam a moment later ("Start the exam first" on the first submit), because of a race in how VS Code stores extension state: when two saves happen close together, the older one could replace the newer. Progress, quiz scores and exam sessions are now protected against it.
+
+### Added
+
+- Automated tests: unit tests for grading, exams, the learning path, content, import and the Java runner, and integration tests that start VS Code and go through challenges, resets, grouping, languages, a full exam and an import. CI runs them on every pull request.
+
 ### Changed
 
 - Releases are also published to **[Open VSX](https://open-vsx.org/extension/lleonardogr/sphynx)**, so Sphynx can be installed in Cursor, VSCodium, Windsurf and Gitpod.
