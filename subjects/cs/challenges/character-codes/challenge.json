@@ -1,0 +1,78 @@
+{
+  "title": "Character Codes",
+  "topic": "TextMedia",
+  "requires": [
+    "Loops",
+    "Strings"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "A char is a number: (int) c gives its code, so (int) 'A' is 65.",
+    "Go through the line with a loop and text.charAt(i).",
+    "Build the output with a StringBuilder, putting a space before every code except the first."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Códigos dos caracteres",
+      "hints": [
+        "Um char é um número: (int) c dá o código dele, então (int) 'A' é 65.",
+        "Percorra a linha com um laço e texto.charAt(i).",
+        "Monte a saída com um StringBuilder, colocando um espaço antes de cada código menos o primeiro."
+      ],
+      "mustContain": [
+        "Use um laço para percorrer os caracteres."
+      ],
+      "mustNotContain": [
+        "Percorra os caracteres com um laço: getBytes(), chars() e codePoints() não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to go through the characters."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "getBytes|chars\\s*\\(\\)|codePoints\\s*\\(\\)",
+      "message": "Go through the characters with a loop: getBytes(), chars() and codePoints() aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "Hi!\n",
+      "output": ""
+    },
+    {
+      "input": "Java 25\n",
+      "output": ""
+    },
+    {
+      "input": "A\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "az\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "0 9\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "~{}\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "Hello, World.\n",
+      "output": "",
+      "hidden": true
+    }
+  ]
+}

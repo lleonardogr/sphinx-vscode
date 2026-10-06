@@ -1,0 +1,84 @@
+{
+  "title": "Hex Colors",
+  "topic": "TextMedia",
+  "requires": [
+    "Strings",
+    "Methods"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "After the #, each pair of hex digits is one color byte: red, green, blue. FF is 255, 88 is 136, 00 is 0.",
+    "A method int digit(char c) that returns 0–15 (or -1 for a character that isn't a hex digit) makes the rest easy: a pair is digit(first) × 16 + digit(second).",
+    "For the short form #f80, double each digit first: f → ff, 8 → 88, 0 → 00."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Cores em hexadecimal",
+      "hints": [
+        "Depois do #, cada par de dígitos hex é um byte de cor: vermelho, verde, azul. FF é 255, 88 é 136, 00 é 0.",
+        "Um método int digit(char c) que devolve 0–15 (ou -1 para um caractere que não é dígito hex) facilita o resto: um par é digit(primeiro) × 16 + digit(segundo).",
+        "Na forma curta #f80, duplique cada dígito primeiro: f → ff, 8 → 88, 0 → 00."
+      ],
+      "mustNotContain": [
+        "Leia os dígitos hex você mesmo: nada de métodos prontos que fazem isso por você."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "(parse(Int|Long)|valueOf)\\s*\\([^;]*,\\s*\\w+\\s*\\)|\\.decode\\s*\\(|HexFormat|Color\\.",
+      "message": "Read the hex digits yourself: no library methods that do it for you."
+    }
+  ],
+  "tests": [
+    {
+      "input": "#FF8800\n",
+      "output": ""
+    },
+    {
+      "input": "#f80\n",
+      "output": ""
+    },
+    {
+      "input": "#000000\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "#FFFFFF\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "#1e90ff\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "#12345\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "FF8800\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "#GG0000\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "#abc\n",
+      "output": "",
+      "hidden": true
+    },
+    {
+      "input": "#C0FFEE\n",
+      "output": "",
+      "hidden": true
+    }
+  ]
+}

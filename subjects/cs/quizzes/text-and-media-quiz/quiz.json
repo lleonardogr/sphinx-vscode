@@ -1,0 +1,139 @@
+{
+  "title": "Text, Images and Sound Quiz",
+  "topic": "TextMedia",
+  "requires": [
+    "Strings"
+  ],
+  "description": "Character codes, Unicode and UTF-8, pixels and colors, and sound samples.",
+  "questions": [
+    {
+      "type": "number",
+      "prompt": "What is the ASCII code of the letter **A**?",
+      "answer": "65",
+      "explanation": "Upper-case letters start at 65: A = 65, B = 66, … Z = 90."
+    },
+    {
+      "type": "output",
+      "code": "IO.println((int) 'a');",
+      "answer": "97",
+      "explanation": "Lower-case letters start at 97, exactly 32 after the upper-case ones."
+    },
+    {
+      "type": "output",
+      "code": "IO.println((char) 66);",
+      "answer": "B",
+      "explanation": "Casting a number to char gives the character with that code: 66 is B."
+    },
+    {
+      "type": "output",
+      "code": "IO.println('a' - 'A');",
+      "answer": "32",
+      "explanation": "Subtracting chars subtracts their codes: 97 − 65 = 32."
+    },
+    {
+      "type": "choice",
+      "prompt": "How many bytes does **é** (U+00E9) take in UTF-8?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "answer": 1,
+      "explanation": "Code points from U+0080 to U+07FF take 2 bytes: é is C3 A9."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "Every ASCII file is also a valid UTF-8 file.",
+      "answer": true,
+      "explanation": "UTF-8 stores code points 0 to 127 in one byte, exactly as ASCII does."
+    },
+    {
+      "type": "number",
+      "prompt": "How many bytes does one pixel take in a typical 24-bit color image?",
+      "answer": "3",
+      "explanation": "One byte each for red, green and blue: 24 bits."
+    },
+    {
+      "type": "number",
+      "prompt": "How many bytes does an uncompressed **100 × 100** image with 24-bit color take?",
+      "answer": "30000",
+      "explanation": "100 × 100 pixels × 3 bytes = 30,000 bytes."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does the color **#00FF00** look like?",
+      "options": [
+        "Red",
+        "Green",
+        "Blue",
+        "Black"
+      ],
+      "answer": 1,
+      "explanation": "The three bytes are red 00, green FF (255), blue 00: pure green."
+    },
+    {
+      "type": "number",
+      "prompt": "How many bytes per second does uncompressed CD audio take (44,100 samples per second, 16 bits, stereo)?",
+      "answer": "176400",
+      "explanation": "44,100 × 2 bytes × 2 channels = 176,400 bytes per second."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de texto, imagens e som",
+      "description": "Códigos de caracteres, Unicode e UTF-8, pixels e cores, e amostras de som.",
+      "questions": [
+        {
+          "prompt": "Qual é o código ASCII da letra **A**?",
+          "explanation": "As letras maiúsculas começam em 65: A = 65, B = 66, … Z = 90."
+        },
+        {
+          "explanation": "As letras minúsculas começam em 97, exatamente 32 depois das maiúsculas."
+        },
+        {
+          "explanation": "Converter um número para char dá o caractere com esse código: 66 é B."
+        },
+        {
+          "explanation": "Subtrair chars subtrai os códigos deles: 97 − 65 = 32."
+        },
+        {
+          "prompt": "Quantos bytes **é** (U+00E9) ocupa em UTF-8?",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "explanation": "Code points de U+0080 a U+07FF ocupam 2 bytes: é é C3 A9."
+        },
+        {
+          "prompt": "Todo arquivo ASCII também é um arquivo UTF-8 válido.",
+          "explanation": "O UTF-8 guarda os code points de 0 a 127 em um byte, exatamente como o ASCII."
+        },
+        {
+          "prompt": "Quantos bytes um pixel ocupa numa imagem colorida típica de 24 bits?",
+          "explanation": "Um byte para o vermelho, um para o verde e um para o azul: 24 bits."
+        },
+        {
+          "prompt": "Quantos bytes ocupa uma imagem **100 × 100** sem compressão com cor de 24 bits?",
+          "explanation": "100 × 100 pixels × 3 bytes = 30.000 bytes."
+        },
+        {
+          "prompt": "Como é a cor **#00FF00**?",
+          "options": [
+            "Vermelha",
+            "Verde",
+            "Azul",
+            "Preta"
+          ],
+          "explanation": "Os três bytes são vermelho 00, verde FF (255), azul 00: verde puro."
+        },
+        {
+          "prompt": "Quantos bytes por segundo ocupa o áudio de CD sem compressão (44.100 amostras por segundo, 16 bits, estéreo)?",
+          "explanation": "44.100 × 2 bytes × 2 canais = 176.400 bytes por segundo."
+        }
+      ]
+    }
+  }
+}
