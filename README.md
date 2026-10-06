@@ -199,16 +199,42 @@ Write an `exam.json` (title, duration, open or closed, submissions per question,
 
 ## Roadmap
 
+Done:
+
 - [x] A complete Java learning path: 11 units, from the basics to OOP, exceptions, recursion and streams, with quizzes, tests and exams
 - [x] AI hints tailored to the student's code (local model or your own API key)
 - [x] English and Portuguese
 - [x] Publish to the VS Code Marketplace and Open VSX
-- [x] A class results dashboard for teachers that reads many exam results at once
+- [x] A teacher view: exam previews, export packs and a class results dashboard
 - [x] Subjects, lessons and prerequisites, with CS Fundamentals starting at unit 2 (Number Systems)
-- [ ] The rest of CS Fundamentals: units 1 and 3–8, tests and exams
+
+Content:
+
+- [ ] The rest of CS Fundamentals: units 1 and 3–8 (how a computer works, bits and bytes, number representation, text and media, logic and bitwise operations, algorithms, networks)
+- [ ] CS Fundamentals tests and exams: Number Converter and Packet Inspector tests, CS Exam 1 and a final exam
+- [ ] Lessons for the Java units, to read before each unit's challenges
 - [ ] An algorithms and data structures unit
+- [ ] New subjects: C, SQL and graph theory
+
+For teachers:
+
+- [ ] Lessons in Import and Export packs (today they're shared with a folder)
+- [ ] **Create New Lesson**, like **Create New Challenge**
+- [ ] Teachers' own subjects and units, from their content folders
+- [ ] Optional prerequisite locks, turned on by the teacher
+- [ ] Hide exam questions in the teacher view, or protect it with a PIN
 - [ ] AI help for writing new challenges
-- [ ] Support more languages (Python, JavaScript, C, …) through a pluggable runner per language
+
+For students:
+
+- [ ] Back up and restore progress (to move to another computer or reinstall)
+- [ ] More interface languages, such as Spanish
+
+Platform:
+
+- [ ] Support more languages (Python, JavaScript, C, SQL, …) through a pluggable runner per language
+- [ ] Publish to the Marketplace with Microsoft Entra ID before personal access tokens are retired on December 1, 2026 ([#47](https://github.com/lleonardogr/sphynx-vscode/issues/47))
+- [ ] A verified publisher namespace on Open VSX
 
 ## Development
 
