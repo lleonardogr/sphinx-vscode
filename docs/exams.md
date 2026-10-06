@@ -130,6 +130,7 @@ week-3-exam/
 | `mode` | `"closed"` | `"open"` or `"closed"` (see above). |
 | `maxSubmissions` | `3` | Submissions per question. The best one counts. |
 | `questions` | required | Each has an `id` and `points` (default `10`). |
+| `subject` | | The [subject](creating-challenges.md#subjects-lessons-and-prerequisites) whose sidebar lists the exam, such as `"cs"`. By default, the subject most of its questions come from. |
 
 A question `id` is either:
 

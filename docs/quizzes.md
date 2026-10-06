@@ -1,6 +1,6 @@
 # Quizzes
 
-A **quiz** is a set of short questions about Java: multiple choice, true or false, short answer, and "what does this code print?". Each unit of the learning path ends with its quiz, and teachers can add a quiz to an [exam](exams.md) as a graded question.
+A **quiz** is a set of short questions: multiple choice, true or false, short answer, numbers (typed in binary, octal, decimal or hexadecimal), and "what does this code print?". Each unit of the learning path ends with its quiz, and teachers can add a quiz to an [exam](exams.md) as a graded question.
 
 - [Taking a quiz (students)](#taking-a-quiz-students)
 - [Writing a quiz (teachers)](#writing-a-quiz-teachers)
@@ -68,7 +68,9 @@ my-quizzes/
 |-------|---------|-------------|
 | `title` | required | Shown in the sidebar and at the top of the quiz. |
 | `description` | | Shown above the questions (Markdown). |
-| `topic` | | The unit the quiz belongs to, such as `Loops`; it's listed at the end of that unit. Leave it out (or use another name) to put it in the Custom section. |
+| `topic` | | The unit the quiz belongs to, such as `Loops` or `NumberSystems`; it's listed at the end of that unit. Leave it out (or use another name) to put it in the Custom section. |
+| `requires` | | Units the student should know first, such as `["Basics"]`. Shown with the student's progress; nothing is locked. See [Prerequisites](creating-challenges.md#prerequisites). |
+| `subject` | | For a quiz without a unit: the subject whose Custom section lists it, such as `"cs"`. Default: `java`. |
 | `questions` | required | The questions, in order. See below. |
 
 Every question can also have:
@@ -92,8 +94,26 @@ To share quizzes, put them next to your challenges and use [Import](creating-cha
 | `truefalse` | picks True or False | `true` or `false` |
 | `short` | types a word or value | An accepted answer, or a list of them. Extra spaces and letter case are ignored, unless you set `"caseSensitive": true`. |
 | `output` | reads `code` and types what it prints | The exact output. Leave it `""` and let the validator fill it in (see below). Add `options` to let the student pick instead of typing; `answer` is then the index of the right option. |
+| `number` | types a number | The number written in the question's `base`, as plain digits: `"1101"` with `"base": 2`, `"2F"` with `"base": 16`, `"2.125"` in decimal. |
 
 For `output` questions, the code can be a **snippet**, which is run inside `void main() { … }`, or a **whole program**, in modern or classic style. When the student types the output, spaces at the start and at the end are ignored, and spaces inside the lines must match.
+
+### Number questions
+
+```json
+{ "type": "number", "prompt": "Convert **13** to binary.", "base": 2, "answer": "1101" }
+```
+
+| Field | Default | Description |
+|-------|---------|-------------|
+| `base` | `10` | The base the student answers in: `2`, `8`, `10` or `16`. The answer box says which one ("Binary number, e.g. 1011"). |
+| `tolerance` | `0` | How far a decimal answer may be from the right one, such as `0.01`. |
+
+Answers are compared **by value**, so the student doesn't have to match your exact spelling:
+
+- Leading zeros, spaces and underscores don't matter: `1101`, `0000 1101` and `0000_1101` are the same.
+- The usual prefixes are accepted: `0b1101`, `0o17`, `0x2F` or `#2F`. Hex digits can be upper or lower case.
+- In decimal, when the right answer is a whole number, `1,024` and `1.024` both mean 1024. When it has decimals, a comma works as the decimal point too: `2,125` or `2.125`.
 
 ---
 

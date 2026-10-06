@@ -6,6 +6,11 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **CS Fundamentals**, a second subject about how computers work, in English and Portuguese. Its first unit, **2 · Number Systems**, has two lessons (Place Value and Binary; Hexadecimal and Octal), a quiz and four challenges solved in Java: Binary to Decimal, Decimal to Binary, Hex to Decimal and Base Converter (any base from 2 to 36).
+- **Subjects**: the student view shows one subject at a time. **Switch Subject…** (📚) changes it, the sidebar header shows its name, and the status bar counts its challenges. Exams are listed under their subject, and an exam in progress is always shown.
+- **Lessons**: short pages to read before a unit's quiz and challenges, with images, a reading time, **Mark as read** (a ✓ in the sidebar) and a button to the next item. Teachers can write their own (`lesson.json` and `lesson.md`).
+- **Prerequisites**: challenges, quizzes and lessons can list the units they build on (`"requires": ["Loops"]`). The sidebar shows *needs Loops*, and the panel shows each unit with the student's progress (**Needs: Java Programming · Loops · 7/12**). Nothing is locked.
+- **Number questions** in quizzes: the student types a number in binary, octal, decimal or hexadecimal, and it's compared by value (prefixes like `0b` and `0x`, spaces and leading zeros are fine), with an optional tolerance for decimals.
 - **Teacher view**: a second view of the Sphynx sidebar for teachers, opened with the 💼 button (**Switch to Teacher View**). It lists **My Exams** with their questions (click one to edit it), **My Challenges & Quizzes** (only the teacher's own imported or folder content; click one to try it) and the **Tools** (create, import, validate, verify exam results, AI setup). Right-click an item to **Edit** it or **Show in Folder**. The 🎓 button switches back to the **student view**, which no longer shows the authoring buttons. The choice is remembered.
 - **Export a Pack for Students…**: in the teacher view (Tools, or right-click an item), choose exams, challenges and quizzes and save them as a `.zip` that students import with one click. **For students** leaves the reference solutions out; **For teachers** keeps them. The teacher's own challenges an exam uses are added automatically.
 - **Class Results…**: in the teacher view (Tools, or right-click an exam), open a folder of your class's results files as one dashboard: average, median, highest, lowest and the hardest question; one sortable row per student with points per question, time taken, time away, how the exam ended and the integrity warnings; **Verify all** re-grades every file and flags edited scores; **Export CSV** for a spreadsheet.
@@ -21,6 +26,7 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Changed
 
+- **Reset All Challenges…** moved from a button at the top of the student sidebar to its **…** menu, so it isn't clicked by accident. It also clears the lessons marked as read.
 - Releases are also published to **[Open VSX](https://open-vsx.org/extension/lleonardogr/sphynx)**, so Sphynx can be installed in Cursor, VSCodium, Windsurf and Gitpod.
 - Both publish steps skip a version that is already published, so a release can be re-run safely.
 
