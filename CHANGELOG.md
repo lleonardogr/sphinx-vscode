@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-10-06
+
 ### Changed
 
 - Sphynx is on the **[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)**: the README now installs from there (the `.vsix` is still attached to every release for offline classrooms), and it has a demo GIF and screenshots of the learning path, quizzes, exams and the Portuguese interface.
@@ -211,7 +213,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.9.0...v1.0.0
 [0.9.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.8.0...v0.9.0
