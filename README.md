@@ -7,8 +7,8 @@
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/lleonardogr.sphynx?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/lleonardogr.sphynx)](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx)
 [![Open VSX](https://img.shields.io/open-vsx/v/lleonardogr/sphynx?label=Open%20VSX)](https://open-vsx.org/extension/lleonardogr/sphynx)
-[![CI](https://github.com/lleonardogr/sphynx-vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/lleonardogr/sphynx-vscode/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/lleonardogr/sphynx-vscode)](https://github.com/lleonardogr/sphynx-vscode/releases/latest)
+[![CI](https://github.com/lleonardogr/sphinx-vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/lleonardogr/sphinx-vscode/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/lleonardogr/sphinx-vscode)](https://github.com/lleonardogr/sphinx-vscode/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 > *Like the sphinx of the legend, Sphinx asks you questions, and you only pass if you answer them right.*
@@ -111,7 +111,7 @@ Sphinx checks Java when it starts. If something is wrong, it warns you and shows
 
    In **Cursor**, VSCodium or Windsurf, search for **Sphinx** the same way: it comes from [Open VSX](https://open-vsx.org/extension/lleonardogr/sphynx).
 
-   No internet in the classroom? Download **`sphynx-x.y.z.vsix`** from the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) and use **Install from VSIX…** in the Extensions view's **`...`** menu.
+   No internet in the classroom? Download **`sphynx-x.y.z.vsix`** from the [latest release](https://github.com/lleonardogr/sphinx-vscode/releases/latest) and use **Install from VSIX…** in the Extensions view's **`...`** menu.
 2. Open a folder for your work (**File → Open Folder…**). Your code is saved in `sphinx/<challenge>/Main.java` inside it.
 
 ### 3. Solve your first challenge
@@ -175,7 +175,7 @@ Click the 💼 button at the top of the Sphinx sidebar (**Switch to Teacher View
 
 ### Share the extension with your class
 
-Point students to the [Marketplace page](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx) (or the `.vsix` in the [latest release](https://github.com/lleonardogr/sphynx-vscode/releases/latest) for offline classrooms) and the [Getting started](#getting-started-students) steps above. Reference solutions (`Solution*.java`) are **never** included in the `.vsix`, but they are visible in this public repository.
+Point students to the [Marketplace page](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx) (or the `.vsix` in the [latest release](https://github.com/lleonardogr/sphinx-vscode/releases/latest) for offline classrooms) and the [Getting started](#getting-started-students) steps above. Reference solutions (`Solution*.java`) are **never** included in the `.vsix`, but they are visible in this public repository.
 
 To build the `.vsix` yourself:
 
@@ -233,13 +233,13 @@ For students:
 Platform:
 
 - [ ] Support more languages (Python, JavaScript, C, SQL, …) through a pluggable runner per language
-- [ ] Publish to the Marketplace with Microsoft Entra ID before personal access tokens are retired on December 1, 2026 ([#47](https://github.com/lleonardogr/sphynx-vscode/issues/47))
+- [ ] Publish to the Marketplace with Microsoft Entra ID before personal access tokens are retired on December 1, 2026 ([#47](https://github.com/lleonardogr/sphinx-vscode/issues/47))
 - [ ] A verified publisher namespace on Open VSX
 
 ## Development
 
 ```bash
-git clone https://github.com/lleonardogr/sphynx-vscode.git
+git clone https://github.com/lleonardogr/sphinx-vscode.git
 cd sphinx-vscode
 npm install        # dependencies + the commit-message hook
 npm run compile    # type-check and build to out/

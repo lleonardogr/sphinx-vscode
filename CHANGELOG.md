@@ -150,7 +150,7 @@ All notable changes to this project are documented here. The format follows [Kee
   - Student code is saved in `sphynx/`. An existing `tech-challenges/` folder keeps being used, so no code is lost.
   - Exam results files use the format `sphynx-exam-results`, and **Verify** still accepts files from Tech Challenges.
   - Solved-challenge progress, exam state and saved AI keys belong to the old extension id, so they start fresh.
-  - The repository moved to [lleonardogr/sphynx-vscode](https://github.com/lleonardogr/sphynx-vscode). Old links redirect.
+  - The repository moved to [lleonardogr/sphinx-vscode](https://github.com/lleonardogr/sphinx-vscode). Old links redirect.
 
 ### Added
 
@@ -246,20 +246,20 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.2.0...HEAD
-[1.2.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.2...v1.1.0
-[1.0.2]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.1...v1.0.2
-[1.0.1]: https://github.com/lleonardogr/sphynx-vscode/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.9.0...v1.0.0
-[0.9.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.8.0...v0.9.0
-[0.8.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.7.1...v0.8.0
-[0.7.1]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.7.0...v0.7.1
-[0.7.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.6.0...v0.7.0
-[0.6.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.5.0...v0.6.0
-[0.5.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.4.0...v0.5.0
-[0.4.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.3.0...v0.4.0
-[0.3.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.2.1...v0.3.0
-[0.2.1]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/lleonardogr/sphynx-vscode/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/lleonardogr/sphynx-vscode/releases/tag/v0.1.0
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.0.2...v1.1.0
+[1.0.2]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v0.9.0...v1.0.0
+[0.9.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v0.8.0...v0.9.0
+[0.8.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v0.7.1...v0.8.0
+[0.7.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v0.7.0...v0.7.1
+[0.7.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v0.6.0...v0.7.0
+[0.6.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v0.2.1...v0.3.0
+[0.2.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/lleonardogr/sphinx-vscode/releases/tag/v0.1.0
