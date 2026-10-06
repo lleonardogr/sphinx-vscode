@@ -1,0 +1,74 @@
+{
+  "title": "Storage Units",
+  "topic": "BitsBytes",
+  "requires": [
+    "Loops",
+    "Strings"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Keep dividing by 1000 while the value is 1000 or more, counting how many times you divided. Do the same with 1024 for the binary units.",
+    "The count picks the prefix: 0 is plain bytes, 1 is K, 2 is M, and so on. \"KMGTP\".charAt(count - 1) gives the letter.",
+    "Bytes are printed as a whole number; everything else with String.format(\"%.2f\", value)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Unidades de armazenamento",
+      "hints": [
+        "Continue dividindo por 1000 enquanto o valor for 1000 ou mais, contando quantas vezes dividiu. Faça o mesmo com 1024 para as unidades binárias.",
+        "A contagem escolhe o prefixo: 0 são bytes, 1 é K, 2 é M, e assim por diante. \"KMGTP\".charAt(contagem - 1) dá a letra.",
+        "Bytes são impressos como número inteiro; o resto com String.format(\"%.2f\", valor)."
+      ],
+      "mustContain": [
+        "Use um laço para achar a unidade."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to find the unit."
+    }
+  ],
+  "tests": [
+    {
+      "input": "1500000\n",
+      "output": "SI: 1.50 MB\nBinary: 1.43 MiB\n"
+    },
+    {
+      "input": "512\n",
+      "output": "SI: 512 B\nBinary: 512 B\n"
+    },
+    {
+      "input": "1024\n",
+      "output": "SI: 1.02 KB\nBinary: 1.00 KiB\n",
+      "hidden": true
+    },
+    {
+      "input": "1000\n",
+      "output": "SI: 1.00 KB\nBinary: 1000 B\n",
+      "hidden": true
+    },
+    {
+      "input": "0\n",
+      "output": "SI: 0 B\nBinary: 0 B\n",
+      "hidden": true
+    },
+    {
+      "input": "1000000000000\n",
+      "output": "SI: 1.00 TB\nBinary: 931.32 GiB\n",
+      "hidden": true
+    },
+    {
+      "input": "123456789\n",
+      "output": "SI: 123.46 MB\nBinary: 117.74 MiB\n",
+      "hidden": true
+    },
+    {
+      "input": "1125899906842624\n",
+      "output": "SI: 1.13 PB\nBinary: 1.00 PiB\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "title": "Kilobytes and Kibibytes",
+  "topic": "BitsBytes",
+  "order": 2,
+  "translations": {
+    "pt-br": {
+      "title": "Kilobytes e kibibytes"
+    }
+  }
+}

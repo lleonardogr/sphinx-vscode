@@ -1,0 +1,141 @@
+{
+  "title": "Bits and Bytes Quiz",
+  "topic": "BitsBytes",
+  "requires": [
+    "Basics"
+  ],
+  "description": "How much fits in a number of bits, and how sizes and speeds are measured: bytes, kilobytes, kibibytes and megabits.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "How many bits are there in one **byte**?",
+      "options": [
+        "4",
+        "8",
+        "10",
+        "16"
+      ],
+      "answer": 1,
+      "explanation": "A byte is 8 bits, enough for 256 different values. Half a byte (4 bits) is called a nibble."
+    },
+    {
+      "type": "number",
+      "prompt": "How many different values can **10 bits** hold?",
+      "answer": "1024",
+      "explanation": "Each bit doubles the count: 2¹⁰ = 1024."
+    },
+    {
+      "type": "number",
+      "prompt": "What is the largest number **16 bits** can store, counting from 0?",
+      "answer": "65535",
+      "explanation": "16 bits hold 2¹⁶ = 65,536 values, from 0 to 65,535."
+    },
+    {
+      "type": "number",
+      "prompt": "How many bits do you need to write **300** in binary?",
+      "answer": "9",
+      "explanation": "8 bits only reach 255, and 9 bits reach 511, so 300 needs 9 bits (`100101100`)."
+    },
+    {
+      "type": "number",
+      "prompt": "How many bytes are there in one **KiB** (kibibyte)?",
+      "answer": "1024",
+      "explanation": "Binary prefixes multiply by 1024 = 2¹⁰: 1 KiB = 1024 bytes, 1 MiB = 1024 KiB."
+    },
+    {
+      "type": "number",
+      "prompt": "How many bytes are there in one **KB** (kilobyte), as disk makers count?",
+      "answer": "1000",
+      "explanation": "SI prefixes multiply by 1000, like kilometre and kilogram: 1 KB = 1000 bytes, 1 MB = 1,000,000 bytes."
+    },
+    {
+      "type": "choice",
+      "prompt": "A disk sold as **1 TB** shows up as about **931 GB** on Windows. Why?",
+      "options": [
+        "Part of the disk is broken",
+        "The disk maker counts in powers of 1000, and Windows divides by 1024 (it shows GiB, calling them GB)",
+        "The operating system uses 69 GB",
+        "Files are compressed"
+      ],
+      "answer": 1,
+      "explanation": "1 TB = 1,000,000,000,000 bytes. Divided by 1024³ that is 931.3 GiB. Nothing is missing: the same bytes are counted with a bigger unit."
+    },
+    {
+      "type": "number",
+      "prompt": "An internet connection of **80 Mbps** downloads how many **megabytes** per second, at most?",
+      "answer": "10",
+      "explanation": "Speeds are in bits: 80 megabits per second ÷ 8 bits per byte = 10 megabytes per second."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "A Java `int` always uses 32 bits, on any computer.",
+      "answer": true,
+      "explanation": "Java fixes the sizes: `byte` 8 bits, `short` 16, `int` 32, `long` 64. That is why an `int` stops at 2,147,483,647."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(1024 * 1024);",
+      "answer": "1048576",
+      "explanation": "1024 × 1024 = 1,048,576: the number of bytes in one MiB."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de bits e bytes",
+      "description": "Quanto cabe numa quantidade de bits, e como tamanhos e velocidades são medidos: bytes, kilobytes, kibibytes e megabits.",
+      "questions": [
+        {
+          "prompt": "Quantos bits há em um **byte**?",
+          "options": [
+            "4",
+            "8",
+            "10",
+            "16"
+          ],
+          "explanation": "Um byte tem 8 bits, o suficiente para 256 valores diferentes. Meio byte (4 bits) se chama nibble."
+        },
+        {
+          "prompt": "Quantos valores diferentes **10 bits** conseguem guardar?",
+          "explanation": "Cada bit dobra a quantidade: 2¹⁰ = 1024."
+        },
+        {
+          "prompt": "Qual é o maior número que **16 bits** conseguem guardar, contando a partir de 0?",
+          "explanation": "16 bits guardam 2¹⁶ = 65.536 valores, de 0 a 65.535."
+        },
+        {
+          "prompt": "Quantos bits são necessários para escrever **300** em binário?",
+          "explanation": "8 bits só chegam a 255, e 9 bits chegam a 511, então 300 precisa de 9 bits (`100101100`)."
+        },
+        {
+          "prompt": "Quantos bytes há em um **KiB** (kibibyte)?",
+          "explanation": "Os prefixos binários multiplicam por 1024 = 2¹⁰: 1 KiB = 1024 bytes, 1 MiB = 1024 KiB."
+        },
+        {
+          "prompt": "Quantos bytes há em um **KB** (kilobyte), como os fabricantes de disco contam?",
+          "explanation": "Os prefixos SI multiplicam por 1000, como quilômetro e quilograma: 1 KB = 1000 bytes, 1 MB = 1.000.000 bytes."
+        },
+        {
+          "prompt": "Um disco vendido como **1 TB** aparece com cerca de **931 GB** no Windows. Por quê?",
+          "options": [
+            "Parte do disco está com defeito",
+            "O fabricante conta em potências de 1000, e o Windows divide por 1024 (mostra GiB, chamando de GB)",
+            "O sistema operacional usa 69 GB",
+            "Os arquivos são comprimidos"
+          ],
+          "explanation": "1 TB = 1.000.000.000.000 bytes. Dividido por 1024³ dá 931,3 GiB. Nada sumiu: os mesmos bytes são contados com uma unidade maior."
+        },
+        {
+          "prompt": "Uma conexão de internet de **80 Mbps** baixa no máximo quantos **megabytes** por segundo?",
+          "explanation": "Velocidades são em bits: 80 megabits por segundo ÷ 8 bits por byte = 10 megabytes por segundo."
+        },
+        {
+          "prompt": "Um `int` do Java sempre usa 32 bits, em qualquer computador.",
+          "explanation": "O Java fixa os tamanhos: `byte` 8 bits, `short` 16, `int` 32, `long` 64. É por isso que um `int` para em 2.147.483.647."
+        },
+        {
+          "explanation": "1024 × 1024 = 1.048.576: a quantidade de bytes em um MiB."
+        }
+      ]
+    }
+  }
+}

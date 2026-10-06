@@ -1,0 +1,77 @@
+{
+  "title": "Bits Needed",
+  "topic": "BitsBytes",
+  "requires": [
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "Each bit of a binary number is one division by 2: count how many times you can halve the number before it reaches 0.",
+    "Zero still needs one bit to be written down.",
+    "A byte holds 8 bits, so the bytes needed are the bits divided by 8, rounded up: (bits + 7) / 8."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Bits necessários",
+      "hints": [
+        "Cada bit de um número binário é uma divisão por 2: conte quantas vezes dá para dividir o número ao meio até ele chegar a 0.",
+        "O zero também precisa de um bit para ser escrito.",
+        "Um byte tem 8 bits, então os bytes necessários são os bits divididos por 8, arredondando para cima: (bits + 7) / 8."
+      ],
+      "mustContain": [
+        "Use um laço que divide o número ao meio."
+      ],
+      "mustNotContain": [
+        "Conte os bits você mesmo: nada de métodos prontos que fazem isso por você."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop that halves the number."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "toBinaryString|toString\\s*\\([^;]*,\\s*\\w+\\s*\\)|numberOf(Leading|Trailing)Zeros|bitLength|highestOneBit|Math\\s*\\.\\s*log",
+      "message": "Count the bits yourself: no library methods that do it for you."
+    }
+  ],
+  "tests": [
+    {
+      "input": "255\n",
+      "output": "Bits: 8\nBytes: 1\n"
+    },
+    {
+      "input": "256\n",
+      "output": "Bits: 9\nBytes: 2\n"
+    },
+    {
+      "input": "0\n",
+      "output": "Bits: 1\nBytes: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n",
+      "output": "Bits: 1\nBytes: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "1000\n",
+      "output": "Bits: 10\nBytes: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "65535\n",
+      "output": "Bits: 16\nBytes: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "1000000000000000000\n",
+      "output": "Bits: 60\nBytes: 8\n",
+      "hidden": true
+    }
+  ]
+}

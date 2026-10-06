@@ -1,0 +1,77 @@
+{
+  "title": "How Many Values?",
+  "topic": "BitsBytes",
+  "requires": [
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "With 1 bit there are 2 values, and every extra bit doubles the count: 2, 4, 8, 16, …",
+    "Start a long at 1 and double it n times in a loop.",
+    "Counting from 0, the largest value is one less than the number of values."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quantos valores?",
+      "hints": [
+        "Com 1 bit há 2 valores, e cada bit a mais dobra a quantidade: 2, 4, 8, 16, …",
+        "Comece um long em 1 e dobre-o n vezes num laço.",
+        "Contando a partir do 0, o maior valor é um a menos que a quantidade de valores."
+      ],
+      "mustContain": [
+        "Use um laço que dobra a quantidade."
+      ],
+      "mustNotContain": [
+        "Dobre a quantidade num laço: Math.pow e o operador << não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop that doubles the count."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "Math\\s*\\.\\s*pow|<<",
+      "message": "Double the count in a loop: Math.pow and the << operator aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "8\n",
+      "output": "Values: 256\nLargest: 255\n"
+    },
+    {
+      "input": "1\n",
+      "output": "Values: 2\nLargest: 1\n"
+    },
+    {
+      "input": "4\n",
+      "output": "Values: 16\nLargest: 15\n",
+      "hidden": true
+    },
+    {
+      "input": "16\n",
+      "output": "Values: 65536\nLargest: 65535\n",
+      "hidden": true
+    },
+    {
+      "input": "32\n",
+      "output": "Values: 4294967296\nLargest: 4294967295\n",
+      "hidden": true
+    },
+    {
+      "input": "10\n",
+      "output": "Values: 1024\nLargest: 1023\n",
+      "hidden": true
+    },
+    {
+      "input": "62\n",
+      "output": "Values: 4611686018427387904\nLargest: 4611686018427387903\n",
+      "hidden": true
+    }
+  ]
+}

@@ -51,10 +51,11 @@ The second subject covers what new students should know about **how a computer w
 | Unit | Lessons | Quiz and challenges |
 |------|---------|---------------------|
 | 2 · Number Systems | Place Value and Binary · Hexadecimal and Octal | Number Systems Quiz (answers typed in binary, decimal or hexadecimal) · Binary to Decimal · Decimal to Binary · Hex to Decimal · Base Converter (any base from 2 to 36) |
+| 3 · Bits and Bytes | Bits and Bytes · Kilobytes and Kibibytes | Bits and Bytes Quiz · How Many Values? · Bits Needed · Storage Units (MB vs MiB) · Download Time |
 
 ![A CS Fundamentals lesson, Place Value and Binary, with a diagram of the byte 10110010 adding up to 178, and the Number Systems unit in the sidebar](media/screenshots/lesson.png)
 
-Each item shows the Java it needs, with your progress: for example **Needs: Java Programming · Loops · 7/12**. Nothing is locked. More units are on the way: how a computer works, bits and bytes, number representation, text and media, logic and bitwise operations, algorithms and complexity, and networks.
+Each item shows the Java it needs, with your progress: for example **Needs: Java Programming · Loops · 7/12**. Nothing is locked. More units are on the way: how a computer works, number representation, text and media, logic and bitwise operations, algorithms and complexity, and networks.
 
 ## Screenshots
 
@@ -206,11 +207,11 @@ Done:
 - [x] English and Portuguese
 - [x] Publish to the VS Code Marketplace and Open VSX
 - [x] A teacher view: exam previews, export packs and a class results dashboard
-- [x] Subjects, lessons and prerequisites, with CS Fundamentals starting at unit 2 (Number Systems)
+- [x] Subjects, lessons and prerequisites, with CS Fundamentals units 2 (Number Systems) and 3 (Bits and Bytes)
 
 Content:
 
-- [ ] The rest of CS Fundamentals: units 1 and 3–8 (how a computer works, bits and bytes, number representation, text and media, logic and bitwise operations, algorithms, networks)
+- [ ] The rest of CS Fundamentals: units 1 and 4–8 (how a computer works, number representation, text and media, logic and bitwise operations, algorithms, networks)
 - [ ] CS Fundamentals tests and exams: Number Converter and Packet Inspector tests, CS Exam 1 and a final exam
 - [ ] Lessons for the Java units, to read before each unit's challenges
 - [ ] An algorithms and data structures unit

@@ -49,9 +49,9 @@ test('Java 25+ is available to the extension', async () => {
 
 test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
-  assert.equal(api.challenges().length, 104);
-  assert.equal(api.quizzes().length, 12);
-  assert.equal(api.lessons().length, 2);
+  assert.equal(api.challenges().length, 108);
+  assert.equal(api.quizzes().length, 13);
+  assert.equal(api.lessons().length, 4);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['exam-1', 'exam-2', 'final-exam', 'sample-exam']);
 });
 
@@ -135,7 +135,16 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
     assert.equal(api.tree.subject, 'cs');
     assert.ok(!api.tree.getChildren().some((n) => (n as { kind: string }).kind === 'examsRoot'), 'the Java exams are not listed under CS');
     const groups = api.tree.getChildren().filter((n) => (n as { kind: string }).kind === 'group');
-    assert.deepEqual(groups.map(label), ['2 · Number Systems']);
+    assert.deepEqual(groups.map(label), ['2 · Number Systems', '3 · Bits and Bytes']);
+    assert.deepEqual(api.tree.getChildren(groups[1]).map(label), [
+      'Bits and Bytes',
+      'Kilobytes and Kibibytes',
+      'How Many Values?',
+      'Bits Needed',
+      'Storage Units',
+      'Download Time',
+      'Bits and Bytes Quiz',
+    ]);
     const items = api.tree.getChildren(groups[0]);
     assert.deepEqual(items.map(label), [
       'Place Value and Binary',

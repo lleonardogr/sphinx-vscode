@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 752 212" role="img" aria-label="Every extra bit doubles the patterns: 1 bit has 2 (0, 1), 2 bits have 4 (00 to 11), 3 bits have 8 (000 to 111)">
+  <style>
+    text { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; text-anchor: middle; }
+    rect { fill: none; stroke: #3b82f6; stroke-width: 2; }
+    .pat { font-size: 20px; font-weight: 600; fill: #3b82f6; font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .n { font-size: 16px; fill: #8a94a6; }
+    .count { font-size: 24px; font-weight: 700; fill: #f59e0b; }
+  </style>
+    <text class="n" x="40" y="47">n = 1</text><rect x="80" y="20" width="36" height="40" rx="7"/><text class="pat" x="98" y="47">0</text><rect x="126" y="20" width="36" height="40" rx="7"/><text class="pat" x="144" y="47">1</text><text class="count" x="202" y="47">2</text>
+  <text class="n" x="40" y="109">n = 2</text><rect x="80" y="82" width="50" height="40" rx="7"/><text class="pat" x="105" y="109">00</text><rect x="140" y="82" width="50" height="40" rx="7"/><text class="pat" x="165" y="109">01</text><rect x="200" y="82" width="50" height="40" rx="7"/><text class="pat" x="225" y="109">10</text><rect x="260" y="82" width="50" height="40" rx="7"/><text class="pat" x="285" y="109">11</text><text class="count" x="350" y="109">4</text>
+  <text class="n" x="40" y="171">n = 3</text><rect x="80" y="144" width="64" height="40" rx="7"/><text class="pat" x="112" y="171">000</text><rect x="154" y="144" width="64" height="40" rx="7"/><text class="pat" x="186" y="171">001</text><rect x="228" y="144" width="64" height="40" rx="7"/><text class="pat" x="260" y="171">010</text><rect x="302" y="144" width="64" height="40" rx="7"/><text class="pat" x="334" y="171">011</text><rect x="376" y="144" width="64" height="40" rx="7"/><text class="pat" x="408" y="171">100</text><rect x="450" y="144" width="64" height="40" rx="7"/><text class="pat" x="482" y="171">101</text><rect x="524" y="144" width="64" height="40" rx="7"/><text class="pat" x="556" y="171">110</text><rect x="598" y="144" width="64" height="40" rx="7"/><text class="pat" x="630" y="171">111</text><text class="count" x="702" y="171">8</text>
+</svg>
