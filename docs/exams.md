@@ -199,6 +199,18 @@ Use the **re-graded** score. A ⚠ means the file was changed after the exam.
 
 ---
 
+### Class results dashboard
+
+In the teacher view, **Class Results…** (in **Tools**, or right-click an exam) opens the results files your class handed in, from a folder or a selection of files, as one table:
+
+- **Summary:** average, median, highest and lowest score, and the question with the lowest average (the hardest one).
+- **One row per student:** total score, points per question (`–` when not submitted), time taken, time outside VS Code, how the exam ended (submitted, time up, or away too long), and the integrity warnings (hover the count for the details).
+- **Sort** by any column, and click a name to open that student's results file.
+- **Verify all** re-grades every file, like **Verify Exam Results**, and marks each row ✓ when the score matches or ⚠ with the re-graded score when the file was edited.
+- **Export CSV** saves the table for a spreadsheet or your school's system.
+
+Other JSON files in the folder are ignored, and results of other exams are skipped (the dashboard says how many).
+
 ## Limits you should know about
 
 Sphynx runs on the student's own computer, so a determined student can work around it. Exams suit practice, homework and supervised classroom quizzes. They aren't a secure exam system.

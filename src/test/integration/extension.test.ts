@@ -4,6 +4,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import type { SphynxApi } from '../../extension';
+import type { ClassReport } from '../../classResults';
 import { migrateOldStorage } from '../../extension';
 import { javacMajorVersion } from '../../runner';
 import { extractZip, findImportables, findSolutions } from '../../importCore';
@@ -250,6 +251,34 @@ test('a teacher exports an exam as a pack for students, without the solutions', 
   assert.deepEqual(findSolutions(dest), []);
   assert.ok(dialogs.messages.some((m) => /Exported 1 item to class-7b\.zip/.test(m)), dialogs.messages.slice(-2).join(' | '));
   fs.rmSync(out, { recursive: true, force: true });
+});
+
+test('the class results dashboard summarizes the files students handed in, and catches an edited score', async () => {
+  // The real results file from the exam test, plus a copy whose quiz score was edited by hand.
+  const real = api.examManager.state('exam-1')!.resultsFile!;
+  const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-class-'));
+  fs.copyFileSync(real, path.join(folder, 'results-test-student.json'));
+  const tampered = JSON.parse(read(real));
+  tampered.student = 'Edited Score';
+  tampered.questions.find((q: { id: string }) => q.id === 'exam-1-quiz').earned = 20;
+  tampered.score.earned = 40;
+  fs.writeFileSync(path.join(folder, 'results-edited.json'), JSON.stringify(tampered));
+  fs.writeFileSync(path.join(folder, 'notes.json'), '{"not": "results"}');
+
+  dialogs.openDialog = [vscode.Uri.file(folder)];
+  const exam = api.exams().find((e) => e.id === 'exam-1')!;
+  const report = (await vscode.commands.executeCommand('sphynx.classResults', { kind: 'exam', exam })) as ClassReport;
+  assert.ok(report, 'the dashboard did not open');
+  assert.deepEqual(report.rows.map((r) => `${r.student}:${r.earned}`), ['Edited Score:40', 'Test Student:20']);
+  assert.deepEqual(report.stats, { count: 2, average: 30, median: 30, highest: 40, lowest: 20 });
+  assert.equal(report.questions.length, 4);
+
+  const verified = await api.verifyFiles(report.rows.map((r) => r.file));
+  const byName = Object.fromEntries(verified.map((v) => [path.basename(v.file), v]));
+  assert.equal(byName['results-test-student.json'].matches, true, JSON.stringify(byName['results-test-student.json']));
+  assert.equal(byName['results-edited.json'].matches, false);
+  assert.equal(byName['results-edited.json'].recomputed, 20);
+  fs.rmSync(folder, { recursive: true, force: true });
 });
 
 test('the imported library and saved solutions move over from the old extension id', () => {

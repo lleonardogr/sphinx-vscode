@@ -55,5 +55,6 @@
   "command.revealItem": "Mostrar na pasta",
   "command.previewExam": "Testar a prova (prévia)",
   "command.restartPreview": "Recomeçar prévia",
-  "command.exportPack": "Exportar um pacote para os alunos…"
+  "command.exportPack": "Exportar um pacote para os alunos…",
+  "command.classResults": "Resultados da turma… (professores)"
 }

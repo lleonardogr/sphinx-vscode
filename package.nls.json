@@ -55,5 +55,6 @@
   "command.revealItem": "Show in Folder",
   "command.previewExam": "Try Exam (Preview)",
   "command.restartPreview": "Restart Preview",
-  "command.exportPack": "Export a Pack for Students…"
+  "command.exportPack": "Export a Pack for Students…",
+  "command.classResults": "Class Results… (Teachers)"
 }

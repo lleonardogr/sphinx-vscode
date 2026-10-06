@@ -1,0 +1,28 @@
+/* Class results dashboard (classResultsPanel.ts); builds on panel.css. */
+.actions { display: flex; gap: 8px; margin-top: 12px; }
+.stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0 12px; }
+.stat { background: var(--vscode-editorWidget-background); border: 1px solid var(--vscode-widget-border, transparent); border-radius: 6px; padding: 10px 14px; min-width: 110px; }
+.stat-value { font-size: 1.6em; font-weight: 600; }
+.stat-value .small { font-size: 0.55em; font-weight: 500; }
+.stat-label { color: var(--vscode-descriptionForeground); font-size: 0.85em; margin-top: 2px; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.95em; }
+th, td { padding: 6px 8px; border-bottom: 1px solid var(--vscode-widget-border, rgba(128, 128, 128, 0.25)); text-align: left; white-space: nowrap; }
+/* Long question titles wrap, so every column fits in a normal editor width. */
+th { white-space: normal; vertical-align: bottom; min-width: 48px; max-width: 110px; line-height: 1.25; }
+th:first-child { max-width: none; }
+th { cursor: pointer; user-select: none; position: sticky; top: 0; background: var(--vscode-editor-background); font-weight: 600; }
+th.sorted-asc::after { content: ' ▲'; font-size: 0.75em; }
+th.sorted-desc::after { content: ' ▼'; font-size: 0.75em; }
+th:hover { color: var(--vscode-textLink-foreground); }
+td.cell { text-align: center; font-variant-numeric: tabular-nums; }
+td.good { color: var(--vscode-testing-iconPassed, #3fb950); }
+td.mid { color: var(--vscode-editorWarning-foreground, #d29922); }
+td.low { color: var(--vscode-testing-iconFailed, #f85149); }
+td.none { color: var(--vscode-descriptionForeground); }
+td.flag { color: var(--vscode-editorWarning-foreground, #d29922); }
+td.verified.ok { color: var(--vscode-testing-iconPassed, #3fb950); }
+td.verified.bad { color: var(--vscode-testing-iconFailed, #f85149); font-weight: 600; }
+tfoot td { border-top: 2px solid var(--vscode-widget-border, rgba(128, 128, 128, 0.4)); border-bottom: none; color: var(--vscode-descriptionForeground); }
+a.open { color: var(--vscode-textLink-foreground); text-decoration: none; }
+a.open:hover { text-decoration: underline; }

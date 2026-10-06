@@ -166,6 +166,12 @@
         "icon": "$(package)"
       },
       {
+        "command": "sphynx.classResults",
+        "title": "%command.classResults%",
+        "category": "Sphynx",
+        "icon": "$(table)"
+      },
+      {
         "command": "sphynx.checkJava",
         "title": "%command.checkJava%",
         "category": "Sphynx",
@@ -355,6 +361,11 @@
           "command": "sphynx.exportPack",
           "when": "view == sphynx.teacher",
           "group": "authoring"
+        },
+        {
+          "command": "sphynx.classResults",
+          "when": "view == sphynx.teacher",
+          "group": "authoring"
         }
       ],
       "view/item/context": [
@@ -468,6 +479,11 @@
           "command": "sphynx.exportPack",
           "when": "view == sphynx.teacher && viewItem =~ /^teacher(Exam|Item)$/",
           "group": "teacher@3"
+        },
+        {
+          "command": "sphynx.classResults",
+          "when": "view == sphynx.teacher && viewItem == teacherExam",
+          "group": "teacher@4"
         }
       ],
       "editor/title": [
