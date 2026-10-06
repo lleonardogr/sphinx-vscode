@@ -148,6 +148,30 @@
         "icon": "$(folder-opened)"
       },
       {
+        "command": "sphynx.previewExam",
+        "title": "%command.previewExam%",
+        "category": "Sphynx",
+        "icon": "$(play)"
+      },
+      {
+        "command": "sphynx.restartPreview",
+        "title": "%command.restartPreview%",
+        "category": "Sphynx",
+        "icon": "$(debug-restart)"
+      },
+      {
+        "command": "sphynx.exportPack",
+        "title": "%command.exportPack%",
+        "category": "Sphynx",
+        "icon": "$(package)"
+      },
+      {
+        "command": "sphynx.classResults",
+        "title": "%command.classResults%",
+        "category": "Sphynx",
+        "icon": "$(table)"
+      },
+      {
         "command": "sphynx.checkJava",
         "title": "%command.checkJava%",
         "category": "Sphynx",
@@ -332,6 +356,16 @@
           "command": "sphynx.checkJava",
           "when": "view == sphynx.teacher",
           "group": "java"
+        },
+        {
+          "command": "sphynx.exportPack",
+          "when": "view == sphynx.teacher",
+          "group": "authoring"
+        },
+        {
+          "command": "sphynx.classResults",
+          "when": "view == sphynx.teacher",
+          "group": "authoring"
         }
       ],
       "view/item/context": [
@@ -405,6 +439,51 @@
           "command": "sphynx.revealItem",
           "when": "view == sphynx.teacher && viewItem =~ /^teacher(Exam|Item|Question)$/",
           "group": "teacher@2"
+        },
+        {
+          "command": "sphynx.previewExam",
+          "when": "view == sphynx.teacher && viewItem == teacherExam",
+          "group": "inline@0"
+        },
+        {
+          "command": "sphynx.previewExam",
+          "when": "view == sphynx.teacher && viewItem == teacherExam",
+          "group": "teacher@0"
+        },
+        {
+          "command": "sphynx.finishExam",
+          "when": "view == sphynx.teacher && viewItem == teacherPreviewActive",
+          "group": "inline"
+        },
+        {
+          "command": "sphynx.finishExam",
+          "when": "view == sphynx.teacher && viewItem == teacherPreviewActive",
+          "group": "preview@1"
+        },
+        {
+          "command": "sphynx.openExamResults",
+          "when": "view == sphynx.teacher && viewItem == teacherPreviewFinished",
+          "group": "inline"
+        },
+        {
+          "command": "sphynx.openExamResults",
+          "when": "view == sphynx.teacher && viewItem == teacherPreviewFinished",
+          "group": "preview@1"
+        },
+        {
+          "command": "sphynx.restartPreview",
+          "when": "view == sphynx.teacher && viewItem =~ /^teacherPreview/",
+          "group": "preview@2"
+        },
+        {
+          "command": "sphynx.exportPack",
+          "when": "view == sphynx.teacher && viewItem =~ /^teacher(Exam|Item)$/",
+          "group": "teacher@3"
+        },
+        {
+          "command": "sphynx.classResults",
+          "when": "view == sphynx.teacher && viewItem == teacherExam",
+          "group": "teacher@4"
         }
       ],
       "editor/title": [
@@ -425,6 +504,14 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "sphynx.previewExam",
+          "when": "false"
+        },
+        {
+          "command": "sphynx.restartPreview",
+          "when": "false"
+        },
         {
           "command": "sphynx.editItem",
           "when": "false"

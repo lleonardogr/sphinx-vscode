@@ -141,6 +141,14 @@ Copy the built-in example from the repository's [`exams/sample-exam`](../exams/s
 
 ---
 
+## Trying an exam before giving it
+
+In the **teacher view** (💼 at the top of the Sphynx sidebar), every exam under **My Exams** has a ▶ **Try Exam (Preview)** button. It starts a **preview attempt**: the same questions, timer and restrictions your students get, so you can check that everything works and how long it takes.
+
+- The preview has its own answers and results (its id ends in `--preview`). It never counts as, or blocks, a real attempt, and **Verify Exam Results** rejects a preview's results file.
+- It appears under the exam as **Your preview attempt**, with your score per question. Right-click it to **Finish** it, **Open Results**, or **Restart Preview** (clears its answers so you can try again).
+- Previews are only listed in the teacher view, never in the student view.
+
 ## Giving the exam to your class
 
 The simplest way is to **zip the exam folder** and send it. **Remove the `Solution*.java` files** first. Students click **Import** (⤓) at the top of the Sphynx sidebar and choose the zip. If they forget, the import offers to remove any solutions it finds. See [Sharing challenges with students](creating-challenges.md#sharing-challenges-with-students).
@@ -190,6 +198,18 @@ A results file is plain JSON, so a student could edit the score. Always **verify
 Use the **re-graded** score. A ⚠ means the file was changed after the exam.
 
 ---
+
+### Class results dashboard
+
+In the teacher view, **Class Results…** (in **Tools**, or right-click an exam) opens the results files your class handed in, from a folder or a selection of files, as one table:
+
+- **Summary:** average, median, highest and lowest score, and the question with the lowest average (the hardest one).
+- **One row per student:** total score, points per question (`–` when not submitted), time taken, time outside VS Code, how the exam ended (submitted, time up, or away too long), and the integrity warnings (hover the count for the details).
+- **Sort** by any column, and click a name to open that student's results file.
+- **Verify all** re-grades every file, like **Verify Exam Results**, and marks each row ✓ when the score matches or ⚠ with the re-graded score when the file was edited.
+- **Export CSV** saves the table for a spreadsheet or your school's system.
+
+Other JSON files in the folder are ignored, and results of other exams are skipped (the dashboard says how many).
 
 ## Limits you should know about
 

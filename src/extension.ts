@@ -18,9 +18,12 @@ import { plural, setLanguage, tr } from './i18n';
 import { JavaSetup } from './javaSetup';
 import { clearJavaCache } from './runner';
 import { formatVerification, verifyResults } from './examVerify';
-import { ExamDefinition, ExamQuestion, loadExams, parseExamChallengeId } from './exams';
+import { ExamDefinition, ExamQuestion, PREVIEW_SUFFIX, examChallengeId, loadExams, parseExamChallengeId, previewOf } from './exams';
 import { ChallengeNode, ChallengeTreeProvider, GroupMode } from './treeView';
 import { Origin, TeacherNode, TeacherTreeProvider, sourceFile } from './teacherView';
+import { exportPack } from './exporter';
+import { ClassReport, buildClassReport, examsInResults, findResultsFiles, readResults } from './classResults';
+import { ClassResultsPanel } from './classResultsPanel';
 
 const CODE_FILE = 'Main.java';
 
@@ -48,6 +51,8 @@ export function migrateOldStorage(storage: string): void {
 export interface SphynxApi {
   progress: Progress;
   teacherTree: TeacherTreeProvider;
+  /** Re-grades results files (the class dashboard's "Verify all"). */
+  verifyFiles(files: string[]): Promise<{ file: string; matches: boolean; recomputed?: number; error?: string }[]>;
   view(): 'student' | 'teacher';
   quizProgress: QuizProgress;
   examManager: ExamManager;
@@ -76,7 +81,8 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
 
   const examManager = new ExamManager(context, (examId) => examCodeDir(examId), (exam, q) => gradeExamQuestion(exam, q), store);
   const javaSetup = new JavaSetup(output, () => javaHome(), () => javaStyle());
-  const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams, examManager, () => quizzes, quizProgress, () => javaSetup.problems());
+  // Teachers' preview attempts (see previewOf) are listed in the teacher view only.
+  const tree = new ChallengeTreeProvider(() => challenges, progress, () => exams.filter((e) => !e.preview), examManager, () => quizzes, quizProgress, () => javaSetup.problems());
   javaSetup.onDidChange(() => tree.refresh());
   const GROUP_KEY = 'sphynx.groupBy';
   tree.mode = context.globalState.get<GroupMode>(GROUP_KEY, 'path');
@@ -93,7 +99,24 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     }
     return inside(libraryDir()) ? 'imported' : 'folder';
   };
-  const teacherTree = new TeacherTreeProvider(() => challenges, () => quizzes, () => exams, origin);
+  const teacherTree = new TeacherTreeProvider(() => challenges, () => quizzes, () => exams, origin, examManager, (exam) => exams.find((e) => e.id === exam.id + PREVIEW_SUFFIX));
+  /** Re-grades results files for the class dashboard's "Verify all". */
+  async function verifyFiles(files: string[]): Promise<{ file: string; matches: boolean; recomputed?: number; error?: string }[]> {
+    const out: { file: string; matches: boolean; recomputed?: number; error?: string }[] = [];
+    for (const file of files) {
+      try {
+        const report = await verifyResults(file, exams, javaHome());
+        out.push({ file, matches: report.matches, recomputed: report.recomputed });
+      } catch (e) {
+        out.push({ file, matches: false, error: (e as Error).message });
+      }
+    }
+    return out;
+  }
+  const classPanel = new ClassResultsPanel(context.extensionUri, verifyFiles);
+  context.subscriptions.push({ dispose: () => classPanel.dispose() });
+  /** Exams whose preview was started in this session (later sessions find them through their saved state). */
+  const previewing = new Set<string>();
   const teacherView = vscode.window.createTreeView('sphynx.teacher', { treeDataProvider: teacherTree });
   const currentView = (): 'student' | 'teacher' => (store.get<string>(VIEW_KEY) === 'teacher' ? 'teacher' : 'student');
   async function setView(view: 'student' | 'teacher'): Promise<void> {
@@ -162,7 +185,8 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     const quizResult = loadQuizzes([...builtIn, ...extra]);
     quizzes = quizResult.quizzes;
     const examResult = loadExams([...builtIn, ...extra], challenges, quizzes);
-    exams = examResult.exams;
+    const previews = examResult.exams.filter((e) => previewing.has(e.id) || examManager.state(e.id + PREVIEW_SUFFIX)).map(previewOf);
+    exams = [...examResult.exams, ...previews];
     const errors = [...result.errors.filter((e) => !e.endsWith('folder not found')), ...quizResult.errors, ...examResult.errors];
     if (errors.length) {
       errors.forEach((e) => output.appendLine(`[challenges] ${e}`));
@@ -776,7 +800,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     if (arg && typeof arg === 'object' && 'exam' in (arg as object)) {
       return (arg as { exam: ExamDefinition }).exam;
     }
-    const candidates = exams.filter(filter);
+    const candidates = exams.filter((t) => !t.preview || examManager.state(t.id)).filter(filter);
     if (candidates.length === 0) {
       vscode.window.showInformationMessage(tr('No matching exam.', 'Nenhuma prova encontrada.'));
       return undefined;
@@ -789,6 +813,26 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
       { placeHolder },
     );
     return pick?.exam;
+  }
+
+  /** Clears a teacher's preview attempt (state and answers) after asking. Real attempts are never cleared. */
+  async function restartPreview(preview: ExamDefinition): Promise<boolean> {
+    if (!preview.preview || !preview.id.endsWith(PREVIEW_SUFFIX)) {
+      return false;
+    }
+    const restartLabel = tr('Restart Preview', 'Recomeçar prévia');
+    const answer = await vscode.window.showWarningMessage(
+      tr(`Restart your preview of "${preview.title}"?`, `Recomeçar sua prévia de "${preview.title}"?`),
+      { modal: true, detail: tr('Its answers and score are cleared. Real attempts are not affected.', 'As respostas e a nota dela são apagadas. Tentativas de verdade não são afetadas.') },
+      restartLabel,
+    );
+    if (answer !== restartLabel) {
+      return false;
+    }
+    await examManager.reset(preview);
+    fs.rmSync(examCodeDir(preview.id), { recursive: true, force: true });
+    teacherTree.refresh();
+    return true;
   }
 
   /** Teachers: re-grade one or more results files and compare with the scores they claim. */
@@ -898,6 +942,72 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
     }),
     vscode.commands.registerCommand('sphynx.verifyExamResults', verifyExamResultsCommand),
     vscode.commands.registerCommand('sphynx.switchToTeacherView', () => setView('teacher')),
+    vscode.commands.registerCommand('sphynx.previewExam', async (node?: { exam?: ExamDefinition }) => {
+      const exam = node?.exam;
+      if (!exam || exam.preview) {
+        return;
+      }
+      previewing.add(exam.id);
+      reload();
+      const preview = exams.find((e) => e.id === exam.id + PREVIEW_SUFFIX)!;
+      if (examManager.state(preview.id)?.finishedAt && !(await restartPreview(preview))) {
+        return;
+      }
+      if (!examManager.state(preview.id) && !(await examManager.start(preview))) {
+        return;
+      }
+      const first = preview.questions[0];
+      const id = examChallengeId(preview.id, first.id);
+      await vscode.commands.executeCommand(first.kind === 'quiz' ? 'sphynx.openQuiz' : 'sphynx.open', id);
+    }),
+    vscode.commands.registerCommand('sphynx.classResults', async (node?: { exam?: ExamDefinition }): Promise<ClassReport | undefined> => {
+      const picked = await vscode.window.showOpenDialog({
+        title: tr("Class results: choose the folder (or files) with your students' results", 'Resultados da turma: escolha a pasta (ou os arquivos) com os resultados dos alunos'),
+        openLabel: tr('Open', 'Abrir'),
+        canSelectFiles: true,
+        canSelectFolders: true,
+        canSelectMany: true,
+        filters: { [tr('Exam results', 'Resultados de prova')]: ['json'] },
+      });
+      if (!picked?.length) {
+        return undefined;
+      }
+      const { results, errors } = readResults(findResultsFiles(picked.map((u) => u.fsPath)));
+      if (results.length === 0) {
+        vscode.window.showInformationMessage(tr('No exam results files were found there.', 'Nenhum arquivo de resultado de prova foi encontrado ali.'));
+        return undefined;
+      }
+      const found = examsInResults(results);
+      let examId = node?.exam && !node.exam.preview ? node.exam.id : undefined;
+      if (!examId || !found.some((e) => e.id === examId)) {
+        if (examId) {
+          vscode.window.showWarningMessage(tr(`None of these files are results of "${node!.exam!.title}".`, `Nenhum destes arquivos é resultado de "${node!.exam!.title}".`));
+          return undefined;
+        }
+        const pick =
+          found.length === 1
+            ? found[0]
+            : await vscode.window.showQuickPick(
+                found.map((e) => ({ label: e.title, description: plural(e.count, ['results file', 'results files'], ['arquivo', 'arquivos']), ...e })),
+                { title: tr('Which exam?', 'Qual prova?') },
+              );
+        examId = pick?.id;
+      }
+      if (!examId) {
+        return undefined;
+      }
+      const report = buildClassReport(results, examId, errors);
+      classPanel.show(report);
+      return report;
+    }),
+    vscode.commands.registerCommand('sphynx.exportPack', (node?: TeacherNode) =>
+      exportPack({ challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, origin, extensionPath: context.extensionPath }, node),
+    ),
+    vscode.commands.registerCommand('sphynx.restartPreview', async (node?: { exam?: ExamDefinition }) => {
+      if (node?.exam?.preview) {
+        await restartPreview(node.exam);
+      }
+    }),
     vscode.commands.registerCommand('sphynx.switchToStudentView', () => setView('student')),
     vscode.commands.registerCommand('sphynx.editItem', async (node?: TeacherNode) => {
       const file = node && sourceFile(node);
@@ -963,7 +1073,7 @@ export function activate(context: vscode.ExtensionContext): SphynxApi {
   context.subscriptions.push(javaSetup);
   void javaSetup.checkQuietly();
   updateContextKey();
-  return { progress, teacherTree, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath };
+  return { progress, teacherTree, verifyFiles, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath };
 }
 
 export function deactivate(): void {}

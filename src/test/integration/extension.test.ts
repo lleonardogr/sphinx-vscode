@@ -4,8 +4,10 @@ import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import type { SphynxApi } from '../../extension';
+import type { ClassReport } from '../../classResults';
 import { migrateOldStorage } from '../../extension';
 import { javacMajorVersion } from '../../runner';
+import { extractZip, findImportables, findSolutions } from '../../importCore';
 import { dialogs, test, waitFor } from './harness';
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
@@ -204,6 +206,79 @@ test('the teacher view lists the teacher\'s exams, own content and tools, and sw
   assert.equal(t.getTreeItem(question as never).command?.command, 'sphynx.editItem');
   await vscode.commands.executeCommand('sphynx.switchToStudentView');
   assert.equal(api.view(), 'student');
+});
+
+test('a teacher previews an exam without touching the real attempt, and can restart it', async () => {
+  await vscode.commands.executeCommand('sphynx.switchToTeacherView');
+  const exam = api.exams().find((e) => e.id === 'exam-2')!;
+  dialogs.inputBox = 'Teacher';
+  dialogs.answer = (m, buttons) => (m.startsWith('Start') ? buttons[0] : undefined);
+  await vscode.commands.executeCommand('sphynx.previewExam', { kind: 'exam', exam });
+  assert.ok(api.examManager.state('exam-2--preview'), 'the preview did not start');
+  assert.equal(api.examManager.state('exam-2'), undefined, 'the real exam must not start');
+
+  // Listed under the exam in the teacher view, never in the student view.
+  const t = api.teacherTree;
+  const examNode = t.getChildren(t.getChildren()[0]).find((n) => String(t.getTreeItem(n as never).label) === 'Exam 2: Building Blocks')!;
+  const [previewNode] = t.getChildren(examNode);
+  assert.equal(String(t.getTreeItem(previewNode as never).label), 'Your preview attempt');
+  assert.equal(t.getTreeItem(previewNode as never).contextValue, 'teacherPreviewActive');
+  assert.equal(t.getChildren(previewNode).length, exam.questions.length);
+  const studentExams = api.tree.getChildren(api.tree.getChildren().find((n) => (n as { kind: string }).kind === 'examsRoot'));
+  assert.ok(studentExams.every((n) => !(n as { exam: { preview?: boolean } }).exam.preview));
+
+  // Restarting clears the preview (state and answers) only.
+  const answers = path.join(path.dirname(api.examManager.answerFile(api.exams().find((e) => e.id === 'exam-2--preview')!, exam.questions[1])));
+  dialogs.answer = (_m, buttons) => buttons.find((b) => b === 'Restart Preview');
+  await vscode.commands.executeCommand('sphynx.restartPreview', { kind: 'preview', exam: api.exams().find((e) => e.id === 'exam-2--preview') });
+  assert.equal(api.examManager.state('exam-2--preview'), undefined);
+  assert.equal(fs.existsSync(path.dirname(answers)), false, 'the preview answers were not removed');
+  await vscode.commands.executeCommand('sphynx.switchToStudentView');
+});
+
+test('a teacher exports an exam as a pack for students, without the solutions', async () => {
+  const exam = api.exams().find((e) => e.id === 'exam-1')!;
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-export-'));
+  dialogs.quickPick = 0; // the preselected exam, then "For students"
+  dialogs.saveDialog = vscode.Uri.file(path.join(out, 'class-7b.zip'));
+  dialogs.answer = () => undefined;
+  await vscode.commands.executeCommand('sphynx.exportPack', { kind: 'exam', exam });
+  const zip = path.join(out, 'class-7b.zip');
+  assert.ok(fs.existsSync(zip), 'no pack was written');
+  const dest = path.join(out, 'extracted');
+  extractZip(zip, dest);
+  assert.deepEqual(findImportables(dest, 'class-7b').map((f) => `${f.kind}:${f.name}`), ['exam:exam-1']);
+  assert.deepEqual(findSolutions(dest), []);
+  assert.ok(dialogs.messages.some((m) => /Exported 1 item to class-7b\.zip/.test(m)), dialogs.messages.slice(-2).join(' | '));
+  fs.rmSync(out, { recursive: true, force: true });
+});
+
+test('the class results dashboard summarizes the files students handed in, and catches an edited score', async () => {
+  // The real results file from the exam test, plus a copy whose quiz score was edited by hand.
+  const real = api.examManager.state('exam-1')!.resultsFile!;
+  const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'sphynx-class-'));
+  fs.copyFileSync(real, path.join(folder, 'results-test-student.json'));
+  const tampered = JSON.parse(read(real));
+  tampered.student = 'Edited Score';
+  tampered.questions.find((q: { id: string }) => q.id === 'exam-1-quiz').earned = 20;
+  tampered.score.earned = 40;
+  fs.writeFileSync(path.join(folder, 'results-edited.json'), JSON.stringify(tampered));
+  fs.writeFileSync(path.join(folder, 'notes.json'), '{"not": "results"}');
+
+  dialogs.openDialog = [vscode.Uri.file(folder)];
+  const exam = api.exams().find((e) => e.id === 'exam-1')!;
+  const report = (await vscode.commands.executeCommand('sphynx.classResults', { kind: 'exam', exam })) as ClassReport;
+  assert.ok(report, 'the dashboard did not open');
+  assert.deepEqual(report.rows.map((r) => `${r.student}:${r.earned}`), ['Edited Score:40', 'Test Student:20']);
+  assert.deepEqual(report.stats, { count: 2, average: 30, median: 30, highest: 40, lowest: 20 });
+  assert.equal(report.questions.length, 4);
+
+  const verified = await api.verifyFiles(report.rows.map((r) => r.file));
+  const byName = Object.fromEntries(verified.map((v) => [path.basename(v.file), v]));
+  assert.equal(byName['results-test-student.json'].matches, true, JSON.stringify(byName['results-test-student.json']));
+  assert.equal(byName['results-edited.json'].matches, false);
+  assert.equal(byName['results-edited.json'].recomputed, 20);
+  fs.rmSync(folder, { recursive: true, force: true });
 });
 
 test('the imported library and saved solutions move over from the old extension id', () => {

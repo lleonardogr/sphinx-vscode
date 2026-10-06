@@ -56,3 +56,27 @@ describe('exam ids and scores', () => {
     assert.equal(scoreOutcome({ kind: 'ruleViolation', messages: ['x'] }, 30).earned, 0);
   });
 });
+
+describe('previewOf', () => {
+  it('copies an exam under its own id, so a preview never mixes with a real attempt', () => {
+    const { previewOf } = require('../../exams') as typeof import('../../exams');
+    const { loadChallenges } = require('../../challenges') as typeof import('../../challenges');
+    const { loadQuizzes } = require('../../quizzes') as typeof import('../../quizzes');
+    const { loadExams } = require('../../exams') as typeof import('../../exams');
+    const path = require('path') as typeof import('path');
+    const { CONTENT_ROOTS, ROOT } = require('./helpers') as typeof import('./helpers');
+    const challenges = loadChallenges(CONTENT_ROOTS).challenges;
+    const exam = loadExams([path.join(ROOT, 'exams')], challenges, loadQuizzes(CONTENT_ROOTS).quizzes).exams.find((e) => e.id === 'exam-1')!;
+    const p = previewOf(exam);
+    assert.equal(p.id, 'exam-1--preview');
+    assert.equal(p.preview, true);
+    assert.equal(p.title, 'Exam 1: Basics to Strings (preview)');
+    assert.deepEqual(p.questions.map((q) => q.id), exam.questions.map((q) => q.id));
+    for (const q of p.questions) {
+      const id = q.kind === 'quiz' ? q.quiz.id : q.challenge.id;
+      assert.deepEqual(parseExamChallengeId(id), { examId: 'exam-1--preview', questionId: q.id });
+    }
+    assert.equal(exam.questions[1].kind === 'challenge' && exam.questions[1].challenge.id, 'exam:exam-1:parking-fee', 'the original is not changed');
+    assert.deepEqual(p.restrictions, exam.restrictions);
+  });
+});

@@ -34,6 +34,7 @@ export const dialogs = {
   answer: (_message: string, _buttons: string[]): string | undefined => undefined,
   inputBox: 'Test Student' as string | undefined,
   openDialog: undefined as vscode.Uri[] | undefined,
+  saveDialog: undefined as vscode.Uri | undefined,
   /** Index of the quick pick item to choose (undefined = cancel). */
   quickPick: 0 as number | undefined,
   messages: [] as string[],
@@ -51,8 +52,13 @@ export function stubDialogs(): void {
   w.showErrorMessage = message('error');
   w.showInputBox = async () => dialogs.inputBox;
   w.showOpenDialog = async () => dialogs.openDialog;
-  w.showQuickPick = async (items: unknown) => {
-    const list = (await items) as unknown[];
+  w.showSaveDialog = async () => dialogs.saveDialog;
+  w.showQuickPick = async (items: unknown, options?: vscode.QuickPickOptions) => {
+    const list = (await items) as vscode.QuickPickItem[];
+    if (options?.canPickMany) {
+      // Multi-select: accept what the extension preselected.
+      return dialogs.quickPick === undefined ? undefined : list.filter((i) => i.picked);
+    }
     return dialogs.quickPick === undefined ? undefined : list[dialogs.quickPick];
   };
 }

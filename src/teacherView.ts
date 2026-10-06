@@ -3,7 +3,8 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { Challenge } from './challenges';
-import { ExamDefinition, ExamQuestion, maxScore, questionTitle } from './exams';
+import { ExamDefinition, ExamQuestion, examChallengeId, maxScore, questionTitle } from './exams';
+import { ExamManager } from './examSession';
 import { QuizDefinition } from './quizzes';
 import { difficultyName, plural, tr } from './i18n';
 import { TESTS_TOPIC } from './path';
@@ -15,6 +16,9 @@ export type TeacherNode =
   | { kind: 'section'; id: 'exams' | 'content' | 'tools' }
   | { kind: 'exam'; exam: ExamDefinition }
   | { kind: 'examQuestion'; exam: ExamDefinition; question: ExamQuestion }
+  /** The teacher's preview attempt of an exam (`exam` is the preview copy). */
+  | { kind: 'preview'; exam: ExamDefinition }
+  | { kind: 'previewQuestion'; exam: ExamDefinition; question: ExamQuestion }
   | { kind: 'challenge'; challenge: Challenge }
   | { kind: 'quiz'; quiz: QuizDefinition }
   | { kind: 'tool'; id: string; label: string; icon: string; command: string }
@@ -51,7 +55,12 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
     private readonly getQuizzes: () => QuizDefinition[],
     private readonly getExams: () => ExamDefinition[],
     private readonly origin: (dir: string) => Origin,
-  ) {}
+    private readonly examManager: ExamManager,
+    /** The preview copy of an exam, when the teacher has started one. */
+    private readonly previewFor: (exam: ExamDefinition) => ExamDefinition | undefined,
+  ) {
+    examManager.onDidChange(() => this.refresh());
+  }
 
   refresh(): void {
     this.changed.fire();
@@ -76,8 +85,15 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
     switch (node.kind) {
       case 'section':
         return this.section(node.id);
-      case 'exam':
-        return node.exam.questions.map((question) => ({ kind: 'examQuestion', exam: node.exam, question }));
+      case 'exam': {
+        const preview = this.previewFor(node.exam);
+        return [
+          ...(preview && this.examManager.state(preview.id) ? [{ kind: 'preview', exam: preview } as TeacherNode] : []),
+          ...node.exam.questions.map((question): TeacherNode => ({ kind: 'examQuestion', exam: node.exam, question })),
+        ];
+      }
+      case 'preview':
+        return node.exam.questions.map((question) => ({ kind: 'previewQuestion', exam: node.exam, question }));
       default:
         return [];
     }
@@ -85,7 +101,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
 
   private section(id: 'exams' | 'content' | 'tools'): TeacherNode[] {
     if (id === 'exams') {
-      const exams = [...this.getExams()].sort((a, b) => Number(this.origin(a.dir) === 'builtIn') - Number(this.origin(b.dir) === 'builtIn') || a.title.localeCompare(b.title));
+      const exams = this.getExams().filter((e) => !e.preview).sort((a, b) => Number(this.origin(a.dir) === 'builtIn') - Number(this.origin(b.dir) === 'builtIn') || a.title.localeCompare(b.title));
       return exams.length ? exams.map((exam) => ({ kind: 'exam', exam })) : [{ kind: 'hint', label: tr('Import an exam, or copy the sample exam to start one', 'Importe uma prova, ou copie a prova de exemplo para começar'), command: 'sphynx.importContent' }];
     }
     if (id === 'content') {
@@ -100,7 +116,9 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
     return [
       tool('create', tr('Create New Challenge…', 'Criar novo desafio…'), 'add', 'sphynx.createChallenge'),
       tool('import', tr('Import Challenges, Quizzes or Exams…', 'Importar desafios, quizzes ou provas…'), 'cloud-download', 'sphynx.importContent'),
+      tool('export', tr('Export a Pack for Students…', 'Exportar um pacote para os alunos…'), 'package', 'sphynx.exportPack'),
       tool('validate', tr('Validate Challenges in a Folder…', 'Validar desafios de uma pasta…'), 'beaker', 'sphynx.validateChallenges'),
+      tool('results', tr('Class Results…', 'Resultados da turma…'), 'table', 'sphynx.classResults'),
       tool('verify', tr("Verify Students' Exam Results…", 'Verificar resultados das provas…'), 'verified', 'sphynx.verifyExamResults'),
       tool('ai', tr('Set Up AI Hints…', 'Configurar dicas de IA…'), 'sparkle', 'sphynx.setupAi'),
     ];
@@ -119,7 +137,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         item.id = `teacher:section:${node.id}`;
         item.iconPath = new vscode.ThemeIcon(icon);
         if (node.id === 'exams') {
-          item.description = String(this.getExams().length);
+          item.description = String(this.getExams().filter((e) => !e.preview).length);
         } else if (node.id === 'content') {
           const own = this.ownContent();
           item.description = String(own.challenges.length + own.quizzes.length);
@@ -136,6 +154,33 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
           `**${e.title}**\n\n${e.description}\n\n${e.mode === 'closed' ? tr('Closed exam', 'Prova fechada') : tr('Open exam', 'Prova aberta')} · ${tr('restrictions', 'restrições')}: ${e.restrictions.level}\n\n\`${e.dir}\``,
         );
         item.contextValue = 'teacherExam';
+        return item;
+      }
+      case 'preview': {
+        const s = this.examManager.state(node.exam.id)!;
+        const item = new vscode.TreeItem(tr('Your preview attempt', 'Sua tentativa de prévia'), vscode.TreeItemCollapsibleState.Expanded);
+        item.id = `teacher:preview:${node.exam.id}`;
+        item.iconPath = new vscode.ThemeIcon(s.finishedAt ? 'pass' : 'watch');
+        const ends = new Date(s.endsAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        item.description = s.finishedAt
+          ? `${tr('finished', 'terminada')} · ${this.examManager.formatScore(node.exam)}`
+          : `${tr('in progress', 'em andamento')} · ${tr('ends', 'termina')} ${ends}`;
+        item.tooltip = tr(
+          'A practice attempt with the real rules and timer. It never counts as a real attempt, and you can restart it.',
+          'Uma tentativa de treino com as regras e o tempo reais. Ela nunca conta como tentativa de verdade, e você pode recomeçá-la.',
+        );
+        item.contextValue = s.finishedAt ? 'teacherPreviewFinished' : 'teacherPreviewActive';
+        return item;
+      }
+      case 'previewQuestion': {
+        const q = node.question;
+        const qs = this.examManager.state(node.exam.id)?.questions[q.id];
+        const item = new vscode.TreeItem(questionTitle(q), vscode.TreeItemCollapsibleState.None);
+        item.id = `teacher:preview:${node.exam.id}:${q.id}`;
+        item.iconPath = new vscode.ThemeIcon(qs?.submissions ? 'pass' : q.kind === 'quiz' ? 'question' : 'code');
+        item.description = `${qs?.bestEarned ?? 0}/${q.points} pts`;
+        const id = examChallengeId(node.exam.id, q.id);
+        item.command = q.kind === 'quiz' ? { command: 'sphynx.openQuiz', title: tr('Open', 'Abrir'), arguments: [id] } : { command: 'sphynx.open', title: tr('Open', 'Abrir'), arguments: [id] };
         return item;
       }
       case 'examQuestion': {
