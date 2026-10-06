@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **CS Fundamentals, unit 3 · Bits and Bytes**, in English and Portuguese: two lessons (Bits and Bytes, with a diagram; Kilobytes and Kibibytes), a quiz, and four challenges solved in Java: How Many Values?, Bits Needed, Storage Units (the same size in MB and MiB) and Download Time.
+
 ## [1.2.0] - 2026-10-06
 
 ### Changed

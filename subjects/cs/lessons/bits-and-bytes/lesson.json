@@ -1,0 +1,10 @@
+{
+  "title": "Bits and Bytes",
+  "topic": "BitsBytes",
+  "order": 1,
+  "translations": {
+    "pt-br": {
+      "title": "Bits e bytes"
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "title": "Download Time",
+  "topic": "BitsBytes",
+  "requires": [
+    "Methods"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Turn both lines into the same kind of number first: the size into bytes, the speed into bits per second. A method for each keeps main short.",
+    "A byte is 8 bits, so the download takes bytes × 8 ÷ bitsPerSecond seconds. Round up: (bits + speed - 1) / speed.",
+    "For the time, seconds / 3600 is the hours, (seconds % 3600) / 60 the minutes, and seconds % 60 the seconds. String.format(\"%d:%02d:%02d\", …) pads with zeros."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Tempo de download",
+      "hints": [
+        "Transforme as duas linhas no mesmo tipo de número primeiro: o tamanho em bytes, a velocidade em bits por segundo. Um método para cada um deixa o main curto.",
+        "Um byte tem 8 bits, então o download leva bytes × 8 ÷ bitsPorSegundo segundos. Arredonde para cima: (bits + velocidade - 1) / velocidade.",
+        "Para o tempo, segundos / 3600 são as horas, (segundos % 3600) / 60 os minutos e segundos % 60 os segundos. String.format(\"%d:%02d:%02d\", …) completa com zeros."
+      ],
+      "mustContain": [
+        "Escreva um método que devolve um long, como long bytes(long amount, String unit)."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\blong\\s+\\w+\\s*\\([^)]*\\)\\s*\\{",
+      "message": "Write a method that returns a long, such as long bytes(long amount, String unit)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "700 MB\n100 Mbps\n",
+      "output": "Time: 0:00:56\n"
+    },
+    {
+      "input": "4 GiB\n50 Mbps\n",
+      "output": "Time: 0:11:28\n"
+    },
+    {
+      "input": "0 B\n1 bps\n",
+      "output": "Time: 0:00:00\n",
+      "hidden": true
+    },
+    {
+      "input": "1 B\n1 Kbps\n",
+      "output": "Time: 0:00:01\n",
+      "hidden": true
+    },
+    {
+      "input": "2 TB\n10 Mbps\n",
+      "output": "Time: 444:26:40\n",
+      "hidden": true
+    },
+    {
+      "input": "5 XB\n10 Mbps\n",
+      "output": "Invalid unit: XB\n",
+      "hidden": true
+    },
+    {
+      "input": "10 MB\n3 Mbs\n",
+      "output": "Invalid unit: Mbs\n",
+      "hidden": true
+    },
+    {
+      "input": "1 MiB\n8 bps\n",
+      "output": "Time: 291:16:16\n",
+      "hidden": true
+    },
+    {
+      "input": "25 GB\n1 Gbps\n",
+      "output": "Time: 0:03:20\n",
+      "hidden": true
+    }
+  ]
+}
