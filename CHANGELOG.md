@@ -4,6 +4,12 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- **Sphynx is now Sphinx**, spelled like the creature of the legend. It's listed as **Sphinx Challenges** on the Marketplace and Open VSX, and the sidebar, commands and messages say Sphinx. Settings are now `sphinx.*` (for example `sphinx.java.home`), and new code is saved in `sphinx/`.
+  - Nothing is lost when updating: settings, progress, quiz scores, exam sessions and saved AI keys are moved over automatically, an existing `sphynx/` code folder keeps being used, and exam results files saved before the rename still verify.
+  - The extension id stays `lleonardogr.sphynx`, so it updates in place.
+
 ## [1.1.0] - 2026-10-06
 
 ### Added
