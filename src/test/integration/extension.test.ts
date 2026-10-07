@@ -176,7 +176,7 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
     ]);
     // A lesson gets its ✓ once read.
     const lesson = items[0];
-    assert.equal(String(api.tree.getTreeItem(lesson as never).description), 'Lesson · 2 min · 3 readings');
+    assert.equal(String(api.tree.getTreeItem(lesson as never).description), 'Lesson · 1 min · 3 readings');
     await vscode.commands.executeCommand('sphinx.openLesson', 'place-value-and-binary');
     await api.lessonProgress.markRead('place-value-and-binary');
     assert.equal((api.tree.getTreeItem(api.tree.getChildren(numberSystems)[0] as never).iconPath as vscode.ThemeIcon).id, 'pass-filled');
