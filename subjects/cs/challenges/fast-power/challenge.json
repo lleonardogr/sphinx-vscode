@@ -1,0 +1,73 @@
+{
+  "title": "Fast Power",
+  "topic": "Algorithms",
+  "requires": [
+    "Loops"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Multiplying by a n times takes n steps; with n = 10¹⁸ that would never finish. Look at n in binary instead: each bit of n is one step.",
+    "Keep result = 1 and base = a % m. While n > 0: if n is odd, result = result * base % m; then base = base * base % m and n = n / 2.",
+    "Take % m after every multiplication so the numbers stay small: both are below m, so the product fits in a long."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Potência rápida",
+      "hints": [
+        "Multiplicar por a n vezes leva n passos; com n = 10¹⁸ isso nunca terminaria. Olhe n em binário: cada bit de n é um passo.",
+        "Guarde resultado = 1 e base = a % m. Enquanto n > 0: se n for ímpar, resultado = resultado * base % m; depois base = base * base % m e n = n / 2.",
+        "Tire o % m depois de cada multiplicação para os números continuarem pequenos: os dois ficam abaixo de m, então o produto cabe num long."
+      ],
+      "mustNotContain": [
+        "Escreva a potência rápida você mesmo: Math.pow, BigInteger e modPow não valem aqui."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "Math\\s*\\.\\s*pow|BigInteger|modPow",
+      "message": "Write the fast power yourself: Math.pow, BigInteger and modPow aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2 10 1000\n",
+      "output": "Result: 24\nFast steps: 4\nNaive steps: 10\n"
+    },
+    {
+      "input": "3 1000000000000000000 1000000007\n",
+      "output": "Result: 246336683\nFast steps: 60\nNaive steps: 1000000000000000000\n"
+    },
+    {
+      "input": "5 0 7\n",
+      "output": "Result: 1\nFast steps: 0\nNaive steps: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "7 1 1\n",
+      "output": "Result: 0\nFast steps: 1\nNaive steps: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "123456789 2 1000000007\n",
+      "output": "Result: 643499475\nFast steps: 2\nNaive steps: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "2 63 1000000000\n",
+      "output": "Result: 854775808\nFast steps: 6\nNaive steps: 63\n",
+      "hidden": true
+    },
+    {
+      "input": "10 18 999999937\n",
+      "output": "Result: 3969\nFast steps: 5\nNaive steps: 18\n",
+      "hidden": true
+    },
+    {
+      "input": "999999999 999999999999 999999999\n",
+      "output": "Result: 0\nFast steps: 40\nNaive steps: 999999999999\n",
+      "hidden": true
+    }
+  ]
+}

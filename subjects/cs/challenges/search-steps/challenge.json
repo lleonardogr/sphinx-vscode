@@ -5,7 +5,7 @@
     "Arrays"
   ],
   "difficulty": "Easy",
-  "order": 2,
+  "order": 1,
   "hints": [
     "Linear search looks at the numbers one by one from the start: count one step per number looked at, and stop when you find the target.",
     "Binary search keeps a range lo..hi. Each step looks at the middle, mid = (lo + hi) / 2, and throws away the half where the target can't be.",

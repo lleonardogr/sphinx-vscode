@@ -5,7 +5,7 @@
     "Arrays"
   ],
   "difficulty": "Medium",
-  "order": 3,
+  "order": 2,
   "hints": [
     "Pass i looks for the smallest number from position i to the end, then swaps it into position i. After pass i, the first i + 1 numbers are in their final place.",
     "Count a comparison each time you compare two numbers while looking for the smallest. Count a swap only when the smallest isn't already at position i.",
