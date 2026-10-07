@@ -4,20 +4,8 @@
   "requires": [
     "Basics"
   ],
-  "description": "How much fits in a number of bits, and how sizes and speeds are measured: bytes, kilobytes, kibibytes and megabits.",
+  "description": "How much fits in a number of bits, sizes in SI and binary units, bits versus bytes, and byte order.",
   "questions": [
-    {
-      "type": "choice",
-      "prompt": "How many bits are there in one **byte**?",
-      "options": [
-        "4",
-        "8",
-        "10",
-        "16"
-      ],
-      "answer": 1,
-      "explanation": "A byte is 8 bits, enough for 256 different values. Half a byte (4 bits) is called a nibble."
-    },
     {
       "type": "number",
       "prompt": "How many different values can **10 bits** hold?",
@@ -28,7 +16,7 @@
       "type": "number",
       "prompt": "What is the largest number **16 bits** can store, counting from 0?",
       "answer": "65535",
-      "explanation": "16 bits hold 2¹⁶ = 65,536 values, from 0 to 65,535."
+      "explanation": "16 bits hold 2¹⁶ = 65,536 values, from 0 to 65,535. Answering 65,536 is the classic off-by-one."
     },
     {
       "type": "number",
@@ -41,12 +29,6 @@
       "prompt": "How many bytes are there in one **KiB** (kibibyte)?",
       "answer": "1024",
       "explanation": "Binary prefixes multiply by 1024 = 2¹⁰: 1 KiB = 1024 bytes, 1 MiB = 1024 KiB."
-    },
-    {
-      "type": "number",
-      "prompt": "How many bytes are there in one **KB** (kilobyte), as disk makers count?",
-      "answer": "1000",
-      "explanation": "SI prefixes multiply by 1000, like kilometre and kilogram: 1 KB = 1000 bytes, 1 MB = 1,000,000 bytes."
     },
     {
       "type": "choice",
@@ -62,9 +44,22 @@
     },
     {
       "type": "number",
+      "prompt": "A memory card is sold as **4 GB** (SI). About how many **GiB** is that? Answer with 2 decimals.",
+      "answer": "3.73",
+      "explanation": "4 × 1000³ ÷ 1024³ = 3.725…, about 3.73 GiB.",
+      "tolerance": 0.01
+    },
+    {
+      "type": "number",
       "prompt": "An internet connection of **80 Mbps** downloads how many **megabytes** per second, at most?",
       "answer": "10",
       "explanation": "Speeds are in bits: 80 megabits per second ÷ 8 bits per byte = 10 megabytes per second."
+    },
+    {
+      "type": "number",
+      "prompt": "Two bytes stored **little-endian** are `2C 01`. Which number do they store?",
+      "answer": "300",
+      "explanation": "Little-endian puts the least significant byte first: 0x012C = 1 × 256 + 44 = 300. Reading them big-endian would give 0x2C01 = 11,265."
     },
     {
       "type": "truefalse",
@@ -82,25 +77,15 @@
   "translations": {
     "pt-br": {
       "title": "Quiz de bits e bytes",
-      "description": "Quanto cabe numa quantidade de bits, e como tamanhos e velocidades são medidos: bytes, kilobytes, kibibytes e megabits.",
+      "description": "Quanto cabe numa quantidade de bits, tamanhos em unidades SI e binárias, bits versus bytes, e a ordem dos bytes.",
       "questions": [
-        {
-          "prompt": "Quantos bits há em um **byte**?",
-          "options": [
-            "4",
-            "8",
-            "10",
-            "16"
-          ],
-          "explanation": "Um byte tem 8 bits, o suficiente para 256 valores diferentes. Meio byte (4 bits) se chama nibble."
-        },
         {
           "prompt": "Quantos valores diferentes **10 bits** conseguem guardar?",
           "explanation": "Cada bit dobra a quantidade: 2¹⁰ = 1024."
         },
         {
           "prompt": "Qual é o maior número que **16 bits** conseguem guardar, contando a partir de 0?",
-          "explanation": "16 bits guardam 2¹⁶ = 65.536 valores, de 0 a 65.535."
+          "explanation": "16 bits guardam 2¹⁶ = 65.536 valores, de 0 a 65.535. Responder 65.536 é o erro clássico de um a mais."
         },
         {
           "prompt": "Quantos bits são necessários para escrever **300** em binário?",
@@ -109,10 +94,6 @@
         {
           "prompt": "Quantos bytes há em um **KiB** (kibibyte)?",
           "explanation": "Os prefixos binários multiplicam por 1024 = 2¹⁰: 1 KiB = 1024 bytes, 1 MiB = 1024 KiB."
-        },
-        {
-          "prompt": "Quantos bytes há em um **KB** (kilobyte), como os fabricantes de disco contam?",
-          "explanation": "Os prefixos SI multiplicam por 1000, como quilômetro e quilograma: 1 KB = 1000 bytes, 1 MB = 1.000.000 bytes."
         },
         {
           "prompt": "Um disco vendido como **1 TB** aparece com cerca de **931 GB** no Windows. Por quê?",
@@ -125,8 +106,16 @@
           "explanation": "1 TB = 1.000.000.000.000 bytes. Dividido por 1024³ dá 931,3 GiB. Nada sumiu: os mesmos bytes são contados com uma unidade maior."
         },
         {
+          "prompt": "Um cartão de memória é vendido como **4 GB** (SI). Quantos **GiB** são, mais ou menos? Responda com 2 casas decimais.",
+          "explanation": "4 × 1000³ ÷ 1024³ = 3,725…, cerca de 3,73 GiB."
+        },
+        {
           "prompt": "Uma conexão de internet de **80 Mbps** baixa no máximo quantos **megabytes** por segundo?",
           "explanation": "Velocidades são em bits: 80 megabits por segundo ÷ 8 bits por byte = 10 megabytes por segundo."
+        },
+        {
+          "prompt": "Dois bytes guardados em **little-endian** são `2C 01`. Que número eles guardam?",
+          "explanation": "O little-endian coloca o byte menos significativo primeiro: 0x012C = 1 × 256 + 44 = 300. Lidos em big-endian, dariam 0x2C01 = 11.265."
         },
         {
           "prompt": "Um `int` do Java sempre usa 32 bits, em qualquer computador.",

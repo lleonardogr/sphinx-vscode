@@ -4,8 +4,9 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        String kind = scanner.next(); // bits or number
         long n = scanner.nextLong();
 
-        // TODO: conte quantas vezes n pode ser dividido ao meio, depois imprima os bits e os bytes
+        // TODO: for "bits", double to count the values; for "number", halve to count the bits
     }
 }

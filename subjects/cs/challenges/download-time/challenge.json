@@ -4,8 +4,8 @@
   "requires": [
     "Methods"
   ],
-  "difficulty": "Hard",
-  "order": 4,
+  "difficulty": "Medium",
+  "order": 3,
   "hints": [
     "Turn both lines into the same kind of number first: the size into bytes, the speed into bits per second. A method for each keeps main short.",
     "A byte is 8 bits, so the download takes bytes × 8 ÷ bitsPerSecond seconds. Round up: (bits + speed - 1) / speed.",

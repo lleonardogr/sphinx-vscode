@@ -1,68 +1,24 @@
-## Por que isso importa
+## Em resumo
 
-Todo número, letra, foto e programa num computador é guardado como **bits**. Saber quanto um grupo de bits consegue guardar explica enigmas do dia a dia: por que um `int` do Java para em 2.147.483.647, por que as cores têm 256 tons de vermelho e por que um contador pode de repente pular para um número negativo.
-
-## O bit
-
-Um **bit** (de *binary digit*, dígito binário) é o menor pedaço de informação: ele é **0** ou **1**. No hardware, é um interruptor minúsculo, desligado ou ligado, ou um ponto de um disco magnetizado para um lado ou para o outro.
-
-Um bit só responde a uma pergunta de sim ou não. Para guardar mais, colocamos bits lado a lado.
-
-## Cada bit dobra as possibilidades
-
-Com 1 bit há 2 padrões: `0` e `1`. Acrescente um segundo bit e cada um desses padrões pode ser seguido de um 0 ou de um 1, então há 4: `00`, `01`, `10`, `11`. Um terceiro bit dobra de novo, para 8.
+Um **bit** é 0 ou 1, e um **byte** são 8 bits. Cada bit a mais dobra as possibilidades, então **n bits têm 2ⁿ valores**, de 0 a 2ⁿ − 1: um byte guarda de 0 a 255. No sentido contrário, um número precisa de tantos bits quantas vezes dá para dividi-lo ao meio até chegar a 0: 300 precisa de 9.
 
 ![Cada bit a mais dobra os padrões: 2, 4, 8](bit-patterns.svg)
 
-Então **n bits têm 2ⁿ padrões**: 2 × 2 × … × 2, n vezes. Se usamos os padrões para os números 0, 1, 2, …, o **maior número é 2ⁿ − 1**, porque começamos a contar do 0.
+Os tamanhos usam dois tipos de prefixo. Os **prefixos SI** multiplicam por 1000: 1 KB = 1000 bytes, 1 MB = 1000² bytes. Os **prefixos binários** multiplicam por 1024: 1 KiB = 1024 bytes, 1 MiB = 1024² bytes. É por isso que um disco de 1 TB aparece com 931 "GB" no Windows: os mesmos bytes divididos por 1024³.
 
-| Bits | Padrões (2ⁿ) | Números |
-|------|--------------|---------|
-| 1 | 2 | 0 a 1 |
-| 4 | 16 | 0 a 15 |
-| 8 | 256 | 0 a 255 |
-| 16 | 65.536 | 0 a 65.535 |
-| 32 | 4.294.967.296 | 0 a 4.294.967.295 |
+Velocidades são em **bits** por segundo (Mbps, b minúsculo) e arquivos em **bytes** (MB, B maiúsculo): uma conexão de 100 Mbps transfere no máximo 12,5 MB por segundo.
 
-Dobrar cresce muito rápido. 10 bits já dão 1.024 padrões, cerca de mil, e cada 10 bits a mais multiplicam isso por cerca de mil de novo: 20 bits dão cerca de um milhão, 30 bits cerca de um bilhão.
+Um número maior que 255 ocupa vários bytes, e eles podem ser guardados em duas ordens. O **big-endian** coloca o byte mais significativo primeiro, como escrevemos os números; o **little-endian** coloca o menos significativo primeiro. Os processadores Intel e ARM e muitos formatos de arquivo são little-endian; os protocolos de rede são big-endian.
 
-## O byte
+| 300 = 0x012C | 1º byte | 2º byte |
+|--------------|---------|---------|
+| big-endian | `01` | `2C` |
+| little-endian | `2C` | `01` |
 
-Os bits são agrupados de oito em oito, e um grupo de **8 bits é um byte**. Um byte guarda 2⁸ = **256** valores diferentes, de 0 a 255. Meio byte, 4 bits, se chama **nibble**, e é exatamente um dígito hexadecimal: é por isso que um byte sempre é escrito com dois dígitos hex, como `FF`.
+<!-- readings -->
 
-A memória é organizada em bytes: cada byte tem seu próprio endereço, e o tamanho dos arquivos é contado em bytes. Uma letra de texto simples como `A` ocupa um byte, e um pixel de uma foto normalmente ocupa três: um byte para o vermelho, um para o verde e um para o azul. É daí que vêm os 256 tons de cada cor.
+## Verifique
 
-## Quantos bits um número precisa?
-
-Inverta a pergunta: para guardar o número 300, quantos bits são necessários? 8 bits só chegam a 255, e 9 bits chegam a 511, então **300 precisa de 9 bits**.
-
-Um jeito simples de contar é **dividir o número ao meio até ele chegar a 0**: cada divisão remove um dígito binário. 300 → 150 → 75 → 37 → 18 → 9 → 4 → 2 → 1 → 0 são 9 divisões, então 9 bits. É o mesmo que escrever 300 em binário, `100101100`, e contar os dígitos.
-
-## Bits no Java
-
-O Java dá a cada tipo de número inteiro um tamanho fixo, igual em qualquer computador:
-
-| Tipo | Bits | Faixa |
-|------|------|-------|
-| `byte` | 8 | −128 a 127 |
-| `short` | 16 | −32.768 a 32.767 |
-| `int` | 32 | cerca de −2,1 bilhões a 2,1 bilhões |
-| `long` | 64 | cerca de −9,2 × 10¹⁸ a 9,2 × 10¹⁸ |
-
-As faixas são divididas entre números negativos e positivos, então um `int` vai até 2³¹ − 1 = 2.147.483.647 em vez de 2³² − 1. Como os números negativos são guardados é o tema de uma unidade mais adiante.
-
-Quando uma conta passa do maior valor, os bits simplesmente **dão a volta**. Isso se chama **overflow** (estouro), e o Java não avisa:
-
-```java
-int big = 2_147_483_647;
-IO.println(big + 1); // imprime -2147483648
-```
-
-É por isso que os desafios desta unidade usam `long` sempre que os números podem ficar grandes.
-
-## Resumo
-
-- Um bit é 0 ou 1; um byte são 8 bits.
-- n bits têm 2ⁿ padrões, então contam de 0 a 2ⁿ − 1. Cada bit a mais dobra isso.
-- Os bits que um número precisa são as vezes que dá para dividi-lo ao meio até chegar a 0.
-- `byte`, `short`, `int` e `long` do Java têm 8, 16, 32 e 64 bits; passar do limite faz o valor dar a volta.
+1. Quantos valores 10 bits guardam, e quantos bits o 1000 precisa?
+2. Quantos bytes há em 2 MiB, e em 2 MB?
+3. Que número os bytes little-endian `E8 03` guardam?

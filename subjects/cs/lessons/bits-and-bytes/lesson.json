@@ -2,9 +2,61 @@
   "title": "Bits and Bytes",
   "topic": "BitsBytes",
   "order": 1,
+  "objectives": [
+    "Compute how many values n bits can hold, and how many bits a number needs",
+    "Convert sizes between SI units (KB, MB) and binary units (KiB, MiB)",
+    "Tell bits from bytes in speeds and file sizes, and estimate a download time",
+    "Read a number stored in several bytes, in little-endian or big-endian order"
+  ],
+  "readings": [
+    {
+      "title": "Representing Numbers and Letters with Binary",
+      "source": "Crash Course Computer Science #4",
+      "url": "https://www.youtube.com/watch?v=1GSjbWt0c9M",
+      "type": "video",
+      "minutes": 11,
+      "lang": "en",
+      "lookFor": "The first half: how many values 8 bits can hold, why a kilobyte is sometimes 1000 and sometimes 1024 bytes, and what 32-bit and 64-bit mean."
+    },
+    {
+      "title": "Prefixes for binary multiples",
+      "source": "NIST (U.S. National Institute of Standards and Technology)",
+      "url": "https://physics.nist.gov/cuu/Units/binary.html",
+      "type": "article",
+      "minutes": 4,
+      "lang": "en",
+      "lookFor": "The table of binary prefixes (Ki, Mi, Gi) next to the SI ones (k, M, G), and why they were created: so a kilobyte can mean exactly 1000 bytes."
+    },
+    {
+      "title": "Little and Big Endian Mystery",
+      "source": "GeeksforGeeks",
+      "url": "https://www.geeksforgeeks.org/dsa/little-and-big-endian-mystery/",
+      "type": "article",
+      "minutes": 5,
+      "lang": "en",
+      "lookFor": "How the same 4-byte number is laid out in memory in each order, and where each order is used: processors are mostly little-endian, network protocols big-endian."
+    }
+  ],
   "translations": {
     "pt-br": {
-      "title": "Bits e bytes"
+      "title": "Bits e bytes",
+      "objectives": [
+        "Calcular quantos valores n bits guardam, e quantos bits um número precisa",
+        "Converter tamanhos entre unidades SI (KB, MB) e unidades binárias (KiB, MiB)",
+        "Diferenciar bits de bytes em velocidades e tamanhos de arquivo, e estimar um tempo de download",
+        "Ler um número guardado em vários bytes, em ordem little-endian ou big-endian"
+      ],
+      "readings": [
+        {
+          "lookFor": "A primeira metade: quantos valores 8 bits guardam, por que um kilobyte às vezes é 1000 e às vezes 1024 bytes, e o que querem dizer 32 bits e 64 bits."
+        },
+        {
+          "lookFor": "A tabela dos prefixos binários (Ki, Mi, Gi) ao lado dos SI (k, M, G), e por que eles foram criados: para que um kilobyte possa ser exatamente 1000 bytes."
+        },
+        {
+          "lookFor": "Como o mesmo número de 4 bytes fica na memória em cada ordem, e onde cada ordem é usada: processadores são em geral little-endian, protocolos de rede big-endian."
+        }
+      ]
     }
   }
 }

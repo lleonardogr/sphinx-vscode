@@ -6,7 +6,7 @@
     "Strings"
   ],
   "difficulty": "Medium",
-  "order": 3,
+  "order": 2,
   "hints": [
     "Keep dividing by 1000 while the value is 1000 or more, counting how many times you divided. Do the same with 1024 for the binary units.",
     "The count picks the prefix: 0 is plain bytes, 1 is K, 2 is M, and so on. \"KMGTP\".charAt(count - 1) gives the letter.",

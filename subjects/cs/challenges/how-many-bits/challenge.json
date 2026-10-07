@@ -1,0 +1,87 @@
+{
+  "title": "How Many Bits?",
+  "topic": "BitsBytes",
+  "requires": [
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "For \"bits n\": with 1 bit there are 2 values, and each extra bit doubles them. Double a long n times, starting at 1.",
+    "For \"number x\": each halving removes one binary digit, so count how many times x can be halved before it reaches 0. Zero still needs 1 bit.",
+    "A byte is 8 bits: the bytes needed are the bits divided by 8, rounded up, (bits + 7) / 8."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quantos bits?",
+      "hints": [
+        "Para \"bits n\": com 1 bit há 2 valores, e cada bit a mais os dobra. Dobre um long n vezes, começando em 1.",
+        "Para \"number x\": cada divisão ao meio remove um dígito binário, então conte quantas vezes x pode ser dividido ao meio até chegar a 0. O zero também precisa de 1 bit.",
+        "Um byte tem 8 bits: os bytes necessários são os bits divididos por 8, arredondando para cima, (bits + 7) / 8."
+      ],
+      "mustContain": [
+        "Use laços que dobram ou dividem ao meio."
+      ],
+      "mustNotContain": [
+        "Dobre e divida ao meio em laços: Math.pow, Math.log, << e métodos que contam bits não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use loops that double or halve."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "Math\\s*\\.\\s*(pow|log)|<<|bitCount|numberOfLeadingZeros|bitLength|toBinaryString",
+      "message": "Double and halve in loops: Math.pow, Math.log, << and bit-counting methods aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "bits 8\n",
+      "output": "Values: 256\nLargest: 255\n"
+    },
+    {
+      "input": "number 300\n",
+      "output": "Bits: 9\nBytes: 2\n"
+    },
+    {
+      "input": "bits 1\n",
+      "output": "Values: 2\nLargest: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "bits 62\n",
+      "output": "Values: 4611686018427387904\nLargest: 4611686018427387903\n",
+      "hidden": true
+    },
+    {
+      "input": "number 0\n",
+      "output": "Bits: 1\nBytes: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "number 255\n",
+      "output": "Bits: 8\nBytes: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "number 256\n",
+      "output": "Bits: 9\nBytes: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "number 1000000000000000000\n",
+      "output": "Bits: 60\nBytes: 8\n",
+      "hidden": true
+    },
+    {
+      "input": "bits 32\n",
+      "output": "Values: 4294967296\nLargest: 4294967295\n",
+      "hidden": true
+    }
+  ]
+}
