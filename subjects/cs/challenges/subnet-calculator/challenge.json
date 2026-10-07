@@ -1,0 +1,73 @@
+{
+  "title": "Subnet Calculator",
+  "topic": "Networks",
+  "requires": [
+    "Methods"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Turn the address into one 32-bit number in a long (as in IP Address to Number). The block size is 2^(32 − prefix): 1L << (32 - prefix).",
+    "The network address is the address rounded down to a multiple of the block size: address - address % size (or address & mask). The broadcast is network + size - 1.",
+    "Write a method String dotted(long n) that turns a number back into a.b.c.d: the bytes are n >> 24, (n >> 16) & 255, (n >> 8) & 255 and n & 255."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Calculadora de sub-rede",
+      "hints": [
+        "Transforme o endereço num único número de 32 bits num long (como em Endereço IP para número). O tamanho do bloco é 2^(32 − prefixo): 1L << (32 - prefixo).",
+        "O endereço de rede é o endereço arredondado para baixo até um múltiplo do tamanho do bloco: endereco - endereco % tamanho (ou endereco & mascara). O broadcast é rede + tamanho - 1.",
+        "Escreva um método String dotted(long n) que transforma um número de volta em a.b.c.d: os bytes são n >> 24, (n >> 16) & 255, (n >> 8) & 255 e n & 255."
+      ],
+      "mustNotContain": [
+        "Trabalhe com os números você mesmo: classes de java.net e toBinaryString não valem aqui."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "InetAddress|Inet4Address|toBinaryString|java\\.net",
+      "message": "Work with the numbers yourself: java.net classes and toBinaryString aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "192.168.1.130/26\n",
+      "output": "Network: 192.168.1.128\nBroadcast: 192.168.1.191\nFirst host: 192.168.1.129\nLast host: 192.168.1.190\nHosts: 62\n"
+    },
+    {
+      "input": "10.0.0.1/8\n",
+      "output": "Network: 10.0.0.0\nBroadcast: 10.255.255.255\nFirst host: 10.0.0.1\nLast host: 10.255.255.254\nHosts: 16777214\n"
+    },
+    {
+      "input": "172.16.5.4/16\n",
+      "output": "Network: 172.16.0.0\nBroadcast: 172.16.255.255\nFirst host: 172.16.0.1\nLast host: 172.16.255.254\nHosts: 65534\n",
+      "hidden": true
+    },
+    {
+      "input": "192.168.0.1/30\n",
+      "output": "Network: 192.168.0.0\nBroadcast: 192.168.0.3\nFirst host: 192.168.0.1\nLast host: 192.168.0.2\nHosts: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "200.100.50.25/24\n",
+      "output": "Network: 200.100.50.0\nBroadcast: 200.100.50.255\nFirst host: 200.100.50.1\nLast host: 200.100.50.254\nHosts: 254\n",
+      "hidden": true
+    },
+    {
+      "input": "10.20.30.40/20\n",
+      "output": "Network: 10.20.16.0\nBroadcast: 10.20.31.255\nFirst host: 10.20.16.1\nLast host: 10.20.31.254\nHosts: 4094\n",
+      "hidden": true
+    },
+    {
+      "input": "255.255.255.254/30\n",
+      "output": "Network: 255.255.255.252\nBroadcast: 255.255.255.255\nFirst host: 255.255.255.253\nLast host: 255.255.255.254\nHosts: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "128.0.0.1/9\n",
+      "output": "Network: 128.0.0.0\nBroadcast: 128.127.255.255\nFirst host: 128.0.0.1\nLast host: 128.127.255.254\nHosts: 8388606\n",
+      "hidden": true
+    }
+  ]
+}

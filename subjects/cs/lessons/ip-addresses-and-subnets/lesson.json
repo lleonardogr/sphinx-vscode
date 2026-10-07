@@ -1,0 +1,10 @@
+{
+  "title": "IP Addresses and Subnets",
+  "topic": "Networks",
+  "order": 2,
+  "translations": {
+    "pt-br": {
+      "title": "Endereços IP e sub-redes"
+    }
+  }
+}
