@@ -20,22 +20,22 @@
       "explanation": "13 ÷ 2 = 6 r **1**, 6 ÷ 2 = 3 r **0**, 3 ÷ 2 = 1 r **1**, 1 ÷ 2 = 0 r **1**. Reading the remainders upward gives 1101."
     },
     {
-      "type": "number",
-      "prompt": "What is the largest number one byte (8 bits) can store, counting from 0?",
-      "answer": "255",
-      "explanation": "8 bits give 2⁸ = 256 values: 0 to 255."
+      "type": "choice",
+      "prompt": "Why do programmers usually write bytes in **hexadecimal** instead of binary?",
+      "options": [
+        "Hex numbers are stored in less memory",
+        "One hex digit is exactly 4 bits, so a byte is always two short digits that convert back to bits easily",
+        "Computers calculate in hex",
+        "Binary can't represent every byte"
+      ],
+      "answer": 1,
+      "explanation": "16 = 2⁴, so each hex digit stands for 4 bits: `1011 0010` is `B2`. The memory is the same; hex is just easier for people to read."
     },
     {
-      "type": "choice",
-      "prompt": "How many different values can **5 bits** represent?",
-      "options": [
-        "5",
-        "10",
-        "25",
-        "32"
-      ],
-      "answer": 3,
-      "explanation": "Each bit doubles the combinations: 2⁵ = 32."
+      "type": "number",
+      "prompt": "What is **10₁₆** (hexadecimal) in decimal?",
+      "answer": "16",
+      "explanation": "In hex the second position is worth 16, so 10₁₆ is 1 × 16 + 0 = 16. \"10\" means ten only in decimal."
     },
     {
       "type": "number",
@@ -90,18 +90,18 @@
           "explanation": "13 ÷ 2 = 6 resto **1**, 6 ÷ 2 = 3 resto **0**, 3 ÷ 2 = 1 resto **1**, 1 ÷ 2 = 0 resto **1**. Lendo os restos de baixo para cima: 1101."
         },
         {
-          "prompt": "Qual é o maior número que um byte (8 bits) consegue guardar, contando a partir de 0?",
-          "explanation": "8 bits dão 2⁸ = 256 valores: de 0 a 255."
+          "prompt": "Por que os programadores costumam escrever bytes em **hexadecimal** em vez de binário?",
+          "options": [
+            "Números hex ocupam menos memória",
+            "Um dígito hex são exatamente 4 bits, então um byte é sempre dois dígitos curtos que voltam a bits facilmente",
+            "Os computadores calculam em hex",
+            "O binário não consegue representar todo byte"
+          ],
+          "explanation": "16 = 2⁴, então cada dígito hex representa 4 bits: `1011 0010` é `B2`. A memória é a mesma; o hex só é mais fácil de as pessoas lerem."
         },
         {
-          "prompt": "Quantos valores diferentes **5 bits** conseguem representar?",
-          "options": [
-            "5",
-            "10",
-            "25",
-            "32"
-          ],
-          "explanation": "Cada bit dobra as combinações: 2⁵ = 32."
+          "prompt": "Quanto é **10₁₆** (hexadecimal) em decimal?",
+          "explanation": "No hex a segunda posição vale 16, então 10₁₆ é 1 × 16 + 0 = 16. \"10\" só quer dizer dez no decimal."
         },
         {
           "prompt": "Converta **1011 0010₂** para hexadecimal.",

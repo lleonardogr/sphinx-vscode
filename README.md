@@ -46,17 +46,17 @@ Three exams close the stages, each with a quiz and three private coding question
 
 ## CS Fundamentals
 
-The second subject covers what new students should know about **how a computer works**: 8 units, from the processor and memory to number systems, text, logic, algorithms and networks, with 16 lessons, 8 quizzes and 32 challenges. Switch to it with the 📚 button at the top of the sidebar (**Switch Subject…**). Each unit starts with a lesson to read (units 1, 6 and 8 already use a **reading guide**: a short summary, the unit's objectives and curated videos and articles from the web), then challenges and a quiz solved in Java:
+The second subject covers what new students should know about **how a computer works**: 8 units, from the processor and memory to number systems, text, logic, algorithms and networks, with 8 reading guides, 8 quizzes and 32 challenges. Switch to it with the 📚 button at the top of the sidebar (**Switch Subject…**). Each unit starts with a **reading guide**: a short summary with a diagram, the unit's objectives, and curated videos, articles and interactive pages from the web. Then come challenges solved in Java and a quiz:
 
 | Unit | Lessons | Challenges (plus the unit's quiz) |
 |------|---------|-----------------------------------|
 | 1 · How Computers Work | How a Computer Works (reading guide: Crash Course, GeeksforGeeks) | Instruction Decoder · Stack Machine · Cache Simulator · Tiny CPU (a fetch–decode–execute simulator) |
-| 2 · Number Systems | Place Value and Binary · Hexadecimal and Octal | Binary to Decimal · Decimal to Binary · Hex to Decimal · Base Converter (any base from 2 to 36) |
-| 3 · Bits and Bytes | Bits and Bytes · Kilobytes and Kibibytes | How Many Values? · Bits Needed · Storage Units (MB vs MiB) · Download Time |
-| 4 · Representing Numbers | Negative Numbers: Two's Complement · Fractions and Floating Point | Two's Complement · Read a Signed Byte · Overflow Detector · Binary Fractions |
-| 5 · Text, Images and Sound | Text: ASCII and Unicode · Images and Sound | Character Codes · Media Size · Hex Colors · UTF-8 Encoder |
+| 2 · Number Systems | Number Systems (reading guide: Math is Fun, Cisco Binary Game) | Binary to Decimal · Decimal to Binary · Hex to Decimal · Base Converter (any base from 2 to 36) |
+| 3 · Bits and Bytes | Bits and Bytes (reading guide: Crash Course, NIST, GeeksforGeeks) | How Many Bits? · Storage Units (MB vs MiB) · Download Time · Read a BMP Header (little-endian) |
+| 4 · Representing Numbers | Representing Numbers (reading guide: Ben Eater, The Floating-Point Guide, Computerphile) | Two's Complement · Read a Signed Byte · Overflow Detector · Binary Fractions |
+| 5 · Text, Images and Sound | Text, Images and Sound (reading guide: Crash Course, Joel Spolsky on Unicode) | Case Flipper · Run-Length Encoding · Hex Colors (and readable text) · UTF-8 Encoder |
 | 6 · Logic and Bitwise Operations | Logic and Bitwise Operations (reading guide: Crash Course, NandGame, GeeksforGeeks) | Parity Bit · Permission Flags · Ripple-Carry Adder · 8-bit Register |
-| 7 · Algorithms and Complexity | What Is an Algorithm? · Big O: How Algorithms Grow | Count the Operations · Search Steps · Selection Sort Trace · Pair Sum: Slow and Fast |
+| 7 · Algorithms and Complexity | Algorithms and Complexity (reading guide: Crash Course, CS50, VisuAlgo) | Search Steps · Selection Sort Trace · Fast Power (O(log n)) · Pair Sum: Slow and Fast |
 | 8 · Networks and the Internet | Networks and the Internet (reading guide: Crash Course, How DNS Works, Packet Coders) | Valid IPv4 Address · Read an HTTP Request · Subnet Calculator · Routing Table (longest prefix match) |
 
 ![A CS Fundamentals lesson, Place Value and Binary, with a diagram of the byte 10110010 adding up to 178, and the Number Systems unit in the sidebar](media/screenshots/lesson.png)

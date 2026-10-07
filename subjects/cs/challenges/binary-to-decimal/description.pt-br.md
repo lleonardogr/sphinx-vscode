@@ -1,5 +1,7 @@
 # Binário para decimal
 
+Máscaras de rede, permissões de arquivos e os pixels de uma imagem são todos guardados em binário. Ler um número binário é o primeiro passo para entendê-los.
+
 Leia um número escrito em **binário** e imprima o valor dele em **decimal**.
 
 Cada dígito binário vale o dobro do dígito à sua direita. Some os valores das posições dos dígitos que são **1**: `1011` tem 1s nas posições que valem 8, 2 e 1, então vale 8 + 2 + 1 = **11**.

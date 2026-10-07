@@ -51,7 +51,7 @@ test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
   assert.equal(api.challenges().length, 132);
   assert.equal(api.quizzes().length, 19);
-  assert.equal(api.lessons().length, 13);
+  assert.equal(api.lessons().length, 8);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['exam-1', 'exam-2', 'final-exam', 'sample-exam']);
 });
 
@@ -158,18 +158,16 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
     assert.equal(String(api.tree.getTreeItem(unit1[0] as never).description), 'Lesson · 2 min · 3 readings');
     assert.deepEqual(api.tree.getChildren(groups[2]).map(label), [
       'Bits and Bytes',
-      'Kilobytes and Kibibytes',
-      'How Many Values?',
-      'Bits Needed',
+      'How Many Bits?',
       'Storage Units',
       'Download Time',
+      'Read a BMP Header',
       'Bits and Bytes Quiz',
     ]);
     const numberSystems = groups[1];
     const items = api.tree.getChildren(numberSystems);
     assert.deepEqual(items.map(label), [
-      'Place Value and Binary',
-      'Hexadecimal and Octal',
+      'Number Systems',
       'Binary to Decimal',
       'Decimal to Binary',
       'Hex to Decimal',
@@ -178,12 +176,12 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
     ]);
     // A lesson gets its ✓ once read.
     const lesson = items[0];
-    assert.equal(String(api.tree.getTreeItem(lesson as never).description), 'Lesson · 4 min');
+    assert.equal(String(api.tree.getTreeItem(lesson as never).description), 'Lesson · 1 min · 3 readings');
     await vscode.commands.executeCommand('sphinx.openLesson', 'place-value-and-binary');
     await api.lessonProgress.markRead('place-value-and-binary');
     assert.equal((api.tree.getTreeItem(api.tree.getChildren(numberSystems)[0] as never).iconPath as vscode.ThemeIcon).id, 'pass-filled');
     // Prerequisites: in the description, and with progress in the tooltip.
-    const b2d = api.tree.getTreeItem(items[2] as never);
+    const b2d = api.tree.getTreeItem(items[1] as never);
     assert.equal(b2d.description, 'Easy · needs Loops');
     assert.match((b2d.tooltip as vscode.MarkdownString).value, /Needs:\n- Java Programming · Loops \(\d+\/12 solved\)/);
   } finally {

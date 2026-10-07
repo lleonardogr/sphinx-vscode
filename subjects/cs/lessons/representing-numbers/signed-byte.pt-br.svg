@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" role="img" aria-label="O byte 11111011 em complemento de dois: o bit mais à esquerda vale −128, os outros de 64 a 1, e eles somam −5">
+  <style>
+    text { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; text-anchor: middle; }
+    .place { font-size: 15px; fill: #8a94a6; }
+    .neg { font-size: 15px; fill: #ef4444; font-weight: 700; }
+    .bit { font-size: 30px; font-weight: 600; }
+    .one rect { fill: #3b82f6; } .one text { fill: #ffffff; }
+    .zero rect { fill: none; stroke: #8a94a6; stroke-width: 2; } .zero text { fill: #8a94a6; }
+    .sum { font-size: 18px; fill: #3b82f6; font-weight: 600; }
+    .label { font-size: 13px; fill: #8a94a6; }
+  </style>
+  <text class="label" x="300" y="30">complemento de dois: o bit mais à esquerda vale −128</text>
+  <text class="neg" x="48" y="62">−128</text><g class="one"><rect x="20" y="74" width="56" height="56" rx="8"/><text class="bit" x="48" y="113">1</text></g><text class="place" x="118" y="62">64</text><g class="one"><rect x="90" y="74" width="56" height="56" rx="8"/><text class="bit" x="118" y="113">1</text></g><text class="place" x="188" y="62">32</text><g class="one"><rect x="160" y="74" width="56" height="56" rx="8"/><text class="bit" x="188" y="113">1</text></g><text class="place" x="258" y="62">16</text><g class="one"><rect x="230" y="74" width="56" height="56" rx="8"/><text class="bit" x="258" y="113">1</text></g><text class="place" x="328" y="62">8</text><g class="one"><rect x="300" y="74" width="56" height="56" rx="8"/><text class="bit" x="328" y="113">1</text></g><text class="place" x="398" y="62">4</text><g class="zero"><rect x="370" y="74" width="56" height="56" rx="8"/><text class="bit" x="398" y="113">0</text></g><text class="place" x="468" y="62">2</text><g class="one"><rect x="440" y="74" width="56" height="56" rx="8"/><text class="bit" x="468" y="113">1</text></g><text class="place" x="538" y="62">1</text><g class="one"><rect x="510" y="74" width="56" height="56" rx="8"/><text class="bit" x="538" y="113">1</text></g>
+  <text class="sum" x="300" y="172">−128 + 64 + 32 + 16 + 8 + 2 + 1 = −5</text>
+</svg>

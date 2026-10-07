@@ -1,10 +1,60 @@
 {
-  "title": "Place Value and Binary",
+  "title": "Number Systems",
   "topic": "NumberSystems",
   "order": 1,
+  "objectives": [
+    "Convert numbers between binary, decimal and hexadecimal",
+    "Explain why one hex digit is exactly 4 bits, and why bytes are written in hex",
+    "Read binary, hexadecimal and octal literals in Java code"
+  ],
+  "readings": [
+    {
+      "title": "Binary Number System",
+      "source": "Math is Fun",
+      "url": "https://www.mathsisfun.com/binary-number-system.html",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "How each position is worth twice the one to its right (1, 2, 4, 8, …), and the worked examples that read binary numbers like 1111 and 1001."
+    },
+    {
+      "title": "Hexadecimals",
+      "source": "Math is Fun",
+      "url": "https://www.mathsisfun.com/hexadecimals.html",
+      "type": "article",
+      "minutes": 4,
+      "lang": "en",
+      "lookFor": "The digits A to F for 10 to 15, and how each position is worth 16 times the one to its right. The summary here adds why one hex digit is 4 bits."
+    },
+    {
+      "title": "Binary Game",
+      "source": "Cisco",
+      "url": "https://learningcontent.cisco.com/games/binary/index.html",
+      "type": "interactive",
+      "minutes": 10,
+      "lang": "en",
+      "lookFor": "Play a few rounds: click bits to make the decimal number shown, and type the decimal value of the bits shown. Try to get fast at the place values 128, 64, 32, 16, 8, 4, 2, 1."
+    }
+  ],
   "translations": {
     "pt-br": {
-      "title": "Valor posicional e binário"
+      "title": "Sistemas de numeração",
+      "objectives": [
+        "Converter números entre binário, decimal e hexadecimal",
+        "Explicar por que um dígito hex é exatamente 4 bits, e por que bytes são escritos em hex",
+        "Ler literais binários, hexadecimais e octais em código Java"
+      ],
+      "readings": [
+        {
+          "lookFor": "Como cada posição vale o dobro da que está à sua direita (1, 2, 4, 8, …), e os exemplos que leem números binários como 1111 e 1001."
+        },
+        {
+          "lookFor": "Os dígitos de A a F para 10 a 15, e como cada posição vale 16 vezes a que está à sua direita. O resumo aqui acrescenta por que um dígito hex são 4 bits."
+        },
+        {
+          "lookFor": "Jogue algumas rodadas: clique nos bits para formar o número decimal mostrado, e digite o valor decimal dos bits mostrados. Tente ficar rápido nos valores das posições 128, 64, 32, 16, 8, 4, 2, 1."
+        }
+      ]
     }
   }
 }

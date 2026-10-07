@@ -22,5 +22,8 @@ void main() {
         }
         rgb[i] = high * 16 + low;
     }
+    int brightness = (299 * rgb[0] + 587 * rgb[1] + 114 * rgb[2] + 500) / 1000;
     IO.println("rgb(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ")");
+    IO.println("Brightness: " + brightness);
+    IO.println("Text: " + (brightness >= 128 ? "black" : "white"));
 }

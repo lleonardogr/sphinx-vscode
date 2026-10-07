@@ -1,0 +1,62 @@
+{
+  "title": "Algorithms and Complexity",
+  "topic": "Algorithms",
+  "order": 1,
+  "objectives": [
+    "Compare linear and binary search by counting their steps",
+    "Trace a simple sorting algorithm step by step",
+    "Estimate the Big O of code from its loops",
+    "Explain why a better algorithm beats a faster computer as the input grows"
+  ],
+  "readings": [
+    {
+      "title": "Intro to Algorithms",
+      "source": "Crash Course Computer Science #13",
+      "url": "https://www.youtube.com/watch?v=rL8X2mlNHPM",
+      "type": "video",
+      "minutes": 12,
+      "lang": "en",
+      "lookFor": "How selection sort works and why it takes about n² steps, how merge sort gets to n log n, and what Big O notation says about the two."
+    },
+    {
+      "title": "Lecture 3: Algorithms (notes)",
+      "source": "CS50, Harvard University",
+      "url": "https://cs50.harvard.edu/x/notes/3/",
+      "type": "article",
+      "minutes": 20,
+      "lang": "en",
+      "lookFor": "Linear and binary search, the running-time chart, and the definitions of O and Ω. The examples are in C, but they read almost like Java."
+    },
+    {
+      "title": "Sorting",
+      "source": "VisuAlgo (National University of Singapore)",
+      "url": "https://visualgo.net/en/sorting",
+      "type": "interactive",
+      "minutes": 10,
+      "lang": "en",
+      "lookFor": "Pick Selection Sort, enter a few numbers and step through it: watch how it searches for the smallest number on every pass. Then compare with Merge Sort."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Algoritmos e complexidade",
+      "objectives": [
+        "Comparar a busca linear e a binária contando seus passos",
+        "Acompanhar passo a passo um algoritmo de ordenação simples",
+        "Estimar o Big O de um código a partir dos seus laços",
+        "Explicar por que um algoritmo melhor vence um computador mais rápido conforme a entrada cresce"
+      ],
+      "readings": [
+        {
+          "lookFor": "Como a ordenação por seleção funciona e por que ela leva cerca de n² passos, como o merge sort chega a n log n, e o que a notação Big O diz sobre os dois."
+        },
+        {
+          "lookFor": "As buscas linear e binária, o gráfico de tempo de execução e as definições de O e Ω. Os exemplos são em C, mas se leem quase como Java."
+        },
+        {
+          "lookFor": "Escolha Selection Sort, digite alguns números e avance passo a passo: veja como ele procura o menor número em cada passada. Depois compare com o Merge Sort."
+        }
+      ]
+    }
+  }
+}

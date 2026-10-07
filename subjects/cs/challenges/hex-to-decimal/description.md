@@ -1,5 +1,7 @@
 # Hex to Decimal
 
+Hexadecimal shows up in web colors (`#FF8800`), memory addresses and error codes like `0x80070005`.
+
 Read a number in **hexadecimal** (base 16) and print its value in **decimal**.
 
 Hex digits go from `0` to `9` and then `A` (10) to `F` (15), in upper or lower case. Each digit is worth 16 times the digit to its right: `2F` is 2 × 16 + 15 = **47**.

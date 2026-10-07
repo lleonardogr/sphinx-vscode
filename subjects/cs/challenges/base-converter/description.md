@@ -1,5 +1,7 @@
 # Base Converter
 
+Programmers switch bases all the time: binary for bits, hex for bytes, and base 36 for short codes such as the ones in shortened links.
+
 Convert a number from **any base to any base**, from 2 to 36. Digits go from `0` to `9` and then `A` (10) to `Z` (35), so base 16 uses `0`–`F` and base 36 uses `0`–`Z`. Letters may be typed in upper or lower case.
 
 For example, `255 10 16` converts 255 from base 10 to base 16: **FF**.

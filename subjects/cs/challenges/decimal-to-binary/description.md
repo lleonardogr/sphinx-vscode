@@ -1,5 +1,7 @@
 # Decimal to Binary
 
+Every number your program uses is stored as bits. This is the conversion the computer makes whenever you type a number.
+
 Read a number in **decimal** and print it in **binary**.
 
 Divide by 2 repeatedly and write down the remainders. Reading the remainders from the **last** to the first gives the binary number. For 13: 13 ÷ 2 = 6 remainder **1**, 6 ÷ 2 = 3 r **0**, 3 ÷ 2 = 1 r **1**, 1 ÷ 2 = 0 r **1**, so 13 is **1101**.

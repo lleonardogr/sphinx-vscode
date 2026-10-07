@@ -1,0 +1,62 @@
+{
+  "title": "Text, Images and Sound",
+  "topic": "TextMedia",
+  "order": 1,
+  "objectives": [
+    "Convert between characters and their codes, and use code arithmetic in Java",
+    "Explain what Unicode is and encode a code point in UTF-8",
+    "Describe how pixels, colors and sound samples are stored as numbers",
+    "Compress and expand data with run-length encoding, and tell lossless from lossy compression"
+  ],
+  "readings": [
+    {
+      "title": "Representing Numbers and Letters with Binary",
+      "source": "Crash Course Computer Science #4",
+      "url": "https://www.youtube.com/watch?v=1GSjbWt0c9M",
+      "type": "video",
+      "minutes": 11,
+      "lang": "en",
+      "lookFor": "How a table of codes turns letters into numbers (ASCII), why 128 codes weren't enough, and how Unicode gave every character in every language a number."
+    },
+    {
+      "title": "The Absolute Minimum Every Software Developer Must Know About Unicode",
+      "source": "Joel Spolsky, Joel on Software",
+      "url": "https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/",
+      "type": "article",
+      "minutes": 15,
+      "lang": "en",
+      "lookFor": "The difference between a code point (U+00E9) and the bytes that store it, how UTF-8 keeps English text identical to ASCII, and why text looks garbled when it's read with the wrong encoding. The article is from 2003: today UTF-8 uses at most 4 bytes, not 6."
+    },
+    {
+      "title": "Compression",
+      "source": "Crash Course Computer Science #21",
+      "url": "https://www.youtube.com/watch?v=OtDxDvCpPL4",
+      "type": "video",
+      "minutes": 12,
+      "lang": "en",
+      "lookFor": "Run-length encoding on a row of pixels, why it's lossless, and how lossy formats such as JPEG and MP3 throw away details people barely notice."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Texto, imagens e som",
+      "objectives": [
+        "Converter entre caracteres e seus códigos, e fazer contas com códigos no Java",
+        "Explicar o que é o Unicode e codificar um code point em UTF-8",
+        "Descrever como pixels, cores e amostras de som são guardados como números",
+        "Comprimir e expandir dados com codificação por comprimento de sequência, e diferenciar compressão sem perda e com perda"
+      ],
+      "readings": [
+        {
+          "lookFor": "Como uma tabela de códigos transforma letras em números (ASCII), por que 128 códigos não bastavam, e como o Unicode deu um número a cada caractere de cada idioma."
+        },
+        {
+          "lookFor": "A diferença entre um code point (U+00E9) e os bytes que o guardam, como o UTF-8 mantém o texto em inglês idêntico ao ASCII, e por que o texto fica embaralhado quando é lido com a codificação errada. O artigo é de 2003: hoje o UTF-8 usa no máximo 4 bytes, não 6."
+        },
+        {
+          "lookFor": "A codificação por comprimento de sequência numa linha de pixels, por que ela é sem perda, e como formatos com perda como JPEG e MP3 jogam fora detalhes que as pessoas mal percebem."
+        }
+      ]
+    }
+  }
+}

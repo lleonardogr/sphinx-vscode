@@ -1,5 +1,7 @@
 # Hexadecimal para decimal
 
+O hexadecimal aparece em cores da web (`#FF8800`), endereços de memória e códigos de erro como `0x80070005`.
+
 Leia um número em **hexadecimal** (base 16) e imprima o valor dele em **decimal**.
 
 Os dígitos hex vão de `0` a `9` e depois de `A` (10) a `F` (15), maiúsculos ou minúsculos. Cada dígito vale 16 vezes o dígito à sua direita: `2F` é 2 × 16 + 15 = **47**.

@@ -1,0 +1,78 @@
+{
+  "title": "Read a BMP Header",
+  "topic": "BitsBytes",
+  "requires": [
+    "Arrays",
+    "Methods"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Split the line into 30 hex strings and turn each into a number with Integer.parseInt(text, 16).",
+    "Little-endian means the first byte is the least significant: the 4 bytes b0 b1 b2 b3 are b0 + b1 × 256 + b2 × 256² + b3 × 256³. Keep it in a long.",
+    "A method long little(int[] bytes, int start, int count) that reads count bytes from start keeps main short: width is little(bytes, 18, 4), bits per pixel little(bytes, 28, 2)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Lendo o cabeçalho de um BMP",
+      "hints": [
+        "Separe a linha em 30 textos hex e transforme cada um num número com Integer.parseInt(texto, 16).",
+        "Little-endian quer dizer que o primeiro byte é o menos significativo: os 4 bytes b0 b1 b2 b3 são b0 + b1 × 256 + b2 × 256² + b3 × 256³. Guarde num long.",
+        "Um método long little(int[] bytes, int start, int count) que lê count bytes a partir de start deixa o main curto: a largura é little(bytes, 18, 4), os bits por pixel little(bytes, 28, 2)."
+      ],
+      "mustContain": [
+        "Use um laço para ler os bytes."
+      ],
+      "mustNotContain": [
+        "Leia os bytes você mesmo: ByteBuffer e bibliotecas de imagem não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to read the bytes."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "ByteBuffer|ByteOrder|ImageIO|java\\.awt",
+      "message": "Read the bytes yourself: ByteBuffer and image libraries aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "42 4D 4E 00 00 00 00 00 00 00 36 00 00 00 28 00 00 00 04 00 00 00 02 00 00 00 01 00 18 00\n",
+      "output": "Format: BMP\nWidth: 4\nHeight: 2\nBits per pixel: 24\nFile size: 78 bytes\n"
+    },
+    {
+      "input": "42 4D 36 10 0E 00 00 00 00 00 36 00 00 00 28 00 00 00 80 02 00 00 E0 01 00 00 01 00 18 00\n",
+      "output": "Format: BMP\nWidth: 640\nHeight: 480\nBits per pixel: 24\nFile size: 921654 bytes\n"
+    },
+    {
+      "input": "42 4D 36 90 7E 00 00 00 00 00 36 00 00 00 28 00 00 00 80 07 00 00 38 04 00 00 01 00 20 00\n",
+      "output": "Format: BMP\nWidth: 1920\nHeight: 1080\nBits per pixel: 32\nFile size: 8294454 bytes\n",
+      "hidden": true
+    },
+    {
+      "input": "42 4D 3A 00 00 00 00 00 00 00 36 00 00 00 28 00 00 00 01 00 00 00 01 00 00 00 01 00 01 00\n",
+      "output": "Format: BMP\nWidth: 1\nHeight: 1\nBits per pixel: 1\nFile size: 58 bytes\n",
+      "hidden": true
+    },
+    {
+      "input": "42 4D 96 EA 00 00 00 00 00 00 36 00 00 00 28 00 00 00 2C 01 00 00 C8 00 00 00 01 00 08 00\n",
+      "output": "Format: BMP\nWidth: 300\nHeight: 200\nBits per pixel: 8\nFile size: 60054 bytes\n",
+      "hidden": true
+    },
+    {
+      "input": "42 4D 36 00 06 00 00 00 00 00 36 00 00 00 28 00 00 00 00 00 01 00 02 00 00 00 01 00 18 00\n",
+      "output": "Format: BMP\nWidth: 65536\nHeight: 2\nBits per pixel: 24\nFile size: 393270 bytes\n",
+      "hidden": true
+    },
+    {
+      "input": "50 4E 4E 00 00 00 00 00 00 00 36 00 00 00 28 00 00 00 04 00 00 00 02 00 00 00 01 00 18 00\n",
+      "output": "Not a BMP file\n",
+      "hidden": true
+    }
+  ]
+}
