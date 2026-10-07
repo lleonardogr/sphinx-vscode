@@ -12,6 +12,8 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Changed
 
 - **CS Fundamentals, unit 1** follows the new guide: its two lessons became one reading guide (Crash Course videos on the CPU and caches, and a GeeksforGeeks article on the JVM). Two new challenges replace the formula ones: **Stack Machine** (how the JVM computes) and **Cache Simulator** (hits, misses and locality). Instruction Decoder is now the Easy challenge, and the quiz asks students to trace and calculate instead of recalling facts.
+- **CS Fundamentals, unit 8** follows the guide too: one reading guide (Crash Course on the internet, the How DNS Works comic and Packet Coders on subnetting), **Read an HTTP Request** and **Routing Table** (longest prefix match) replace Packet Splitter and IP Address to Number, Subnet Calculator is now Medium, and the quiz asks students to decide and calculate.
+- **CS Fundamentals, unit 6**: one reading guide (Crash Course on Boolean logic, the NandGame puzzle game and GeeksforGeeks on bitwise operators) with a half-adder diagram; **Parity Bit** (error detection) and **Ripple-Carry Adder** (adding with gates) replace Bit Checker and Truth Table; quiz prompts can now show tables.
 
 ## [1.4.0] - 2026-10-07
 

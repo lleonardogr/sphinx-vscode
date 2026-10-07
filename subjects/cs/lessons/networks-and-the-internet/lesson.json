@@ -1,0 +1,62 @@
+{
+  "title": "Networks and the Internet",
+  "topic": "Networks",
+  "order": 1,
+  "objectives": [
+    "Follow a web request through DNS, TCP and HTTP, and choose TCP or UDP for an application",
+    "Check that an IPv4 address is valid and read it as one 32-bit number",
+    "Find the network, broadcast and host addresses of an address with a prefix",
+    "Choose the next hop for a packet by longest prefix match, as a router does"
+  ],
+  "readings": [
+    {
+      "title": "The Internet",
+      "source": "Crash Course Computer Science #29",
+      "url": "https://www.youtube.com/watch?v=AEaKrq3SpW8",
+      "type": "video",
+      "minutes": 12,
+      "lang": "en",
+      "lookFor": "How a message becomes packets, how routers pass them along hop by hop, why TCP numbers and acknowledges packets while UDP doesn't, and what DNS does before any of it."
+    },
+    {
+      "title": "How DNS Works",
+      "source": "DNSimple (a comic in 6 short episodes)",
+      "url": "https://howdns.works/",
+      "type": "article",
+      "minutes": 15,
+      "lang": "en",
+      "lookFor": "Follow one name from the browser cache to the resolver, then the root, TLD and authoritative servers, and notice where each answer is cached for next time."
+    },
+    {
+      "title": "A Beginner's Guide to Subnetting",
+      "source": "Packet Coders (Rick Donato)",
+      "url": "https://www.packetcoders.io/a-beginners-guide-to-subnetting/",
+      "type": "article",
+      "minutes": 7,
+      "lang": "en",
+      "lookFor": "How the prefix and the subnet mask split an address into network and host bits, and the worked examples that find the network, the broadcast and the number of hosts. You can skip the classful addressing history."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Redes e a internet",
+      "objectives": [
+        "Acompanhar um pedido da web pelo DNS, TCP e HTTP, e escolher TCP ou UDP para uma aplicação",
+        "Verificar se um endereço IPv4 é válido e lê-lo como um único número de 32 bits",
+        "Achar os endereços de rede, de broadcast e de hosts de um endereço com prefixo",
+        "Escolher o próximo salto de um pacote pelo maior prefixo correspondente, como um roteador faz"
+      ],
+      "readings": [
+        {
+          "lookFor": "Como uma mensagem vira pacotes, como os roteadores os passam adiante salto a salto, por que o TCP numera e confirma os pacotes e o UDP não, e o que o DNS faz antes de tudo isso."
+        },
+        {
+          "lookFor": "Acompanhe um nome desde o cache do navegador até o resolvedor, depois os servidores raiz, de TLD e autoritativo, e repare onde cada resposta fica em cache para a próxima vez."
+        },
+        {
+          "lookFor": "Como o prefixo e a máscara de sub-rede dividem um endereço em bits de rede e de host, e os exemplos que acham a rede, o broadcast e o número de hosts. Dá para pular a história do endereçamento por classes."
+        }
+      ]
+    }
+  }
+}

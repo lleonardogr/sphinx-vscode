@@ -4,25 +4,73 @@
   "requires": [
     "Strings"
   ],
-  "description": "Packets, IP addresses, TCP and UDP, ports, DNS and subnets.",
+  "description": "Packets, TCP and UDP, DNS and HTTP, IP addresses, subnets and routing. Most questions ask you to decide or calculate.",
   "questions": [
     {
-      "type": "number",
-      "prompt": "How many bits does an **IPv4** address have?",
-      "answer": "32",
-      "explanation": "4 bytes of 8 bits each."
+      "type": "choice",
+      "prompt": "Which pair of addresses is on the same **/24** network?",
+      "options": [
+        "192.168.1.20 and 192.168.2.20",
+        "192.168.1.20 and 192.168.1.200",
+        "10.0.0.1 and 11.0.0.1",
+        "172.16.5.1 and 172.17.5.1"
+      ],
+      "answer": 1,
+      "explanation": "In a /24 the first 24 bits, the first three numbers, are the network. 192.168.1 is the same in both."
     },
     {
       "type": "choice",
-      "prompt": "Which of these is a valid IPv4 address?",
+      "prompt": "A video call app has to choose between TCP and UDP. Which fits better, and why?",
       "options": [
-        "192.168.1.256",
-        "10.0.0.1",
-        "1.2.3",
-        "300.1.1.1"
+        "TCP, because every packet must arrive",
+        "UDP, because a late packet is useless for live audio and video, and waiting for resends would cause lag",
+        "TCP, because it is faster",
+        "UDP, because it guarantees the order"
       ],
       "answer": 1,
-      "explanation": "Each of the 4 parts must be a number from 0 to 255."
+      "explanation": "TCP resends lost packets and keeps the order, which adds delay. For live media it is better to skip a lost packet than to wait for it."
+    },
+    {
+      "type": "choice",
+      "prompt": "In what order do these happen when you open https://example.com?",
+      "options": [
+        "HTTP request → DNS lookup → TCP connection",
+        "DNS lookup → TCP connection → HTTP request",
+        "TCP connection → DNS lookup → HTTP request",
+        "DNS lookup → HTTP request → TCP connection"
+      ],
+      "answer": 1,
+      "explanation": "The browser needs the address first (DNS), then a connection to it (TCP), and only then can it send the request (HTTP)."
+    },
+    {
+      "type": "number",
+      "prompt": "A 3,000-byte message is sent in packets that carry at most **1,460 bytes** of data each. How many packets are needed?",
+      "answer": "3",
+      "explanation": "1,460 + 1,460 = 2,920 bytes, so 80 bytes are left for a third packet."
+    },
+    {
+      "type": "number",
+      "prompt": "How many hosts (usable addresses) fit in a **/26** network?",
+      "answer": "62",
+      "explanation": "32 − 26 = 6 host bits: 2⁶ = 64 addresses, minus the network and broadcast addresses."
+    },
+    {
+      "type": "number",
+      "prompt": "What is the last number of the **broadcast** address of 192.168.1.130/26? (192.168.1.?)",
+      "answer": "191",
+      "explanation": "The block has 64 addresses and starts at 128 (130 rounded down to a multiple of 64), so it ends at 128 + 63 = 191."
+    },
+    {
+      "type": "choice",
+      "prompt": "A router has the routes **10.0.0.0/8 → A**, **10.1.0.0/16 → B** and **0.0.0.0/0 → C**. Where does it send a packet for **10.1.5.5**?",
+      "options": [
+        "A",
+        "B",
+        "C",
+        "To all three"
+      ],
+      "answer": 1,
+      "explanation": "All three match, and the longest prefix wins: /16 is more specific than /8 and /0."
     },
     {
       "type": "choice",
@@ -31,84 +79,86 @@
         "Encrypts web pages",
         "Turns names like example.com into IP addresses",
         "Splits data into packets",
-        "Assigns port numbers"
+        "Chooses the route of each packet"
       ],
       "answer": 1,
-      "explanation": "DNS is the internet's phone book: it looks up the address of a name."
-    },
-    {
-      "type": "choice",
-      "prompt": "Which protocol guarantees that data arrives complete and in order?",
-      "options": [
-        "UDP",
-        "IP",
-        "TCP",
-        "DNS"
-      ],
-      "answer": 2,
-      "explanation": "TCP numbers the data, confirms what arrived and sends lost packets again."
-    },
-    {
-      "type": "number",
-      "prompt": "Which port does **HTTPS** use by default?",
-      "answer": "443",
-      "explanation": "HTTP uses port 80 and HTTPS port 443."
-    },
-    {
-      "type": "number",
-      "prompt": "How many hosts (usable addresses) fit in a **/24** network?",
-      "answer": "254",
-      "explanation": "2⁸ = 256 addresses, minus the network and the broadcast addresses."
-    },
-    {
-      "type": "choice",
-      "prompt": "Which address is **private** (not used on the public internet)?",
-      "options": [
-        "8.8.8.8",
-        "142.250.79.46",
-        "192.168.0.10",
-        "200.1.2.3"
-      ],
-      "answer": 2,
-      "explanation": "The private blocks are 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16."
+      "explanation": "DNS is the internet's phone book: before connecting, your computer asks it for the address of a name."
     },
     {
       "type": "truefalse",
-      "prompt": "A file is sent across the internet as one big piece.",
-      "answer": false,
-      "explanation": "It is split into packets of about 1500 bytes or less, which travel independently and are reassembled."
+      "prompt": "If your DNS server stops answering, websites can seem \"down\" even though your network still works.",
+      "answer": true,
+      "explanation": "Without DNS your computer can't find the address of a name, so nothing loads, although packets to known addresses still get through."
     },
     {
-      "type": "number",
-      "prompt": "What is the last part of the network address of **192.168.1.130/26**? (192.168.1.?)",
-      "answer": "128",
-      "explanation": "A /26 block has 64 addresses: 130 rounded down to a multiple of 64 is 128."
-    },
-    {
-      "type": "number",
-      "prompt": "How many bits does an **IPv6** address have?",
-      "answer": "128",
-      "explanation": "Four times as many bits as IPv4: about 3.4 × 10³⁸ addresses."
+      "type": "choice",
+      "prompt": "A server receives `GET /a b HTTP/1.1`. Why does it answer 400 Bad Request?",
+      "options": [
+        "GET is not allowed",
+        "The request line must have exactly 3 parts, and the space in the path makes 4",
+        "HTTP/1.1 is too old",
+        "The path must end in .html"
+      ],
+      "answer": 1,
+      "explanation": "The request line is method, path and version, separated by single spaces. Spaces inside a path must be encoded, as %20."
     }
   ],
   "translations": {
     "pt-br": {
       "title": "Quiz de redes",
-      "description": "Pacotes, endereços IP, TCP e UDP, portas, DNS e sub-redes.",
+      "description": "Pacotes, TCP e UDP, DNS e HTTP, endereços IP, sub-redes e roteamento. A maioria das perguntas pede para decidir ou calcular.",
       "questions": [
         {
-          "prompt": "Quantos bits tem um endereço **IPv4**?",
-          "explanation": "4 bytes de 8 bits cada."
+          "prompt": "Qual par de endereços está na mesma rede **/24**?",
+          "options": [
+            "192.168.1.20 e 192.168.2.20",
+            "192.168.1.20 e 192.168.1.200",
+            "10.0.0.1 e 11.0.0.1",
+            "172.16.5.1 e 172.17.5.1"
+          ],
+          "explanation": "Numa /24 os primeiros 24 bits, os três primeiros números, são a rede. 192.168.1 é igual nos dois."
         },
         {
-          "prompt": "Qual destes é um endereço IPv4 válido?",
+          "prompt": "Um app de chamada de vídeo precisa escolher entre TCP e UDP. Qual serve melhor, e por quê?",
           "options": [
-            "192.168.1.256",
-            "10.0.0.1",
-            "1.2.3",
-            "300.1.1.1"
+            "TCP, porque todo pacote precisa chegar",
+            "UDP, porque um pacote atrasado não serve para áudio e vídeo ao vivo, e esperar reenvios causaria atraso",
+            "TCP, porque é mais rápido",
+            "UDP, porque garante a ordem"
           ],
-          "explanation": "Cada uma das 4 partes precisa ser um número de 0 a 255."
+          "explanation": "O TCP reenvia pacotes perdidos e mantém a ordem, o que acrescenta atraso. Para mídia ao vivo é melhor pular um pacote perdido do que esperar por ele."
+        },
+        {
+          "prompt": "Em que ordem estas coisas acontecem quando você abre https://example.com?",
+          "options": [
+            "Pedido HTTP → consulta DNS → conexão TCP",
+            "Consulta DNS → conexão TCP → pedido HTTP",
+            "Conexão TCP → consulta DNS → pedido HTTP",
+            "Consulta DNS → pedido HTTP → conexão TCP"
+          ],
+          "explanation": "O navegador precisa primeiro do endereço (DNS), depois de uma conexão com ele (TCP), e só então pode mandar o pedido (HTTP)."
+        },
+        {
+          "prompt": "Uma mensagem de 3.000 bytes é enviada em pacotes que levam no máximo **1.460 bytes** de dados cada. Quantos pacotes são necessários?",
+          "explanation": "1.460 + 1.460 = 2.920 bytes, então sobram 80 bytes para um terceiro pacote."
+        },
+        {
+          "prompt": "Quantos hosts (endereços utilizáveis) cabem numa rede **/26**?",
+          "explanation": "32 − 26 = 6 bits de host: 2⁶ = 64 endereços, menos os endereços de rede e de broadcast."
+        },
+        {
+          "prompt": "Qual é o último número do endereço de **broadcast** de 192.168.1.130/26? (192.168.1.?)",
+          "explanation": "O bloco tem 64 endereços e começa em 128 (130 arredondado para baixo até um múltiplo de 64), então termina em 128 + 63 = 191."
+        },
+        {
+          "prompt": "Um roteador tem as rotas **10.0.0.0/8 → A**, **10.1.0.0/16 → B** e **0.0.0.0/0 → C**. Para onde ele manda um pacote para **10.1.5.5**?",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "Para as três"
+          ],
+          "explanation": "As três correspondem, e o maior prefixo vence: /16 é mais específico que /8 e /0."
         },
         {
           "prompt": "O que o **DNS** faz?",
@@ -116,49 +166,23 @@
             "Criptografa páginas da web",
             "Transforma nomes como example.com em endereços IP",
             "Divide os dados em pacotes",
-            "Distribui números de porta"
+            "Escolhe a rota de cada pacote"
           ],
-          "explanation": "O DNS é a lista telefônica da internet: ele procura o endereço de um nome."
+          "explanation": "O DNS é a lista telefônica da internet: antes de conectar, seu computador pergunta a ele o endereço de um nome."
         },
         {
-          "prompt": "Qual protocolo garante que os dados chegam completos e em ordem?",
+          "prompt": "Se o seu servidor DNS para de responder, os sites podem parecer \"fora do ar\" mesmo com a sua rede funcionando.",
+          "explanation": "Sem DNS seu computador não consegue achar o endereço de um nome, então nada carrega, embora pacotes para endereços conhecidos ainda passem."
+        },
+        {
+          "prompt": "Um servidor recebe `GET /a b HTTP/1.1`. Por que ele responde 400 Bad Request?",
           "options": [
-            "UDP",
-            "IP",
-            "TCP",
-            "DNS"
+            "GET não é permitido",
+            "A linha de pedido precisa ter exatamente 3 partes, e o espaço no caminho faz 4",
+            "HTTP/1.1 é antigo demais",
+            "O caminho precisa terminar em .html"
           ],
-          "explanation": "O TCP numera os dados, confirma o que chegou e reenvia os pacotes perdidos."
-        },
-        {
-          "prompt": "Qual porta o **HTTPS** usa por padrão?",
-          "explanation": "O HTTP usa a porta 80 e o HTTPS a porta 443."
-        },
-        {
-          "prompt": "Quantos hosts (endereços utilizáveis) cabem numa rede **/24**?",
-          "explanation": "2⁸ = 256 endereços, menos os endereços de rede e de broadcast."
-        },
-        {
-          "prompt": "Qual endereço é **privado** (não usado na internet pública)?",
-          "options": [
-            "8.8.8.8",
-            "142.250.79.46",
-            "192.168.0.10",
-            "200.1.2.3"
-          ],
-          "explanation": "Os blocos privados são 10.0.0.0/8, 172.16.0.0/12 e 192.168.0.0/16."
-        },
-        {
-          "prompt": "Um arquivo é enviado pela internet como um único pedaço grande.",
-          "explanation": "Ele é dividido em pacotes de cerca de 1500 bytes ou menos, que viajam de forma independente e são remontados."
-        },
-        {
-          "prompt": "Qual é a última parte do endereço de rede de **192.168.1.130/26**? (192.168.1.?)",
-          "explanation": "Um bloco /26 tem 64 endereços: 130 arredondado para baixo até um múltiplo de 64 é 128."
-        },
-        {
-          "prompt": "Quantos bits tem um endereço **IPv6**?",
-          "explanation": "Quatro vezes mais bits que o IPv4: cerca de 3,4 × 10³⁸ endereços."
+          "explanation": "A linha de pedido é método, caminho e versão, separados por espaços simples. Espaços dentro de um caminho precisam ser codificados, como %20."
         }
       ]
     }

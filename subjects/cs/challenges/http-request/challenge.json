@@ -1,0 +1,88 @@
+{
+  "title": "Read an HTTP Request",
+  "topic": "Networks",
+  "requires": [
+    "Strings",
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "The first line splits on spaces into exactly 3 parts: method, path and version.",
+    "Read header lines until you reach an empty line. Each header is a name, a colon and a value; split at the first colon only, with indexOf(':'), and trim both sides.",
+    "Header names ignore upper and lower case: compare with equalsIgnoreCase(\"Host\")."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Lendo um pedido HTTP",
+      "hints": [
+        "A primeira linha se divide nos espaços em exatamente 3 partes: método, caminho e versão.",
+        "Leia as linhas de cabeçalho até chegar a uma linha vazia. Cada cabeçalho é um nome, dois-pontos e um valor; divida só nos primeiros dois-pontos, com indexOf(':'), e tire os espaços dos dois lados.",
+        "Nomes de cabeçalho ignoram maiúsculas e minúsculas: compare com equalsIgnoreCase(\"Host\")."
+      ],
+      "mustContain": [
+        "Use um laço para ler as linhas de cabeçalho."
+      ],
+      "mustNotContain": [
+        "Leia o pedido você mesmo: classes de java.net não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to read the header lines."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "java\\.net|HttpRequest|HttpServer|URI\\s*\\(",
+      "message": "Read the request yourself: java.net classes aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "GET /index.html HTTP/1.1\nHost: example.com\nUser-Agent: Sphinx\n\n",
+      "output": "Method: GET\nPath: /index.html\nHost: example.com\nHeaders: 2\n"
+    },
+    {
+      "input": "POST /login HTTP/1.1\nhost:  school.edu \nContent-Length: 27\nAccept: */*\n\n",
+      "output": "Method: POST\nPath: /login\nHost: school.edu\nHeaders: 3\n"
+    },
+    {
+      "input": "GET / HTTP/1.1\nAccept: text/html\n\n",
+      "output": "400 Bad Request\n",
+      "hidden": true
+    },
+    {
+      "input": "GET /a b HTTP/1.1\nHost: x.com\n\n",
+      "output": "400 Bad Request\n",
+      "hidden": true
+    },
+    {
+      "input": "FETCH / HTTP/1.1\nHost: x.com\n\n",
+      "output": "400 Bad Request\n",
+      "hidden": true
+    },
+    {
+      "input": "GET / HTTP/1.1\nHost x.com\n\n",
+      "output": "400 Bad Request\n",
+      "hidden": true
+    },
+    {
+      "input": "DELETE /users/42 HTTP/1.1\nHost: api.example.com:8080\n\n",
+      "output": "Method: DELETE\nPath: /users/42\nHost: api.example.com:8080\nHeaders: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "HEAD /status HTTP/1.0\nHOST: old.example.org\nConnection: close\n\n",
+      "output": "Method: HEAD\nPath: /status\nHost: old.example.org\nHeaders: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "GET /search?q=java HTTP/1.1\nHost: search.example.com\nCookie: a=1; b=2\n\n",
+      "output": "Method: GET\nPath: /search?q=java\nHost: search.example.com\nHeaders: 2\n",
+      "hidden": true
+    }
+  ]
+}

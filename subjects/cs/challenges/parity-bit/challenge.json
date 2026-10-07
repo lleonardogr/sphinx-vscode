@@ -1,0 +1,82 @@
+{
+  "title": "Parity Bit",
+  "topic": "Logic",
+  "requires": [
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "n & 1 is the rightmost bit of n, and n >> 1 drops it. Repeat until n is 0, adding up the 1s.",
+    "With even parity, the parity bit makes the total number of 1s even: it is ones % 2.",
+    "The receiver recomputes the parity of what arrived. If it differs from the parity of what was sent, an odd number of bits changed on the way."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Bit de paridade",
+      "hints": [
+        "n & 1 é o bit mais à direita de n, e n >> 1 o descarta. Repita até n ser 0, somando os 1s.",
+        "Com paridade par, o bit de paridade deixa o total de 1s par: ele é uns % 2.",
+        "Quem recebe recalcula a paridade do que chegou. Se ela for diferente da paridade do que foi enviado, um número ímpar de bits mudou no caminho."
+      ],
+      "mustContain": [
+        "Use & e >> para olhar os bits."
+      ],
+      "mustNotContain": [
+        "Trabalhe com os bits você mesmo: Integer.bitCount e toBinaryString não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "&|>>",
+      "message": "Use & and >> to look at the bits."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "bitCount|toBinaryString|toString\\s*\\([^;]*,\\s*\\w+\\s*\\)|BigInteger",
+      "message": "Work with the bits yourself: Integer.bitCount and toBinaryString aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "13 13\n",
+      "output": "Ones: 3\nParity bit: 1\nReceived: OK\n"
+    },
+    {
+      "input": "13 9\n",
+      "output": "Ones: 3\nParity bit: 1\nReceived: error detected\n"
+    },
+    {
+      "input": "0 0\n",
+      "output": "Ones: 0\nParity bit: 0\nReceived: OK\n",
+      "hidden": true
+    },
+    {
+      "input": "255 254\n",
+      "output": "Ones: 8\nParity bit: 0\nReceived: error detected\n",
+      "hidden": true
+    },
+    {
+      "input": "255 252\n",
+      "output": "Ones: 8\nParity bit: 0\nReceived: OK\n",
+      "hidden": true
+    },
+    {
+      "input": "1024 1025\n",
+      "output": "Ones: 1\nParity bit: 1\nReceived: error detected\n",
+      "hidden": true
+    },
+    {
+      "input": "2147483647 2147483646\n",
+      "output": "Ones: 31\nParity bit: 1\nReceived: error detected\n",
+      "hidden": true
+    },
+    {
+      "input": "6 3\n",
+      "output": "Ones: 2\nParity bit: 0\nReceived: OK\n",
+      "hidden": true
+    }
+  ]
+}

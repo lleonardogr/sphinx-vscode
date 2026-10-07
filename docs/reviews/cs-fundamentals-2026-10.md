@@ -1,6 +1,6 @@
 # Review: CS Fundamentals, October 2026
 
-> **Progress:** unit 1 (the pilot) is done: a reading guide, Stack Machine and Cache Simulator replace CPU Time and Average Memory Access Time, Instruction Decoder is Easy, and the quiz was rewritten.
+> **Progress:** unit 1 (the pilot) is done: a reading guide, Stack Machine and Cache Simulator replace CPU Time and Average Memory Access Time, Instruction Decoder is Easy, and the quiz was rewritten. Unit 8 is done: a reading guide, Read an HTTP Request and Routing Table replace Packet Splitter and IP Address to Number, Subnet Calculator is Medium, and the quiz was rewritten. Unit 6 is done: a reading guide, Parity Bit and Ripple-Carry Adder replace Bit Checker and Truth Table, and the quiz has fewer "what does this print" questions.
 
 A review of the whole CS Fundamentals subject (v1.4.0) against the [content guide](../content-guide.md): 16 lessons, 8 quizzes and 32 challenges. It proposes what to keep, revise and replace. **Nothing changes until the teacher approves the proposals.**
 

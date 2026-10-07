@@ -1,0 +1,62 @@
+{
+  "title": "Logic and Bitwise Operations",
+  "topic": "Logic",
+  "order": 1,
+  "objectives": [
+    "Evaluate logic gates and read and write truth tables",
+    "Simplify a condition with De Morgan's laws",
+    "Use bit masks to test, set, clear and flip bits",
+    "Explain how XOR and AND gates add binary numbers"
+  ],
+  "readings": [
+    {
+      "title": "Boolean Logic & Logic Gates",
+      "source": "Crash Course Computer Science #3",
+      "url": "https://www.youtube.com/watch?v=gI-qXk7XojA",
+      "type": "video",
+      "minutes": 10,
+      "lang": "en",
+      "lookFor": "How transistors become NOT, AND and OR gates, the truth table of each, and how XOR is built from the other three."
+    },
+    {
+      "title": "NandGame: build a computer from scratch",
+      "source": "NandGame",
+      "url": "https://nandgame.com/",
+      "type": "interactive",
+      "minutes": 20,
+      "lang": "en",
+      "lookFor": "Play the first levels: build NOT, AND, OR and XOR from NAND gates, then a half adder and a full adder. Your progress stays in the browser."
+    },
+    {
+      "title": "Bitwise Operators in Java",
+      "source": "GeeksforGeeks",
+      "url": "https://www.geeksforgeeks.org/java/bitwise-operators-in-java/",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "What &, |, ^, ~, << and >> do to each pair of bits in the binary examples, and why ~5 is -6. The summary here shows how to use them as masks."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Lógica e operações bit a bit",
+      "objectives": [
+        "Avaliar portas lógicas e ler e escrever tabelas-verdade",
+        "Simplificar uma condição com as leis de De Morgan",
+        "Usar máscaras de bits para testar, ligar, desligar e inverter bits",
+        "Explicar como as portas XOR e AND somam números binários"
+      ],
+      "readings": [
+        {
+          "lookFor": "Como transistores viram as portas NOT, AND e OR, a tabela-verdade de cada uma, e como o XOR é construído com as outras três."
+        },
+        {
+          "lookFor": "Jogue os primeiros níveis: construa NOT, AND, OR e XOR com portas NAND, depois um meio somador e um somador completo. Seu progresso fica salvo no navegador."
+        },
+        {
+          "lookFor": "O que &, |, ^, ~, << e >> fazem com cada par de bits nos exemplos em binário, e por que ~5 é -6. O resumo aqui mostra como usá-los como máscaras."
+        }
+      ]
+    }
+  }
+}

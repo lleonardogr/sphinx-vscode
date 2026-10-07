@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 230" role="img" aria-label="A half adder: A and B go into an XOR gate, which gives the sum bit, and an AND gate, which gives the carry bit">
+  <defs><marker id="h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/></marker></defs>
+  <style>
+    text { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; text-anchor: middle; }
+    .in { font-size: 22px; font-weight: 700; fill: #3b82f6; }
+    .g { font-size: 18px; font-weight: 700; fill: #3b82f6; }
+    .o { font-size: 18px; font-weight: 700; fill: #f59e0b; }
+    rect.gate { fill: none; stroke: #3b82f6; stroke-width: 2.5; }
+    .w { fill: none; stroke: #3b82f6; stroke-width: 2; }
+    .wo { fill: none; stroke: #f59e0b; stroke-width: 2; marker-end: url(#h); }
+    .t { font-size: 15px; fill: #8a94a6; font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .th { font-size: 14px; fill: #8a94a6; font-weight: 700; }
+    circle { fill: #3b82f6; }
+  </style>
+  <text class="in" x="30" y="72">A</text>
+  <text class="in" x="30" y="162">B</text>
+  <path class="w" d="M48 66 H120 M48 156 H160"/>
+  <path class="w" d="M120 66 V136 H200 M120 66 H200"/>
+  <path class="w" d="M160 156 V86 H200 M160 156 H200"/>
+  <circle cx="120" cy="66" r="4"/><circle cx="160" cy="156" r="4"/>
+  <rect class="gate" x="200" y="50" width="100" height="52" rx="10"/><text class="g" x="250" y="83">XOR</text>
+  <rect class="gate" x="200" y="120" width="100" height="52" rx="10"/><text class="g" x="250" y="153">AND</text>
+  <path class="wo" d="M300 76 H372"/><text class="o" x="415" y="82">Sum</text>
+  <path class="wo" d="M300 146 H372"/><text class="o" x="415" y="152">Carry</text>
+  <text class="th" x="610" y="40">A + B → carry sum</text>
+  <text class="t" x="610" y="70">0 + 0 → 0 0</text>
+  <text class="t" x="610" y="96">0 + 1 → 0 1</text>
+  <text class="t" x="610" y="122">1 + 0 → 0 1</text>
+  <text class="t" x="610" y="148">1 + 1 → 1 0</text>
+</svg>

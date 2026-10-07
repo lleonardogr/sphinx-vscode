@@ -1,0 +1,83 @@
+{
+  "title": "Ripple-Carry Adder",
+  "topic": "Logic",
+  "requires": [
+    "Strings",
+    "Loops"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Go through the columns from right to left (index 7 down to 0), keeping a carry that starts at 0.",
+    "In each column: sum = a ^ b ^ carry, and the new carry = (a & b) | (carry & (a ^ b)). Here a, b and carry are 0 or 1.",
+    "Build the sum and the carries strings by putting each new character in front, since you go from right to left."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Somador com propagação de vai-um",
+      "hints": [
+        "Percorra as colunas da direita para a esquerda (índice 7 até 0), guardando um vai-um que começa em 0.",
+        "Em cada coluna: soma = a ^ b ^ vaiUm, e o novo vai-um = (a & b) | (vaiUm & (a ^ b)). Aqui a, b e vaiUm são 0 ou 1.",
+        "Monte as strings da soma e dos vai-uns colocando cada caractere novo na frente, já que você vai da direita para a esquerda."
+      ],
+      "mustContain": [
+        "Calcule cada bit da soma com XOR (^).",
+        "Calcule cada vai-um com AND (&)."
+      ],
+      "mustNotContain": [
+        "Some os bits com portas: converter para número e voltar não vale aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\^",
+      "message": "Compute each sum bit with XOR (^)."
+    },
+    {
+      "pattern": "&",
+      "message": "Compute each carry with AND (&)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "(parse(Int|Long)|valueOf)\\s*\\([^;]*,\\s*\\w+\\s*\\)|BigInteger|toBinaryString",
+      "message": "Add the bits with gates: converting to a number and back isn't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "00000101\n00000011\n",
+      "output": "Sum: 00001000\nCarries: 00000111\nCarry out: 0\n"
+    },
+    {
+      "input": "11111111\n00000001\n",
+      "output": "Sum: 00000000\nCarries: 11111111\nCarry out: 1\n"
+    },
+    {
+      "input": "00000000\n00000000\n",
+      "output": "Sum: 00000000\nCarries: 00000000\nCarry out: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "10101010\n01010101\n",
+      "output": "Sum: 11111111\nCarries: 00000000\nCarry out: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "10000000\n10000000\n",
+      "output": "Sum: 00000000\nCarries: 10000000\nCarry out: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "01111111\n00000001\n",
+      "output": "Sum: 10000000\nCarries: 01111111\nCarry out: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "11001100\n10101010\n",
+      "output": "Sum: 01110110\nCarries: 10001000\nCarry out: 1\n",
+      "hidden": true
+    }
+  ]
+}
