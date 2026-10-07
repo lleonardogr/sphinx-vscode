@@ -24,5 +24,7 @@ media/logo/source/**
 media/logo/banner.png
 .githooks/**
 docs/publishing.md
+docs/content-guide.md
+docs/reviews/**
 media/screenshots/**
 .vscode-test/**
