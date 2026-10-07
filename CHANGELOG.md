@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-10-07
+
 ### Added
 
 - **CS Fundamentals is complete**: six new units, in English and Portuguese, each with two lessons, a quiz and four challenges solved in Java (Easy, Easy, Medium, Hard):
@@ -264,7 +266,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.0.2...v1.1.0
