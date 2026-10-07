@@ -1,0 +1,62 @@
+{
+  "title": "Representing Numbers",
+  "topic": "NumberRepresentation",
+  "order": 1,
+  "objectives": [
+    "Write and read 8-bit numbers in two's complement",
+    "Predict when a Java int or byte calculation overflows, and what it gives",
+    "Explain why 0.1 + 0.2 is not exactly 0.3 in a double",
+    "Choose a safe way to store money and to compare decimals"
+  ],
+  "readings": [
+    {
+      "title": "Twos complement: Negative numbers in binary",
+      "source": "Ben Eater",
+      "url": "https://www.youtube.com/watch?v=4qH4unVtJkE",
+      "type": "video",
+      "minutes": 15,
+      "lang": "en",
+      "lookFor": "Why a sign bit and ones' complement cause trouble, and how two's complement makes ordinary addition work for negative numbers too."
+    },
+    {
+      "title": "The Floating-Point Guide: Basic answers",
+      "source": "floating-point-gui.de",
+      "url": "https://floating-point-gui.de/basic/",
+      "type": "article",
+      "minutes": 5,
+      "lang": "en",
+      "lookFor": "Why 0.1 + 0.2 doesn't add up to 0.3, and the three ways out: round when you print, compare with a tolerance, or use whole numbers or a decimal type. The site also has a Java page."
+    },
+    {
+      "title": "Floating Point Numbers",
+      "source": "Computerphile",
+      "url": "https://www.youtube.com/watch?v=PZRI1IfStY0",
+      "type": "video",
+      "minutes": 10,
+      "lang": "en",
+      "lookFor": "How floating point works like scientific notation in binary, and why some decimal fractions can never be stored exactly."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Representação de números",
+      "objectives": [
+        "Escrever e ler números de 8 bits em complemento de dois",
+        "Prever quando uma conta com int ou byte do Java estoura, e o que ela dá",
+        "Explicar por que 0,1 + 0,2 não é exatamente 0,3 num double",
+        "Escolher um jeito seguro de guardar dinheiro e de comparar decimais"
+      ],
+      "readings": [
+        {
+          "lookFor": "Por que um bit de sinal e o complemento de um dão problema, e como o complemento de dois faz a soma comum funcionar também para números negativos."
+        },
+        {
+          "lookFor": "Por que 0,1 + 0,2 não dá 0,3, e as três saídas: arredondar ao imprimir, comparar com uma tolerância, ou usar números inteiros ou um tipo decimal. O site também tem uma página sobre Java."
+        },
+        {
+          "lookFor": "Como o ponto flutuante funciona como a notação científica em binário, e por que algumas frações decimais nunca podem ser guardadas exatamente."
+        }
+      ]
+    }
+  }
+}
