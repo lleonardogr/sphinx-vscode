@@ -4,8 +4,8 @@
   "requires": [
     "Methods"
   ],
-  "difficulty": "Hard",
-  "order": 4,
+  "difficulty": "Medium",
+  "order": 3,
   "hints": [
     "Turn the address into one 32-bit number in a long (as in IP Address to Number). The block size is 2^(32 − prefix): 1L << (32 - prefix).",
     "The network address is the address rounded down to a multiple of the block size: address - address % size (or address & mask). The broadcast is network + size - 1.",

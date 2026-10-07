@@ -51,7 +51,7 @@ test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
   assert.equal(api.challenges().length, 132);
   assert.equal(api.quizzes().length, 19);
-  assert.equal(api.lessons().length, 15);
+  assert.equal(api.lessons().length, 14);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['exam-1', 'exam-2', 'final-exam', 'sample-exam']);
 });
 

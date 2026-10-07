@@ -1,0 +1,78 @@
+{
+  "title": "Routing Table",
+  "topic": "Networks",
+  "requires": [
+    "Methods",
+    "Arrays"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Turn every address into one 32-bit number in a long, as in the subnet calculator.",
+    "A route a.b.c.d/p matches an address when both have the same first p bits: address >> (32 - p) == network >> (32 - p). Be careful with /0, which matches everything (shifting a long by 32 is fine).",
+    "Go through all the routes and keep the matching one with the biggest prefix. If nothing matches, print no route."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Tabela de roteamento",
+      "hints": [
+        "Transforme cada endereço num único número de 32 bits num long, como na calculadora de sub-rede.",
+        "Uma rota a.b.c.d/p corresponde a um endereço quando os dois têm os mesmos primeiros p bits: endereco >> (32 - p) == rede >> (32 - p). Cuidado com o /0, que corresponde a tudo (deslocar um long em 32 funciona).",
+        "Percorra todas as rotas e fique com a que corresponde e tem o maior prefixo. Se nenhuma corresponder, imprima no route."
+      ],
+      "mustContain": [
+        "Use um laço para comparar as rotas."
+      ],
+      "mustNotContain": [
+        "Trabalhe com os números você mesmo: classes de java.net não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to compare the routes."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "InetAddress|Inet4Address|java\\.net",
+      "message": "Work with the numbers yourself: java.net classes aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "4\n0.0.0.0/0 Internet\n10.0.0.0/8 Office\n10.1.0.0/16 Lab\n10.1.2.0/24 Servers\n4\n10.1.2.3\n10.1.9.9\n10.200.0.1\n8.8.8.8\n",
+      "output": "10.1.2.3 -> Servers\n10.1.9.9 -> Lab\n10.200.0.1 -> Office\n8.8.8.8 -> Internet\n"
+    },
+    {
+      "input": "2\n192.168.0.0/16 Home\n192.168.10.0/24 Guests\n3\n192.168.10.77\n192.168.11.1\n172.16.0.1\n",
+      "output": "192.168.10.77 -> Guests\n192.168.11.1 -> Home\n172.16.0.1 -> no route\n"
+    },
+    {
+      "input": "4\n0.0.0.0/0 Internet\n10.0.0.0/8 Office\n10.1.0.0/16 Lab\n10.1.2.0/24 Servers\n2\n10.1.2.255\n10.1.3.0\n",
+      "output": "10.1.2.255 -> Servers\n10.1.3.0 -> Lab\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n0.0.0.0/0 Anywhere\n2\n255.255.255.255\n0.0.0.0\n",
+      "output": "255.255.255.255 -> Anywhere\n0.0.0.0 -> Anywhere\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n200.1.2.0/24 A\n200.1.2.128/25 B\n200.1.2.192/26 C\n4\n200.1.2.1\n200.1.2.130\n200.1.2.200\n200.1.3.1\n",
+      "output": "200.1.2.1 -> A\n200.1.2.130 -> B\n200.1.2.200 -> C\n200.1.3.1 -> no route\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n128.0.0.0/1 Upper\n0.0.0.0/1 Lower\n2\n127.255.255.255\n128.0.0.0\n",
+      "output": "127.255.255.255 -> Lower\n128.0.0.0 -> Upper\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n10.0.0.1/32 OneHost\n2\n10.0.0.1\n10.0.0.2\n",
+      "output": "10.0.0.1 -> OneHost\n10.0.0.2 -> no route\n",
+      "hidden": true
+    }
+  ]
+}
