@@ -18,6 +18,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - **CS Fundamentals, unit 3**: one reading guide (Crash Course on bits and bytes, NIST on binary prefixes, GeeksforGeeks on byte order); **How Many Bits?** merges two look-alike challenges, the new **Read a BMP Header** reads little-endian numbers from a real file format, and Download Time is now Medium.
 - **CS Fundamentals, unit 7**: one reading guide (Crash Course on algorithms, Harvard's CS50 notes and the VisuAlgo sorting visualizer) with a growth-curves diagram; **Fast Power** (aⁿ mod m by squaring, O(log n) instead of O(n)) replaces Count the Operations.
 - **CS Fundamentals, unit 4**: one reading guide (Ben Eater on two's complement, The Floating-Point Guide and Computerphile on floating point) with a signed-byte diagram; its challenges and quiz stay.
+- **CS Fundamentals, unit 2**: one reading guide (Math is Fun on binary and hexadecimal, and Cisco's Binary Game); each challenge opens with where the idea is used, and two quiz questions now target common mistakes. Every CS unit now has a reading guide.
 
 ## [1.4.0] - 2026-10-07
 

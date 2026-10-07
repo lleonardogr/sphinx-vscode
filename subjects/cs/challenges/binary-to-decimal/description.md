@@ -1,5 +1,7 @@
 # Binary to Decimal
 
+Network masks, file permissions and the pixels of an image are all stored in binary. Reading a binary number is the first step to understanding them.
+
 Read a number written in **binary** and print its value in **decimal**.
 
 Each binary digit is worth twice the digit to its right. Add up the place values of the digits that are **1**: `1011` has 1s in the places worth 8, 2 and 1, so it is 8 + 2 + 1 = **11**.

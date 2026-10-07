@@ -1,5 +1,7 @@
 # Conversor de bases
 
+Os programadores trocam de base o tempo todo: binário para bits, hex para bytes, e base 36 para códigos curtos como os de links encurtados.
+
 Converta um número de **qualquer base para qualquer base**, de 2 a 36. Os dígitos vão de `0` a `9` e depois de `A` (10) a `Z` (35), então a base 16 usa `0`–`F` e a base 36 usa `0`–`Z`. As letras podem vir maiúsculas ou minúsculas.
 
 Por exemplo, `255 10 16` converte 255 da base 10 para a base 16: **FF**.

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 190" role="img" aria-label="O byte 10110010: valores das posições 128, 64, 32, 16, 8, 4, 2, 1; os uns somam 178">
+  <style>
+    text { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; text-anchor: middle; }
+    .place { font-size: 15px; fill: #8a94a6; }
+    .bit { font-size: 30px; font-weight: 600; }
+    .one rect { fill: #3b82f6; }
+    .one text { fill: #ffffff; }
+    .zero rect { fill: none; stroke: #8a94a6; stroke-width: 2; }
+    .zero text { fill: #8a94a6; }
+    .sum { font-size: 18px; fill: #3b82f6; font-weight: 600; }
+    .label { font-size: 13px; fill: #8a94a6; }
+  </style>
+  <g transform="translate(40,10)">
+    <text class="label" x="280" y="14">valor da posição (2ⁿ)</text>
+    <g class="places">
+      <text class="place" x="30" y="40">128</text><text class="place" x="100" y="40">64</text><text class="place" x="170" y="40">32</text><text class="place" x="240" y="40">16</text>
+      <text class="place" x="310" y="40">8</text><text class="place" x="380" y="40">4</text><text class="place" x="450" y="40">2</text><text class="place" x="520" y="40">1</text>
+    </g>
+    <g class="one"><rect x="2" y="52" width="56" height="56" rx="8"/><text class="bit" x="30" y="91">1</text></g>
+    <g class="zero"><rect x="72" y="52" width="56" height="56" rx="8"/><text class="bit" x="100" y="91">0</text></g>
+    <g class="one"><rect x="142" y="52" width="56" height="56" rx="8"/><text class="bit" x="170" y="91">1</text></g>
+    <g class="one"><rect x="212" y="52" width="56" height="56" rx="8"/><text class="bit" x="240" y="91">1</text></g>
+    <g class="zero"><rect x="282" y="52" width="56" height="56" rx="8"/><text class="bit" x="310" y="91">0</text></g>
+    <g class="zero"><rect x="352" y="52" width="56" height="56" rx="8"/><text class="bit" x="380" y="91">0</text></g>
+    <g class="one"><rect x="422" y="52" width="56" height="56" rx="8"/><text class="bit" x="450" y="91">1</text></g>
+    <g class="zero"><rect x="492" y="52" width="56" height="56" rx="8"/><text class="bit" x="520" y="91">0</text></g>
+    <text class="sum" x="280" y="150">128 + 32 + 16 + 2 = 178</text>
+  </g>
+</svg>
