@@ -43,35 +43,35 @@
   "tests": [
     {
       "input": "Hi!\n",
-      "output": ""
+      "output": "72 105 33\n"
     },
     {
       "input": "Java 25\n",
-      "output": ""
+      "output": "74 97 118 97 32 50 53\n"
     },
     {
       "input": "A\n",
-      "output": "",
+      "output": "65\n",
       "hidden": true
     },
     {
       "input": "az\n",
-      "output": "",
+      "output": "97 122\n",
       "hidden": true
     },
     {
       "input": "0 9\n",
-      "output": "",
+      "output": "48 32 57\n",
       "hidden": true
     },
     {
       "input": "~{}\n",
-      "output": "",
+      "output": "126 123 125\n",
       "hidden": true
     },
     {
       "input": "Hello, World.\n",
-      "output": "",
+      "output": "72 101 108 108 111 44 32 87 111 114 108 100 46\n",
       "hidden": true
     }
   ]

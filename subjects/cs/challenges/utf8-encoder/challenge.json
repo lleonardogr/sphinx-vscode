@@ -33,60 +33,60 @@
   "tests": [
     {
       "input": "U+00E9\n",
-      "output": ""
+      "output": "C3 A9\n"
     },
     {
       "input": "U+1F600\n",
-      "output": ""
+      "output": "F0 9F 98 80\n"
     },
     {
       "input": "U+0041\n",
-      "output": "",
+      "output": "41\n",
       "hidden": true
     },
     {
       "input": "U+20AC\n",
-      "output": "",
+      "output": "E2 82 AC\n",
       "hidden": true
     },
     {
       "input": "U+0000\n",
-      "output": "",
+      "output": "00\n",
       "hidden": true
     },
     {
       "input": "U+007F\n",
-      "output": "",
+      "output": "7F\n",
       "hidden": true
     },
     {
       "input": "U+0080\n",
-      "output": "",
+      "output": "C2 80\n",
       "hidden": true
     },
     {
       "input": "U+07FF\n",
-      "output": "",
+      "output": "DF BF\n",
       "hidden": true
     },
     {
       "input": "U+0800\n",
-      "output": "",
+      "output": "E0 A0 80\n",
       "hidden": true
     },
     {
       "input": "U+FFFF\n",
-      "output": "",
+      "output": "EF BF BF\n",
       "hidden": true
     },
     {
       "input": "U+10000\n",
-      "output": "",
+      "output": "F0 90 80 80\n",
       "hidden": true
     },
     {
       "input": "U+10FFFF\n",
-      "output": "",
+      "output": "F4 8F BF BF\n",
       "hidden": true
     }
   ]

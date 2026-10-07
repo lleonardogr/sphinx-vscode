@@ -34,35 +34,35 @@
   "tests": [
     {
       "input": "AND\n",
-      "output": ""
+      "output": "A B OUT\n0 0 0\n0 1 0\n1 0 0\n1 1 1\n"
     },
     {
       "input": "XOR\n",
-      "output": ""
+      "output": "A B OUT\n0 0 0\n0 1 1\n1 0 1\n1 1 0\n"
     },
     {
       "input": "OR\n",
-      "output": "",
+      "output": "A B OUT\n0 0 0\n0 1 1\n1 0 1\n1 1 1\n",
       "hidden": true
     },
     {
       "input": "NAND\n",
-      "output": "",
+      "output": "A B OUT\n0 0 1\n0 1 1\n1 0 1\n1 1 0\n",
       "hidden": true
     },
     {
       "input": "NOR\n",
-      "output": "",
+      "output": "A B OUT\n0 0 1\n0 1 0\n1 0 0\n1 1 0\n",
       "hidden": true
     },
     {
       "input": "XNOR\n",
-      "output": "",
+      "output": "Unknown gate: XNOR\n",
       "hidden": true
     },
     {
       "input": "and\n",
-      "output": "",
+      "output": "Unknown gate: and\n",
       "hidden": true
     }
   ]

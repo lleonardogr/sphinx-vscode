@@ -42,40 +42,40 @@
   "tests": [
     {
       "input": "13 2\n",
-      "output": ""
+      "output": "Bit 2 of 13 is 1\n"
     },
     {
       "input": "13 1\n",
-      "output": ""
+      "output": "Bit 1 of 13 is 0\n"
     },
     {
       "input": "0 0\n",
-      "output": "",
+      "output": "Bit 0 of 0 is 0\n",
       "hidden": true
     },
     {
       "input": "1 0\n",
-      "output": "",
+      "output": "Bit 0 of 1 is 1\n",
       "hidden": true
     },
     {
       "input": "1024 10\n",
-      "output": "",
+      "output": "Bit 10 of 1024 is 1\n",
       "hidden": true
     },
     {
       "input": "1023 10\n",
-      "output": "",
+      "output": "Bit 10 of 1023 is 0\n",
       "hidden": true
     },
     {
       "input": "2147483647 30\n",
-      "output": "",
+      "output": "Bit 30 of 2147483647 is 1\n",
       "hidden": true
     },
     {
       "input": "6 0\n",
-      "output": "",
+      "output": "Bit 0 of 6 is 0\n",
       "hidden": true
     }
   ]

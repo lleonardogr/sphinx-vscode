@@ -34,50 +34,50 @@
   "tests": [
     {
       "input": "754\n",
-      "output": ""
+      "output": "rwxr-xr--\n"
     },
     {
       "input": "rwxr-x---\n",
-      "output": ""
+      "output": "750\n"
     },
     {
       "input": "777\n",
-      "output": "",
+      "output": "rwxrwxrwx\n",
       "hidden": true
     },
     {
       "input": "000\n",
-      "output": "",
+      "output": "---------\n",
       "hidden": true
     },
     {
       "input": "644\n",
-      "output": "",
+      "output": "rw-r--r--\n",
       "hidden": true
     },
     {
       "input": "r--r--r--\n",
-      "output": "",
+      "output": "444\n",
       "hidden": true
     },
     {
       "input": "800\n",
-      "output": "",
+      "output": "Invalid\n",
       "hidden": true
     },
     {
       "input": "rwz------\n",
-      "output": "",
+      "output": "Invalid\n",
       "hidden": true
     },
     {
       "input": "75\n",
-      "output": "",
+      "output": "Invalid\n",
       "hidden": true
     },
     {
       "input": "-wx--x-w-\n",
-      "output": "",
+      "output": "312\n",
       "hidden": true
     }
   ]

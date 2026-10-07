@@ -34,50 +34,50 @@
   "tests": [
     {
       "input": "#FF8800\n",
-      "output": ""
+      "output": "rgb(255, 136, 0)\n"
     },
     {
       "input": "#f80\n",
-      "output": ""
+      "output": "rgb(255, 136, 0)\n"
     },
     {
       "input": "#000000\n",
-      "output": "",
+      "output": "rgb(0, 0, 0)\n",
       "hidden": true
     },
     {
       "input": "#FFFFFF\n",
-      "output": "",
+      "output": "rgb(255, 255, 255)\n",
       "hidden": true
     },
     {
       "input": "#1e90ff\n",
-      "output": "",
+      "output": "rgb(30, 144, 255)\n",
       "hidden": true
     },
     {
       "input": "#12345\n",
-      "output": "",
+      "output": "Invalid color\n",
       "hidden": true
     },
     {
       "input": "FF8800\n",
-      "output": "",
+      "output": "Invalid color\n",
       "hidden": true
     },
     {
       "input": "#GG0000\n",
-      "output": "",
+      "output": "Invalid color\n",
       "hidden": true
     },
     {
       "input": "#abc\n",
-      "output": "",
+      "output": "rgb(170, 187, 204)\n",
       "hidden": true
     },
     {
       "input": "#C0FFEE\n",
-      "output": "",
+      "output": "rgb(192, 255, 238)\n",
       "hidden": true
     }
   ]
