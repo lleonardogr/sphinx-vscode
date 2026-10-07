@@ -1,0 +1,20 @@
+name: Reading links
+
+# Every Monday, check that the curated readings of every lesson still open.
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  links:
+    name: Check reading links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - run: node scripts/check-links.js

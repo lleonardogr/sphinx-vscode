@@ -3,7 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { describe, it } from 'node:test';
 import { Challenge } from '../../challenges';
-import { loadLesson, readingMinutes, resolveLessonImages } from '../../lessons';
+import { loadLesson, parseReadings, readingMinutes, resolveLessonImages } from '../../lessons';
+import { readingProblems } from '../../validator';
 import { buildPath, nextInPath, pathItemId, requirementStatus, subjectOf, unitKey, unitName } from '../../path';
 import { QuizQuestion, isCorrect, loadQuiz, parseNumberAnswer } from '../../quizzes';
 import { allSubjects, findSubject, findUnit, loadSubjects } from '../../subjects';
@@ -116,6 +117,35 @@ describe('lessons and the path', () => {
     assert.equal(pt.body, en.body, 'no lesson.pt-br.md yet: the English text is shown');
     fs.writeFileSync(path.join(dir, 'lesson.pt-br.md'), '## Valor posicional\n\nTexto.');
     assert.match(loadLesson(dir, 'pt-br').body, /Valor posicional/);
+  });
+
+  it('reads a reading guide: objectives and readings, translated', () => {
+    const dir = lessonFolder();
+    const reading = { title: 'What is DNS?', source: 'Cloudflare', url: 'https://www.cloudflare.com/learning/dns/what-is-dns/', type: 'article', minutes: 8, lang: 'en', lookFor: 'Where answers are cached.' };
+    const meta = JSON.parse(fs.readFileSync(path.join(dir, 'lesson.json'), 'utf8'));
+    fs.writeFileSync(
+      path.join(dir, 'lesson.json'),
+      JSON.stringify({ ...meta, objectives: ['Convert', 'Explain', 'Detect'], readings: [reading], translations: { 'pt-br': { title: 'Binário', objectives: ['Converter', 'Explicar', 'Detectar'], readings: [{ lookFor: 'Onde as respostas ficam em cache.' }] } } }),
+    );
+    const en = loadLesson(dir, 'en');
+    assert.deepEqual(en.objectives, ['Convert', 'Explain', 'Detect']);
+    assert.deepEqual(en.readings, [reading]);
+    const pt = loadLesson(dir, 'pt-br');
+    assert.equal(pt.objectives[0], 'Converter');
+    assert.equal(pt.readings[0].lookFor, 'Onde as respostas ficam em cache.');
+    assert.equal(pt.readings[0].url, reading.url, 'links are shared by every language');
+  });
+
+  it('leaves out incomplete readings, and the validator says why', () => {
+    const good = { title: 'T', source: 'S', url: 'https://example.com/a', type: 'video', minutes: 5, lang: 'en', lookFor: 'L' };
+    const raw = [good, { ...good, url: 'http://example.com' }, { ...good, type: 'podcast' }, { title: 'T' }];
+    assert.equal(parseReadings(raw).length, 1);
+    assert.deepEqual(readingProblems([good]), []);
+    const problems = readingProblems(raw.slice(1));
+    assert.ok(problems.some((p) => p.includes('reading 1: "url" must be an https link')), problems.join('\n'));
+    assert.ok(problems.some((p) => p.includes('reading 2: "type"')), problems.join('\n'));
+    assert.ok(problems.some((p) => p.includes('reading 3: needs "source"')), problems.join('\n'));
+    assert.deepEqual(readingProblems([]), ['"readings" must list 1 to 3 readings']);
   });
 
   it('loads relative images from the lesson folder only', () => {

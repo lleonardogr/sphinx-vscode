@@ -7,7 +7,7 @@ import { QuizProgress } from './quizController';
 import { QuizDefinition } from './quizzes';
 import { PathGroup, PathItem, TESTS_TOPIC, buildPath, groupLabel, pathSequence, requirementStatus, unitIcon, unitName } from './path';
 import { LessonDefinition } from './lessons';
-import { LessonProgress } from './lessonPanel';
+import { LessonProgress, readingCount } from './lessonPanel';
 import { DEFAULT_SUBJECT } from './subjects';
 import { difficultyName, plural, tr } from './i18n';
 import { JavaProblem } from './javaCheck';
@@ -261,7 +261,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     const item = new vscode.TreeItem(lesson.title, vscode.TreeItemCollapsibleState.None);
     item.id = `lesson:${lesson.id}`;
     item.contextValue = 'lesson';
-    item.description = `${tr('Lesson', 'Lição')} · ${lesson.minutes} min${view !== 'path' && lesson.topic ? ` · ${unitName(lesson.topic)}` : ''}`;
+    item.description = `${tr('Lesson', 'Lição')} · ${lesson.minutes} min${lesson.readings.length ? ` · ${readingCount(lesson.readings.length)}` : ''}${view !== 'path' && lesson.topic ? ` · ${unitName(lesson.topic)}` : ''}`;
     item.iconPath = read ? new vscode.ThemeIcon('pass-filled', new vscode.ThemeColor('testing.iconPassed')) : new vscode.ThemeIcon('book');
     item.command = { command: 'sphinx.openLesson', title: tr('Open Lesson', 'Abrir lição'), arguments: [lesson.id] };
     item.tooltip = new vscode.MarkdownString(

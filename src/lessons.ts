@@ -1,10 +1,30 @@
-// Lessons: short reading pages that explain a topic before the quiz and the challenges. A lesson is
-// a folder with lesson.json (title, unit, order, reading time, prerequisites) and lesson.md, plus
-// lesson.<lang>.md for translations. Images next to lesson.md can be used with relative paths.
-// No vscode dependency.
+// Lessons: the reading before a unit's quiz and challenges. A lesson is a folder with lesson.json
+// (title, unit, order, reading time, prerequisites, objectives, readings) and lesson.md, plus
+// lesson.<lang>.md for translations. A reading guide keeps lesson.md short ("In short") and lists
+// curated readings from the web; see docs/content-guide.md. Images next to lesson.md can be used
+// with relative paths. No vscode dependency.
 import * as fs from 'fs';
 import * as path from 'path';
 import { Lang, language } from './i18n';
+
+export const READING_TYPES = ['article', 'video', 'interactive'] as const;
+export type ReadingType = (typeof READING_TYPES)[number];
+
+/** A curated reading from the web: shown as a card that opens in the browser. */
+export interface Reading {
+  title: string;
+  source: string;
+  url: string;
+  type: ReadingType;
+  minutes: number;
+  /** Language of the reading, such as "en". */
+  lang: string;
+  /** What to pay attention to while reading, in the current language. */
+  lookFor: string;
+}
+
+/** Marks where the reading cards go in lesson.md; without it they go after the text. */
+export const READINGS_MARKER = '<!-- readings -->';
 
 export interface LessonDefinition {
   id: string;
@@ -18,9 +38,40 @@ export interface LessonDefinition {
   body: string;
   /** Units the student should know first, e.g. ["Loops"]. */
   requires: string[];
+  /** What a student can do after the unit, in the current language. */
+  objectives: string[];
+  /** Curated readings (reading guides); empty for a plain lesson. */
+  readings: Reading[];
   /** The subject, when the lesson has no unit. */
   subject?: string;
   dir: string;
+}
+
+/** Readings from lesson.json; entries that aren't complete https links are left out (the validator reports them). */
+export function parseReadings(raw: unknown, translated?: unknown): Reading[] {
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+  const t = Array.isArray(translated) ? translated : [];
+  const text = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
+  return raw.flatMap((r, i): Reading[] => {
+    const url = text(r?.url);
+    const type = READING_TYPES.find((x) => x === r?.type);
+    if (!text(r?.title) || !url.startsWith('https://') || !type) {
+      return [];
+    }
+    return [
+      {
+        title: text(r.title),
+        source: text(r.source),
+        url,
+        type,
+        minutes: typeof r.minutes === 'number' && r.minutes > 0 ? Math.round(r.minutes) : 0,
+        lang: text(r.lang) || 'en',
+        lookFor: text(t[i]?.lookFor) || text(r.lookFor),
+      },
+    ];
+  });
 }
 
 const strings = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string' && x.trim() !== '').map((x) => x.trim()) : []);
@@ -50,6 +101,8 @@ export function loadLesson(dir: string, lang: Lang = language()): LessonDefiniti
     minutes: typeof meta.minutes === 'number' && meta.minutes > 0 ? meta.minutes : readingMinutes(body),
     body,
     requires: strings(meta.requires),
+    objectives: strings(t.objectives).length ? strings(t.objectives) : strings(meta.objectives),
+    readings: parseReadings(meta.readings, t.readings),
     subject: typeof meta.subject === 'string' && meta.subject.trim() ? meta.subject.trim() : undefined,
     dir,
   };
