@@ -1,0 +1,74 @@
+{
+  "title": "Tiny CPU",
+  "topic": "Computers",
+  "requires": [
+    "Methods",
+    "Arrays"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Store the program lines in an array, keep a program counter pc (the line to run next, starting at 1), the accumulator, an int[16] memory and a step counter.",
+    "Each turn of the loop is one fetch–decode–execute cycle: read line pc, split it into the name and the number, then do what it says. Most instructions just move to pc + 1; JUMP and JZ set pc instead.",
+    "Stop on HALT, when pc goes past the last line, after 1000 steps, or at an unknown instruction. Count a step for every instruction you run, HALT included."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "CPU minúscula",
+      "hints": [
+        "Guarde as linhas do programa num array, e mantenha um contador de programa pc (a próxima linha a executar, começando em 1), o acumulador, uma memória int[16] e um contador de passos.",
+        "Cada volta do laço é um ciclo de busca–decodificação–execução: leia a linha pc, separe o nome e o número, e faça o que ela diz. A maioria das instruções só passa para pc + 1; JUMP e JZ mudam o pc.",
+        "Pare no HALT, quando o pc passar da última linha, depois de 1000 passos ou numa instrução desconhecida. Conte um passo para cada instrução executada, inclusive o HALT."
+      ],
+      "mustContain": [
+        "Use um laço para o ciclo de busca–decodificação–execução."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop for the fetch–decode–execute cycle."
+    }
+  ],
+  "tests": [
+    {
+      "input": "11\nSET 3\nSTORE 0\nSET 1\nSTORE 1\nLOAD 0\nOUT\nSUB 1\nSTORE 0\nJZ 11\nJUMP 5\nHALT\n",
+      "output": "3\n2\n1\nHalted after 22 steps\n"
+    },
+    {
+      "input": "5\nSET 7\nSTORE 2\nADD 2\nOUT\nHALT\n",
+      "output": "14\nHalted after 5 steps\n"
+    },
+    {
+      "input": "2\nOUT\nHALT\n",
+      "output": "0\nHalted after 2 steps\n",
+      "hidden": true
+    },
+    {
+      "input": "3\nSET 5\nOUT\nJUMP 2\n",
+      "output": "5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\nStep limit reached\n",
+      "hidden": true
+    },
+    {
+      "input": "3\nSET 1\nMULT 2\nHALT\n",
+      "output": "Error at line 2: MULT 2\n",
+      "hidden": true
+    },
+    {
+      "input": "4\nSET 2\nOUT\nSET 9\nOUT\n",
+      "output": "2\n9\nHalted after 4 steps\n",
+      "hidden": true
+    },
+    {
+      "input": "9\nSET 10\nSTORE 0\nSET 0\nSTORE 1\nLOAD 1\nADD 0\nSTORE 1\nOUT\nHALT\n",
+      "output": "10\nHalted after 9 steps\n",
+      "hidden": true
+    },
+    {
+      "input": "3\nSET 0\nJZ 3\nOUT\n",
+      "output": "0\nHalted after 3 steps\n",
+      "hidden": true
+    }
+  ]
+}

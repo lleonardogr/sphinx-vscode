@@ -1,0 +1,64 @@
+{
+  "title": "Instruction Decoder",
+  "topic": "Computers",
+  "requires": [
+    "Strings",
+    "Loops"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "The first 4 characters are the opcode and the last 4 the operand: substring(0, 4) and substring(4).",
+    "Turn the operand bits into a number by doubling and adding each bit, as in Binary to Decimal.",
+    "Check the format first (8 characters, only 0 and 1), then the opcode; an array of names indexed by the opcode value makes the lookup easy."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Decodificador de instruções",
+      "hints": [
+        "Os 4 primeiros caracteres são o opcode e os 4 últimos o operando: substring(0, 4) e substring(4).",
+        "Transforme os bits do operando num número dobrando e somando cada bit, como em Binário para decimal.",
+        "Confira o formato primeiro (8 caracteres, só 0 e 1), depois o opcode; um array de nomes indexado pelo valor do opcode facilita a busca."
+      ],
+      "mustContain": [
+        "Use um laço para decodificar cada instrução."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to decode each instruction."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\n00010101\n00100011\n01110000\n",
+      "output": "LOAD 5\nADD 3\nOUT\n"
+    },
+    {
+      "input": "2\n00000000\n10100001\n",
+      "output": "HALT\nUnknown opcode 1010\n"
+    },
+    {
+      "input": "1\n01011111\n",
+      "output": "JUMP 15\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n00110001\n01000010\n01101001\n01111111\n",
+      "output": "SUB 1\nSTORE 2\nJZ 9\nOUT\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n0001010\n00012101\n000101010\n",
+      "output": "Invalid instruction\nInvalid instruction\nInvalid instruction\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n11110000\n00010000\n",
+      "output": "Unknown opcode 1111\nLOAD 0\n",
+      "hidden": true
+    }
+  ]
+}

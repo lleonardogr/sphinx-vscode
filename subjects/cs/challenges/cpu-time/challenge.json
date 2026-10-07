@@ -1,0 +1,59 @@
+{
+  "title": "CPU Time",
+  "topic": "Computers",
+  "requires": [
+    "Basics"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Cycles = instructions × cycles per instruction (CPI). Keep it in a long: there can be trillions.",
+    "A clock of G GHz ticks G × 1,000,000,000 times per second, so the time in seconds is cycles ÷ (G × 1e9).",
+    "Milliseconds are seconds × 1000. Print with String.format(\"%.3f\", ms)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Tempo de CPU",
+      "hints": [
+        "Ciclos = instruções × ciclos por instrução (CPI). Guarde num long: podem ser trilhões.",
+        "Um clock de G GHz bate G × 1.000.000.000 vezes por segundo, então o tempo em segundos é ciclos ÷ (G × 1e9).",
+        "Milissegundos são segundos × 1000. Imprima com String.format(\"%.3f\", ms)."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "3 2 1500000\n",
+      "output": "Cycles: 3000000\nTime: 1.000 ms\n"
+    },
+    {
+      "input": "2.5 4 10000000\n",
+      "output": "Cycles: 40000000\nTime: 16.000 ms\n"
+    },
+    {
+      "input": "1 4 1000000000\n",
+      "output": "Cycles: 4000000000\nTime: 4000.000 ms\n",
+      "hidden": true
+    },
+    {
+      "input": "4.2 3 7000000\n",
+      "output": "Cycles: 21000000\nTime: 5.000 ms\n",
+      "hidden": true
+    },
+    {
+      "input": "0.5 10 250000\n",
+      "output": "Cycles: 2500000\nTime: 5.000 ms\n",
+      "hidden": true
+    },
+    {
+      "input": "3.6 1 1000000000000\n",
+      "output": "Cycles: 1000000000000\nTime: 277777.778 ms\n",
+      "hidden": true
+    },
+    {
+      "input": "2 1 1\n",
+      "output": "Cycles: 1\nTime: 0.000 ms\n",
+      "hidden": true
+    }
+  ]
+}
