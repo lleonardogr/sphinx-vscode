@@ -46,7 +46,7 @@ Three exams close the stages, each with a quiz and three private coding question
 
 ## CS Fundamentals
 
-The second subject covers what new students should know about **how a computer works**: 8 units, from the processor and memory to number systems, text, logic, algorithms and networks, with 16 lessons, 8 quizzes and 32 challenges. Switch to it with the 📚 button at the top of the sidebar (**Switch Subject…**). Each unit starts with a lesson to read (units 1 and 8 already use a **reading guide**: a short summary, the unit's objectives and curated videos and articles from the web), then challenges and a quiz solved in Java:
+The second subject covers what new students should know about **how a computer works**: 8 units, from the processor and memory to number systems, text, logic, algorithms and networks, with 16 lessons, 8 quizzes and 32 challenges. Switch to it with the 📚 button at the top of the sidebar (**Switch Subject…**). Each unit starts with a lesson to read (units 1, 6 and 8 already use a **reading guide**: a short summary, the unit's objectives and curated videos and articles from the web), then challenges and a quiz solved in Java:
 
 | Unit | Lessons | Challenges (plus the unit's quiz) |
 |------|---------|-----------------------------------|
@@ -55,7 +55,7 @@ The second subject covers what new students should know about **how a computer w
 | 3 · Bits and Bytes | Bits and Bytes · Kilobytes and Kibibytes | How Many Values? · Bits Needed · Storage Units (MB vs MiB) · Download Time |
 | 4 · Representing Numbers | Negative Numbers: Two's Complement · Fractions and Floating Point | Two's Complement · Read a Signed Byte · Overflow Detector · Binary Fractions |
 | 5 · Text, Images and Sound | Text: ASCII and Unicode · Images and Sound | Character Codes · Media Size · Hex Colors · UTF-8 Encoder |
-| 6 · Logic and Bitwise Operations | Boolean Logic and Gates · Bitwise Operations | Truth Table · Bit Checker · Permission Flags · 8-bit Register |
+| 6 · Logic and Bitwise Operations | Logic and Bitwise Operations (reading guide: Crash Course, NandGame, GeeksforGeeks) | Parity Bit · Permission Flags · Ripple-Carry Adder · 8-bit Register |
 | 7 · Algorithms and Complexity | What Is an Algorithm? · Big O: How Algorithms Grow | Count the Operations · Search Steps · Selection Sort Trace · Pair Sum: Slow and Fast |
 | 8 · Networks and the Internet | Networks and the Internet (reading guide: Crash Course, How DNS Works, Packet Coders) | Valid IPv4 Address · Read an HTTP Request · Subnet Calculator · Routing Table (longest prefix match) |
 

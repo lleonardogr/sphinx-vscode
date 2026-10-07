@@ -6,7 +6,7 @@
     "Loops"
   ],
   "difficulty": "Medium",
-  "order": 3,
+  "order": 2,
   "hints": [
     "Each octal digit is 3 bits: read (4), write (2) and execute (1). 7 = 4 + 2 + 1 = rwx, 5 = 4 + 1 = r-x.",
     "From a digit to letters: (d & 4) != 0 means r, (d & 2) != 0 means w, (d & 1) != 0 means x. From letters to a digit: add 4, 2 and 1 for the letters present.",
