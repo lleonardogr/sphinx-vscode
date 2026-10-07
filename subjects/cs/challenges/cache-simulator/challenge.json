@@ -1,0 +1,68 @@
+{
+  "title": "Cache Simulator",
+  "topic": "Computers",
+  "requires": [
+    "Arrays"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "The block of an address is address / blockSize, and the line it goes to is block % lines. A hit means that line already holds that block.",
+    "Keep an array with the block stored in each line, starting with -1 (empty). On a miss, store the new block there: it replaces whatever was there.",
+    "Count the hits as you go, and print the rate with String.format(\"%.1f\", 100.0 * hits / n)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Simulador de cache",
+      "hints": [
+        "O bloco de um endereço é endereco / tamanhoDoBloco, e a linha onde ele vai é bloco % linhas. Um acerto quer dizer que essa linha já guarda esse bloco.",
+        "Guarde um array com o bloco de cada linha, começando com -1 (vazia). Numa falha, guarde o bloco novo ali: ele substitui o que estava.",
+        "Conte os acertos enquanto avança, e imprima a taxa com String.format(\"%.1f\", 100.0 * acertos / n)."
+      ],
+      "mustContain": [
+        "Use um laço para percorrer os endereços."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to go through the addresses."
+    }
+  ],
+  "tests": [
+    {
+      "input": "4 4\n8\n0 1 2 3 4 5 6 7\n",
+      "output": "0 miss\n1 hit\n2 hit\n3 hit\n4 miss\n5 hit\n6 hit\n7 hit\nHits: 6/8\nHit rate: 75.0%\n"
+    },
+    {
+      "input": "4 4\n6\n0 16 32 48 0 16\n",
+      "output": "0 miss\n16 miss\n32 miss\n48 miss\n0 miss\n16 miss\nHits: 0/6\nHit rate: 0.0%\n"
+    },
+    {
+      "input": "2 8\n6\n0 64 0 64 8 72\n",
+      "output": "0 miss\n64 miss\n0 miss\n64 miss\n8 miss\n72 miss\nHits: 0/6\nHit rate: 0.0%\n",
+      "hidden": true
+    },
+    {
+      "input": "8 16\n10\n0 4 8 12 16 20 24 28 32 36\n",
+      "output": "0 miss\n4 hit\n8 hit\n12 hit\n16 miss\n20 hit\n24 hit\n28 hit\n32 miss\n36 hit\nHits: 7/10\nHit rate: 70.0%\n",
+      "hidden": true
+    },
+    {
+      "input": "1 4\n5\n0 1 5 6 0\n",
+      "output": "0 miss\n1 hit\n5 miss\n6 hit\n0 miss\nHits: 2/5\nHit rate: 40.0%\n",
+      "hidden": true
+    },
+    {
+      "input": "4 4\n6\n100 101 102 103 104 100\n",
+      "output": "100 miss\n101 hit\n102 hit\n103 hit\n104 miss\n100 hit\nHits: 4/6\nHit rate: 66.7%\n",
+      "hidden": true
+    },
+    {
+      "input": "16 64\n4\n1000 1024 1000 2000\n",
+      "output": "1000 miss\n1024 miss\n1000 hit\n2000 miss\nHits: 1/4\nHit rate: 25.0%\n",
+      "hidden": true
+    }
+  ]
+}

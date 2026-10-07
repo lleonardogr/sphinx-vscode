@@ -51,7 +51,7 @@ test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
   assert.equal(api.challenges().length, 132);
   assert.equal(api.quizzes().length, 19);
-  assert.equal(api.lessons().length, 16);
+  assert.equal(api.lessons().length, 15);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['exam-1', 'exam-2', 'final-exam', 'sample-exam']);
 });
 
@@ -145,11 +145,17 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
       '7 · Algorithms and Complexity',
       '8 · Networks and the Internet',
     ]);
-    // Every unit: two lessons, four challenges and its quiz, in that order.
+    // Every unit: its lessons (a reading guide, or two lessons), four challenges and its quiz, in that order.
     for (const group of groups) {
       const kinds = api.tree.getChildren(group).map((n) => (n as { kind: string }).kind);
-      assert.deepEqual(kinds, ['lesson', 'lesson', 'challenge', 'challenge', 'challenge', 'challenge', 'quiz'], label(group));
+      const lessons = kinds.filter((k) => k === 'lesson').length;
+      assert.ok(lessons >= 1, label(group));
+      assert.deepEqual(kinds, [...Array(lessons).fill('lesson'), 'challenge', 'challenge', 'challenge', 'challenge', 'quiz'], label(group));
     }
+    // Unit 1 is a reading guide: one lesson with curated readings.
+    const unit1 = api.tree.getChildren(groups[0]);
+    assert.deepEqual(unit1.map(label), ['How a Computer Works', 'Instruction Decoder', 'Stack Machine', 'Cache Simulator', 'Tiny CPU', 'How Computers Work Quiz']);
+    assert.equal(String(api.tree.getTreeItem(unit1[0] as never).description), 'Lesson · 2 min · 3 readings');
     assert.deepEqual(api.tree.getChildren(groups[2]).map(label), [
       'Bits and Bytes',
       'Kilobytes and Kibibytes',

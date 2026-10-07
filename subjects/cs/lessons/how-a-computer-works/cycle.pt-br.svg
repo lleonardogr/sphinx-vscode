@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 690 220" role="img" aria-label="O ciclo de busca, decodificação e execução: buscar a instrução no contador de programa, decodificá-la, executá-la, depois seguir para a próxima instrução ou saltar">
+  <defs><marker id="h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3b82f6"/></marker></defs>
+  <style>
+    text { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; text-anchor: middle; }
+    rect { fill: none; stroke: #3b82f6; stroke-width: 2.5; }
+    .t { font-size: 24px; font-weight: 700; fill: #3b82f6; }
+    .s { font-size: 14px; fill: #8a94a6; }
+    .l { font-size: 14px; fill: #f59e0b; font-weight: 600; }
+    .a { fill: none; stroke: #3b82f6; stroke-width: 2.5; marker-end: url(#h); }
+  </style>
+  <text class="l" x="115" y="26">contador de programa ↓</text>
+  <rect x="20" y="40" width="190" height="96" rx="12"/><text class="t" x="115" y="78">1. Buscar</text><text class="s" x="115" y="104">ler a instrução no</text><text class="s" x="115" y="122">contador de programa</text><rect x="250" y="40" width="190" height="96" rx="12"/><text class="t" x="345" y="78">2. Decodificar</text><text class="s" x="345" y="104">descobrir o que</text><text class="s" x="345" y="122">ela pede</text><rect x="480" y="40" width="190" height="96" rx="12"/><text class="t" x="575" y="78">3. Executar</text><text class="s" x="575" y="104">fazer, com a ULA</text><text class="s" x="575" y="122">e os registradores</text>
+  <path class="a" d="M212 88 H244"/><path class="a" d="M442 88 H474"/>
+  <path class="a" d="M565 136 C565 200, 115 200, 115 140"/><text class="l" x="340" y="206">próxima instrução, ou salto</text>
+</svg>

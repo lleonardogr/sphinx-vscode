@@ -102,7 +102,7 @@ A reading guide replaces the long text lesson. It has three parts, shown in this
 
 ### Format
 
-> **Planned (Phase 3 of the curation plan).** Today a lesson is `lesson.json` plus `lesson.md`. Reading guides add a `readings` list to `lesson.json`; `lesson.md` becomes the "In short" summary followed by the "Check yourself" questions.
+A reading guide is a lesson folder: `lesson.json` lists the objectives and readings, and `lesson.md` holds the "In short" summary, a `<!-- readings -->` line where the reading cards appear, and the "Check yourself" questions. `lesson.pt-br.md` is the Portuguese version, and a diagram can have a Portuguese copy (`cycle.pt-br.svg`). See [`subjects/cs/lessons/how-a-computer-works`](../subjects/cs/lessons/how-a-computer-works) for a complete example.
 
 ```json
 {
@@ -125,7 +125,7 @@ A reading guide replaces the long text lesson. It has three parts, shown in this
 }
 ```
 
-Readings open in the browser. The validator checks the fields, and a weekly CI job reports links that stopped working, to be replaced.
+Readings open in the browser. The validator checks the fields and the Portuguese `lookFor` notes, and warns when the summary is outside 100–350 words or the objectives aren't 3 to 5. `node scripts/check-links.js` checks that every reading still opens; the **Reading links** workflow runs it every Monday.
 
 ## Challenges
 
