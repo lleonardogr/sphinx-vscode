@@ -1,0 +1,82 @@
+{
+  "title": "Stack Machine",
+  "topic": "Computers",
+  "requires": [
+    "Arrays"
+  ],
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "Keep the stack in an array with a variable top that counts how many values it holds: push is stack[top++] = v, pop is stack[--top].",
+    "For ADD, SUB and MUL, pop the right-hand value first, then the left-hand one: PUSH 10, PUSH 3, SUB leaves 7.",
+    "Before popping, check that the stack has enough values; if it doesn't, print the error and stop."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Máquina de pilha",
+      "hints": [
+        "Guarde a pilha num array com uma variável top que conta quantos valores ela tem: empilhar é stack[top++] = v, desempilhar é stack[--top].",
+        "Para ADD, SUB e MUL, desempilhe primeiro o valor da direita, depois o da esquerda: PUSH 10, PUSH 3, SUB deixa 7.",
+        "Antes de desempilhar, confira se a pilha tem valores suficientes; se não tiver, imprima o erro e pare."
+      ],
+      "mustContain": [
+        "Use um laço para executar as instruções uma por uma."
+      ],
+      "mustNotContain": [
+        "Execute as instruções você mesmo."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to run the instructions one by one."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "ScriptEngine|javax\\.script",
+      "message": "Run the instructions yourself."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\nPUSH 3\nPUSH 4\nADD\nPUSH 2\nMUL\nPRINT\n",
+      "output": "14\nStack: empty\n"
+    },
+    {
+      "input": "4\nPUSH 10\nPUSH 3\nSUB\nPRINT\n",
+      "output": "7\nStack: empty\n"
+    },
+    {
+      "input": "3\nPUSH 5\nDUP\nPRINT\n",
+      "output": "5\nStack: 5\n",
+      "hidden": true
+    },
+    {
+      "input": "2\nPUSH 1\nADD\n",
+      "output": "Error at line 2: stack underflow\n",
+      "hidden": true
+    },
+    {
+      "input": "3\nPUSH 2\nPOW 3\nPRINT\n",
+      "output": "Error at line 2: unknown instruction\n",
+      "hidden": true
+    },
+    {
+      "input": "1\nPRINT\n",
+      "output": "Error at line 1: stack underflow\n",
+      "hidden": true
+    },
+    {
+      "input": "7\nPUSH 1000000\nDUP\nMUL\nPUSH 1000000\nMUL\nPRINT\nPUSH -4\n",
+      "output": "1000000000000000000\nStack: -4\n",
+      "hidden": true
+    },
+    {
+      "input": "9\nPUSH 7\nPUSH 2\nPUSH 3\nMUL\nSUB\nDUP\nPRINT\nPUSH 0\nSUB\n",
+      "output": "1\nStack: 1\n",
+      "hidden": true
+    }
+  ]
+}

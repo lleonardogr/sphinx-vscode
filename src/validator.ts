@@ -9,7 +9,7 @@ import { Challenge, loadChallenges } from './challenges';
 import { RunOutcome, RunRequest, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
 import { findExamDirs, loadExams } from './exams';
 import { findQuizDirs, isWholeProgram, loadQuiz, loadQuizzes, quizProgram } from './quizzes';
-import { findLessonDirs, loadLesson } from './lessons';
+import { READINGS_MARKER, READING_TYPES, findLessonDirs, loadLesson } from './lessons';
 import { unitKey } from './path';
 import { findSubject } from './subjects';
 
@@ -214,16 +214,47 @@ function validateLesson(dir: string): ChallengeReport {
       problems.push(`"topic" is "${lesson.topic}", which is not a unit of any subject`);
     }
     problems.push(...referenceProblems(lesson));
-    if (words < 250) {
-      warnings.push(`lesson.md is short (${words} words; aim for 250 or more)`);
-    }
-    if (!/^##\s/m.test(lesson.body)) {
-      warnings.push('lesson.md has no "##" sections');
+    const raw = JSON.parse(fs.readFileSync(path.join(dir, 'lesson.json'), 'utf8'));
+    if (raw.readings !== undefined) {
+      // A reading guide (docs/content-guide.md#reading-guides): a short summary and curated readings.
+      problems.push(...readingProblems(raw.readings));
+      const summary = lesson.body.split(READINGS_MARKER)[0].split(/\s+/).filter(Boolean).length;
+      if (summary < 100 || summary > 350) {
+        warnings.push(`the "In short" summary has ${summary} words; aim for 150 to 250`);
+      }
+      if (lesson.objectives.length < 3 || lesson.objectives.length > 5) {
+        warnings.push(`${lesson.objectives.length} objectives; a unit has 3 to 5`);
+      }
+    } else {
+      if (words < 250) {
+        warnings.push(`lesson.md is short (${words} words; aim for 250 or more)`);
+      }
+      if (!/^##\s/m.test(lesson.body)) {
+        warnings.push('lesson.md has no "##" sections');
+      }
     }
   } catch (e) {
     problems.push((e as Error).message);
   }
   return { kind: 'lesson', id, dir, ok: problems.length === 0, tests: words, solutions: 0, problems, warnings };
+}
+
+/** Each reading needs a title, a source, an https link, a type, its minutes and what to look for. */
+export function readingProblems(readings: unknown): string[] {
+  if (!Array.isArray(readings) || readings.length === 0 || readings.length > 3) {
+    return ['"readings" must list 1 to 3 readings'];
+  }
+  const problems: string[] = [];
+  readings.forEach((r, i) => {
+    const where = `reading ${i + 1}`;
+    for (const field of ['title', 'source', 'lookFor', 'lang']) {
+      if (typeof r?.[field] !== 'string' || !r[field].trim()) problems.push(`${where}: needs "${field}"`);
+    }
+    if (typeof r?.url !== 'string' || !/^https:\/\/[^\s]+$/.test(r.url)) problems.push(`${where}: "url" must be an https link`);
+    if (!(READING_TYPES as readonly string[]).includes(r?.type)) problems.push(`${where}: "type" must be ${READING_TYPES.join(', ')}`);
+    if (!Number.isInteger(r?.minutes) || r.minutes <= 0) problems.push(`${where}: "minutes" must be a whole number above 0`);
+  });
+  return problems;
 }
 
 /**
@@ -376,6 +407,11 @@ export function translationProblems(dir: string, lang: string): string[] {
     const meta = read('lesson.json');
     if (!meta.translations?.[lang]?.title) problems.push(`no ${lang} title`);
     if (!fs.existsSync(path.join(dir, `lesson.${lang}.md`))) problems.push(`no lesson.${lang}.md`);
+    const t = meta.translations?.[lang] ?? {};
+    if (count(meta.objectives) && count(t.objectives) !== count(meta.objectives)) problems.push('objectives not translated');
+    (Array.isArray(meta.readings) ? meta.readings : []).forEach((_r: unknown, i: number) => {
+      if (!t.readings?.[i]?.lookFor) problems.push(`reading ${i + 1}: no ${lang} "lookFor"`);
+    });
   } else if (fs.existsSync(path.join(dir, 'exam.json'))) {
     const meta = read('exam.json');
     if (!meta.translations?.[lang]?.title) problems.push(`no ${lang} title`);

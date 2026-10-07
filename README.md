@@ -46,11 +46,11 @@ Three exams close the stages, each with a quiz and three private coding question
 
 ## CS Fundamentals
 
-The second subject covers what new students should know about **how a computer works**: 8 units, from the processor and memory to number systems, text, logic, algorithms and networks, with 16 lessons, 8 quizzes and 32 challenges. Switch to it with the 📚 button at the top of the sidebar (**Switch Subject…**). Each unit starts with short **lessons** to read, with tables and diagrams, then a quiz and challenges solved in Java:
+The second subject covers what new students should know about **how a computer works**: 8 units, from the processor and memory to number systems, text, logic, algorithms and networks, with 16 lessons, 8 quizzes and 32 challenges. Switch to it with the 📚 button at the top of the sidebar (**Switch Subject…**). Each unit starts with a lesson to read (unit 1 already uses a **reading guide**: a short summary, the unit's objectives and curated videos and articles from the web), then challenges and a quiz solved in Java:
 
 | Unit | Lessons | Challenges (plus the unit's quiz) |
 |------|---------|-----------------------------------|
-| 1 · How Computers Work | Inside a Computer · Memory, Caches and Running a Program | CPU Time · Average Memory Access Time · Instruction Decoder · Tiny CPU (a fetch–decode–execute simulator) |
+| 1 · How Computers Work | How a Computer Works (reading guide: Crash Course, GeeksforGeeks) | Instruction Decoder · Stack Machine · Cache Simulator · Tiny CPU (a fetch–decode–execute simulator) |
 | 2 · Number Systems | Place Value and Binary · Hexadecimal and Octal | Binary to Decimal · Decimal to Binary · Hex to Decimal · Base Converter (any base from 2 to 36) |
 | 3 · Bits and Bytes | Bits and Bytes · Kilobytes and Kibibytes | How Many Values? · Bits Needed · Storage Units (MB vs MiB) · Download Time |
 | 4 · Representing Numbers | Negative Numbers: Two's Complement · Fractions and Floating Point | Two's Complement · Read a Signed Byte · Overflow Detector · Binary Fractions |

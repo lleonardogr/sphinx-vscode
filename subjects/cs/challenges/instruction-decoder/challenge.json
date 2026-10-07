@@ -5,8 +5,8 @@
     "Strings",
     "Loops"
   ],
-  "difficulty": "Medium",
-  "order": 3,
+  "difficulty": "Easy",
+  "order": 1,
   "hints": [
     "The first 4 characters are the opcode and the last 4 the operand: substring(0, 4) and substring(4).",
     "Turn the operand bits into a number by doubling and adding each bit, as in Binary to Decimal.",

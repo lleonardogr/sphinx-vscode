@@ -1,0 +1,62 @@
+{
+  "title": "How a Computer Works",
+  "topic": "Computers",
+  "order": 1,
+  "objectives": [
+    "Say what the CPU, RAM and storage do, and why a program is copied into RAM to run",
+    "Trace the fetch-decode-execute cycle of a short program",
+    "Explain why caches make programs faster, and pick the access pattern that uses them well",
+    "Describe how javac and the JVM turn Java code into instructions the CPU runs"
+  ],
+  "readings": [
+    {
+      "title": "The Central Processing Unit (CPU)",
+      "source": "Crash Course Computer Science #7",
+      "url": "https://www.youtube.com/watch?v=FZGugFqdr60",
+      "type": "video",
+      "minutes": 10,
+      "lang": "en",
+      "lookFor": "Follow one instruction through fetch, decode and execute. Notice the instruction address register (the program counter) and how the clock drives each step."
+    },
+    {
+      "title": "Advanced CPU Designs",
+      "source": "Crash Course Computer Science #9",
+      "url": "https://www.youtube.com/watch?v=rtAlC5J1U40",
+      "type": "video",
+      "minutes": 12,
+      "lang": "en",
+      "lookFor": "Why RAM is slow next to the CPU, how a cache keeps whole blocks of data close, and what a cache hit and a miss are. Pipelining and multiple cores are extras."
+    },
+    {
+      "title": "How JVM Works: JVM Architecture",
+      "source": "GeeksforGeeks",
+      "url": "https://www.geeksforgeeks.org/java/how-jvm-works-jvm-architecture/",
+      "type": "article",
+      "minutes": 8,
+      "lang": "en",
+      "lookFor": "What javac produces, how the class loader brings .class files into memory, and how the JIT compiler turns code that runs often into machine code."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Como um computador funciona",
+      "objectives": [
+        "Dizer o que fazem a CPU, a RAM e o armazenamento, e por que um programa é copiado para a RAM para rodar",
+        "Acompanhar o ciclo de busca, decodificação e execução de um programa curto",
+        "Explicar por que os caches deixam os programas mais rápidos, e escolher o padrão de acesso que os aproveita",
+        "Descrever como o javac e a JVM transformam código Java em instruções que a CPU executa"
+      ],
+      "readings": [
+        {
+          "lookFor": "Acompanhe uma instrução pela busca, decodificação e execução. Repare no registrador de endereço da instrução (o contador de programa) e em como o clock conduz cada passo."
+        },
+        {
+          "lookFor": "Por que a RAM é lenta perto da CPU, como um cache guarda blocos inteiros de dados por perto, e o que são um acerto e uma falha de cache. Pipeline e múltiplos núcleos são extras."
+        },
+        {
+          "lookFor": "O que o javac produz, como o carregador de classes traz os arquivos .class para a memória, e como o compilador JIT transforma em código de máquina o código que roda muito."
+        }
+      ]
+    }
+  }
+}

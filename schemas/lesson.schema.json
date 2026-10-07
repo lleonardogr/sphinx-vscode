@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Sphinx lesson",
-  "description": "A lesson: lesson.json plus lesson.md (and lesson.<lang>.md for translations) in one folder. See docs/creating-challenges.md#lessons.",
+  "description": "A lesson or reading guide: lesson.json plus lesson.md (and lesson.<lang>.md for translations) in one folder. A reading guide keeps lesson.md short and lists curated readings. See docs/content-guide.md#reading-guides.",
   "type": "object",
   "required": [
     "title"
@@ -36,6 +36,67 @@
       },
       "description": "Units the student should know first, by unit key (for example \"Loops\" from Java Programming). Shown with the student's progress in each unit; never enforced."
     },
+    "objectives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 3,
+      "maxItems": 5,
+      "description": "What a student can do after the unit, as things they do: \"Convert a number between binary and decimal\". Shown at the top of the lesson."
+    },
+    "readings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "description": "Curated readings from the web (reading guides). They open in the browser. Put <!-- readings --> in lesson.md where the cards should appear; without it they go after the text.",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "source",
+          "url",
+          "type",
+          "minutes",
+          "lang",
+          "lookFor"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "description": "Who published it, e.g. \"Cloudflare Learning Center\"."
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://",
+            "description": "A free page, without login or paywall."
+          },
+          "type": {
+            "enum": [
+              "article",
+              "video",
+              "interactive"
+            ]
+          },
+          "minutes": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "About how long it takes to read or watch."
+          },
+          "lang": {
+            "type": "string",
+            "description": "Language of the reading, e.g. \"en\"."
+          },
+          "lookFor": {
+            "type": "string",
+            "description": "What to pay attention to while reading."
+          }
+        }
+      }
+    },
     "subject": {
       "type": "string",
       "description": "The subject (for example \"cs\"), for content without a unit. Otherwise the unit decides the subject."
@@ -47,6 +108,24 @@
         "properties": {
           "title": {
             "type": "string"
+          },
+          "objectives": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "readings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "lookFor": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "The translated \"lookFor\" of each reading, in the same order."
           }
         }
       },

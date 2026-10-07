@@ -271,7 +271,7 @@ Subjects are defined in `subjects/<id>/subject.json` and ship with the extension
 
 ### Lessons
 
-A **lesson** is a short page to read before the quiz and challenges of its unit: the idea, why it matters, and worked examples. Lessons come first in their unit and show a reading time. When the student clicks **Mark as read**, the lesson gets a ✓ in the sidebar. A button at the end opens the next item in the path.
+A **lesson** is a short page to read before the quiz and challenges of its unit. Built-in units use **reading guides**: a short summary, the unit's objectives and 1 to 3 curated readings from the web that open in the browser (see [Reading guides](content-guide.md#reading-guides) for the fields and how to choose sources). Lessons come first in their unit and show a reading time. When the student clicks **Mark as read**, the lesson gets a ✓ in the sidebar. A button at the end opens the next item in the path.
 
 A lesson is a folder:
 

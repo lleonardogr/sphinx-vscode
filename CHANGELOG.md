@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Reading guides**: a lesson can list its learning objectives and 1 to 3 curated readings from the web (articles, videos or interactive pages), shown as cards that open in the browser, each with what to look for. The short summary keeps working offline. A weekly check reports readings whose links stopped working.
+- A **content guide** for whoever writes units, including AI assistants: objectives, reading guides, the challenge ladder, quiz rules and a scoring rubric ([docs/content-guide.md](docs/content-guide.md)).
+
+### Changed
+
+- **CS Fundamentals, unit 1** follows the new guide: its two lessons became one reading guide (Crash Course videos on the CPU and caches, and a GeeksforGeeks article on the JVM). Two new challenges replace the formula ones: **Stack Machine** (how the JVM computes) and **Cache Simulator** (hits, misses and locality). Instruction Decoder is now the Easy challenge, and the quiz asks students to trace and calculate instead of recalling facts.
+
 ## [1.4.0] - 2026-10-07
 
 ### Added

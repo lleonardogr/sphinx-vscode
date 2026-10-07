@@ -1,5 +1,7 @@
 # Review: CS Fundamentals, October 2026
 
+> **Progress:** unit 1 (the pilot) is done: a reading guide, Stack Machine and Cache Simulator replace CPU Time and Average Memory Access Time, Instruction Decoder is Easy, and the quiz was rewritten.
+
 A review of the whole CS Fundamentals subject (v1.4.0) against the [content guide](../content-guide.md): 16 lessons, 8 quizzes and 32 challenges. It proposes what to keep, revise and replace. **Nothing changes until the teacher approves the proposals.**
 
 **Scores** follow [the rubric](../content-guide.md#the-rubric): **C**oncept, **F**it, **T**ests, **G**uidance, **H**ook, **D**istinct, each 1–3. *Concept* 1 → replace; any other 1 → revise.

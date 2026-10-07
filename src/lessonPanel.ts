@@ -1,6 +1,6 @@
 // Lessons: the reading panel, and which lessons the student has finished.
 import * as vscode from 'vscode';
-import { LessonDefinition, resolveLessonImages } from './lessons';
+import { LessonDefinition, READINGS_MARKER, Reading, resolveLessonImages } from './lessons';
 import { Requirement, unitName } from './path';
 import { requirementsHtml } from './challengePanel';
 import { language, tr } from './i18n';
@@ -48,12 +48,44 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+const TYPE_LABEL: Record<Reading['type'], [string, string]> = { article: ['Article', 'Artigo'], video: ['Video', 'Vídeo'], interactive: ['Interactive', 'Interativo'] };
+const TYPE_ICON: Record<Reading['type'], string> = { article: '📄', video: '▶', interactive: '🧩' };
+const LANG_NAME: Record<string, [string, string]> = { en: ['English', 'inglês'], 'pt-br': ['Portuguese', 'português'], pt: ['Portuguese', 'português'], es: ['Spanish', 'espanhol'] };
+
+export function readingCount(n: number): string {
+  return n === 1 ? tr('1 reading', '1 leitura') : tr(`${n} readings`, `${n} leituras`);
+}
+
+/** The reading cards; each button asks the extension to open the reading in the browser. */
+function readingsHtml(readings: Reading[]): string {
+  if (!readings.length) {
+    return '';
+  }
+  const cards = readings
+    .map((r, i) => {
+      const lang = LANG_NAME[r.lang.toLowerCase()];
+      const meta = [r.source, tr(...TYPE_LABEL[r.type]), r.minutes ? `${r.minutes} min` : '', lang ? tr(...lang) : r.lang].filter(Boolean).map(escapeHtml).join(' · ');
+      return `<div class="reading">
+        <div class="reading-title"><span class="reading-icon" aria-hidden="true">${TYPE_ICON[r.type]}</span> ${escapeHtml(r.title)}</div>
+        <div class="reading-meta">${meta}</div>
+        ${r.lookFor ? `<p class="reading-look"><strong>${tr('Look for:', 'Repare em:')}</strong> ${escapeHtml(r.lookFor)}</p>` : ''}
+        <button class="secondary" data-open="${i}" title="${escapeHtml(r.url)}">${tr('Open in the browser ↗', 'Abrir no navegador ↗')}</button>
+      </div>`;
+    })
+    .join('');
+  return `<section class="readings">
+    <h2>${tr('Read and watch', 'Leia e assista')}</h2>
+    <p class="muted">${tr('These open in your browser and need the internet. The summary above works offline.', 'Elas abrem no navegador e precisam de internet. O resumo acima funciona sem internet.')}</p>
+    ${cards}
+  </section>`;
+}
+
 function nonce(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   return Array.from({ length: 32 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
 }
 
-export type LessonMessage = { type: 'done' } | { type: 'next' };
+export type LessonMessage = { type: 'done' } | { type: 'next' } | { type: 'open'; index: number };
 
 export interface LessonView {
   read: boolean;
@@ -69,7 +101,8 @@ export class LessonPanel {
 
   constructor(
     private readonly extensionUri: vscode.Uri,
-    private readonly onMessage: (msg: LessonMessage, lesson: LessonDefinition) => void,
+    /** "Mark as read" and "Next"; the panel opens readings itself. */
+    private readonly onMessage: (msg: { type: 'done' | 'next' }, lesson: LessonDefinition) => void,
   ) {}
 
   get current(): LessonDefinition | undefined {
@@ -88,6 +121,12 @@ export class LessonPanel {
       this.panel.webview.onDidReceiveMessage((msg: LessonMessage) => {
         if (this.lesson && (msg?.type === 'done' || msg?.type === 'next')) {
           this.onMessage(msg, this.lesson);
+        } else if (this.lesson && msg?.type === 'open') {
+          // Only the lesson's own readings can be opened, by their position.
+          const reading = this.lesson.readings[msg.index];
+          if (reading) {
+            void vscode.env.openExternal(vscode.Uri.parse(reading.url));
+          }
         }
       });
     } else {
@@ -113,13 +152,21 @@ export class LessonPanel {
     const webview = this.panel!.webview;
     const media = (file: string) => webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', file));
     const n = nonce();
-    let body: string;
-    try {
-      body = await vscode.commands.executeCommand<string>('markdown.api.render', lesson.body);
-    } catch {
-      body = `<pre>${escapeHtml(lesson.body)}</pre>`;
-    }
-    body = resolveLessonImages(body, lesson.dir, (file) => webview.asWebviewUri(vscode.Uri.file(file)).toString());
+    const markdown = async (text: string): Promise<string> => {
+      let html: string;
+      try {
+        html = await vscode.commands.executeCommand<string>('markdown.api.render', text);
+      } catch {
+        html = `<pre>${escapeHtml(text)}</pre>`;
+      }
+      return resolveLessonImages(html, lesson.dir, (file) => webview.asWebviewUri(vscode.Uri.file(file)).toString());
+    };
+    // A reading guide: the "In short" text, the reading cards (where lesson.md has the marker), then the rest.
+    const [before, after = ''] = lesson.body.split(READINGS_MARKER);
+    const body = (await markdown(before)) + readingsHtml(lesson.readings) + (after.trim() ? await markdown(after) : '');
+    const objectives = lesson.objectives.length
+      ? `<section class="objectives"><h2>${tr('After this unit you can', 'Depois desta unidade você consegue')}</h2><ul>${lesson.objectives.map((o) => `<li>${escapeHtml(o)}</li>`).join('')}</ul></section>`
+      : '';
     const needs = requirementsHtml(view.requirements);
     const nextLabel = view.next
       ? `${view.next.kind === 'quiz' ? tr('Next: quiz', 'Próximo: quiz') : view.next.kind === 'lesson' ? tr('Next lesson', 'Próxima lição') : tr('Next: challenge', 'Próximo: desafio')} · ${escapeHtml(view.next.title)} →`
@@ -139,11 +186,12 @@ export class LessonPanel {
     <div class="title-row"><h1>${escapeHtml(lesson.title)}</h1><span id="read-badge" class="badge solved" ${view.read ? '' : 'hidden'}>${tr('✓ Read', '✓ Lida')}</span></div>
     <div class="meta">
       <span class="badge topic">${tr('Lesson', 'Lição')}</span>${lesson.topic ? `<span class="badge">${escapeHtml(unitName(lesson.topic))}</span>` : ''}
-      <span class="badge">${tr(`${lesson.minutes} min read`, `${lesson.minutes} min de leitura`)}</span>
+      <span class="badge">${tr(`${lesson.minutes} min read`, `${lesson.minutes} min de leitura`)}</span>${lesson.readings.length ? `<span class="badge">${readingCount(lesson.readings.length)}</span>` : ''}
     </div>
     ${needs}
   </header>
   <main class="lesson">
+    ${objectives}
     <article class="description">${body}</article>
     <footer class="lesson-footer">
       <button class="primary" id="done" ${view.read ? 'hidden' : ''}>${tr('✓ Mark as read', '✓ Marcar como lida')}</button>
