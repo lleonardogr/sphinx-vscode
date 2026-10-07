@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-10-07
+
 ### Added
 
 - **Reading guides**: a lesson can list its learning objectives and 1 to 3 curated readings from the web (articles, videos or interactive pages), shown as cards that open in the browser, each with what to look for. The short summary keeps working offline. A weekly check reports readings whose links stopped working.
@@ -282,7 +284,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.1.0...v1.2.0
