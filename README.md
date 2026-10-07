@@ -46,7 +46,7 @@ Three exams close the stages, each with a quiz and three private coding question
 
 ## CS Fundamentals
 
-The second subject covers what new students should know about **how a computer works**: 8 units, from the processor and memory to number systems, text, logic, algorithms and networks, with 16 lessons, 8 quizzes and 32 challenges. Switch to it with the 📚 button at the top of the sidebar (**Switch Subject…**). Each unit starts with a **reading guide**: a short summary with a diagram, the unit's objectives, and curated videos, articles and interactive pages from the web. Then come challenges solved in Java and a quiz:
+The second subject covers what new students should know about **how a computer works**: 8 units, from the processor and memory to number systems, text, logic, algorithms and networks, with 8 reading guides, 8 quizzes and 32 challenges. Switch to it with the 📚 button at the top of the sidebar (**Switch Subject…**). Each unit starts with a **reading guide**: a short summary with a diagram, the unit's objectives, and curated videos, articles and interactive pages from the web. Then come challenges solved in Java and a quiz:
 
 | Unit | Lessons | Challenges (plus the unit's quiz) |
 |------|---------|-----------------------------------|
