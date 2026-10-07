@@ -6,6 +6,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String color = scanner.next(); // for example #FF8800
 
-        // TODO: check the format, read each pair of hex digits and print rgb(R, G, B) or Invalid color
+        // TODO: read the three color bytes, then print rgb(R, G, B), the brightness and the text color (or Invalid color)
     }
 }

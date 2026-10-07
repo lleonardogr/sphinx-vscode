@@ -4,13 +4,13 @@
   "requires": [
     "Strings"
   ],
-  "description": "Character codes, Unicode and UTF-8, pixels and colors, and sound samples.",
+  "description": "Character codes, Unicode and UTF-8, pixels and colors, sound samples and compression.",
   "questions": [
     {
-      "type": "number",
-      "prompt": "What is the ASCII code of the letter **A**?",
-      "answer": "65",
-      "explanation": "Upper-case letters start at 65: A = 65, B = 66, … Z = 90."
+      "type": "output",
+      "code": "IO.println((char) ('g' - 32));",
+      "answer": "G",
+      "explanation": "'g' is 103; 103 − 32 = 71, which is 'G'. Lower and upper case letters are 32 apart."
     },
     {
       "type": "output",
@@ -20,15 +20,9 @@
     },
     {
       "type": "output",
-      "code": "IO.println((char) 66);",
-      "answer": "B",
-      "explanation": "Casting a number to char gives the character with that code: 66 is B."
-    },
-    {
-      "type": "output",
-      "code": "IO.println('a' - 'A');",
-      "answer": "32",
-      "explanation": "Subtracting chars subtracts their codes: 97 − 65 = 32."
+      "code": "IO.println('7' - '0');",
+      "answer": "7",
+      "explanation": "Digits have consecutive codes from '0' (48): subtracting '0' turns a digit character into its value."
     },
     {
       "type": "choice",
@@ -43,6 +37,18 @@
       "explanation": "Code points from U+0080 to U+07FF take 2 bytes: é is C3 A9."
     },
     {
+      "type": "choice",
+      "prompt": "A page shows \"PortuguÃªs\" instead of \"Português\". What happened?",
+      "options": [
+        "The file is broken and the letter was lost",
+        "UTF-8 bytes were read as if each byte were one character",
+        "The font has no ê",
+        "The text was compressed with a lossy format"
+      ],
+      "answer": 1,
+      "explanation": "ê is stored in UTF-8 as two bytes, C3 AA. Read one byte at a time with an old table, they show as Ã and ª. The bytes are fine; the table is wrong."
+    },
+    {
       "type": "truefalse",
       "prompt": "Every ASCII file is also a valid UTF-8 file.",
       "answer": true,
@@ -50,15 +56,9 @@
     },
     {
       "type": "number",
-      "prompt": "How many bytes does one pixel take in a typical 24-bit color image?",
-      "answer": "3",
-      "explanation": "One byte each for red, green and blue: 24 bits."
-    },
-    {
-      "type": "number",
       "prompt": "How many bytes does an uncompressed **100 × 100** image with 24-bit color take?",
       "answer": "30000",
-      "explanation": "100 × 100 pixels × 3 bytes = 30,000 bytes."
+      "explanation": "100 × 100 pixels × 3 bytes (red, green, blue) = 30,000 bytes."
     },
     {
       "type": "choice",
@@ -73,29 +73,40 @@
       "explanation": "The three bytes are red 00, green FF (255), blue 00: pure green."
     },
     {
-      "type": "number",
-      "prompt": "How many bytes per second does uncompressed CD audio take (44,100 samples per second, 16 bits, stereo)?",
-      "answer": "176400",
-      "explanation": "44,100 × 2 bytes × 2 channels = 176,400 bytes per second."
+      "type": "short",
+      "prompt": "Encode **AAAABBBCCD** with run-length encoding (count, then letter).",
+      "answer": [
+        "4A3B2C1D"
+      ],
+      "caseSensitive": true,
+      "explanation": "Four As, three Bs, two Cs and one D: 4A3B2C1D, 8 characters instead of 10."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which format gives back **exactly** the original data after decompressing?",
+      "options": [
+        "JPEG",
+        "MP3",
+        "PNG",
+        "MP4 video"
+      ],
+      "answer": 2,
+      "explanation": "PNG is lossless. JPEG, MP3 and most video formats are lossy: they drop details to get much smaller files."
     }
   ],
   "translations": {
     "pt-br": {
       "title": "Quiz de texto, imagens e som",
-      "description": "Códigos de caracteres, Unicode e UTF-8, pixels e cores, e amostras de som.",
+      "description": "Códigos de caracteres, Unicode e UTF-8, pixels e cores, amostras de som e compressão.",
       "questions": [
         {
-          "prompt": "Qual é o código ASCII da letra **A**?",
-          "explanation": "As letras maiúsculas começam em 65: A = 65, B = 66, … Z = 90."
+          "explanation": "'g' é 103; 103 − 32 = 71, que é 'G'. Letras minúsculas e maiúsculas ficam a 32 de distância."
         },
         {
           "explanation": "As letras minúsculas começam em 97, exatamente 32 depois das maiúsculas."
         },
         {
-          "explanation": "Converter um número para char dá o caractere com esse código: 66 é B."
-        },
-        {
-          "explanation": "Subtrair chars subtrai os códigos deles: 97 − 65 = 32."
+          "explanation": "Os dígitos têm códigos seguidos a partir de '0' (48): subtrair '0' transforma o caractere de um dígito no seu valor."
         },
         {
           "prompt": "Quantos bytes **é** (U+00E9) ocupa em UTF-8?",
@@ -108,16 +119,22 @@
           "explanation": "Code points de U+0080 a U+07FF ocupam 2 bytes: é é C3 A9."
         },
         {
+          "prompt": "Uma página mostra \"PortuguÃªs\" em vez de \"Português\". O que aconteceu?",
+          "options": [
+            "O arquivo está quebrado e a letra se perdeu",
+            "Bytes UTF-8 foram lidos como se cada byte fosse um caractere",
+            "A fonte não tem ê",
+            "O texto foi comprimido com um formato com perda"
+          ],
+          "explanation": "O ê é guardado em UTF-8 como dois bytes, C3 AA. Lidos um byte por vez com uma tabela antiga, eles aparecem como Ã e ª. Os bytes estão certos; a tabela está errada."
+        },
+        {
           "prompt": "Todo arquivo ASCII também é um arquivo UTF-8 válido.",
           "explanation": "O UTF-8 guarda os code points de 0 a 127 em um byte, exatamente como o ASCII."
         },
         {
-          "prompt": "Quantos bytes um pixel ocupa numa imagem colorida típica de 24 bits?",
-          "explanation": "Um byte para o vermelho, um para o verde e um para o azul: 24 bits."
-        },
-        {
           "prompt": "Quantos bytes ocupa uma imagem **100 × 100** sem compressão com cor de 24 bits?",
-          "explanation": "100 × 100 pixels × 3 bytes = 30.000 bytes."
+          "explanation": "100 × 100 pixels × 3 bytes (vermelho, verde, azul) = 30.000 bytes."
         },
         {
           "prompt": "Como é a cor **#00FF00**?",
@@ -130,8 +147,18 @@
           "explanation": "Os três bytes são vermelho 00, verde FF (255), azul 00: verde puro."
         },
         {
-          "prompt": "Quantos bytes por segundo ocupa o áudio de CD sem compressão (44.100 amostras por segundo, 16 bits, estéreo)?",
-          "explanation": "44.100 × 2 bytes × 2 canais = 176.400 bytes por segundo."
+          "prompt": "Codifique **AAAABBBCCD** com codificação por comprimento de sequência (contagem, depois a letra).",
+          "explanation": "Quatro As, três Bs, dois Cs e um D: 4A3B2C1D, 8 caracteres em vez de 10."
+        },
+        {
+          "prompt": "Qual formato devolve **exatamente** os dados originais depois de descomprimir?",
+          "options": [
+            "JPEG",
+            "MP3",
+            "PNG",
+            "Vídeo MP4"
+          ],
+          "explanation": "O PNG é sem perda. JPEG, MP3 e a maioria dos formatos de vídeo são com perda: descartam detalhes para ter arquivos bem menores."
         }
       ]
     }

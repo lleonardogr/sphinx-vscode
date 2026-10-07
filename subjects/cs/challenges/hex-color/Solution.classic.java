@@ -25,17 +25,16 @@ public class Main {
             }
             hex = longForm.toString();
         }
-        if (hex.length() != 6) {
+        int r = hex.length() == 6 ? value(hex.substring(0, 2)) : -1;
+        int g = hex.length() == 6 ? value(hex.substring(2, 4)) : -1;
+        int b = hex.length() == 6 ? value(hex.substring(4, 6)) : -1;
+        if (r < 0 || g < 0 || b < 0) {
             System.out.println("Invalid color");
         } else {
-            int r = value(hex.substring(0, 2));
-            int g = value(hex.substring(2, 4));
-            int b = value(hex.substring(4, 6));
-            if (r < 0 || g < 0 || b < 0) {
-                System.out.println("Invalid color");
-            } else {
-                System.out.printf("rgb(%d, %d, %d)%n", r, g, b);
-            }
+            long brightness = Math.round((299 * r + 587 * g + 114 * b) / 1000.0);
+            System.out.printf("rgb(%d, %d, %d)%n", r, g, b);
+            System.out.println("Brightness: " + brightness);
+            System.out.println("Text: " + (brightness < 128 ? "white" : "black"));
         }
     }
 }

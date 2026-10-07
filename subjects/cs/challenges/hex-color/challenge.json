@@ -8,17 +8,17 @@
   "difficulty": "Medium",
   "order": 3,
   "hints": [
-    "After the #, each pair of hex digits is one color byte: red, green, blue. FF is 255, 88 is 136, 00 is 0.",
-    "A method int digit(char c) that returns 0–15 (or -1 for a character that isn't a hex digit) makes the rest easy: a pair is digit(first) × 16 + digit(second).",
-    "For the short form #f80, double each digit first: f → ff, 8 → 88, 0 → 00."
+    "After the #, each pair of hex digits is one byte: red, green, blue. A method int digit(char c) that returns 0–15 (or -1) makes a pair digit(first) × 16 + digit(second).",
+    "For the short form #f80, double each digit first: f → ff, 8 → 88, 0 → 00.",
+    "Brightness with whole numbers: (299 * r + 587 * g + 114 * b + 500) / 1000. Black text is readable when it is 128 or more."
   ],
   "translations": {
     "pt-br": {
       "title": "Cores em hexadecimal",
       "hints": [
-        "Depois do #, cada par de dígitos hex é um byte de cor: vermelho, verde, azul. FF é 255, 88 é 136, 00 é 0.",
-        "Um método int digit(char c) que devolve 0–15 (ou -1 para um caractere que não é dígito hex) facilita o resto: um par é digit(primeiro) × 16 + digit(segundo).",
-        "Na forma curta #f80, duplique cada dígito primeiro: f → ff, 8 → 88, 0 → 00."
+        "Depois do #, cada par de dígitos hex é um byte: vermelho, verde, azul. Um método int digit(char c) que devolve 0–15 (ou -1) faz um par ser digit(primeiro) × 16 + digit(segundo).",
+        "Na forma curta #f80, duplique cada dígito primeiro: f → ff, 8 → 88, 0 → 00.",
+        "Brilho com números inteiros: (299 * r + 587 * g + 114 * b + 500) / 1000. O texto preto é legível quando ele for 128 ou mais."
       ],
       "mustNotContain": [
         "Leia os dígitos hex você mesmo: nada de métodos prontos que fazem isso por você."
@@ -34,25 +34,25 @@
   "tests": [
     {
       "input": "#FF8800\n",
-      "output": "rgb(255, 136, 0)\n"
+      "output": "rgb(255, 136, 0)\nBrightness: 156\nText: black\n"
     },
     {
-      "input": "#f80\n",
-      "output": "rgb(255, 136, 0)\n"
+      "input": "#1e90ff\n",
+      "output": "rgb(30, 144, 255)\nBrightness: 123\nText: white\n"
     },
     {
       "input": "#000000\n",
-      "output": "rgb(0, 0, 0)\n",
+      "output": "rgb(0, 0, 0)\nBrightness: 0\nText: white\n",
       "hidden": true
     },
     {
       "input": "#FFFFFF\n",
-      "output": "rgb(255, 255, 255)\n",
+      "output": "rgb(255, 255, 255)\nBrightness: 255\nText: black\n",
       "hidden": true
     },
     {
-      "input": "#1e90ff\n",
-      "output": "rgb(30, 144, 255)\n",
+      "input": "#f80\n",
+      "output": "rgb(255, 136, 0)\nBrightness: 156\nText: black\n",
       "hidden": true
     },
     {
@@ -71,13 +71,18 @@
       "hidden": true
     },
     {
-      "input": "#abc\n",
-      "output": "rgb(170, 187, 204)\n",
+      "input": "#808080\n",
+      "output": "rgb(128, 128, 128)\nBrightness: 128\nText: black\n",
+      "hidden": true
+    },
+    {
+      "input": "#7f7f7f\n",
+      "output": "rgb(127, 127, 127)\nBrightness: 127\nText: white\n",
       "hidden": true
     },
     {
       "input": "#C0FFEE\n",
-      "output": "rgb(192, 255, 238)\n",
+      "output": "rgb(192, 255, 238)\nBrightness: 234\nText: black\n",
       "hidden": true
     }
   ]

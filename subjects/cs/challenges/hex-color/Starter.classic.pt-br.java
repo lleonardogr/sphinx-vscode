@@ -6,6 +6,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String color = scanner.next(); // por exemplo #FF8800
 
-        // TODO: confira o formato, leia cada par de dígitos hex e imprima rgb(R, G, B) ou Invalid color
+        // TODO: leia os três bytes da cor, depois imprima rgb(R, G, B), o brilho e a cor do texto (ou Invalid color)
     }
 }

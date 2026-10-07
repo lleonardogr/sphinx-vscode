@@ -1,0 +1,83 @@
+{
+  "title": "Case Flipper",
+  "topic": "TextMedia",
+  "requires": [
+    "Loops",
+    "Strings"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "A char is a number, so you can compare it: c >= 'A' && c <= 'Z' is true for upper-case letters.",
+    "Upper and lower case are 32 apart: (char) (c + 32) turns 'A' into 'a', and (char) (c - 32) goes back.",
+    "Anything that isn't a letter (digits, spaces, punctuation) stays as it is."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Inversor de maiúsculas",
+      "hints": [
+        "Um char é um número, então dá para compará-lo: c >= 'A' && c <= 'Z' é verdadeiro para letras maiúsculas.",
+        "Maiúsculas e minúsculas ficam a 32 de distância: (char) (c + 32) transforma 'A' em 'a', e (char) (c - 32) volta.",
+        "Tudo o que não é letra (dígitos, espaços, pontuação) fica como está."
+      ],
+      "mustContain": [
+        "Use um laço para percorrer os caracteres."
+      ],
+      "mustNotContain": [
+        "Use os códigos dos caracteres: toUpperCase, toLowerCase e isUpperCase não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to go through the characters."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "toUpperCase|toLowerCase|isUpperCase|isLowerCase|swapCase",
+      "message": "Use the character codes: toUpperCase, toLowerCase and isUpperCase aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "Hello, World!\n",
+      "output": "hELLO, wORLD!\n"
+    },
+    {
+      "input": "Java 25\n",
+      "output": "jAVA 25\n"
+    },
+    {
+      "input": "a\n",
+      "output": "A\n",
+      "hidden": true
+    },
+    {
+      "input": "Z\n",
+      "output": "z\n",
+      "hidden": true
+    },
+    {
+      "input": "ABCxyz\n",
+      "output": "abcXYZ\n",
+      "hidden": true
+    },
+    {
+      "input": "[`@{\n",
+      "output": "[`@{\n",
+      "hidden": true
+    },
+    {
+      "input": "2 + 2 = 4\n",
+      "output": "2 + 2 = 4\n",
+      "hidden": true
+    },
+    {
+      "input": "MiXeD cAsE TeXt\n",
+      "output": "mIxEd CaSe tExT\n",
+      "hidden": true
+    }
+  ]
+}

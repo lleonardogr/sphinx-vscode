@@ -1,0 +1,88 @@
+{
+  "title": "Run-Length Encoding",
+  "topic": "TextMedia",
+  "requires": [
+    "Strings",
+    "Loops"
+  ],
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "To encode, walk through the text counting how many times the current letter repeats; when the letter changes (or the text ends), write the count and the letter.",
+    "To decode, read the digits into a number (count = count * 10 + digit) until you reach a letter, then write the letter that many times.",
+    "A code is invalid when it ends with digits, starts a run without a count, or has a count of 0."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Codificação por comprimento de sequência",
+      "hints": [
+        "Para codificar, percorra o texto contando quantas vezes a letra atual se repete; quando a letra mudar (ou o texto acabar), escreva a contagem e a letra.",
+        "Para decodificar, leia os dígitos num número (contagem = contagem * 10 + digito) até chegar a uma letra, depois escreva a letra essa quantidade de vezes.",
+        "Um código é inválido quando termina com dígitos, começa uma sequência sem contagem, ou tem contagem 0."
+      ],
+      "mustContain": [
+        "Use um laço para percorrer o texto."
+      ],
+      "mustNotContain": [
+        "Escreva a compressão você mesmo: expressões regulares e java.util.zip não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to go through the text."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "replaceAll|matches\\s*\\(|Pattern|java\\.util\\.zip|Deflater",
+      "message": "Write the compression yourself: regular expressions and java.util.zip aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "encode\nAAAABBBCCD\n",
+      "output": "4A3B2C1D\nLength: 10 -> 8\n"
+    },
+    {
+      "input": "decode\n4A3B2C1D\n",
+      "output": "AAAABBBCCD\nLength: 8 -> 10\n"
+    },
+    {
+      "input": "encode\nA\n",
+      "output": "1A\nLength: 1 -> 2\n",
+      "hidden": true
+    },
+    {
+      "input": "encode\nABCDEF\n",
+      "output": "1A1B1C1D1E1F\nLength: 6 -> 12\n",
+      "hidden": true
+    },
+    {
+      "input": "encode\nWWWWWWWWWWWWBWWWWWWWWWWWWBBB\n",
+      "output": "12W1B12W3B\nLength: 28 -> 10\n",
+      "hidden": true
+    },
+    {
+      "input": "decode\n12W1B12W3B\n",
+      "output": "WWWWWWWWWWWWBWWWWWWWWWWWWBBB\nLength: 10 -> 28\n",
+      "hidden": true
+    },
+    {
+      "input": "decode\n3A2\n",
+      "output": "Invalid code\n",
+      "hidden": true
+    },
+    {
+      "input": "decode\nAB\n",
+      "output": "Invalid code\n",
+      "hidden": true
+    },
+    {
+      "input": "decode\n0A\n",
+      "output": "Invalid code\n",
+      "hidden": true
+    }
+  ]
+}
