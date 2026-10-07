@@ -206,7 +206,7 @@ Used for reviews and by AI assistants to check their own work. Score each criter
 
 ## Workflow
 
-The same steps for a teacher, a contributor or an AI assistant:
+The same steps for a teacher, a contributor or an AI assistant. The helpers in [`scripts/content`](../scripts/content/README.md) write the files and fill in the outputs, and AI assistants such as Claude Code can follow the [`sphinx-unit` skill](../.claude/skills/sphinx-unit/SKILL.md), which walks through these steps:
 
 1. **Spec.** Write the unit spec ([template below](#appendix-unit-spec-template)): objectives, readings, and for each exercise its objective, level and idea. **A person approves the spec before any file is written.**
 2. **Write the files.** Lessons, quiz and challenges, both languages, both solutions.

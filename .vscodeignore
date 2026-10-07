@@ -28,3 +28,4 @@ docs/content-guide.md
 docs/reviews/**
 media/screenshots/**
 .vscode-test/**
+.claude/**
