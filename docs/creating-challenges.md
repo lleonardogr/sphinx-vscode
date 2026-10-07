@@ -265,7 +265,7 @@ Sphinx teaches more than one **subject**. Each has its own units, learning path 
 
 **The unit decides the subject.** A challenge with `"topic": "NumberSystems"` is listed in CS Fundamentals and one with `"topic": "Loops"` in Java Programming. Unit keys are unique across subjects, so nothing else is needed. Content without a unit goes to the **Custom** section of Java Programming, or of the subject named in `"subject"` (for example `"subject": "cs"`). An exam is listed under the subject most of its questions come from, unless its `exam.json` has a `"subject"`.
 
-A unit appears as soon as it has content, and keeps its number: CS Fundamentals starts at **2 · Number Systems**.
+A unit appears as soon as it has content, and keeps its number even when earlier units are empty.
 
 Subjects are defined in `subjects/<id>/subject.json` and ship with the extension, with their content in `subjects/<id>/challenges`, `quizzes`, `lessons` and `tests`. To propose a new one (C, SQL, graph theory…), open an issue.
 
