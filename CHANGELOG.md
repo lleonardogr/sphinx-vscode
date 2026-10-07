@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **CS Fundamentals is complete**: six new units, in English and Portuguese, each with two lessons, a quiz and four challenges solved in Java (Easy, Easy, Medium, Hard):
+  - **1 · How Computers Work**: the parts of a computer, the fetch–decode–execute cycle, memory and caches, and how Java runs; up to a Tiny CPU simulator.
+  - **4 · Representing Numbers**: two's complement, overflow, binary fractions and floating point.
+  - **5 · Text, Images and Sound**: ASCII, Unicode and UTF-8, pixels, colors and audio; up to a UTF-8 encoder.
+  - **6 · Logic and Bitwise Operations**: gates, truth tables, De Morgan, bitwise operators and masks; up to an 8-bit register.
+  - **7 · Algorithms and Complexity**: searching, sorting and Big O, counting the steps of each algorithm.
+  - **8 · Networks and the Internet**: packets, IP, TCP and UDP, DNS, IP addresses and subnets; up to a subnet calculator.
+
 ## [1.3.0] - 2026-10-06
 
 ### Added

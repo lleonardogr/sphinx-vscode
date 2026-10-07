@@ -1,0 +1,77 @@
+{
+  "title": "Selection Sort Trace",
+  "topic": "Algorithms",
+  "requires": [
+    "Arrays"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Pass i looks for the smallest number from position i to the end, then swaps it into position i. After pass i, the first i + 1 numbers are in their final place.",
+    "Count a comparison each time you compare two numbers while looking for the smallest. Count a swap only when the smallest isn't already at position i.",
+    "There are n − 1 passes. Print the array after each one with String.join or a small loop."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Passo a passo da ordenação por seleção",
+      "hints": [
+        "A passada i procura o menor número da posição i até o fim, depois o troca para a posição i. Depois da passada i, os primeiros i + 1 números estão no lugar final.",
+        "Conte uma comparação cada vez que comparar dois números enquanto procura o menor. Conte uma troca só quando o menor ainda não estiver na posição i.",
+        "São n − 1 passadas. Imprima o array depois de cada uma com String.join ou um pequeno laço."
+      ],
+      "mustContain": [
+        "Escreva a ordenação por seleção com dois laços aninhados."
+      ],
+      "mustNotContain": [
+        "Ordene você mesmo: Arrays.sort e outras ordenações prontas não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b[\\s\\S]*\\b(for|while)\\b",
+      "message": "Write selection sort with two nested loops."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\bsort\\s*\\(|\\bsorted\\s*\\(|TreeSet|PriorityQueue",
+      "message": "Sort it yourself: Arrays.sort and other library sorting aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n29 10 14 37 13\n",
+      "output": "10 29 14 37 13\n10 13 14 37 29\n10 13 14 37 29\n10 13 14 29 37\nComparisons: 10\nSwaps: 3\n"
+    },
+    {
+      "input": "4\n1 2 3 4\n",
+      "output": "1 2 3 4\n1 2 3 4\n1 2 3 4\nComparisons: 6\nSwaps: 0\n"
+    },
+    {
+      "input": "2\n2 1\n",
+      "output": "1 2\nComparisons: 1\nSwaps: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n5 5 3 3 1 1\n",
+      "output": "1 5 3 3 5 1\n1 1 3 3 5 5\n1 1 3 3 5 5\n1 1 3 3 5 5\n1 1 3 3 5 5\nComparisons: 15\nSwaps: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "7\n-3 8 0 -9 4 4 2\n",
+      "output": "-9 8 0 -3 4 4 2\n-9 -3 0 8 4 4 2\n-9 -3 0 8 4 4 2\n-9 -3 0 2 4 4 8\n-9 -3 0 2 4 4 8\n-9 -3 0 2 4 4 8\nComparisons: 21\nSwaps: 3\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n3 2 1\n",
+      "output": "1 2 3\n1 2 3\nComparisons: 3\nSwaps: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "8\n8 7 6 5 4 3 2 1\n",
+      "output": "1 7 6 5 4 3 2 8\n1 2 6 5 4 3 7 8\n1 2 3 5 4 6 7 8\n1 2 3 4 5 6 7 8\n1 2 3 4 5 6 7 8\n1 2 3 4 5 6 7 8\n1 2 3 4 5 6 7 8\nComparisons: 28\nSwaps: 4\n",
+      "hidden": true
+    }
+  ]
+}

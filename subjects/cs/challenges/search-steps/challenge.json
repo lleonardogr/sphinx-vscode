@@ -1,0 +1,82 @@
+{
+  "title": "Search Steps",
+  "topic": "Algorithms",
+  "requires": [
+    "Arrays"
+  ],
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "Linear search looks at the numbers one by one from the start: count one step per number looked at, and stop when you find the target.",
+    "Binary search keeps a range lo..hi. Each step looks at the middle, mid = (lo + hi) / 2, and throws away the half where the target can't be.",
+    "Count one step each time you look at a middle number, and stop when you find the target or the range is empty (lo > hi)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Passos da busca",
+      "hints": [
+        "A busca linear olha os números um por um desde o começo: conte um passo por número olhado e pare quando achar o alvo.",
+        "A busca binária guarda um intervalo lo..hi. Cada passo olha o meio, mid = (lo + hi) / 2, e joga fora a metade em que o alvo não pode estar.",
+        "Conte um passo cada vez que olhar um número do meio, e pare quando achar o alvo ou quando o intervalo ficar vazio (lo > hi)."
+      ],
+      "mustContain": [
+        "Escreva as duas buscas com laços."
+      ],
+      "mustNotContain": [
+        "Escreva as buscas você mesmo: Arrays.binarySearch, indexOf e contains não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(while|for)\\b",
+      "message": "Write both searches with loops."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "binarySearch|indexOf|contains\\s*\\(",
+      "message": "Write the searches yourself: Arrays.binarySearch, indexOf and contains aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "10\n1 3 5 7 9 11 13 15 17 19\n7\n",
+      "output": "Linear: 4\nBinary: 4\nFound: yes\n"
+    },
+    {
+      "input": "10\n1 3 5 7 9 11 13 15 17 19\n19\n",
+      "output": "Linear: 10\nBinary: 4\nFound: yes\n"
+    },
+    {
+      "input": "10\n1 3 5 7 9 11 13 15 17 19\n4\n",
+      "output": "Linear: 10\nBinary: 3\nFound: no\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n42\n42\n",
+      "output": "Linear: 1\nBinary: 1\nFound: yes\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n42\n7\n",
+      "output": "Linear: 1\nBinary: 1\nFound: no\n",
+      "hidden": true
+    },
+    {
+      "input": "16\n2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32\n2\n",
+      "output": "Linear: 1\nBinary: 4\nFound: yes\n",
+      "hidden": true
+    },
+    {
+      "input": "16\n2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32\n33\n",
+      "output": "Linear: 16\nBinary: 5\nFound: no\n",
+      "hidden": true
+    },
+    {
+      "input": "7\n-30 -20 -10 0 10 20 30\n0\n",
+      "output": "Linear: 4\nBinary: 1\nFound: yes\n",
+      "hidden": true
+    }
+  ]
+}

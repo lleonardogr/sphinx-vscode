@@ -1,0 +1,165 @@
+{
+  "title": "Algorithms Quiz",
+  "topic": "Algorithms",
+  "requires": [
+    "Loops",
+    "Arrays"
+  ],
+  "description": "Searching, sorting, counting steps and Big O.",
+  "questions": [
+    {
+      "type": "number",
+      "prompt": "Guessing a number from 1 to 100 by always picking the middle, what is the most guesses you can need?",
+      "answer": "7",
+      "explanation": "Each guess halves the range: 100 → 50 → 25 → 13 → 7 → 4 → 2 → 1. 2⁷ = 128 ≥ 100."
+    },
+    {
+      "type": "number",
+      "prompt": "In the worst case, how many numbers does a **linear search** look at in a list of 1000?",
+      "answer": "1000",
+      "explanation": "If the target is last, or not in the list, every number is checked."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does **binary search** need?",
+      "options": [
+        "A list with no repeated numbers",
+        "A sorted list",
+        "A list with an even length",
+        "Nothing special"
+      ],
+      "answer": 1,
+      "explanation": "It throws away half of the list at each step, which only works if the list is in order."
+    },
+    {
+      "type": "choice",
+      "prompt": "Two nested loops, each going over all n elements, are…",
+      "options": [
+        "O(n)",
+        "O(log n)",
+        "O(n²)",
+        "O(2ⁿ)"
+      ],
+      "answer": 2,
+      "explanation": "The inner loop runs n times for each of the n turns of the outer one: n × n."
+    },
+    {
+      "type": "choice",
+      "prompt": "What is the Big O of binary search?",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ],
+      "answer": 1,
+      "explanation": "Halving the range at each step takes about log₂ n steps."
+    },
+    {
+      "type": "output",
+      "code": "int count = 0;\nfor (int i = 0; i < 4; i++) {\n    for (int j = 0; j < 4; j++) {\n        count++;\n    }\n}\nIO.println(count);",
+      "answer": "16",
+      "explanation": "The inner loop runs 4 times for each of the 4 outer turns: 4 × 4 = 16."
+    },
+    {
+      "type": "output",
+      "code": "int count = 0;\nfor (int i = 1; i < 100; i *= 2) {\n    count++;\n}\nIO.println(count);",
+      "answer": "7",
+      "explanation": "i takes the values 1, 2, 4, 8, 16, 32 and 64: doubling loops are O(log n)."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "An O(n) algorithm is faster than an O(n²) one for every input size.",
+      "answer": false,
+      "explanation": "Big O ignores constants: for small inputs the O(n²) algorithm can be faster. It describes what happens as n grows."
+    },
+    {
+      "type": "number",
+      "prompt": "How many comparisons does **selection sort** make on a list of 5 numbers?",
+      "answer": "10",
+      "explanation": "4 + 3 + 2 + 1 = 10, which is 5 × 4 / 2."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which simplifies to **O(n²)**?",
+      "options": [
+        "3n + 7",
+        "n² + 100n + 5",
+        "n log n",
+        "500"
+      ],
+      "answer": 1,
+      "explanation": "Keep the fastest-growing term and drop the constants: n² + 100n + 5 is O(n²)."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de algoritmos",
+      "description": "Busca, ordenação, contagem de passos e Big O.",
+      "questions": [
+        {
+          "prompt": "Adivinhando um número de 1 a 100 sempre pelo meio, qual é o máximo de chutes que você pode precisar?",
+          "explanation": "Cada chute divide o intervalo ao meio: 100 → 50 → 25 → 13 → 7 → 4 → 2 → 1. 2⁷ = 128 ≥ 100."
+        },
+        {
+          "prompt": "No pior caso, quantos números uma **busca linear** olha numa lista de 1000?",
+          "explanation": "Se o alvo for o último, ou não estiver na lista, todos os números são verificados."
+        },
+        {
+          "prompt": "Do que a **busca binária** precisa?",
+          "options": [
+            "Uma lista sem números repetidos",
+            "Uma lista ordenada",
+            "Uma lista de tamanho par",
+            "Nada de especial"
+          ],
+          "explanation": "Ela joga fora metade da lista a cada passo, o que só funciona se a lista estiver em ordem."
+        },
+        {
+          "prompt": "Dois laços aninhados, cada um percorrendo os n elementos, são…",
+          "options": [
+            "O(n)",
+            "O(log n)",
+            "O(n²)",
+            "O(2ⁿ)"
+          ],
+          "explanation": "O laço de dentro roda n vezes para cada uma das n voltas do de fora: n × n."
+        },
+        {
+          "prompt": "Qual é o Big O da busca binária?",
+          "options": [
+            "O(1)",
+            "O(log n)",
+            "O(n)",
+            "O(n²)"
+          ],
+          "explanation": "Dividir o intervalo ao meio a cada passo leva cerca de log₂ n passos."
+        },
+        {
+          "explanation": "O laço de dentro roda 4 vezes para cada uma das 4 voltas de fora: 4 × 4 = 16."
+        },
+        {
+          "explanation": "i assume os valores 1, 2, 4, 8, 16, 32 e 64: laços que dobram são O(log n)."
+        },
+        {
+          "prompt": "Um algoritmo O(n) é mais rápido que um O(n²) para todo tamanho de entrada.",
+          "explanation": "O Big O ignora constantes: para entradas pequenas o algoritmo O(n²) pode ser mais rápido. Ele descreve o que acontece conforme n cresce."
+        },
+        {
+          "prompt": "Quantas comparações a **ordenação por seleção** faz numa lista de 5 números?",
+          "explanation": "4 + 3 + 2 + 1 = 10, que é 5 × 4 / 2."
+        },
+        {
+          "prompt": "Qual se simplifica para **O(n²)**?",
+          "options": [
+            "3n + 7",
+            "n² + 100n + 5",
+            "n log n",
+            "500"
+          ],
+          "explanation": "Fique com o termo que cresce mais rápido e descarte as constantes: n² + 100n + 5 é O(n²)."
+        }
+      ]
+    }
+  }
+}

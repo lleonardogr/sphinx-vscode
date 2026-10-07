@@ -1,0 +1,74 @@
+{
+  "title": "Pair Sum: Slow and Fast",
+  "topic": "Algorithms",
+  "requires": [
+    "Arrays",
+    "Methods"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Brute force: two nested loops over the original list, i from 0 and j from i + 1. Count a comparison for every pair you check, and stop at the first pair that adds up to the target.",
+    "Two pointers: sort a copy (Arrays.copyOf and Arrays.sort are allowed), put lo at the start and hi at the end. If the sum is too small, move lo right; if too big, move hi left.",
+    "Count one comparison each time the two pointers check a sum. Stop when the sum matches or the pointers meet."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Soma de pares: lento e rápido",
+      "hints": [
+        "Força bruta: dois laços aninhados sobre a lista original, i a partir de 0 e j a partir de i + 1. Conte uma comparação para cada par verificado e pare no primeiro par cuja soma é o alvo.",
+        "Dois ponteiros: ordene uma cópia (Arrays.copyOf e Arrays.sort são permitidos), ponha lo no começo e hi no fim. Se a soma for pequena demais, mova lo para a direita; se for grande demais, mova hi para a esquerda.",
+        "Conte uma comparação cada vez que os dois ponteiros verificarem uma soma. Pare quando a soma bater ou os ponteiros se encontrarem."
+      ],
+      "mustContain": [
+        "Escreva os dois algoritmos com laços."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b[\\s\\S]*\\b(for|while)\\b",
+      "message": "Write both algorithms with loops."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\n8 3 11 5 2 9\n14\n",
+      "output": "Pair: 3 + 11\nBrute force: 6\nTwo pointers: 2\n"
+    },
+    {
+      "input": "5\n1 2 3 4 5\n100\n",
+      "output": "Pair: none\nBrute force: 10\nTwo pointers: 4\n"
+    },
+    {
+      "input": "2\n4 6\n10\n",
+      "output": "Pair: 4 + 6\nBrute force: 1\nTwo pointers: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n7 7 1 2\n14\n",
+      "output": "Pair: 7 + 7\nBrute force: 1\nTwo pointers: 3\n",
+      "hidden": true
+    },
+    {
+      "input": "8\n15 -4 9 22 0 3 -10 30\n20\n",
+      "output": "Pair: -10 + 30\nBrute force: 28\nTwo pointers: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n5 1 3\n2\n",
+      "output": "Pair: none\nBrute force: 3\nTwo pointers: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "10\n1 2 3 4 5 6 7 8 9 10\n19\n",
+      "output": "Pair: 9 + 10\nBrute force: 45\nTwo pointers: 9\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n10 20 30 40 50 60\n70\n",
+      "output": "Pair: 10 + 60\nBrute force: 5\nTwo pointers: 1\n",
+      "hidden": true
+    }
+  ]
+}

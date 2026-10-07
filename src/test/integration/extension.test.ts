@@ -49,9 +49,9 @@ test('Java 25+ is available to the extension', async () => {
 
 test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
-  assert.equal(api.challenges().length, 108);
-  assert.equal(api.quizzes().length, 13);
-  assert.equal(api.lessons().length, 4);
+  assert.equal(api.challenges().length, 132);
+  assert.equal(api.quizzes().length, 19);
+  assert.equal(api.lessons().length, 16);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['exam-1', 'exam-2', 'final-exam', 'sample-exam']);
 });
 
@@ -135,8 +135,22 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
     assert.equal(api.tree.subject, 'cs');
     assert.ok(!api.tree.getChildren().some((n) => (n as { kind: string }).kind === 'examsRoot'), 'the Java exams are not listed under CS');
     const groups = api.tree.getChildren().filter((n) => (n as { kind: string }).kind === 'group');
-    assert.deepEqual(groups.map(label), ['2 · Number Systems', '3 · Bits and Bytes']);
-    assert.deepEqual(api.tree.getChildren(groups[1]).map(label), [
+    assert.deepEqual(groups.map(label), [
+      '1 · How Computers Work',
+      '2 · Number Systems',
+      '3 · Bits and Bytes',
+      '4 · Representing Numbers',
+      '5 · Text, Images and Sound',
+      '6 · Logic and Bitwise Operations',
+      '7 · Algorithms and Complexity',
+      '8 · Networks and the Internet',
+    ]);
+    // Every unit: two lessons, four challenges and its quiz, in that order.
+    for (const group of groups) {
+      const kinds = api.tree.getChildren(group).map((n) => (n as { kind: string }).kind);
+      assert.deepEqual(kinds, ['lesson', 'lesson', 'challenge', 'challenge', 'challenge', 'challenge', 'quiz'], label(group));
+    }
+    assert.deepEqual(api.tree.getChildren(groups[2]).map(label), [
       'Bits and Bytes',
       'Kilobytes and Kibibytes',
       'How Many Values?',
@@ -145,7 +159,8 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
       'Download Time',
       'Bits and Bytes Quiz',
     ]);
-    const items = api.tree.getChildren(groups[0]);
+    const numberSystems = groups[1];
+    const items = api.tree.getChildren(numberSystems);
     assert.deepEqual(items.map(label), [
       'Place Value and Binary',
       'Hexadecimal and Octal',
@@ -160,7 +175,7 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
     assert.equal(String(api.tree.getTreeItem(lesson as never).description), 'Lesson · 4 min');
     await vscode.commands.executeCommand('sphinx.openLesson', 'place-value-and-binary');
     await api.lessonProgress.markRead('place-value-and-binary');
-    assert.equal((api.tree.getTreeItem(api.tree.getChildren(groups[0])[0] as never).iconPath as vscode.ThemeIcon).id, 'pass-filled');
+    assert.equal((api.tree.getTreeItem(api.tree.getChildren(numberSystems)[0] as never).iconPath as vscode.ThemeIcon).id, 'pass-filled');
     // Prerequisites: in the description, and with progress in the tooltip.
     const b2d = api.tree.getTreeItem(items[2] as never);
     assert.equal(b2d.description, 'Easy · needs Loops');

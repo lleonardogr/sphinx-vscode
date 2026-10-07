@@ -1,0 +1,77 @@
+{
+  "title": "Count the Operations",
+  "topic": "Algorithms",
+  "requires": [
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Write each of the three loops for real, and add 1 to a counter inside the innermost part.",
+    "For the nested loops, put one loop from 0 to n inside another: the counter grows n times for each of the n outer turns.",
+    "The halving loop is while (m > 1) { m = m / 2; count++; }, starting with m = n."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Conte as operações",
+      "hints": [
+        "Escreva cada um dos três laços de verdade e some 1 a um contador dentro da parte mais interna.",
+        "Nos laços aninhados, coloque um laço de 0 a n dentro de outro: o contador cresce n vezes para cada uma das n voltas de fora.",
+        "O laço que divide ao meio é while (m > 1) { m = m / 2; count++; }, começando com m = n."
+      ],
+      "mustContain": [
+        "Escreva os laços e conte os passos deles: um laço para cada linha da saída."
+      ],
+      "mustNotContain": [
+        "Conte rodando os laços: Math.log e Math.pow não valem aqui."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b[\\s\\S]*\\b(for|while)\\b[\\s\\S]*\\b(for|while)\\b",
+      "message": "Write the loops and count their steps: one loop for each line of the output."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "Math\\s*\\.\\s*(log|pow)|numberOfLeadingZeros",
+      "message": "Count by running the loops: Math.log and Math.pow aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "8\n",
+      "output": "Single loop: 8\nNested loops: 64\nHalving loop: 3\n"
+    },
+    {
+      "input": "1000\n",
+      "output": "Single loop: 1000\nNested loops: 1000000\nHalving loop: 9\n"
+    },
+    {
+      "input": "1\n",
+      "output": "Single loop: 1\nNested loops: 1\nHalving loop: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n",
+      "output": "Single loop: 2\nNested loops: 4\nHalving loop: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "1024\n",
+      "output": "Single loop: 1024\nNested loops: 1048576\nHalving loop: 10\n",
+      "hidden": true
+    },
+    {
+      "input": "3000\n",
+      "output": "Single loop: 3000\nNested loops: 9000000\nHalving loop: 11\n",
+      "hidden": true
+    },
+    {
+      "input": "7\n",
+      "output": "Single loop: 7\nNested loops: 49\nHalving loop: 2\n",
+      "hidden": true
+    }
+  ]
+}

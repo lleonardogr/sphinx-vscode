@@ -1,0 +1,123 @@
+{
+  "title": "Logic and Bitwise Quiz",
+  "topic": "Logic",
+  "requires": [
+    "Conditionals"
+  ],
+  "description": "Logic gates, truth tables, De Morgan and bitwise operators.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "IO.println(true && false);",
+      "answer": "false",
+      "explanation": "AND is true only when both sides are true."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(true ^ true);",
+      "answer": "false",
+      "explanation": "XOR is true only when the two sides are different."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which expression is the same as `!(a && b)`?",
+      "options": [
+        "`!a && !b`",
+        "`!a || !b`",
+        "`a || b`",
+        "`!a ^ b`"
+      ],
+      "answer": 1,
+      "explanation": "De Morgan's law: NOT (A AND B) = (NOT A) OR (NOT B)."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(12 & 10);",
+      "answer": "8",
+      "explanation": "1100 & 1010 = 1000: only the bit that is 1 in both stays."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(12 | 10);",
+      "answer": "14",
+      "explanation": "1100 | 1010 = 1110: every bit that is 1 in either."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(12 ^ 10);",
+      "answer": "6",
+      "explanation": "1100 ^ 1010 = 0110: the bits where they differ."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(1 << 4);",
+      "answer": "16",
+      "explanation": "Each shift to the left doubles the number: 1, 2, 4, 8, 16."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(-16 >> 2);",
+      "answer": "-4",
+      "explanation": ">> keeps the sign: shifting right twice divides by 4."
+    },
+    {
+      "type": "number",
+      "prompt": "In Unix permissions, which digit means **rw-** (read and write, no execute)?",
+      "answer": "6",
+      "explanation": "Read is 4 and write is 2: 4 + 2 = 6."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "For any `int` n, `n & 1` is 1 exactly when n is odd.",
+      "answer": true,
+      "explanation": "The last bit of a binary number is 1 for odd numbers and 0 for even ones (this also holds for negatives in two's complement)."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de lógica e operações bit a bit",
+      "description": "Portas lógicas, tabelas-verdade, De Morgan e operadores bit a bit.",
+      "questions": [
+        {
+          "explanation": "AND só é verdadeiro quando os dois lados são verdadeiros."
+        },
+        {
+          "explanation": "XOR só é verdadeiro quando os dois lados são diferentes."
+        },
+        {
+          "prompt": "Qual expressão é igual a `!(a && b)`?",
+          "options": [
+            "`!a && !b`",
+            "`!a || !b`",
+            "`a || b`",
+            "`!a ^ b`"
+          ],
+          "explanation": "Lei de De Morgan: NOT (A AND B) = (NOT A) OR (NOT B)."
+        },
+        {
+          "explanation": "1100 & 1010 = 1000: só fica o bit que é 1 nos dois."
+        },
+        {
+          "explanation": "1100 | 1010 = 1110: todo bit que é 1 em qualquer um dos dois."
+        },
+        {
+          "explanation": "1100 ^ 1010 = 0110: os bits em que eles diferem."
+        },
+        {
+          "explanation": "Cada deslocamento para a esquerda dobra o número: 1, 2, 4, 8, 16."
+        },
+        {
+          "explanation": ">> mantém o sinal: deslocar duas vezes para a direita divide por 4."
+        },
+        {
+          "prompt": "Nas permissões do Unix, qual dígito quer dizer **rw-** (leitura e escrita, sem execução)?",
+          "explanation": "Leitura é 4 e escrita é 2: 4 + 2 = 6."
+        },
+        {
+          "prompt": "Para qualquer `int` n, `n & 1` é 1 exatamente quando n é ímpar.",
+          "explanation": "O último bit de um número binário é 1 para ímpares e 0 para pares (isso também vale para negativos em complemento de dois)."
+        }
+      ]
+    }
+  }
+}

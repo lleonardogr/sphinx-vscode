@@ -1,0 +1,82 @@
+{
+  "title": "Two's Complement",
+  "topic": "NumberRepresentation",
+  "requires": [
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "In 8 bits, a negative number n is stored as n + 256: -1 becomes 255, -128 becomes 128.",
+    "Then write that number in binary, as in Decimal to Binary: n % 2 is the next bit, from right to left.",
+    "Always produce exactly 8 bits: run the loop 8 times, so the leading zeros are written too."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Complemento de dois",
+      "hints": [
+        "Em 8 bits, um número negativo n é guardado como n + 256: -1 vira 255, -128 vira 128.",
+        "Depois escreva esse número em binário, como em Decimal para binário: n % 2 é o próximo bit, da direita para a esquerda.",
+        "Produza sempre exatamente 8 bits: rode o laço 8 vezes, para que os zeros à esquerda também sejam escritos."
+      ],
+      "mustContain": [
+        "Use um laço para escrever os 8 bits."
+      ],
+      "mustNotContain": [
+        "Escreva os bits você mesmo: nada de métodos prontos que escrevem um número em binário."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to write the 8 bits."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "toBinaryString|toString\\s*\\([^;]*,\\s*\\w+\\s*\\)|BigInteger",
+      "message": "Write the bits yourself: no library methods that write a number in binary."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n",
+      "output": "00000101\n"
+    },
+    {
+      "input": "-5\n",
+      "output": "11111011\n"
+    },
+    {
+      "input": "0\n",
+      "output": "00000000\n",
+      "hidden": true
+    },
+    {
+      "input": "-1\n",
+      "output": "11111111\n",
+      "hidden": true
+    },
+    {
+      "input": "127\n",
+      "output": "01111111\n",
+      "hidden": true
+    },
+    {
+      "input": "-128\n",
+      "output": "10000000\n",
+      "hidden": true
+    },
+    {
+      "input": "100\n",
+      "output": "01100100\n",
+      "hidden": true
+    },
+    {
+      "input": "-100\n",
+      "output": "10011100\n",
+      "hidden": true
+    }
+  ]
+}

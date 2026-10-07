@@ -1,0 +1,175 @@
+{
+  "title": "How Computers Work Quiz",
+  "topic": "Computers",
+  "description": "The parts of a computer, the fetch–decode–execute cycle, clocks, memory and caches, and how Java runs.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "Which part runs the instructions of a program?",
+      "options": [
+        "RAM",
+        "SSD",
+        "CPU",
+        "Motherboard"
+      ],
+      "answer": 2,
+      "explanation": "The CPU (processor) fetches, decodes and executes instructions. RAM and storage only hold them."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "RAM keeps its contents when the computer is turned off.",
+      "answer": false,
+      "explanation": "RAM is volatile: it needs power. Files survive on storage (SSD or hard disk)."
+    },
+    {
+      "type": "number",
+      "prompt": "How many cycles per second does a **3 GHz** clock tick?",
+      "answer": "3000000000",
+      "explanation": "Giga means a billion: 3 GHz = 3,000,000,000 cycles per second."
+    },
+    {
+      "type": "choice",
+      "prompt": "In what order does the CPU handle each instruction?",
+      "options": [
+        "Execute, fetch, decode",
+        "Decode, fetch, execute",
+        "Fetch, decode, execute",
+        "Fetch, execute, decode"
+      ],
+      "answer": 2,
+      "explanation": "It reads the instruction (fetch), works out what it means (decode), then does it (execute)."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which memory is the fastest?",
+      "options": [
+        "RAM",
+        "L3 cache",
+        "Registers",
+        "SSD"
+      ],
+      "answer": 2,
+      "explanation": "Registers are inside the CPU and are read in about one cycle."
+    },
+    {
+      "type": "number",
+      "prompt": "How many nanoseconds does one cycle of a **1 GHz** clock last?",
+      "answer": "1",
+      "explanation": "A billion cycles per second means each one lasts a billionth of a second: 1 ns."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does `javac Main.java` produce?",
+      "options": [
+        "Machine code for your CPU",
+        "Bytecode in Main.class",
+        "A running program",
+        "An image of the screen"
+      ],
+      "answer": 1,
+      "explanation": "javac compiles to bytecode; the JVM (java Main) then runs it, compiling hot code to machine code."
+    },
+    {
+      "type": "number",
+      "prompt": "A cache takes 1 ns, memory takes 100 ns and 90% of accesses hit the cache. What is the average access time in ns?",
+      "answer": "11",
+      "explanation": "1 + 0.10 × 100 = 11 ns."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "A program must be loaded into RAM before the CPU can run it.",
+      "answer": true,
+      "explanation": "The CPU fetches instructions from memory, so programs are copied from storage into RAM first."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why does walking through an array in order run faster than jumping around in it?",
+      "options": [
+        "The JVM sorts the array first",
+        "The cache loads neighbouring data together, so most reads are hits",
+        "Arrays in order use less memory",
+        "It doesn't; both are equally fast"
+      ],
+      "answer": 1,
+      "explanation": "Spatial locality: a cache miss loads a whole 64-byte block, so the next elements are already in the cache."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de como o computador funciona",
+      "description": "As partes de um computador, o ciclo de busca–decodificação–execução, clocks, memória e caches, e como o Java roda.",
+      "questions": [
+        {
+          "prompt": "Qual parte executa as instruções de um programa?",
+          "options": [
+            "RAM",
+            "SSD",
+            "CPU",
+            "Placa-mãe"
+          ],
+          "explanation": "A CPU (processador) busca, decodifica e executa instruções. A RAM e o armazenamento só as guardam."
+        },
+        {
+          "prompt": "A RAM mantém o conteúdo quando o computador é desligado.",
+          "explanation": "A RAM é volátil: precisa de energia. Os arquivos sobrevivem no armazenamento (SSD ou disco rígido)."
+        },
+        {
+          "prompt": "Quantos ciclos por segundo um clock de **3 GHz** bate?",
+          "explanation": "Giga quer dizer bilhão: 3 GHz = 3.000.000.000 de ciclos por segundo."
+        },
+        {
+          "prompt": "Em que ordem a CPU trata cada instrução?",
+          "options": [
+            "Executar, buscar, decodificar",
+            "Decodificar, buscar, executar",
+            "Buscar, decodificar, executar",
+            "Buscar, executar, decodificar"
+          ],
+          "explanation": "Ela lê a instrução (busca), descobre o que ela quer dizer (decodifica), depois faz (executa)."
+        },
+        {
+          "prompt": "Qual memória é a mais rápida?",
+          "options": [
+            "RAM",
+            "Cache L3",
+            "Registradores",
+            "SSD"
+          ],
+          "explanation": "Os registradores ficam dentro da CPU e são lidos em cerca de um ciclo."
+        },
+        {
+          "prompt": "Quantos nanossegundos dura um ciclo de um clock de **1 GHz**?",
+          "explanation": "Um bilhão de ciclos por segundo quer dizer que cada um dura um bilionésimo de segundo: 1 ns."
+        },
+        {
+          "prompt": "O que `javac Main.java` produz?",
+          "options": [
+            "Código de máquina para a sua CPU",
+            "Bytecode em Main.class",
+            "Um programa rodando",
+            "Uma imagem da tela"
+          ],
+          "explanation": "O javac compila para bytecode; a JVM (java Main) então o executa, compilando o código mais usado para código de máquina."
+        },
+        {
+          "prompt": "Um cache leva 1 ns, a memória leva 100 ns e 90% dos acessos acertam o cache. Qual é o tempo médio de acesso em ns?",
+          "explanation": "1 + 0,10 × 100 = 11 ns."
+        },
+        {
+          "prompt": "Um programa precisa ser carregado na RAM antes que a CPU possa executá-lo.",
+          "explanation": "A CPU busca as instruções na memória, então os programas são copiados do armazenamento para a RAM primeiro."
+        },
+        {
+          "prompt": "Por que percorrer um array em ordem é mais rápido do que pular de um lugar para outro nele?",
+          "options": [
+            "A JVM ordena o array antes",
+            "O cache carrega os dados vizinhos juntos, então a maioria das leituras são acertos",
+            "Arrays em ordem usam menos memória",
+            "Não é; os dois são igualmente rápidos"
+          ],
+          "explanation": "Localidade espacial: uma falha de cache carrega um bloco inteiro de 64 bytes, então os próximos elementos já estão no cache."
+        }
+      ]
+    }
+  }
+}

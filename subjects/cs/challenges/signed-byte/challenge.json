@@ -1,0 +1,78 @@
+{
+  "title": "Read a Signed Byte",
+  "topic": "NumberRepresentation",
+  "requires": [
+    "Loops",
+    "Strings"
+  ],
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "In two's complement, the leftmost bit of a byte is worth −128 instead of +128. The other bits keep their usual values: 64, 32, 16, 8, 4, 2, 1.",
+    "Go through the 8 characters with a loop, adding the place value of each 1.",
+    "Another way: read the bits as an unsigned number from 0 to 255, then subtract 256 if it is 128 or more."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Lendo um byte com sinal",
+      "hints": [
+        "No complemento de dois, o bit mais à esquerda de um byte vale −128 em vez de +128. Os outros bits mantêm seus valores de sempre: 64, 32, 16, 8, 4, 2, 1.",
+        "Percorra os 8 caracteres com um laço, somando o valor da posição de cada 1.",
+        "Outro jeito: leia os bits como número sem sinal de 0 a 255, depois subtraia 256 se ele for 128 ou mais."
+      ],
+      "mustContain": [
+        "Use um laço para percorrer os bits."
+      ],
+      "mustNotContain": [
+        "Leia os bits você mesmo: nada de métodos prontos que leem um número em outra base."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Use a loop to go through the bits."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "(parse(Int|Long|Byte|Short|UnsignedInt)|valueOf)\\s*\\([^;]*,\\s*\\w+\\s*\\)|BigInteger|\\.decode\\s*\\(",
+      "message": "Read the bits yourself: no library methods that read a number in another base."
+    }
+  ],
+  "tests": [
+    {
+      "input": "11111011\n",
+      "output": "-5\n"
+    },
+    {
+      "input": "00000101\n",
+      "output": "5\n"
+    },
+    {
+      "input": "10000000\n",
+      "output": "-128\n",
+      "hidden": true
+    },
+    {
+      "input": "01111111\n",
+      "output": "127\n",
+      "hidden": true
+    },
+    {
+      "input": "11111111\n",
+      "output": "-1\n",
+      "hidden": true
+    },
+    {
+      "input": "00000000\n",
+      "output": "0\n",
+      "hidden": true
+    },
+    {
+      "input": "10011100\n",
+      "output": "-100\n",
+      "hidden": true
+    }
+  ]
+}

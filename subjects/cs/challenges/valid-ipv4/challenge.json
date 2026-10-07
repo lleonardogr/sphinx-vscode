@@ -1,0 +1,99 @@
+{
+  "title": "Valid IPv4 Address",
+  "topic": "Networks",
+  "requires": [
+    "Strings",
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Split on dots with text.split(\"\\\\.\", -1): the -1 keeps empty parts, so \"1.2.3.4.\" gives 5 parts and is caught.",
+    "Check each part: 1 to 3 characters, all digits, no leading zero unless the part is exactly \"0\", and a value from 0 to 255.",
+    "Return as soon as one rule fails; a method boolean valid(String part) keeps the loop short."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Endereço IPv4 válido",
+      "hints": [
+        "Separe nos pontos com texto.split(\"\\\\.\", -1): o -1 mantém as partes vazias, então \"1.2.3.4.\" dá 5 partes e é detectado.",
+        "Confira cada parte: 1 a 3 caracteres, todos dígitos, sem zero à esquerda a não ser que a parte seja exatamente \"0\", e valor de 0 a 255.",
+        "Saia assim que uma regra falhar; um método boolean valid(String parte) deixa o laço curto."
+      ],
+      "mustNotContain": [
+        "Trabalhe com os números você mesmo: classes de java.net e toBinaryString não valem aqui.",
+        "Confira as regras você mesmo, sem expressões regulares."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "InetAddress|Inet4Address|toBinaryString|java\\.net",
+      "message": "Work with the numbers yourself: java.net classes and toBinaryString aren't allowed here."
+    },
+    {
+      "pattern": "matches\\s*\\(|Pattern",
+      "message": "Check the rules yourself, without regular expressions."
+    }
+  ],
+  "tests": [
+    {
+      "input": "192.168.1.1\n",
+      "output": "Valid\n"
+    },
+    {
+      "input": "256.1.1.1\n",
+      "output": "Invalid\n"
+    },
+    {
+      "input": "10.0.0.255\n",
+      "output": "Valid\n",
+      "hidden": true
+    },
+    {
+      "input": "1.2.3\n",
+      "output": "Invalid\n",
+      "hidden": true
+    },
+    {
+      "input": "1.2.3.4.\n",
+      "output": "Invalid\n",
+      "hidden": true
+    },
+    {
+      "input": "01.2.3.4\n",
+      "output": "Invalid\n",
+      "hidden": true
+    },
+    {
+      "input": "0.0.0.0\n",
+      "output": "Valid\n",
+      "hidden": true
+    },
+    {
+      "input": "a.b.c.d\n",
+      "output": "Invalid\n",
+      "hidden": true
+    },
+    {
+      "input": "1..2.3\n",
+      "output": "Invalid\n",
+      "hidden": true
+    },
+    {
+      "input": "255.255.255.255\n",
+      "output": "Valid\n",
+      "hidden": true
+    },
+    {
+      "input": "1.2.3.4.5\n",
+      "output": "Invalid\n",
+      "hidden": true
+    },
+    {
+      "input": "12345.1.1.1\n",
+      "output": "Invalid\n",
+      "hidden": true
+    }
+  ]
+}

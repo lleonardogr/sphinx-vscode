@@ -1,0 +1,166 @@
+{
+  "title": "Networks Quiz",
+  "topic": "Networks",
+  "requires": [
+    "Strings"
+  ],
+  "description": "Packets, IP addresses, TCP and UDP, ports, DNS and subnets.",
+  "questions": [
+    {
+      "type": "number",
+      "prompt": "How many bits does an **IPv4** address have?",
+      "answer": "32",
+      "explanation": "4 bytes of 8 bits each."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which of these is a valid IPv4 address?",
+      "options": [
+        "192.168.1.256",
+        "10.0.0.1",
+        "1.2.3",
+        "300.1.1.1"
+      ],
+      "answer": 1,
+      "explanation": "Each of the 4 parts must be a number from 0 to 255."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does **DNS** do?",
+      "options": [
+        "Encrypts web pages",
+        "Turns names like example.com into IP addresses",
+        "Splits data into packets",
+        "Assigns port numbers"
+      ],
+      "answer": 1,
+      "explanation": "DNS is the internet's phone book: it looks up the address of a name."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which protocol guarantees that data arrives complete and in order?",
+      "options": [
+        "UDP",
+        "IP",
+        "TCP",
+        "DNS"
+      ],
+      "answer": 2,
+      "explanation": "TCP numbers the data, confirms what arrived and sends lost packets again."
+    },
+    {
+      "type": "number",
+      "prompt": "Which port does **HTTPS** use by default?",
+      "answer": "443",
+      "explanation": "HTTP uses port 80 and HTTPS port 443."
+    },
+    {
+      "type": "number",
+      "prompt": "How many hosts (usable addresses) fit in a **/24** network?",
+      "answer": "254",
+      "explanation": "2⁸ = 256 addresses, minus the network and the broadcast addresses."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which address is **private** (not used on the public internet)?",
+      "options": [
+        "8.8.8.8",
+        "142.250.79.46",
+        "192.168.0.10",
+        "200.1.2.3"
+      ],
+      "answer": 2,
+      "explanation": "The private blocks are 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "A file is sent across the internet as one big piece.",
+      "answer": false,
+      "explanation": "It is split into packets of about 1500 bytes or less, which travel independently and are reassembled."
+    },
+    {
+      "type": "number",
+      "prompt": "What is the last part of the network address of **192.168.1.130/26**? (192.168.1.?)",
+      "answer": "128",
+      "explanation": "A /26 block has 64 addresses: 130 rounded down to a multiple of 64 is 128."
+    },
+    {
+      "type": "number",
+      "prompt": "How many bits does an **IPv6** address have?",
+      "answer": "128",
+      "explanation": "Four times as many bits as IPv4: about 3.4 × 10³⁸ addresses."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de redes",
+      "description": "Pacotes, endereços IP, TCP e UDP, portas, DNS e sub-redes.",
+      "questions": [
+        {
+          "prompt": "Quantos bits tem um endereço **IPv4**?",
+          "explanation": "4 bytes de 8 bits cada."
+        },
+        {
+          "prompt": "Qual destes é um endereço IPv4 válido?",
+          "options": [
+            "192.168.1.256",
+            "10.0.0.1",
+            "1.2.3",
+            "300.1.1.1"
+          ],
+          "explanation": "Cada uma das 4 partes precisa ser um número de 0 a 255."
+        },
+        {
+          "prompt": "O que o **DNS** faz?",
+          "options": [
+            "Criptografa páginas da web",
+            "Transforma nomes como example.com em endereços IP",
+            "Divide os dados em pacotes",
+            "Distribui números de porta"
+          ],
+          "explanation": "O DNS é a lista telefônica da internet: ele procura o endereço de um nome."
+        },
+        {
+          "prompt": "Qual protocolo garante que os dados chegam completos e em ordem?",
+          "options": [
+            "UDP",
+            "IP",
+            "TCP",
+            "DNS"
+          ],
+          "explanation": "O TCP numera os dados, confirma o que chegou e reenvia os pacotes perdidos."
+        },
+        {
+          "prompt": "Qual porta o **HTTPS** usa por padrão?",
+          "explanation": "O HTTP usa a porta 80 e o HTTPS a porta 443."
+        },
+        {
+          "prompt": "Quantos hosts (endereços utilizáveis) cabem numa rede **/24**?",
+          "explanation": "2⁸ = 256 endereços, menos os endereços de rede e de broadcast."
+        },
+        {
+          "prompt": "Qual endereço é **privado** (não usado na internet pública)?",
+          "options": [
+            "8.8.8.8",
+            "142.250.79.46",
+            "192.168.0.10",
+            "200.1.2.3"
+          ],
+          "explanation": "Os blocos privados são 10.0.0.0/8, 172.16.0.0/12 e 192.168.0.0/16."
+        },
+        {
+          "prompt": "Um arquivo é enviado pela internet como um único pedaço grande.",
+          "explanation": "Ele é dividido em pacotes de cerca de 1500 bytes ou menos, que viajam de forma independente e são remontados."
+        },
+        {
+          "prompt": "Qual é a última parte do endereço de rede de **192.168.1.130/26**? (192.168.1.?)",
+          "explanation": "Um bloco /26 tem 64 endereços: 130 arredondado para baixo até um múltiplo de 64 é 128."
+        },
+        {
+          "prompt": "Quantos bits tem um endereço **IPv6**?",
+          "explanation": "Quatro vezes mais bits que o IPv4: cerca de 3,4 × 10³⁸ endereços."
+        }
+      ]
+    }
+  }
+}

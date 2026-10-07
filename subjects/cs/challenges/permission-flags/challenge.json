@@ -1,0 +1,84 @@
+{
+  "title": "Permission Flags",
+  "topic": "Logic",
+  "requires": [
+    "Strings",
+    "Loops"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Each octal digit is 3 bits: read (4), write (2) and execute (1). 7 = 4 + 2 + 1 = rwx, 5 = 4 + 1 = r-x.",
+    "From a digit to letters: (d & 4) != 0 means r, (d & 2) != 0 means w, (d & 1) != 0 means x. From letters to a digit: add 4, 2 and 1 for the letters present.",
+    "Tell the two kinds of input apart by their length: 3 characters or 9. Check every character before printing."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Flags de permissão",
+      "hints": [
+        "Cada dígito octal são 3 bits: leitura (4), escrita (2) e execução (1). 7 = 4 + 2 + 1 = rwx, 5 = 4 + 1 = r-x.",
+        "De um dígito para letras: (d & 4) != 0 quer dizer r, (d & 2) != 0 quer dizer w, (d & 1) != 0 quer dizer x. De letras para um dígito: some 4, 2 e 1 para as letras presentes.",
+        "Diferencie os dois tipos de entrada pelo tamanho: 3 caracteres ou 9. Confira cada caractere antes de imprimir."
+      ],
+      "mustContain": [
+        "Use os operadores bit a bit & ou | com as máscaras 4, 2 e 1."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "&|\\|",
+      "message": "Use the bitwise operators & or | with the masks 4, 2 and 1."
+    }
+  ],
+  "tests": [
+    {
+      "input": "754\n",
+      "output": "rwxr-xr--\n"
+    },
+    {
+      "input": "rwxr-x---\n",
+      "output": "750\n"
+    },
+    {
+      "input": "777\n",
+      "output": "rwxrwxrwx\n",
+      "hidden": true
+    },
+    {
+      "input": "000\n",
+      "output": "---------\n",
+      "hidden": true
+    },
+    {
+      "input": "644\n",
+      "output": "rw-r--r--\n",
+      "hidden": true
+    },
+    {
+      "input": "r--r--r--\n",
+      "output": "444\n",
+      "hidden": true
+    },
+    {
+      "input": "800\n",
+      "output": "Invalid\n",
+      "hidden": true
+    },
+    {
+      "input": "rwz------\n",
+      "output": "Invalid\n",
+      "hidden": true
+    },
+    {
+      "input": "75\n",
+      "output": "Invalid\n",
+      "hidden": true
+    },
+    {
+      "input": "-wx--x-w-\n",
+      "output": "312\n",
+      "hidden": true
+    }
+  ]
+}

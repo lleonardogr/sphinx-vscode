@@ -1,0 +1,93 @@
+{
+  "title": "UTF-8 Encoder",
+  "topic": "TextMedia",
+  "requires": [
+    "Methods"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "First pick the number of bytes from the code point: below 0x80 one byte, below 0x800 two, below 0x10000 three, otherwise four.",
+    "The low 6 bits of the code point are code % 64, and code / 64 drops them. Each continuation byte is 0x80 + 6 bits, written from the last byte to the first.",
+    "The first byte starts with a marker: 0xC0 for two bytes, 0xE0 for three, 0xF0 for four, plus whatever bits are left. String.format(\"%02X\", b) prints a byte as two hex digits."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Codificador UTF-8",
+      "hints": [
+        "Primeiro escolha a quantidade de bytes pelo code point: abaixo de 0x80 um byte, abaixo de 0x800 dois, abaixo de 0x10000 três, senão quatro.",
+        "Os 6 bits mais baixos do code point são code % 64, e code / 64 os descarta. Cada byte de continuação é 0x80 + 6 bits, escritos do último byte para o primeiro.",
+        "O primeiro byte começa com uma marca: 0xC0 para dois bytes, 0xE0 para três, 0xF0 para quatro, mais os bits que sobraram. String.format(\"%02X\", b) imprime um byte como dois dígitos hex."
+      ],
+      "mustNotContain": [
+        "Monte os bytes você mesmo: nada de métodos prontos que codificam texto."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "getBytes|Charset|\\.encode\\s*\\(|toChars|appendCodePoint",
+      "message": "Build the bytes yourself: no library methods that encode text."
+    }
+  ],
+  "tests": [
+    {
+      "input": "U+00E9\n",
+      "output": "C3 A9\n"
+    },
+    {
+      "input": "U+1F600\n",
+      "output": "F0 9F 98 80\n"
+    },
+    {
+      "input": "U+0041\n",
+      "output": "41\n",
+      "hidden": true
+    },
+    {
+      "input": "U+20AC\n",
+      "output": "E2 82 AC\n",
+      "hidden": true
+    },
+    {
+      "input": "U+0000\n",
+      "output": "00\n",
+      "hidden": true
+    },
+    {
+      "input": "U+007F\n",
+      "output": "7F\n",
+      "hidden": true
+    },
+    {
+      "input": "U+0080\n",
+      "output": "C2 80\n",
+      "hidden": true
+    },
+    {
+      "input": "U+07FF\n",
+      "output": "DF BF\n",
+      "hidden": true
+    },
+    {
+      "input": "U+0800\n",
+      "output": "E0 A0 80\n",
+      "hidden": true
+    },
+    {
+      "input": "U+FFFF\n",
+      "output": "EF BF BF\n",
+      "hidden": true
+    },
+    {
+      "input": "U+10000\n",
+      "output": "F0 90 80 80\n",
+      "hidden": true
+    },
+    {
+      "input": "U+10FFFF\n",
+      "output": "F4 8F BF BF\n",
+      "hidden": true
+    }
+  ]
+}

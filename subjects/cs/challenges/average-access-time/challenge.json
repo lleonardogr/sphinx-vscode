@@ -1,0 +1,59 @@
+{
+  "title": "Average Memory Access Time",
+  "topic": "Computers",
+  "requires": [
+    "Basics"
+  ],
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "The hit rate is a percentage: divide it by 100 to get a fraction, so 95 becomes 0.95. The miss rate is 1 − that.",
+    "Every access checks the cache first; only misses also wait for main memory: average = cache + missRate × memory.",
+    "The speedup is how many times faster than always going to memory: memory ÷ average."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Tempo médio de acesso à memória",
+      "hints": [
+        "A taxa de acerto é uma porcentagem: divida por 100 para ter uma fração, então 95 vira 0,95. A taxa de falha é 1 − isso.",
+        "Todo acesso olha o cache primeiro; só as falhas também esperam a memória principal: média = cache + taxaDeFalha × memória.",
+        "O ganho é quantas vezes mais rápido do que ir sempre à memória: memória ÷ média."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "1 100 95\n",
+      "output": "Average: 6.00 ns\nSpeedup: 16.67x\n"
+    },
+    {
+      "input": "2 80 90\n",
+      "output": "Average: 10.00 ns\nSpeedup: 8.00x\n"
+    },
+    {
+      "input": "1 100 100\n",
+      "output": "Average: 1.00 ns\nSpeedup: 100.00x\n",
+      "hidden": true
+    },
+    {
+      "input": "1 100 0\n",
+      "output": "Average: 101.00 ns\nSpeedup: 0.99x\n",
+      "hidden": true
+    },
+    {
+      "input": "0.5 60 98\n",
+      "output": "Average: 1.70 ns\nSpeedup: 35.29x\n",
+      "hidden": true
+    },
+    {
+      "input": "3 120 75\n",
+      "output": "Average: 33.00 ns\nSpeedup: 3.64x\n",
+      "hidden": true
+    },
+    {
+      "input": "1 50 99.5\n",
+      "output": "Average: 1.25 ns\nSpeedup: 40.00x\n",
+      "hidden": true
+    }
+  ]
+}

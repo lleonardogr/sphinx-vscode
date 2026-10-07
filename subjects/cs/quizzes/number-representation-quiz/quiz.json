@@ -1,0 +1,140 @@
+{
+  "title": "Representing Numbers Quiz",
+  "topic": "NumberRepresentation",
+  "requires": [
+    "Basics"
+  ],
+  "description": "Negative numbers in two's complement, overflow, binary fractions and floating point.",
+  "questions": [
+    {
+      "type": "number",
+      "prompt": "Write **−1** as an 8-bit two's complement number.",
+      "answer": "11111111",
+      "base": 2,
+      "explanation": "Invert 00000001 to get 11111110, then add 1: 11111111. Or: −1 + 256 = 255."
+    },
+    {
+      "type": "number",
+      "prompt": "Which number does the byte **10000000** store in two's complement?",
+      "answer": "-128",
+      "explanation": "The leftmost bit is worth −128 and all the others are 0."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which numbers fit in a Java `byte`?",
+      "options": [
+        "0 to 255",
+        "−127 to 127",
+        "−128 to 127",
+        "−256 to 255"
+      ],
+      "answer": 2,
+      "explanation": "8 bits in two's complement: −2⁷ to 2⁷ − 1."
+    },
+    {
+      "type": "number",
+      "prompt": "What is the largest value an `int` can hold?",
+      "answer": "2147483647",
+      "explanation": "2³¹ − 1 = 2,147,483,647: 32 bits, one of them for the sign."
+    },
+    {
+      "type": "output",
+      "code": "int x = Integer.MAX_VALUE;\nIO.println(x + 1);",
+      "answer": "-2147483648",
+      "explanation": "Overflow: the result needs a 33rd bit, which is dropped, and the number wraps around to the smallest int."
+    },
+    {
+      "type": "output",
+      "code": "IO.println((byte) 200);",
+      "answer": "-56",
+      "explanation": "200 is 11001000; as a signed byte the first bit is worth −128: −128 + 64 + 8 = −56. (Or 200 − 256.)"
+    },
+    {
+      "type": "number",
+      "prompt": "Binary **0.101** is which decimal number?",
+      "answer": "0.625",
+      "explanation": "The places after the binary point are worth ½, ¼ and ⅛: 0.5 + 0.125 = 0.625."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "The number 0.1 can be stored exactly in a `double`.",
+      "answer": false,
+      "explanation": "In binary, 0.1 repeats forever (0.000110011…), so a double stores the closest value it can."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(0.1 + 0.2);",
+      "answer": "0.30000000000000004",
+      "explanation": "0.1 and 0.2 are both stored slightly off, and their sum is not the double closest to 0.3."
+    },
+    {
+      "type": "choice",
+      "prompt": "What is a safe way to store prices in a program?",
+      "options": [
+        "A `double` in reais",
+        "A `float` in reais",
+        "A `long` counting cents",
+        "A `String` such as \"19.90\""
+      ],
+      "answer": 2,
+      "explanation": "Whole cents are exact and easy to add. BigDecimal also works; double and float are approximate."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de representação de números",
+      "description": "Números negativos em complemento de dois, overflow, frações em binário e ponto flutuante.",
+      "questions": [
+        {
+          "prompt": "Escreva **−1** como número de 8 bits em complemento de dois.",
+          "explanation": "Inverta 00000001 para ter 11111110 e some 1: 11111111. Ou: −1 + 256 = 255."
+        },
+        {
+          "prompt": "Que número o byte **10000000** guarda em complemento de dois?",
+          "explanation": "O bit mais à esquerda vale −128 e todos os outros são 0."
+        },
+        {
+          "prompt": "Que números cabem num `byte` do Java?",
+          "options": [
+            "0 a 255",
+            "−127 a 127",
+            "−128 a 127",
+            "−256 a 255"
+          ],
+          "explanation": "8 bits em complemento de dois: −2⁷ a 2⁷ − 1."
+        },
+        {
+          "prompt": "Qual é o maior valor que um `int` consegue guardar?",
+          "explanation": "2³¹ − 1 = 2.147.483.647: 32 bits, um deles para o sinal."
+        },
+        {
+          "explanation": "Overflow: o resultado precisa de um 33º bit, que é descartado, e o número dá a volta até o menor int."
+        },
+        {
+          "explanation": "200 é 11001000; num byte com sinal o primeiro bit vale −128: −128 + 64 + 8 = −56. (Ou 200 − 256.)"
+        },
+        {
+          "prompt": "O binário **0.101** é qual número decimal?",
+          "explanation": "As posições depois da vírgula binária valem ½, ¼ e ⅛: 0,5 + 0,125 = 0,625."
+        },
+        {
+          "prompt": "O número 0,1 pode ser guardado exatamente num `double`.",
+          "explanation": "Em binário, 0,1 se repete para sempre (0.000110011…), então um double guarda o valor mais próximo que consegue."
+        },
+        {
+          "explanation": "0,1 e 0,2 são guardados levemente errados, e a soma deles não é o double mais próximo de 0,3."
+        },
+        {
+          "prompt": "Qual é um jeito seguro de guardar preços num programa?",
+          "options": [
+            "Um `double` em reais",
+            "Um `float` em reais",
+            "Um `long` contando centavos",
+            "Uma `String` como \"19.90\""
+          ],
+          "explanation": "Centavos inteiros são exatos e fáceis de somar. BigDecimal também serve; double e float são aproximados."
+        }
+      ]
+    }
+  }
+}
