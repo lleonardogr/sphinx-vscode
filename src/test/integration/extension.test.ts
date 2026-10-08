@@ -51,7 +51,7 @@ test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
   assert.equal(api.challenges().length, 134);
   assert.equal(api.quizzes().length, 19);
-  assert.equal(api.lessons().length, 8);
+  assert.equal(api.lessons().length, 10);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam', 'exam-1', 'exam-2', 'final-exam', 'sample-exam']);
   assert.deepEqual(api.exams().filter((e) => e.subject === 'cs').map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam']);
 });
@@ -120,6 +120,12 @@ test('the sidebar groups by learning path, difficulty and progress', async () =>
     api.tree.mode = 'path';
     assert.ok(labels().includes('1 · Basics'));
     assert.ok(labels().includes('11 · Lambdas & Streams'));
+    // Java units open with a quick guide: one short lesson with one reading (or two).
+    const basics = api.tree.getChildren().find((n) => String(api.tree.getTreeItem(n as never).label) === '1 · Basics');
+    const [guide, first] = api.tree.getChildren(basics);
+    assert.equal(String(api.tree.getTreeItem(guide as never).label), 'Variables and Arithmetic');
+    assert.equal(String(api.tree.getTreeItem(guide as never).description), 'Lesson · 1 min · 1 reading');
+    assert.equal(String(api.tree.getTreeItem(first as never).label), 'Hello, World!');
     api.tree.mode = 'difficulty';
     assert.ok(['Easy', 'Medium', 'Hard'].every((d) => labels().includes(d)), labels().join(', '));
     api.tree.mode = 'progress';

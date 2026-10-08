@@ -12,6 +12,7 @@ Then fill in the expected outputs and validate (see README.md in this folder):
 """
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -194,6 +195,27 @@ def reading_guide(folder, *, title, title_pt, topic, order, objectives, objectiv
             f.write(text)
     summary = md.split('<!-- readings -->')[0]
     print(f'{folder}: "In short" has {len(summary.split())} words (aim for 150 to 250)')
+    return d
+
+
+def quick_guide(folder, *, title, title_pt, topic, order, objectives, objectives_pt, readings, md, md_pt, requires=None):
+    """Writes a quick guide, the reading guide of a programming subject: 2 or 3 objectives, 1 reading (plus
+    an optional video), and a lesson.md with a short "In short", one code example and a "Watch out" line."""
+    assert 2 <= len(objectives) <= 3 and len(objectives) == len(objectives_pt), 'a quick guide has 2 or 3 objectives, in both languages'
+    assert 1 <= len(readings) <= 2, 'a quick guide has 1 reading, plus an optional video'
+    d = os.path.join(REPO, folder)
+    os.makedirs(d, exist_ok=True)
+    meta = {'title': title, 'topic': topic, 'order': order}
+    if requires:
+        meta['requires'] = requires
+    meta.update({'objectives': objectives, 'readings': [r for r, _ in readings],
+                 'translations': {'pt-br': {'title': title_pt, 'objectives': objectives_pt, 'readings': [p for _, p in readings]}}})
+    _write_json(f'{d}/lesson.json', meta)
+    _write_text(f'{d}/lesson.md', md)
+    _write_text(f'{d}/lesson.pt-br.md', md_pt)
+    summary = md.split('<!-- readings -->')[0]
+    prose = re.sub(r'```.*?```', '', summary, flags=re.S)
+    print(f'{folder}: "In short" has {len(prose.split())} words of text (aim for 60 to 120) and {len(summary.split())} with the code (the validator warns above 180)')
     return d
 
 

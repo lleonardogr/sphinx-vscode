@@ -1,0 +1,36 @@
+{
+  "title": "Variables and Arithmetic",
+  "topic": "Basics",
+  "order": 1,
+  "objectives": [
+    "Store values in int, double and String variables, and print them.",
+    "Predict what / and % give with whole numbers, and get decimals when you need them.",
+    "Turn a line the user typed into a number."
+  ],
+  "readings": [
+    {
+      "title": "Java Operators: Arithmetic, Relational, Logical and more",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/operators",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "The arithmetic operators, especially dividing two integers (9 / 2 gives 4, but 9.0 / 2 gives 4.5) and %, then assignment (+=) and ++. Relational and logical operators come back in Conditionals; you can skip the rest. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Variáveis e aritmética",
+      "objectives": [
+        "Guardar valores em variáveis int, double e String, e imprimi-los.",
+        "Prever o que / e % dão com números inteiros, e obter decimais quando precisar.",
+        "Transformar uma linha digitada pelo usuário em um número."
+      ],
+      "readings": [
+        {
+          "lookFor": "Os operadores aritméticos, principalmente a divisão de dois inteiros (9 / 2 dá 4, mas 9.0 / 2 dá 4.5) e o %, depois atribuição (+=) e ++. Os operadores relacionais e lógicos voltam em Condicionais; o resto você pode pular. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+        }
+      ]
+    }
+  }
+}

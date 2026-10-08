@@ -1,0 +1,48 @@
+{
+  "title": "Making Decisions",
+  "topic": "Conditionals",
+  "order": 1,
+  "objectives": [
+    "Choose between paths with if, else if and else, with the conditions in the right order.",
+    "Combine conditions with &&, || and !.",
+    "Pick a value with the ternary operator and with a switch expression."
+  ],
+  "readings": [
+    {
+      "title": "Java if...else (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/if-else-statement",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "The if...else if ladder: Java checks the conditions from top to bottom and runs only the first true one. At the end, follow the link to the ternary operator. The examples print with System.out.println, which is IO.println in Sphinx."
+    },
+    {
+      "title": "Branching with Switch Expressions",
+      "source": "dev.java",
+      "url": "https://dev.java/learn/language/constructs/basics/switch-expression/",
+      "type": "article",
+      "minutes": 5,
+      "lang": "en",
+      "lookFor": "Optional, for the switch challenges: the arrow form (case 6, 7 -> …) and a switch that gives a value. The parts on yield and null are more than you need now."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Tomando decisões",
+      "objectives": [
+        "Escolher entre caminhos com if, else if e else, com as condições na ordem certa.",
+        "Combinar condições com &&, || e !.",
+        "Escolher um valor com o operador ternário e com uma expressão switch."
+      ],
+      "readings": [
+        {
+          "lookFor": "A escada if...else if: o Java confere as condições de cima para baixo e roda só a primeira verdadeira. No fim, siga o link para o operador ternário. Os exemplos imprimem com System.out.println, que é IO.println no Sphinx."
+        },
+        {
+          "lookFor": "Opcional, para os desafios com switch: a forma com seta (case 6, 7 -> …) e um switch que dá um valor. As partes sobre yield e null são mais do que você precisa agora."
+        }
+      ]
+    }
+  }
+}

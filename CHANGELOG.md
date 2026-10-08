@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Added
 
 - **CS Fundamentals tests and exams.** Two tests close the stages: **Programmer's Calculator** (after unit 4: a running value shown in binary, hex, unsigned and signed, with carry, borrow and overflow flags) and **Packet Inspector** (after unit 8: decode an IPv4 and UDP packet from its bytes and check the header checksum). Two closed exams with a quiz and three private coding questions each: **CS Exam 1: Data Representation** (units 1–5, 90 minutes: Fits in a Type, Hex Dump, Base64 Encoder) and the **CS Final Exam** (the whole subject, focused on units 6–8, 120 minutes: Gray Code, Merge Step, DNS Resolver). They are listed in the CS sidebar.
+- **Java quick guides**: Java units can now open with a quick guide, a lighter reading guide for programming subjects: two or three objectives, a short summary around one code example, a "Watch out" line and one curated page to read (plus an optional extra). Units 1 (**Variables and Arithmetic**) and 2 (**Making Decisions**) have one, with Programiz and dev.java readings. The content guide and the `sphinx-unit` skill describe the format, and the validator applies its limits to programming subjects.
 - **Lessons in packs**: **Import** and **Export a Pack** now carry lessons (reading guides included), with their diagrams and translations. Imported lessons appear in their unit, and in the teacher view under **My Challenges, Quizzes & Lessons**, where they can be exported or deleted.
 
 ### Changed

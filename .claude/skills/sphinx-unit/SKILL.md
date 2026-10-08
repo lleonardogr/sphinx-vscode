@@ -1,6 +1,6 @@
 ---
 name: sphinx-unit
-description: Create or rework a Sphinx learning unit (a reading guide, a quiz and four challenges) following the content guide. Use when asked to add or improve a unit, subject, lesson, reading guide, quiz, challenge or test in Sphinx's built-in content, or to review existing content against the rubric.
+description: Create or rework a Sphinx learning unit (a reading guide or quick guide, a quiz and challenges) following the content guide. Use when asked to add or improve a unit, subject, lesson, reading guide, quiz, challenge or test in Sphinx's built-in content, or to review existing content against the rubric.
 ---
 
 # Creating a Sphinx unit
@@ -34,10 +34,12 @@ Show the spec to the person and wait for a clear approval before writing any fil
 - **Check every link yourself:**
   - Open the page and confirm what it covers.
   - YouTube videos: `https://www.youtube.com/oembed?url=<video url>&format=json` confirms the title and channel.
-- **Avoid sites that block automated requests** ("Just a moment…", "Client Challenge", HTTP 403/429), such as Cloudflare's Learning Center or Khan Academy. They can't be verified, and the weekly link check would warn about them every week.
+- **Avoid sites that block automated requests** ("Just a moment…", "Client Challenge", HTTP 403/429), such as Cloudflare's Learning Center, Khan Academy or W3Schools. Test with `node scripts/check-links.js`: a site can answer curl and still block it. They can't be verified, and the weekly link check would warn about them every week.
 - Write a **"look for"** note for each reading in both languages. Mention it if the reading is outdated or has a slip (for example "the article is from 2003: UTF-8 now uses at most 4 bytes").
 
 ### 4. Write the files
+
+**In a programming subject** (Java), write a [quick guide](../../../docs/content-guide.md#quick-guides-for-programming-subjects) with `quick_guide` instead of a reading guide: 2–3 objectives, a short "In short" around one code example in the starters' style, one "Watch out" line, and 1 reading plus at most one extra. No diagram and no "Check yourself".
 
 Use the helpers in [scripts/content](../../../scripts/content/README.md), from a script outside the repository: `challenge`, `quiz` with `num`/`choice`/`out`/`tf`/`short`, and `reading_guide` with `reading`.
 

@@ -8,6 +8,7 @@ This guide is the standard for *what* goes into a unit and *how good* it has to 
 - [The unit template](#the-unit-template)
 - [Learning objectives](#learning-objectives)
 - [Reading guides](#reading-guides)
+- [Quick guides for programming subjects](#quick-guides-for-programming-subjects)
 - [Challenges](#challenges)
 - [Quizzes](#quizzes)
 - [The rubric](#the-rubric)
@@ -31,7 +32,7 @@ This guide is the standard for *what* goes into a unit and *how good* it has to 
 | Part | How many | Purpose |
 |------|----------|---------|
 | Learning objectives | 3 to 5 | What a student can do after the unit. Written in the unit spec and shown in the reading guide. |
-| Reading guide | 1 (2 for big units) | A short summary, 1 to 3 curated readings, and "check yourself" questions. |
+| Reading guide | 1 (2 for big units) | A short summary, 1 to 3 curated readings, and "check yourself" questions. In a programming subject, a lighter [quick guide](#quick-guides-for-programming-subjects). |
 | Quiz | 8 to 10 questions | Checks understanding and catches misconceptions. |
 | Challenges | 4 | One per step of the ladder: Easy, Easy or Medium, Medium, Hard. |
 | Test (optional) | 0 or 1 | A bigger program mixing several units, at the end of a stage. |
@@ -126,6 +127,25 @@ A reading guide is a lesson folder: `lesson.json` lists the objectives and readi
 ```
 
 Readings open in the browser. The validator checks the fields and the Portuguese `lookFor` notes, and warns when the summary is outside 100–350 words or the objectives aren't 3 to 5. `node scripts/check-links.js` checks that every reading still opens; the **Reading links** workflow runs it every Monday.
+
+## Quick guides for programming subjects
+
+In a theory subject such as CS Fundamentals, the reading carries the idea, so the guide does too. In a programming subject such as Java, students learn by writing code, and the unit's challenges do the teaching. Its guide is a **quick guide**: just enough to start the first challenge, and a link for whoever wants more.
+
+| | Reading guide (theory) | Quick guide (programming) |
+|---|---|---|
+| Objectives | 3 to 5 | 2 or 3 |
+| In short | 150 to 250 words and a diagram | 60 to 120 words around **one short code example** (about 10 lines) |
+| Watch out | the common mistake, inside the summary | one **Watch out** line: the mistake students make first |
+| Readings | 1 to 3 | **1**, plus at most one extra: a video, or a page on the unit's newest syntax |
+| Check yourself | 2 or 3 questions | none: the unit's first challenge is the check |
+
+- **The code example compiles** and uses the style of the starters (`void main()`, `IO.println`, `IO.readln()`). Don't give away a challenge: show the syntax on a different problem.
+- **No prompts when reading input.** `IO.readln("Name: ")` prints the prompt, and the tests would see it.
+- **Tutorials use the older style.** Most pages write `public static void main` and `System.out.println`. Say in the "look for" note that `IO.println` and `void main()` do the same.
+- **Sources:** short beginner pages with runnable examples, such as Programiz, and dev.java (Oracle's official tutorial) for newer syntax. Skip pages that wander into advanced topics, or point to the part to read. W3Schools blocks the weekly link check, so don't use it.
+
+The validator knows a quick guide by its subject's `"kind": "programming"`, and warns when the summary is outside 40–180 words (code included), the objectives aren't 2 or 3, or there are more than 2 readings. `quick_guide()` in [scripts/content](../scripts/content/README.md) writes one. See [`subjects/java/lessons/variables-and-arithmetic`](../subjects/java/lessons/variables-and-arithmetic) for an example.
 
 ## Challenges
 
