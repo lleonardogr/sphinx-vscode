@@ -1,0 +1,48 @@
+{
+  "title": "Repeating with Loops",
+  "topic": "Loops",
+  "order": 1,
+  "objectives": [
+    "Repeat code a known number of times with a for loop, counting up or down.",
+    "Repeat until a condition changes with while, or at least once with do … while.",
+    "Keep a running total or count across the repetitions."
+  ],
+  "readings": [
+    {
+      "title": "Java for Loop (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/for-loop",
+      "type": "article",
+      "minutes": 5,
+      "lang": "en",
+      "lookFor": "The three parts of a for loop, and the tables that follow i through every round. Skip the for-each loop for now: it comes back with Arrays. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+    },
+    {
+      "title": "Java while and do...while Loop",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/do-while-loop",
+      "type": "article",
+      "minutes": 4,
+      "lang": "en",
+      "lookFor": "Optional: while for when you don't know how many rounds you need, and do … while, whose body always runs at least once. The examples read input with Scanner; in Sphinx, IO.readln() reads a line."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Repetindo com laços",
+      "objectives": [
+        "Repetir código um número conhecido de vezes com um laço for, contando para cima ou para baixo.",
+        "Repetir até uma condição mudar com while, ou pelo menos uma vez com do … while.",
+        "Manter um total ou uma contagem ao longo das repetições."
+      ],
+      "readings": [
+        {
+          "lookFor": "As três partes de um laço for, e as tabelas que acompanham o i em cada volta. Pule o for-each por enquanto: ele volta em Arrays. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+        },
+        {
+          "lookFor": "Opcional: while para quando você não sabe quantas voltas precisa, e do … while, cujo corpo sempre roda pelo menos uma vez. Os exemplos leem a entrada com Scanner; no Sphinx, IO.readln() lê uma linha."
+        }
+      ]
+    }
+  }
+}
