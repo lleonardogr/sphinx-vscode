@@ -28,13 +28,13 @@
       "lookFor": "Follow one name from the browser cache to the resolver, then the root, TLD and authoritative servers, and notice where each answer is cached for next time."
     },
     {
-      "title": "A Beginner's Guide to Subnetting",
-      "source": "Packet Coders (Rick Donato)",
-      "url": "https://www.packetcoders.io/a-beginners-guide-to-subnetting/",
+      "title": "Subnet Cheat Sheet",
+      "source": "freeCodeCamp",
+      "url": "https://www.freecodecamp.org/news/subnet-cheat-sheet-24-subnet-mask-30-26-27-29-and-other-ip-address-cidr-network-references/",
       "type": "article",
-      "minutes": 7,
+      "minutes": 9,
       "lang": "en",
-      "lookFor": "How the prefix and the subnet mask split an address into network and host bits, and the worked examples that find the network, the broadcast and the number of hosts. You can skip the classful addressing history."
+      "lookFor": "How a prefix such as /26 splits an address into network and host bits, how a mask in binary marks the network part, and the table of prefixes with their usable addresses (/26 has 62). The wildcard masks and the /31 special case are more than you need."
     }
   ],
   "translations": {
@@ -54,7 +54,7 @@
           "lookFor": "Acompanhe um nome desde o cache do navegador até o resolvedor, depois os servidores raiz, de TLD e autoritativo, e repare onde cada resposta fica em cache para a próxima vez."
         },
         {
-          "lookFor": "Como o prefixo e a máscara de sub-rede dividem um endereço em bits de rede e de host, e os exemplos que acham a rede, o broadcast e o número de hosts. Dá para pular a história do endereçamento por classes."
+          "lookFor": "Como um prefixo como /26 divide um endereço em bits de rede e de host, como uma máscara em binário marca a parte de rede, e a tabela de prefixos com os endereços utilizáveis (/26 tem 62). As máscaras curinga e o caso especial do /31 são mais do que você precisa."
         }
       ]
     }

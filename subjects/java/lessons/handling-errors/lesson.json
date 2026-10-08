@@ -9,13 +9,22 @@
   ],
   "readings": [
     {
-      "title": "Java Exception Handling (With Examples)",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/exception-handling",
+      "title": "Catching and Handling Exceptions",
+      "source": "dev.java",
+      "url": "https://dev.java/learn/language/annotations-exceptions/exceptions/catching-handling/",
       "type": "article",
-      "minutes": 5,
+      "minutes": 15,
       "lang": "en",
-      "lookFor": "try and catch, finally (it always runs), then throw and throws. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+      "lookFor": "try and catch blocks, catching more than one exception, and finally. The main example writes to a file; if it feels heavy, the page suggests jumping to the common patterns at its end. Try-with-resources is more than you need now."
+    },
+    {
+      "title": "Throwing Exceptions",
+      "source": "dev.java",
+      "url": "https://dev.java/learn/language/annotations-exceptions/exceptions/throwing/",
+      "type": "article",
+      "minutes": 8,
+      "lang": "en",
+      "lookFor": "Optional, for Insufficient Funds: the throw statement, the throws clause, and creating your own exception class. Chained exceptions are more than you need now."
     }
   ],
   "translations": {
@@ -28,7 +37,10 @@
       ],
       "readings": [
         {
-          "lookFor": "try e catch, finally (ele sempre roda), depois throw e throws. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+          "lookFor": "Blocos try e catch, capturar mais de uma exceção, e finally. O exemplo principal escreve num arquivo; se parecer pesado, a página sugere pular para os padrões comuns no fim. Try-with-resources é mais do que você precisa agora."
+        },
+        {
+          "lookFor": "Opcional, para Saldo insuficiente: o comando throw, a cláusula throws, e criar sua própria classe de exceção. Exceções encadeadas são mais do que você precisa agora."
         }
       ]
     }

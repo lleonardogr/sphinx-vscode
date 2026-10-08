@@ -18,13 +18,13 @@
       "lookFor": "Map, filter and reduce compared with the same loop, intermediate operations (they return a stream) versus terminal ones (they produce the result), and why nothing runs until the terminal one."
     },
     {
-      "title": "Java Lambda Expressions (With Examples)",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/lambda-expression",
+      "title": "Writing Your First Lambda Expression",
+      "source": "dev.java",
+      "url": "https://dev.java/learn/language/fp/lambdas/first-lambdas/",
       "type": "article",
-      "minutes": 8,
+      "minutes": 9,
       "lang": "en",
-      "lookFor": "Optional: the (parameters) -> body syntax, with one expression or a block in braces. You can skip the generic functional interfaces."
+      "lookFor": "Optional: the (parameters) -> body syntax, with one expression or a block in braces. The parts on capturing local values and serialization are more than you need now."
     }
   ],
   "translations": {
@@ -40,7 +40,7 @@
           "lookFor": "Map, filter e reduce comparados com o mesmo laço, operações intermediárias (devolvem um stream) versus terminais (produzem o resultado), e por que nada roda até a terminal."
         },
         {
-          "lookFor": "Opcional: a sintaxe (parâmetros) -> corpo, com uma expressão ou um bloco entre chaves. Pode pular as interfaces funcionais genéricas."
+          "lookFor": "Opcional: a sintaxe (parâmetros) -> corpo, com uma expressão ou um bloco entre chaves. As partes sobre capturar valores locais e serialização são mais do que você precisa agora."
         }
       ]
     }

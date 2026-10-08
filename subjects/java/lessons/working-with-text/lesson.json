@@ -9,13 +9,13 @@
   ],
   "readings": [
     {
-      "title": "Java String (With Examples)",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/string",
+      "title": "Strings",
+      "source": "dev.java",
+      "url": "https://dev.java/learn/language/constructs/numbers-strings/strings/",
       "type": "article",
-      "minutes": 8,
+      "minutes": 9,
       "lang": "en",
-      "lookFor": "length, concatenation, equals and the table of methods at the end (charAt, indexOf, substring, toUpperCase…). One slip: the page says you can also compare strings with ==. Don't: == checks whether both are the same object, so two equal texts can give false. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+      "lookFor": "Concatenating Strings, Getting Characters and Substrings by Index (charAt and substring), Searching for Characters and Substrings (indexOf), and Comparing Strings (equals). You can skip format strings and number conversions."
     },
     {
       "title": "String Builders",
@@ -37,7 +37,7 @@
       ],
       "readings": [
         {
-          "lookFor": "length, concatenação, equals e a tabela de métodos no fim (charAt, indexOf, substring, toUpperCase…). Um deslize: a página diz que você também pode comparar strings com ==. Não faça isso: == confere se as duas são o mesmo objeto, então dois textos iguais podem dar false. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+          "lookFor": "Concatenating Strings, Getting Characters and Substrings by Index (charAt e substring), Searching for Characters and Substrings (indexOf) e Comparing Strings (equals). Pode pular as strings de formato e as conversões de números."
         },
         {
           "lookFor": "Opcional, para Compressão de string: por que o StringBuilder existe, depois append, insert e reverse em \"StringBuilder Operations\". Pode pular length e capacity."
