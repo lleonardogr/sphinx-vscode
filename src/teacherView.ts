@@ -6,6 +6,8 @@ import { Challenge } from './challenges';
 import { ExamDefinition, ExamQuestion, examChallengeId, maxScore, questionTitle } from './exams';
 import { ExamManager } from './examSession';
 import { QuizDefinition } from './quizzes';
+import { LessonDefinition } from './lessons';
+import { readingCount } from './lessonPanel';
 import { difficultyName, plural, tr } from './i18n';
 import { TESTS_TOPIC } from './path';
 
@@ -21,6 +23,7 @@ export type TeacherNode =
   | { kind: 'previewQuestion'; exam: ExamDefinition; question: ExamQuestion }
   | { kind: 'challenge'; challenge: Challenge }
   | { kind: 'quiz'; quiz: QuizDefinition }
+  | { kind: 'lesson'; lesson: LessonDefinition }
   | { kind: 'tool'; id: string; label: string; icon: string; command: string }
   | { kind: 'hint'; label: string; command: string };
 
@@ -39,6 +42,8 @@ export function sourceFile(node: TeacherNode): string | undefined {
       return path.join(node.challenge.dir, 'challenge.json');
     case 'quiz':
       return path.join(node.quiz.dir, 'quiz.json');
+    case 'lesson':
+      return path.join(node.lesson.dir, 'lesson.md');
     case 'examQuestion':
       return node.question.kind === 'quiz' ? path.join(node.question.quiz.dir, 'quiz.json') : path.join(node.question.challenge.dir, 'description.md');
     default:
@@ -58,6 +63,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
     private readonly examManager: ExamManager,
     /** The preview copy of an exam, when the teacher has started one. */
     private readonly previewFor: (exam: ExamDefinition) => ExamDefinition | undefined,
+    private readonly getLessons: () => LessonDefinition[] = () => [],
   ) {
     examManager.onDidChange(() => this.refresh());
   }
@@ -66,11 +72,12 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
     this.changed.fire();
   }
 
-  /** The teacher's own challenges and quizzes: everything that isn't built in. */
-  ownContent(): { challenges: Challenge[]; quizzes: QuizDefinition[] } {
+  /** The teacher's own challenges, quizzes and lessons: everything that isn't built in. */
+  ownContent(): { challenges: Challenge[]; quizzes: QuizDefinition[]; lessons: LessonDefinition[] } {
     return {
       challenges: this.getChallenges().filter((c) => this.origin(c.dir) !== 'builtIn'),
       quizzes: this.getQuizzes().filter((q) => this.origin(q.dir) !== 'builtIn'),
+      lessons: this.getLessons().filter((l) => this.origin(l.dir) !== 'builtIn'),
     };
   }
 
@@ -109,6 +116,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
       const items: TeacherNode[] = [
         ...own.challenges.sort((a, b) => a.title.localeCompare(b.title)).map((challenge): TeacherNode => ({ kind: 'challenge', challenge })),
         ...own.quizzes.sort((a, b) => a.title.localeCompare(b.title)).map((quiz): TeacherNode => ({ kind: 'quiz', quiz })),
+        ...own.lessons.sort((a, b) => a.title.localeCompare(b.title)).map((lesson): TeacherNode => ({ kind: 'lesson', lesson })),
       ];
       return items.length ? items : [{ kind: 'hint', label: tr('Create a challenge or import a pack', 'Crie um desafio ou importe um pacote'), command: 'sphinx.createChallenge' }];
     }
@@ -129,7 +137,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
       case 'section': {
         const labels = {
           exams: [tr('My Exams', 'Minhas provas'), 'checklist'],
-          content: [tr('My Challenges & Quizzes', 'Meus desafios e quizzes'), 'library'],
+          content: [tr('My Challenges, Quizzes & Lessons', 'Meus desafios, quizzes e lições'), 'library'],
           tools: [tr('Tools', 'Ferramentas'), 'tools'],
         } as const;
         const [label, icon] = labels[node.id];
@@ -140,7 +148,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
           item.description = String(this.getExams().filter((e) => !e.preview).length);
         } else if (node.id === 'content') {
           const own = this.ownContent();
-          item.description = String(own.challenges.length + own.quizzes.length);
+          item.description = String(own.challenges.length + own.quizzes.length + own.lessons.length);
         }
         return item;
       }
@@ -190,8 +198,14 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         item.id = `teacher:exam:${node.exam.id}:${q.id}`;
         item.iconPath = new vscode.ThemeIcon(q.kind === 'quiz' ? 'question' : 'code');
         item.description = `${q.points} pts · ${q.kind === 'quiz' ? 'Quiz' : difficultyName(q.challenge.difficulty)}`;
-        item.contextValue = 'teacherQuestion';
-        item.command = { command: 'sphinx.editItem', title: tr('Edit', 'Editar'), arguments: [node] };
+        // Built-in exams can be tried (Try Exam) but not edited: changes would be lost on the next update.
+        if (this.origin(node.exam.dir) === 'builtIn') {
+          item.contextValue = 'teacherQuestionBuiltIn';
+          item.tooltip = tr('A question of a built-in exam. Try it with Try Exam (Preview).', 'Uma questão de uma prova incluída. Experimente com Testar prova (prévia).');
+        } else {
+          item.contextValue = 'teacherQuestion';
+          item.command = { command: 'sphinx.editItem', title: tr('Edit', 'Editar'), arguments: [node] };
+        }
         return item;
       }
       case 'challenge': {
@@ -213,6 +227,16 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         item.description = `${tr(...ORIGIN[this.origin(q.dir)])} · Quiz · ${plural(q.questions.length, ['question', 'questions'], ['questão', 'questões'])}`;
         item.contextValue = 'teacherItem';
         item.command = { command: 'sphinx.openQuiz', title: tr('Try', 'Testar'), arguments: [q.id] };
+        return item;
+      }
+      case 'lesson': {
+        const l = node.lesson;
+        const item = new vscode.TreeItem(l.title, vscode.TreeItemCollapsibleState.None);
+        item.id = `teacher:lesson:${l.id}`;
+        item.iconPath = new vscode.ThemeIcon('book');
+        item.description = `${tr(...ORIGIN[this.origin(l.dir)])} · ${tr('Lesson', 'Lição')}${l.readings.length ? ` · ${readingCount(l.readings.length)}` : ''}`;
+        item.contextValue = 'teacherItem';
+        item.command = { command: 'sphinx.openLesson', title: tr('Open', 'Abrir'), arguments: [l.id] };
         return item;
       }
       case 'tool': {

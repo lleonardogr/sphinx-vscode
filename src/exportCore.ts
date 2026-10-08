@@ -1,4 +1,4 @@
-// Builds a pack (.zip) of challenges, quizzes and exams that students import with one click.
+// Builds a pack (.zip) of challenges, quizzes, lessons and exams that students import with one click.
 // No vscode dependency, so it can be tested with the importer.
 import * as fs from 'fs';
 import * as path from 'path';
@@ -6,8 +6,8 @@ import { zipSync } from 'fflate';
 import { ExamDefinition } from './exams';
 
 export interface PackItem {
-  kind: 'challenge' | 'quiz' | 'exam';
-  /** The item's folder (with challenge.json, quiz.json or exam.json). */
+  kind: 'challenge' | 'quiz' | 'lesson' | 'exam';
+  /** The item's folder (with challenge.json, quiz.json, lesson.json or exam.json), copied whole, images included. */
   dir: string;
 }
 

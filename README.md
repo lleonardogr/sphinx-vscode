@@ -178,7 +178,7 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 
 ## For teachers
 
-Click the 💼 button at the top of the Sphinx sidebar (**Switch to Teacher View**) to open the **teacher view**. It lists **My Exams** (with their questions; click one to edit it, or press ▶ **Try Exam (Preview)** to take the exam yourself with the real timer and rules, in a practice attempt you can restart that never counts as a real one), **My Challenges & Quizzes** (what you created or imported; click one to try it), and the **Tools**: create, import, **export a pack** for your class (a `.zip` they import with one click, without the solutions), validate, and open your class's results as a **dashboard** (scores per question, time away, warnings, verification, CSV export). Right-click one of your own exams, challenges, tests or quizzes to **Delete** it; built-in content can't be deleted. The 🎓 button switches back to the **student view**, where you can practise the learning path like your students.
+Click the 💼 button at the top of the Sphinx sidebar (**Switch to Teacher View**) to open the **teacher view**. It lists **My Exams** (with their questions; press ▶ **Try Exam (Preview)** to take an exam yourself with the real timer and rules, in a practice attempt you can restart that never counts as a real one), **My Challenges, Quizzes & Lessons** (what you created or imported; click one to try it), and the **Tools**: create, import, **export a pack** for your class (a `.zip` they import with one click, without the solutions), validate, and open your class's results as a **dashboard** (scores per question, time away, warnings, verification, CSV export). Your own exams, challenges, quizzes and lessons can be edited, exported and deleted from their right-click menu. Built-in content can be tried, used in your exams and graded, but not changed: it's part of the extension, and an update would undo any change. The 🎓 button switches back to the **student view**, where you can practise the learning path like your students.
 
 ### Share the extension with your class
 
@@ -215,6 +215,7 @@ Done:
 - [x] A teacher view: exam previews, export packs and a class results dashboard
 - [x] Subjects, lessons and prerequisites, and the complete CS Fundamentals subject: 8 units with lessons, quizzes and challenges
 - [x] Exam retakes after a wait, and deleting your own content in the teacher view
+- [x] Lessons in Import and Export packs
 
 Content:
 
@@ -225,7 +226,6 @@ Content:
 
 For teachers:
 
-- [ ] Lessons in Import and Export packs (today they're shared with a folder)
 - [ ] **Create New Lesson**, like **Create New Challenge**
 - [ ] Teachers' own subjects and units, from their content folders
 - [ ] Optional prerequisite locks, turned on by the teacher

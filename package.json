@@ -464,17 +464,17 @@
         },
         {
           "command": "sphinx.editItem",
-          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|ExamOwn|Item|Question)$/",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(ExamOwn|Item|Question)$/",
           "group": "inline"
         },
         {
           "command": "sphinx.editItem",
-          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|ExamOwn|Item|Question)$/",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(ExamOwn|Item|Question)$/",
           "group": "teacher@1"
         },
         {
           "command": "sphinx.revealItem",
-          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|ExamOwn|Item|Question)$/",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(ExamOwn|Item|Question)$/",
           "group": "teacher@2"
         },
         {
@@ -514,7 +514,7 @@
         },
         {
           "command": "sphinx.exportPack",
-          "when": "view == sphinx.teacher && viewItem =~ /^teacher(Exam|ExamOwn|Item)$/",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(ExamOwn|Item)$/",
           "group": "teacher@3"
         },
         {

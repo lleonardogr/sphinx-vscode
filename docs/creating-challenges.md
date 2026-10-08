@@ -304,7 +304,7 @@ place-value-and-binary/
 
 Write for a beginner: short sections with `##` headings, a table or a diagram where it helps, and examples worked out step by step. Images must be inside the lesson's folder. The validator checks that the unit exists and warns when a lesson has fewer than 250 words or no `##` sections, or (with `--lang=pt-br`) no translation.
 
-Share your lessons through a [live folder](#sharing-a-live-folder) for now: **Import** and **Export a Pack** don't carry lessons yet.
+Share your lessons like challenges: in a [pack](#the-easy-way-export-a-pack-then-import) or a [live folder](#sharing-a-live-folder). A lesson's whole folder travels with it, diagrams and translations included.
 
 ### Prerequisites
 
@@ -433,17 +433,17 @@ You don't have to rebuild the extension to hand out challenges.
 
 ### The easy way: Export a pack, then Import
 
-1. In the **teacher view** (💼 at the top of the Sphinx sidebar), run **Export a Pack for Students…** (in **Tools**, or right-click an exam, challenge or quiz). Choose what goes in it, then **For students** (reference solutions are left out) or **For teachers** (solutions kept), and save the `.zip`. When an exam uses one of your own challenges by id, that challenge is added to the pack automatically, so the import works.
+1. In the **teacher view** (💼 at the top of the Sphinx sidebar), run **Export a Pack for Students…** (in **Tools**, or right-click one of your exams, challenges, quizzes or lessons). Choose what goes in it from your own content (built-in content is already in every student's Sphinx), then **For students** (reference solutions are left out) or **For teachers** (solutions kept), and save the `.zip`. When an exam uses one of your own challenges by id, that challenge is added to the pack automatically, so the import works.
 
-   You can also build the zip by hand: put your challenge, test, [quiz](quizzes.md) and exam folders in one parent folder, for example `java-week-3/`, and zip it. (Zipping a single challenge or exam folder works too.)
+   You can also build the zip by hand: put your challenge, test, [quiz](quizzes.md), lesson and exam folders in one parent folder, for example `java-week-3/`, and zip it. (Zipping a single challenge or exam folder works too.)
 2. Send the zip to your class: email, your school's learning platform, a shared drive or a USB stick.
-3. Students click the **Import** button (⤓) at the top of the Sphinx sidebar, or run **Sphinx: Import Challenges, Quizzes, Tests or Exams…**, and choose the zip or the folder.
+3. Students click the **Import** button (⤓) at the top of the Sphinx sidebar, or run **Sphinx: Import Challenges, Quizzes, Lessons or Exams…**, and choose the zip or the folder.
 
-The extension finds every folder with a `challenge.json`, `quiz.json` or `exam.json` inside, checks that each one loads, and **copies** them into its own library. They keep working after the zip is deleted. Importing the same package again offers to replace the older version, and progress is kept.
+The extension finds every folder with a `challenge.json`, `quiz.json`, `lesson.json` or `exam.json` inside, checks that each one loads, and **copies** them into its own library. They keep working after the zip is deleted. Importing the same package again offers to replace the older version, and progress is kept.
 
 - If the package contains `Solution*.java` files, the import asks whether to **remove** them (students) or **keep** them (teachers, who need them to validate). You can still remove them from the zip before sharing, which is safer.
 - An imported item with the same id as a built-in one is renamed (for example `fizzbuzz-imported`), so both stay available.
-- **Sphinx: Remove Imported Challenges, Quizzes, Tests or Exams…** takes them out of the sidebar again. Students' own code files are kept.
+- **Sphinx: Remove Imported Challenges, Quizzes, Lessons or Exams…** takes them out of the sidebar again. Students' own code files are kept.
 
 ### Sharing a live folder
 

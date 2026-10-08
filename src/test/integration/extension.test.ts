@@ -237,12 +237,21 @@ test('an exam: start, submit a question, finish, and hand in a results file', as
 
 });
 
-test('importing a teacher\'s folder adds its challenge and can strip the solutions', async () => {
+test('importing a teacher\'s folder adds its challenge, lesson and exam, and can strip the solutions', async () => {
   const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-share-'));
   const dir = path.join(folder, 'class-demo');
   fs.cpSync(path.join(ROOT, 'challenges', 'fizzbuzz'), dir, { recursive: true });
   const meta = JSON.parse(read(path.join(dir, 'challenge.json')));
   fs.writeFileSync(path.join(dir, 'challenge.json'), JSON.stringify({ ...meta, title: 'Class Demo', topic: undefined, translations: undefined }));
+  // A reading guide and an exam, renamed so they don't clash with the built-in ones.
+  const retitle = (from: string, to: string, file: string, title: string) => {
+    fs.cpSync(from, path.join(folder, to), { recursive: true });
+    const data = JSON.parse(read(path.join(folder, to, file)));
+    delete data.translations?.['pt-br']?.title;
+    fs.writeFileSync(path.join(folder, to, file), JSON.stringify({ ...data, title }));
+  };
+  retitle(path.join(ROOT, 'subjects', 'cs', 'lessons', 'bits-and-bytes'), 'class-reading', 'lesson.json', 'Class Reading');
+  retitle(path.join(ROOT, 'exams', 'exam-1'), 'class-exam', 'exam.json', 'Class Exam');
   dialogs.openDialog = [vscode.Uri.file(folder)];
   dialogs.quickPick = 0; // Remove the solutions
   dialogs.answer = () => undefined;
@@ -250,26 +259,41 @@ test('importing a teacher\'s folder adds its challenge and can strip the solutio
   const imported = api.challenges().find((c) => c.title === 'Class Demo');
   assert.ok(imported, 'the challenge was not imported');
   assert.equal(fs.readdirSync(imported.dir).some((f) => f.startsWith('Solution')), false, 'solutions were not removed');
+  assert.ok(api.lessons().some((l) => l.title === 'Class Reading'), 'the lesson was not imported');
+  assert.ok(api.exams().some((e) => e.title === 'Class Exam'), 'the exam was not imported');
   fs.rmSync(folder, { recursive: true, force: true });
 });
 
-test('the teacher view lists the teacher\'s exams, own content and tools, and switches back', async () => {
+test('the teacher view lists the teacher\'s exams, own content and tools, edits only their own, and switches back', async () => {
   assert.equal(api.view(), 'student');
   await vscode.commands.executeCommand('sphinx.switchToTeacherView');
   assert.equal(api.view(), 'teacher');
   const t = api.teacherTree;
   const label = (n: unknown) => String(t.getTreeItem(n as never).label);
   const [exams, content, tools] = t.getChildren();
-  assert.deepEqual([exams, content, tools].map(label), ['My Exams', 'My Challenges & Quizzes', 'Tools']);
-  assert.deepEqual(t.getChildren(exams).map(label).sort(), ['Exam 1: Basics to Strings', 'Exam 2: Building Blocks', 'Final Exam', 'Sample Exam: Java Basics']);
-  assert.match(String(t.getTreeItem(t.getChildren(exams)[0] as never).description), /^Built-in · 4 questions · 100 pts · \d+ min$/);
-  // Only the teacher's own content: the challenge imported by the previous test, none of the built-in ones.
-  assert.deepEqual(t.getChildren(content).map(label), ['Class Demo']);
+  assert.deepEqual([exams, content, tools].map(label), ['My Exams', 'My Challenges, Quizzes & Lessons', 'Tools']);
+  assert.deepEqual(t.getChildren(exams).map(label).sort(), ['Class Exam', 'Exam 1: Basics to Strings', 'Exam 2: Building Blocks', 'Final Exam', 'Sample Exam: Java Basics']);
+  const exam = (title: string) => t.getChildren(exams).find((n) => label(n) === title)!;
+  assert.match(String(t.getTreeItem(exam('Exam 1: Basics to Strings') as never).description), /^Built-in · 4 questions · 100 pts · \d+ min$/);
+  assert.equal(t.getTreeItem(exam('Exam 1: Basics to Strings') as never).contextValue, 'teacherExam');
+  assert.equal(t.getTreeItem(exam('Class Exam') as never).contextValue, 'teacherExamOwn');
+  // Only the teacher's own content: what the previous test imported, none of the built-in content.
+  assert.deepEqual(t.getChildren(content).map(label), ['Class Demo', 'Class Reading']);
   assert.match(String(t.getTreeItem(t.getChildren(content)[0] as never).description), /^Imported · /);
+  assert.match(String(t.getTreeItem(t.getChildren(content)[1] as never).description), /^Imported · Lesson · \d readings?$/);
   assert.ok(t.getChildren(tools).map(label).includes("Verify Students' Exam Results…"));
-  // Questions open their source file for editing.
-  const question = t.getChildren(t.getChildren(exams)[0]!)[0]!;
-  assert.equal(t.getTreeItem(question as never).command?.command, 'sphinx.editItem');
+  // The teacher's own questions open for editing; built-in ones don't.
+  const ownQuestion = t.getChildren(exam('Class Exam'))[0]!;
+  assert.equal(t.getTreeItem(ownQuestion as never).contextValue, 'teacherQuestion');
+  assert.equal(t.getTreeItem(ownQuestion as never).command?.command, 'sphinx.editItem');
+  const builtInQuestion = t.getChildren(exam('Exam 1: Basics to Strings'))[0]!;
+  assert.equal(t.getTreeItem(builtInQuestion as never).contextValue, 'teacherQuestionBuiltIn');
+  assert.equal(t.getTreeItem(builtInQuestion as never).command, undefined);
+  dialogs.messages.length = 0;
+  const editors = vscode.window.visibleTextEditors.length;
+  await vscode.commands.executeCommand('sphinx.editItem', exam('Exam 1: Basics to Strings'));
+  assert.ok(dialogs.messages.some((m) => m.includes('Built-in content is part of the extension')), dialogs.messages.join(' | '));
+  assert.equal(vscode.window.visibleTextEditors.length, editors, 'a built-in file was opened for editing');
   await vscode.commands.executeCommand('sphinx.switchToStudentView');
   assert.equal(api.view(), 'student');
 });
@@ -302,8 +326,8 @@ test('a teacher previews an exam without touching the real attempt, and can rest
   await vscode.commands.executeCommand('sphinx.switchToStudentView');
 });
 
-test('a teacher exports an exam as a pack for students, without the solutions', async () => {
-  const exam = api.exams().find((e) => e.id === 'exam-1')!;
+test('a teacher exports their own exam as a pack for students, without the solutions', async () => {
+  const exam = api.exams().find((e) => e.id === 'class-exam')!;
   const out = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-export-'));
   dialogs.quickPick = 0; // the preselected exam, then "For students"
   dialogs.saveDialog = vscode.Uri.file(path.join(out, 'class-7b.zip'));
@@ -313,7 +337,7 @@ test('a teacher exports an exam as a pack for students, without the solutions', 
   assert.ok(fs.existsSync(zip), 'no pack was written');
   const dest = path.join(out, 'extracted');
   extractZip(zip, dest);
-  assert.deepEqual(findImportables(dest, 'class-7b').map((f) => `${f.kind}:${f.name}`), ['exam:exam-1']);
+  assert.deepEqual(findImportables(dest, 'class-7b').map((f) => `${f.kind}:${f.name}`), ['exam:class-exam']);
   assert.deepEqual(findSolutions(dest), []);
   assert.ok(dialogs.messages.some((m) => /Exported 1 item to class-7b\.zip/.test(m)), dialogs.messages.slice(-2).join(' | '));
   fs.rmSync(out, { recursive: true, force: true });
@@ -376,7 +400,7 @@ test('a finished exam can be taken again after 6 hours, starting fresh and keepi
   assert.equal(JSON.parse(read(api.examManager.state('exam-1')!.resultsFile!)).attempt, 2);
 });
 
-test('a teacher deletes an imported challenge, but never built-in content', async () => {
+test('a teacher deletes an imported challenge and lesson, but never built-in content', async () => {
   const demo = api.challenges().find((c) => c.title === 'Class Demo')!;
   assert.ok(demo, 'the challenge imported earlier is there');
   const builtIn = api.exams().find((e) => e.id === 'exam-1')!;
@@ -386,6 +410,10 @@ test('a teacher deletes an imported challenge, but never built-in content', asyn
   await vscode.commands.executeCommand('sphinx.deleteItem', { kind: 'challenge', challenge: demo });
   assert.equal(fs.existsSync(demo.dir), false, 'the imported copy is removed');
   assert.equal(api.challenges().some((c) => c.title === 'Class Demo'), false, 'it left the sidebar');
+  const lesson = api.lessons().find((l) => l.title === 'Class Reading')!;
+  await vscode.commands.executeCommand('sphinx.deleteItem', { kind: 'lesson', lesson });
+  assert.equal(fs.existsSync(lesson.dir), false, 'the imported lesson is removed');
+  assert.equal(api.lessons().some((l) => l.title === 'Class Reading'), false);
 });
 
 test('state saved under the old "sphynx." keys moves to "sphinx." keys, once', () => {
