@@ -1,0 +1,48 @@
+{
+  "title": "Lambdas and Streams",
+  "topic": "Streams",
+  "order": 1,
+  "objectives": [
+    "Pass behaviour as a value with a lambda, such as a comparator.",
+    "Build a stream pipeline: filter, map and sort, then one terminal operation.",
+    "Group and count with collectors instead of loops."
+  ],
+  "readings": [
+    {
+      "title": "Processing Data in Memory Using the Stream API",
+      "source": "dev.java",
+      "url": "https://dev.java/learn/api/collections-and-streams/streams/map-filter-reduce/",
+      "type": "article",
+      "minutes": 9,
+      "lang": "en",
+      "lookFor": "Map, filter and reduce compared with the same loop, intermediate operations (they return a stream) versus terminal ones (they produce the result), and why nothing runs until the terminal one."
+    },
+    {
+      "title": "Java Lambda Expressions (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/lambda-expression",
+      "type": "article",
+      "minutes": 8,
+      "lang": "en",
+      "lookFor": "Optional: the (parameters) -> body syntax, with one expression or a block in braces. You can skip the generic functional interfaces."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Lambdas e streams",
+      "objectives": [
+        "Passar comportamento como valor com uma lambda, como um comparador.",
+        "Montar um pipeline de stream: filtrar, mapear e ordenar, depois uma operação terminal.",
+        "Agrupar e contar com collectors em vez de laços."
+      ],
+      "readings": [
+        {
+          "lookFor": "Map, filter e reduce comparados com o mesmo laço, operações intermediárias (devolvem um stream) versus terminais (produzem o resultado), e por que nada roda até a terminal."
+        },
+        {
+          "lookFor": "Opcional: a sintaxe (parâmetros) -> corpo, com uma expressão ou um bloco entre chaves. Pode pular as interfaces funcionais genéricas."
+        }
+      ]
+    }
+  }
+}

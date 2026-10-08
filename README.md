@@ -25,7 +25,7 @@ Students pick a challenge from the **Sphinx** sidebar. The problem statement ope
 
 ## The learning path (100 challenges)
 
-The sidebar lists numbered **units** in teaching order. Each unit runs from easy to harder challenges, ends with its quiz, and the last unit of a stage ends with a bigger **test** that mixes everything so far. Units can open with a **quick guide**: a one-minute summary around a short code example, the mistake to watch out for, and one curated page to read (units 1 to 7 have one so far).
+The sidebar lists numbered **units** in teaching order. Each unit runs from easy to harder challenges, ends with its quiz, and the last unit of a stage ends with a bigger **test** that mixes everything so far. Every unit opens with a **quick guide**: a one-minute summary around a short code example, the mistake to watch out for, and one curated page to read.
 
 | Unit | Challenges | Quiz and tests |
 |------|------------|----------------|
@@ -216,11 +216,11 @@ Done:
 - [x] Subjects, lessons and prerequisites, and the complete CS Fundamentals subject: 8 units with lessons, quizzes and challenges
 - [x] Exam retakes after a wait, and deleting your own content in the teacher view
 - [x] Lessons in Import and Export packs
+- [x] Quick guides for the 11 Java units
 
 Content:
 
 - [ ] CS Fundamentals tests and exams: Number Converter and Packet Inspector tests, CS Exam 1 and a final exam
-- [ ] Quick guides for the Java units (units 1 to 7 done)
 - [ ] An algorithms and data structures unit
 - [ ] New subjects: C, SQL and graph theory
 

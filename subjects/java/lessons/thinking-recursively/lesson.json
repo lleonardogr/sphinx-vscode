@@ -1,0 +1,48 @@
+{
+  "title": "Thinking Recursively",
+  "topic": "Recursion",
+  "order": 1,
+  "objectives": [
+    "Write a recursive method: a base case, and a call on a smaller problem.",
+    "Trace the calls a recursive method makes, and why some repeat.",
+    "Remember results already computed (memoization) to avoid repeated calls."
+  ],
+  "readings": [
+    {
+      "title": "Java Recursion: Recursive Methods (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/recursion",
+      "type": "article",
+      "minutes": 4,
+      "lang": "en",
+      "lookFor": "The base case, and the diagram of factorial(4) calling itself down to the base case and returning back up. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+    },
+    {
+      "title": "Recursion Tree and DAG",
+      "source": "VisuAlgo",
+      "url": "https://visualgo.net/en/recursion",
+      "type": "interactive",
+      "minutes": 5,
+      "lang": "en",
+      "lookFor": "Optional: pick Fibonacci from the list and press Run to watch the tree of calls grow. Notice the same calls repeated in light blue: that is why the Fibonacci challenge remembers results. The code is in JavaScript, but reads like Java."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Pensando de forma recursiva",
+      "objectives": [
+        "Escrever um método recursivo: um caso base, e uma chamada num problema menor.",
+        "Acompanhar as chamadas que um método recursivo faz, e por que algumas se repetem.",
+        "Guardar resultados já calculados (memoização) para evitar chamadas repetidas."
+      ],
+      "readings": [
+        {
+          "lookFor": "O caso base, e o diagrama de factorial(4) chamando a si mesmo até o caso base e voltando. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+        },
+        {
+          "lookFor": "Opcional: escolha Fibonacci na lista e clique em Run para ver a árvore de chamadas crescer. Repare nas mesmas chamadas repetidas em azul-claro: é por isso que o desafio Fibonacci guarda resultados. O código é em JavaScript, mas se lê como Java."
+        }
+      ]
+    }
+  }
+}

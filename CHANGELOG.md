@@ -6,7 +6,7 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
-- **Java quick guides**: Java units can now open with a quick guide, a lighter reading guide for programming subjects: two or three objectives, a short summary around one code example, a "Watch out" line and one curated page to read (plus an optional extra). Units 1 to 7 have one: **Variables and Arithmetic**, **Making Decisions**, **Repeating with Loops**, **Working with Text**, **Writing Methods**, **Storing Many Values** and **Lists, Sets and Maps**, with Programiz and dev.java readings. The content guide and the `sphinx-unit` skill describe the format, and the validator applies its limits to programming subjects.
+- **Java quick guides**: Java units can now open with a quick guide, a lighter reading guide for programming subjects: two or three objectives, a short summary around one code example, a "Watch out" line and one curated page to read (plus an optional extra). Every Java unit has one: **Variables and Arithmetic**, **Making Decisions**, **Repeating with Loops**, **Working with Text**, **Writing Methods**, **Storing Many Values**, **Lists, Sets and Maps**, **Classes and Objects**, **Handling Errors**, **Thinking Recursively** and **Lambdas and Streams**, with Programiz, dev.java and VisuAlgo readings. The content guide and the `sphinx-unit` skill describe the format, and the validator applies its limits to programming subjects.
 - **Lessons in packs**: **Import** and **Export a Pack** now carry lessons (reading guides included), with their diagrams and translations. Imported lessons appear in their unit, and in the teacher view under **My Challenges, Quizzes & Lessons**, where they can be exported or deleted.
 
 ### Changed
