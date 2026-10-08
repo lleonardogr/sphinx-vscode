@@ -1,0 +1,73 @@
+{
+  "title": "Merge Step",
+  "difficulty": "Medium",
+  "hints": [
+    "Keep one index into each list. Compare the two numbers they point to, copy the smaller one and move that index forward.",
+    "Count a comparison every time you compare a number of A with a number of B. When one list runs out, copy the rest of the other without comparing.",
+    "Before merging, check each list: it is sorted when no number is smaller than the one before it."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Passo de intercalação",
+      "hints": [
+        "Guarde um índice em cada lista. Compare os dois números para onde eles apontam, copie o menor e avance esse índice.",
+        "Conte uma comparação toda vez que comparar um número de A com um número de B. Quando uma lista acabar, copie o resto da outra sem comparar.",
+        "Antes de intercalar, confira cada lista: ela está ordenada quando nenhum número é menor que o anterior."
+      ],
+      "mustNotContain": [
+        "Intercale as listas você mesmo: ordenação e coleções ordenadas não valem aqui."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "\\bsort\\s*\\(|\\.sorted\\s*\\(|TreeSet|TreeMap|PriorityQueue",
+      "message": "Merge the lists yourself: sorting and sorted collections aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "4\n1 4 9 12\n3\n2 3 10\n",
+      "output": "1 2 3 4 9 10 12\nComparisons: 6\n"
+    },
+    {
+      "input": "3\n5 5 8\n2\n5 6\n",
+      "output": "5 5 5 6 8\nComparisons: 4\n"
+    },
+    {
+      "input": "1\n7\n1\n3\n",
+      "output": "3 7\nComparisons: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n1 2 3\n3\n4 5 6\n",
+      "output": "1 2 3 4 5 6\nComparisons: 3\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n10 20 30\n4\n1 2 3 40\n",
+      "output": "1 2 3 10 20 30 40\nComparisons: 6\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n3 1 2\n2\n1 2\n",
+      "output": "List A is not sorted\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n1 2\n3\n5 4 6\n",
+      "output": "List B is not sorted\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n-5 -1 0 0 8\n4\n-3 0 2 100\n",
+      "output": "-5 -3 -1 0 0 0 2 8 100\nComparisons: 8\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n1 3 5 7 9 11\n6\n2 4 6 8 10 12\n",
+      "output": "1 2 3 4 5 6 7 8 9 10 11 12\nComparisons: 11\n",
+      "hidden": true
+    }
+  ]
+}

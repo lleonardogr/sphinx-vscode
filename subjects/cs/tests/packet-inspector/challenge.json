@@ -1,0 +1,93 @@
+{
+  "title": "Packet Inspector",
+  "topic": "Tests",
+  "skills": [
+    "BitsBytes",
+    "TextMedia",
+    "Logic",
+    "Networks"
+  ],
+  "unit": "Networks",
+  "requires": [
+    "Loops",
+    "Strings",
+    "Arrays",
+    "Methods"
+  ],
+  "difficulty": "Hard",
+  "order": 1,
+  "hints": [
+    "The first byte holds two numbers: the version in its high 4 bits (byte >> 4) and the header length, in 4-byte words, in its low 4 bits (byte & 0x0F).",
+    "Numbers of two bytes are big-endian: the first byte is the high one, so the value is first * 256 + second. Write a method for it; you need it for the length, the checksum and the ports.",
+    "The UDP header starts right after the IP header, at byte headerLength (not always 20). The payload starts 8 bytes later and ends at Total length: anything after that is padding."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Inspetor de pacotes",
+      "hints": [
+        "O primeiro byte guarda dois números: a versão nos 4 bits altos (byte >> 4) e o tamanho do cabeçalho, em palavras de 4 bytes, nos 4 bits baixos (byte & 0x0F).",
+        "Números de dois bytes são big-endian: o primeiro byte é o alto, então o valor é primeiro * 256 + segundo. Escreva um método para isso; você precisa dele para o tamanho, o checksum e as portas.",
+        "O cabeçalho UDP começa logo depois do cabeçalho IP, no byte headerLength (nem sempre 20). O conteúdo começa 8 bytes depois e termina no Total length: o que vier depois é enchimento."
+      ],
+      "mustNotContain": [
+        "Leia os bytes você mesmo: java.net, ByteBuffer, DataInputStream e HexFormat não valem aqui."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "java\\.net|InetAddress|ByteBuffer|DataInputStream|HexFormat",
+      "message": "Read the bytes yourself: java.net, ByteBuffer, DataInputStream and HexFormat aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "45 00 00 25 1c 46 40 00 40 11 52 c1 c0 a8 01 14 0a 00 00 05 c7 38 02 02 00 11 00 00 48 69 20 53 70 68 69 6e 78\n",
+      "output": "Version: 4\nHeader length: 20 bytes\nTotal length: 37 bytes\nTTL: 64\nProtocol: UDP (17)\nSource: 192.168.1.20\nDestination: 10.0.0.5\nChecksum: 0x52C1 (valid)\nPorts: 51000 -> 514\nPayload: Hi Sphinx\n"
+    },
+    {
+      "input": "45 00 00 28 1c 46 40 00 80 06 9e aa 0a 00 00 05 5d b8 d8 22 c3 50 01 bb 00 00 00 01 00 00 00 00 50 02 ff ff 00 00 00 00\n",
+      "output": "Version: 4\nHeader length: 20 bytes\nTotal length: 40 bytes\nTTL: 128\nProtocol: TCP (6)\nSource: 10.0.0.5\nDestination: 93.184.216.34\nChecksum: 0x9EAA (valid)\n"
+    },
+    {
+      "input": "45 00 00 25 1c 46 40 00 40 11 53 c1 c0 a8 01 14 0a 00 00 05 c7 38 02 02 00 11 00 00 48 69 20 53 70 68 69 6e 78\n",
+      "output": "Version: 4\nHeader length: 20 bytes\nTotal length: 37 bytes\nTTL: 64\nProtocol: UDP (17)\nSource: 192.168.1.20\nDestination: 10.0.0.5\nChecksum: 0x53C1 (invalid)\nPorts: 51000 -> 514\nPayload: Hi Sphinx\n",
+      "hidden": true
+    },
+    {
+      "input": "46 00 00 29 1c 46 40 00 40 11 31 4f ac 10 00 09 ac 10 00 01 94 04 00 00 9c 40 23 28 00 11 00 00 73 74 61 74 75 73 3d 6f 6b\n",
+      "output": "Version: 4\nHeader length: 24 bytes\nTotal length: 41 bytes\nTTL: 64\nProtocol: UDP (17)\nSource: 172.16.0.9\nDestination: 172.16.0.1\nChecksum: 0x314F (valid)\nPorts: 40000 -> 9000\nPayload: status=ok\n",
+      "hidden": true
+    },
+    {
+      "input": "45 00 00 20 1c 46 40 00 01 11 db 35 c0 a8 00 02 c0 a8 00 ff 00 44 00 43 00 0c 00 00 70 69 6e 67 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n",
+      "output": "Version: 4\nHeader length: 20 bytes\nTotal length: 32 bytes\nTTL: 1\nProtocol: UDP (17)\nSource: 192.168.0.2\nDestination: 192.168.0.255\nChecksum: 0xDB35 (valid)\nPorts: 68 -> 67\nPayload: ping\n",
+      "hidden": true
+    },
+    {
+      "input": "45 00 00 23 1c 46 40 00 40 11 06 7c 0a 01 02 03 0a 01 02 04 14 e9 14 e9 00 0f 00 00 48 69 00 0a 7f ff 21\n",
+      "output": "Version: 4\nHeader length: 20 bytes\nTotal length: 35 bytes\nTTL: 64\nProtocol: UDP (17)\nSource: 10.1.2.3\nDestination: 10.1.2.4\nChecksum: 0x067C (valid)\nPorts: 5353 -> 5353\nPayload: Hi....!\n",
+      "hidden": true
+    },
+    {
+      "input": "65 00 00 1d 1c 46 40 00 40 11 ee 76 01 02 03 04 05 06 07 08 c7 38 02 02 00 09 00 00 78\n",
+      "output": "Not IPv4\n",
+      "hidden": true
+    },
+    {
+      "input": "45 00 00 1c 1c 46 40 00 75 01 17 cf 08 08 08 08 c0 a8 01 14 00 00 55 aa 00 01 00 01\n",
+      "output": "Version: 4\nHeader length: 20 bytes\nTotal length: 28 bytes\nTTL: 117\nProtocol: ICMP (1)\nSource: 8.8.8.8\nDestination: 192.168.1.20\nChecksum: 0x17CF (valid)\n",
+      "hidden": true
+    },
+    {
+      "input": "45 00 00 18 ff ff 40 00 ff 63 7b 83 ff ff ff ff 00 00 00 00 61 62 63 64\n",
+      "output": "Version: 4\nHeader length: 20 bytes\nTotal length: 24 bytes\nTTL: 255\nProtocol: Unknown (99)\nSource: 255.255.255.255\nDestination: 0.0.0.0\nChecksum: 0x7B83 (valid)\n",
+      "hidden": true
+    },
+    {
+      "input": "45 00 00 1C 1C 46 40 00 40 11 B8 3B CB 00 71 07 C6 33 64 14 00 01 FF FF 00 08 00 00\n",
+      "output": "Version: 4\nHeader length: 20 bytes\nTotal length: 28 bytes\nTTL: 64\nProtocol: UDP (17)\nSource: 203.0.113.7\nDestination: 198.51.100.20\nChecksum: 0xB83B (valid)\nPorts: 1 -> 65535\nPayload: (empty)\n",
+      "hidden": true
+    }
+  ]
+}
