@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-10-08
+
 ### Changed
 
 - **Readings from open sources first.** Java guides now link to freeCodeCamp's *Java Handbook* (to the right section) and Oracle's dev.java tutorials instead of Programiz, and CS unit 8 links to freeCodeCamp's Subnet Cheat Sheet instead of a training company's guide. The content guide and the `sphinx-unit` skill now say which sources come first: official docs, then non-profit and university education, then free resources from independent authors, and commercial learning platforms only when nothing else covers the topic.
@@ -307,7 +309,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.6.1...HEAD
+[1.6.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.3.0...v1.4.0
