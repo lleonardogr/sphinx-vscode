@@ -9,13 +9,13 @@
   ],
   "readings": [
     {
-      "title": "Java Operators: Arithmetic, Relational, Logical and more",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/operators",
+      "title": "How to Use Operators in Java",
+      "source": "freeCodeCamp, The Java Handbook",
+      "url": "https://www.freecodecamp.org/news/the-java-handbook/#heading-how-to-use-operators-in-java",
       "type": "article",
       "minutes": 6,
       "lang": "en",
-      "lookFor": "The arithmetic operators, especially dividing two integers (9 / 2 gives 4, but 9.0 / 2 gives 4.5) and %, then assignment (+=) and ++. Relational and logical operators come back in Conditionals; you can skip the rest. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+      "lookFor": "The arithmetic and assignment operators: why 8 / 5 gives 1 with two ints, and what % leaves over. The sections just before cover variables and primitive types, if you want more. The handbook writes System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
     }
   ],
   "translations": {
@@ -28,7 +28,7 @@
       ],
       "readings": [
         {
-          "lookFor": "Os operadores aritméticos, principalmente a divisão de dois inteiros (9 / 2 dá 4, mas 9.0 / 2 dá 4.5) e o %, depois atribuição (+=) e ++. Os operadores relacionais e lógicos voltam em Condicionais; o resto você pode pular. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+          "lookFor": "Os operadores aritméticos e de atribuição: por que 8 / 5 dá 1 com dois ints, e o que o % deixa de resto. As seções logo antes falam de variáveis e tipos primitivos, se quiser mais. O livro escreve System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
         }
       ]
     }

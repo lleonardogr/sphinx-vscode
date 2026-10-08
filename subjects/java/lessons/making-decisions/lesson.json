@@ -9,13 +9,13 @@
   ],
   "readings": [
     {
-      "title": "Java if...else (With Examples)",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/if-else-statement",
+      "title": "How to Use Conditional Statements in Java",
+      "source": "freeCodeCamp, The Java Handbook",
+      "url": "https://www.freecodecamp.org/news/the-java-handbook/#heading-how-to-use-conditional-statements-in-java",
       "type": "article",
       "minutes": 6,
       "lang": "en",
-      "lookFor": "The if...else if ladder: Java checks the conditions from top to bottom and runs only the first true one. At the end, follow the link to the ternary operator. The examples print with System.out.println, which is IO.println in Sphinx."
+      "lookFor": "if, else if and else, then the switch-case section right after. The handbook shows only the older switch with break; the dev.java reading shows the arrow form (case 6, 7 ->) the challenges use. The handbook writes System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
     },
     {
       "title": "Branching with Switch Expressions",
@@ -37,7 +37,7 @@
       ],
       "readings": [
         {
-          "lookFor": "A escada if...else if: o Java confere as condições de cima para baixo e roda só a primeira verdadeira. No fim, siga o link para o operador ternário. Os exemplos imprimem com System.out.println, que é IO.println no Sphinx."
+          "lookFor": "if, else if e else, depois a seção de switch-case logo em seguida. O livro mostra só o switch antigo com break; a leitura do dev.java mostra a forma com seta (case 6, 7 ->) que os desafios usam. O livro escreve System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
         },
         {
           "lookFor": "Opcional, para os desafios com switch: a forma com seta (case 6, 7 -> …) e um switch que dá um valor. As partes sobre yield e null são mais do que você precisa agora."

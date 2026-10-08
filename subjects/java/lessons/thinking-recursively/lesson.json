@@ -9,13 +9,13 @@
   ],
   "readings": [
     {
-      "title": "Java Recursion: Recursive Methods (With Examples)",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/recursion",
+      "title": "How Recursion Works — Explained with Flowcharts and a Video",
+      "source": "freeCodeCamp (Beau Carnes)",
+      "url": "https://www.freecodecamp.org/news/how-recursion-works-explained-with-flowcharts-and-a-video-de61f40cb7f9/",
       "type": "article",
-      "minutes": 4,
+      "minutes": 7,
       "lang": "en",
-      "lookFor": "The base case, and the diagram of factorial(4) calling itself down to the base case and returning back up. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+      "lookFor": "The base case and the recursive case, and how the call stack grows and unwinds in the factorial example. The code is in JavaScript, but reads like Java; the short video in the article explains it again."
     },
     {
       "title": "Recursion Tree and DAG",
@@ -37,7 +37,7 @@
       ],
       "readings": [
         {
-          "lookFor": "O caso base, e o diagrama de factorial(4) chamando a si mesmo até o caso base e voltando. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+          "lookFor": "O caso base e o caso recursivo, e como a pilha de chamadas cresce e desfaz no exemplo do fatorial. O código é em JavaScript, mas se lê como Java; o vídeo curto do artigo explica de novo."
         },
         {
           "lookFor": "Opcional: escolha Fibonacci na lista e clique em Run para ver a árvore de chamadas crescer. Repare nas mesmas chamadas repetidas em azul-claro: é por isso que o desafio Fibonacci guarda resultados. O código é em JavaScript, mas se lê como Java."

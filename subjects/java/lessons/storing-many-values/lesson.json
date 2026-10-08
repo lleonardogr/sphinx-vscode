@@ -9,22 +9,13 @@
   ],
   "readings": [
     {
-      "title": "Java Array (With Examples)",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/arrays",
+      "title": "How to Work with Arrays in Java",
+      "source": "freeCodeCamp, The Java Handbook",
+      "url": "https://www.freecodecamp.org/news/the-java-handbook/#heading-how-to-work-with-arrays-in-java",
       "type": "article",
-      "minutes": 5,
+      "minutes": 7,
       "lang": "en",
-      "lookFor": "Creating an array, indexes from 0 to length − 1, and looping through it with for and for-each, up to the sum and average example. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
-    },
-    {
-      "title": "Java Multidimensional Array (2d and 3d Array)",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/multidimensional-array",
-      "type": "article",
-      "minutes": 4,
-      "lang": "en",
-      "lookFor": "Optional, for Matrix Sums and Tic-Tac-Toe Winner: a 2D array is an array of rows, and nested for loops visit every cell. You can skip 3D arrays."
+      "lookFor": "Creating an array, indexes from 0 to length − 1, looping over it, and the 2D example of a weekly medicine routine (rows and columns), for Matrix Sums and Tic-Tac-Toe Winner. The sort, fill and copy helpers at the end are optional. The handbook writes System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
     }
   ],
   "translations": {
@@ -37,10 +28,7 @@
       ],
       "readings": [
         {
-          "lookFor": "Criar um array, índices de 0 a length − 1, e percorrê-lo com for e for-each, até o exemplo de soma e média. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
-        },
-        {
-          "lookFor": "Opcional, para Somas da matriz e Vencedor do jogo da velha: um array 2D é um array de linhas, e laços for aninhados visitam cada célula. Pode pular os arrays 3D."
+          "lookFor": "Criar um array, índices de 0 a length − 1, percorrê-lo, e o exemplo 2D de uma rotina semanal de remédios (linhas e colunas), para Somas da matriz e Vencedor do jogo da velha. Os utilitários de ordenar, preencher e copiar no fim são opcionais. O livro escreve System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
         }
       ]
     }

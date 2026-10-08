@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- **Readings from open sources first.** Java guides now link to freeCodeCamp's *Java Handbook* (to the right section) and Oracle's dev.java tutorials instead of Programiz, and CS unit 8 links to freeCodeCamp's Subnet Cheat Sheet instead of a training company's guide. The content guide and the `sphinx-unit` skill now say which sources come first: official docs, then non-profit and university education, then free resources from independent authors, and commercial learning platforms only when nothing else covers the topic.
+
 ## [1.6.0] - 2026-10-08
 
 ### Added

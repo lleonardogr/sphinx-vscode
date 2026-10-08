@@ -69,7 +69,7 @@ A reading guide replaces the long text lesson. It has three parts, shown in this
 
 | Field | Example |
 |-------|---------|
-| Title and source | "What is DNS?", Cloudflare Learning Center |
+| Title and source | "Subnet Cheat Sheet", freeCodeCamp |
 | Type | article, video or interactive |
 | Minutes | 8 |
 | Language | en |
@@ -83,14 +83,21 @@ A reading guide replaces the long text lesson. It has three parts, shown in this
 - Prefer pages with **diagrams, animations or interactive examples**: they explain what text in the app can't.
 - Check every link by hand before adding it: open it, read it, confirm it covers the objectives.
 
+**Which sources come first.** When several pages cover the topic equally well, choose in this order:
+
+1. **Official documentation and tutorials** from whoever maintains the language or standard: dev.java and docs.oracle.com for Java, MDN for the web, NIST for units of measure.
+2. **Non-profit and university education:** freeCodeCamp (its articles and handbooks), CS50 (Harvard), Crash Course, VisuAlgo (National University of Singapore).
+3. **Well-known free resources** from independent authors that sell nothing alongside them, such as floating-point-gui.de, Joel on Software, Ben Eater, Computerphile, NandGame or Math is Fun.
+4. **Commercial learning platforms**, which publish free pages to sell their own courses or tools (Programiz, W3Schools and similar), only when nothing above covers the topic as well. GeeksforGeeks is the exception: it is a widely used free reference, so it can be chosen on the merits of the page.
+
 **Candidate sources** (check each page individually; quality varies even inside one site):
 
 | Source | Good for |
 |--------|----------|
+| dev.java (Oracle) | Java: strings, exceptions, lambdas and streams, newer syntax such as switch expressions |
+| freeCodeCamp | beginner articles and handbooks, such as *The Java Handbook*, with sections you can link to (`#heading-…`) |
 | makingsoftware.com | illustrated explanations of how hardware and software work (check which chapters are free) |
 | GeeksforGeeks | specific algorithms and data structures (choose page by page) |
-| Cloudflare Learning Center | networks: DNS, IP, TCP/UDP, HTTP |
-| Khan Academy (Computing) | number systems, algorithms (Cormen and Balkcom's course) |
 | CS50 (Harvard) notes and lectures | computers, memory, algorithms |
 | Crash Course Computer Science, Computerphile (YouTube) | short videos on almost every unit |
 | VisuAlgo | interactive sorting and searching |
@@ -113,8 +120,8 @@ A reading guide is a lesson folder: `lesson.json` lists the objectives and readi
   "objectives": ["Find the network address of an IPv4 address with a prefix", "…"],
   "readings": [
     {
-      "title": "What is an IP address?",
-      "source": "Cloudflare Learning Center",
+      "title": "Subnet Cheat Sheet",
+      "source": "freeCodeCamp",
       "url": "https://…",
       "type": "article",
       "minutes": 6,
@@ -143,7 +150,7 @@ In a theory subject such as CS Fundamentals, the reading carries the idea, so th
 - **The code example compiles** and uses the style of the starters (`void main()`, `IO.println`, `IO.readln()`). Don't give away a challenge: show the syntax on a different problem.
 - **No prompts when reading input.** `IO.readln("Name: ")` prints the prompt, and the tests would see it.
 - **Tutorials use the older style.** Most pages write `public static void main` and `System.out.println`. Say in the "look for" note that `IO.println` and `void main()` do the same.
-- **Sources:** short beginner pages with runnable examples, such as Programiz, and dev.java (Oracle's official tutorial) for newer syntax. Skip pages that wander into advanced topics, or point to the part to read. W3Schools blocks the weekly link check, so don't use it.
+- **Sources:** follow the [order above](#2-readings-curated-can-be-english-only): dev.java (Oracle's official tutorial) and freeCodeCamp first. A long page or handbook is fine when the "look for" note links to the right section, such as `the-java-handbook/#heading-how-to-use-loops-in-java`, and says what to skip.
 
 The validator knows a quick guide by its subject's `"kind": "programming"`, and warns when the summary is outside 40–180 words (code included), the objectives aren't 2 or 3, or there are more than 2 readings. `quick_guide()` in [scripts/content](../scripts/content/README.md) writes one. See [`subjects/java/lessons/variables-and-arithmetic`](../subjects/java/lessons/variables-and-arithmetic) for an example.
 
