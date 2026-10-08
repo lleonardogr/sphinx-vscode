@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-10-08
+
 ### Added
 
 - **CS Fundamentals tests and exams.** Two tests close the stages: **Programmer's Calculator** (after unit 4: a running value shown in binary, hex, unsigned and signed, with carry, borrow and overflow flags) and **Packet Inspector** (after unit 8: decode an IPv4 and UDP packet from its bytes and check the header checksum). Two closed exams with a quiz and three private coding questions each: **CS Exam 1: Data Representation** (units 1–5, 90 minutes: Fits in a Type, Hex Dump, Base64 Encoder) and the **CS Final Exam** (the whole subject, focused on units 6–8, 120 minutes: Gray Code, Merge Step, DNS Resolver). They are listed in the CS sidebar.
@@ -296,7 +298,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.2.0...v1.3.0
