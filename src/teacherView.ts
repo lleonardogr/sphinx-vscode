@@ -123,7 +123,8 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
     const tool = (toolId: string, label: string, icon: string, command: string): TeacherNode => ({ kind: 'tool', id: toolId, label, icon, command });
     return [
       tool('create', tr('Create New Challenge…', 'Criar novo desafio…'), 'add', 'sphinx.createChallenge'),
-      tool('import', tr('Import Challenges, Quizzes or Exams…', 'Importar desafios, quizzes ou provas…'), 'cloud-download', 'sphinx.importContent'),
+      tool('lesson', tr('Create New Lesson…', 'Criar nova lição…'), 'book', 'sphinx.createLesson'),
+      tool('import', tr('Import Challenges, Quizzes, Lessons or Exams…', 'Importar desafios, quizzes, lições ou provas…'), 'cloud-download', 'sphinx.importContent'),
       tool('export', tr('Export a Pack for Students…', 'Exportar um pacote para os alunos…'), 'package', 'sphinx.exportPack'),
       tool('validate', tr('Validate Challenges in a Folder…', 'Validar desafios de uma pasta…'), 'beaker', 'sphinx.validateChallenges'),
       tool('results', tr('Class Results…', 'Resultados da turma…'), 'table', 'sphinx.classResults'),

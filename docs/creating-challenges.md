@@ -273,6 +273,13 @@ Subjects are defined in `subjects/<id>/subject.json` and ship with the extension
 
 A **lesson** is a short page to read before the quiz and challenges of its unit. Built-in units use **reading guides**: a short summary, the unit's objectives and 1 to 3 curated readings from the web that open in the browser (see [Reading guides](content-guide.md#reading-guides) for the fields and how to choose sources). Lessons come first in their unit and show a reading time. When the student clicks **Mark as read**, the lesson gets a ✓ in the sidebar. A button at the end opens the next item in the path.
 
+**The quick way: Create New Lesson.** In the teacher view (💼), run **Create New Lesson…** (in **Tools**, or **Sphinx: Create New Lesson…** from the Command Palette). Choose a folder, a title and the unit the lesson opens, then the kind:
+
+- a **quick guide**, recommended for programming subjects such as Java: a one-minute summary around one code example, a "Watch out" line and one reading;
+- a **reading guide**, recommended for theory subjects such as CS Fundamentals: a longer summary with a diagram, up to three readings and "Check yourself" questions.
+
+Sphinx writes `lesson.json` and `lesson.md` with guidance in comments (students don't see them), opens both, and adds the folder to `sphinx.extraChallengePaths` so the lesson appears in its unit. Write the summary, the objectives and the readings, then press **Preview** to see it as students will. The validator reminds you while the example reading link (`example.com`) is still there.
+
 A lesson is a folder:
 
 ```

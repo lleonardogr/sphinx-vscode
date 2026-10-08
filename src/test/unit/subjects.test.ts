@@ -150,7 +150,7 @@ describe('lessons and the path', () => {
   });
 
   it('holds programming subjects to the quick guide limits, and theory subjects to the full ones', async () => {
-    const reading = { title: 'T', source: 'S', url: 'https://example.com/a', type: 'article', minutes: 5, lang: 'en', lookFor: 'L' };
+    const reading = { title: 'T', source: 'S', url: 'https://example.org/a', type: 'article', minutes: 5, lang: 'en', lookFor: 'L' };
     const guide = (topic: string, readings: number) => {
       const dir = path.join(tempDir(), 'guide');
       fs.mkdirSync(dir);

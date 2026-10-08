@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { AiHints } from './ai/hints';
-import { createChallenge, validateFolder } from './authoring';
+import { createChallenge, createLesson, validateFolder } from './authoring';
 import { ChallengePanel, PanelAction, PanelExamInfo, examStatusText } from './challengePanel';
 import { Challenge, loadChallenges } from './challenges';
 import { Progress } from './progress';
@@ -883,6 +883,8 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     extensionPath: context.extensionPath,
     output,
     challenges: () => challenges,
+    lessons: () => lessons,
+    subject: () => tree.subject,
     javaHome,
     reload,
   };
@@ -1230,6 +1232,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     }),
     vscode.commands.registerCommand('sphinx.deleteItem', (node?: TeacherNode) => deleteItem(node)),
     vscode.commands.registerCommand('sphinx.createChallenge', () => createChallenge(authoringDeps)),
+    vscode.commands.registerCommand('sphinx.createLesson', () => createLesson(authoringDeps)),
     vscode.commands.registerCommand('sphinx.importContent', () => importContent(importDeps)),
     vscode.commands.registerCommand('sphinx.removeImported', () => removeImported(importDeps)),
     vscode.commands.registerCommand('sphinx.validateChallenges', () => validateFolder(authoringDeps)),

@@ -5,12 +5,18 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { CUSTOM_TOPIC, Challenge, topicOrder } from './challenges';
 import { formatReport, reportPassed, validateChallenges } from './validator';
+import { LessonDefinition } from './lessons';
+import { allSubjects, findSubject, subjectTitle } from './subjects';
+import { unitName } from './path';
 import { tr } from './i18n';
 
 interface AuthoringDeps {
   extensionPath: string;
   output: vscode.OutputChannel;
   challenges: () => Challenge[];
+  lessons?: () => LessonDefinition[];
+  /** The subject shown in the sidebar. */
+  subject?: () => string;
   javaHome: () => string | undefined;
   reload: () => void;
 }
@@ -234,6 +240,209 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
   );
   if (choice) {
     vscode.env.openExternal(vscode.Uri.parse('https://github.com/lleonardogr/sphinx-vscode/blob/main/docs/creating-challenges.md'));
+  }
+}
+
+/** A quick guide (programming subjects) or a reading guide (theory subjects); see docs/content-guide.md. */
+export type LessonStyle = 'quick' | 'reading';
+
+/** Where a lesson goes: a unit, or no unit in a subject (its Custom section). */
+export type LessonPlace = { topic: string } | { subject: string };
+
+/** The example link of a new lesson: the validator warns until it is replaced. */
+export const EXAMPLE_READING_URL = 'https://example.com/replace-with-your-reading';
+
+/** The files of a new lesson, written in the current interface language. */
+export function lessonTemplates(title: string, place: LessonPlace, order: number, style: LessonStyle): Record<string, string> {
+  const quick = style === 'quick';
+  const objectives = quick
+    ? [tr('Write … (what students can do after this unit, with a verb you can check).', 'Escrever … (o que os alunos conseguem fazer depois desta unidade, com um verbo que dá para conferir).'), tr('Predict … (a second objective).', 'Prever … (um segundo objetivo).')]
+    : [
+        tr('Explain … (what students can do after this unit, with a verb you can check).', 'Explicar … (o que os alunos conseguem fazer depois desta unidade, com um verbo que dá para conferir).'),
+        tr('Calculate … (a second objective).', 'Calcular … (um segundo objetivo).'),
+        tr('Trace … (a third objective).', 'Acompanhar … (um terceiro objetivo).'),
+      ];
+  const lessonJson = {
+    title,
+    ...place,
+    order,
+    objectives,
+    readings: [
+      {
+        title: tr('The title of the page', 'O título da página'),
+        source: tr('Who publishes it, such as dev.java or freeCodeCamp', 'Quem a publica, como dev.java ou freeCodeCamp'),
+        url: EXAMPLE_READING_URL,
+        type: 'article',
+        minutes: 5,
+        lang: 'en',
+        lookFor: tr('What to read on the page, and what to skip.', 'O que ler na página, e o que pular.'),
+      },
+    ],
+  };
+  const quickMd = tr(
+    `## In short
+
+<!-- A quick guide: 60 to 120 words around one short example. The unit's challenges do the teaching. -->
+Write the key idea here, in two or three short sentences, with the words the challenges use.
+
+\`\`\`java
+void main() {
+    // One short example (about 10 lines) in the style of the starters.
+    // Show the syntax on a different problem from the challenges.
+    IO.println("Hello");
+}
+\`\`\`
+
+**Watch out:** the mistake students make first.
+
+<!-- readings -->
+`,
+    `## Em resumo
+
+<!-- Um guia rápido: 60 a 120 palavras em volta de um exemplo curto. Os desafios da unidade é que ensinam. -->
+Escreva aqui a ideia principal, em duas ou três frases curtas, com as palavras que os desafios usam.
+
+\`\`\`java
+void main() {
+    // Um exemplo curto (umas 10 linhas) no estilo dos códigos iniciais.
+    // Mostre a sintaxe num problema diferente dos desafios.
+    IO.println("Olá");
+}
+\`\`\`
+
+**Cuidado:** o erro que os alunos cometem primeiro.
+
+<!-- readings -->
+`,
+  );
+  const readingMd = tr(
+    `## In short
+
+<!-- A reading guide: 150 to 250 words with the key idea, the words the exercises use, and the fact students most often get wrong.
+     Add one diagram if the idea is visual: put an SVG next to this file and write ![What it shows](diagram.svg). -->
+Write the key idea here.
+
+<!-- readings -->
+
+## Check yourself
+
+1. A question the reading should let students answer.
+2. Another one, pointing to the quiz.
+`,
+    `## Em resumo
+
+<!-- Um guia de leitura: 150 a 250 palavras com a ideia principal, as palavras que os exercícios usam e o que os alunos mais erram.
+     Acrescente um diagrama se a ideia for visual: coloque um SVG ao lado deste arquivo e escreva ![O que ele mostra](diagrama.svg). -->
+Escreva aqui a ideia principal.
+
+<!-- readings -->
+
+## Confira
+
+1. Uma pergunta que a leitura deve deixar os alunos responderem.
+2. Outra, que leve ao quiz.
+`,
+  );
+  return { 'lesson.json': JSON.stringify(lessonJson, null, 2) + '\n', 'lesson.md': quick ? quickMd : readingMd };
+}
+
+/** Writes a new lesson into `dir`. */
+export function writeLessonTemplate(dir: string, title: string, place: LessonPlace, order: number, style: LessonStyle): void {
+  fs.mkdirSync(dir, { recursive: true });
+  for (const [file, content] of Object.entries(lessonTemplates(title, place, order, style))) {
+    fs.writeFileSync(path.join(dir, file), content);
+  }
+}
+
+export async function createLesson(deps: AuthoringDeps): Promise<void> {
+  const folder = await pickFolder(deps, tr('New lesson (1/4): folder', 'Nova lição (1/4): pasta'));
+  if (!folder) {
+    return;
+  }
+
+  const title = await vscode.window.showInputBox({
+    title: tr('New lesson (2/4): title', 'Nova lição (2/4): título'),
+    prompt: tr('The name students see, e.g. "Working with Files"', 'O nome que os alunos veem, por exemplo "Trabalhando com arquivos"'),
+    ignoreFocusOut: true,
+    validateInput: (v) => {
+      const id = slugify(v);
+      if (!id) {
+        return tr('Type a title', 'Digite um título');
+      }
+      return fs.existsSync(path.join(folder, id)) ? tr(`A folder named "${id}" already exists`, `Já existe uma pasta chamada "${id}"`) : undefined;
+    },
+  });
+  if (!title) {
+    return;
+  }
+
+  // Units grouped by subject, the sidebar's subject first, then "no unit" for each subject.
+  type PlacePick = vscode.QuickPickItem & { place?: LessonPlace; subject?: string };
+  const current = deps.subject?.();
+  const subjects = [...allSubjects()].sort((a, b) => Number(b.id === current) - Number(a.id === current));
+  const placePicks: PlacePick[] = subjects.flatMap((s) => [
+    { label: subjectTitle(s), kind: vscode.QuickPickItemKind.Separator },
+    ...s.units.map((u, i): PlacePick => ({ label: `${i + 1} · ${unitName(u.key)}`, place: { topic: u.key }, subject: s.id })),
+    { label: `$(star-empty) ${tr('No unit (the Custom section)', 'Sem unidade (a seção Personalizados)')}`, place: { subject: s.id }, subject: s.id },
+  ]);
+  const placePick = await vscode.window.showQuickPick(placePicks, {
+    title: tr('New lesson (3/4): unit', 'Nova lição (3/4): unidade'),
+    placeHolder: tr('The lesson opens its unit, before the challenges', 'A lição abre a unidade, antes dos desafios'),
+    ignoreFocusOut: true,
+  });
+  if (!placePick?.place) {
+    return;
+  }
+
+  const programming = findSubject(placePick.subject)?.kind === 'programming';
+  const styles: (vscode.QuickPickItem & { style: LessonStyle })[] = [
+    {
+      label: tr('Quick guide', 'Guia rápido'),
+      description: programming ? tr('recommended for programming subjects', 'recomendado para matérias de programação') : '',
+      detail: tr('A one-minute summary around one code example, a "Watch out" line and one reading.', 'Um resumo de um minuto em volta de um exemplo de código, uma linha de "Cuidado" e uma leitura.'),
+      style: 'quick',
+    },
+    {
+      label: tr('Reading guide', 'Guia de leitura'),
+      description: programming ? '' : tr('recommended for theory subjects', 'recomendado para matérias teóricas'),
+      detail: tr('A longer summary with a diagram, up to three readings and "Check yourself" questions.', 'Um resumo mais longo com um diagrama, até três leituras e perguntas de "Confira".'),
+      style: 'reading',
+    },
+  ];
+  if (!programming) {
+    styles.reverse();
+  }
+  const style = await vscode.window.showQuickPick(styles, { title: tr('New lesson (4/4): kind', 'Nova lição (4/4): tipo'), ignoreFocusOut: true });
+  if (!style) {
+    return;
+  }
+
+  const topic = 'topic' in placePick.place ? placePick.place.topic : '';
+  const order = Math.max(0, ...(deps.lessons?.() ?? []).filter((l) => l.topic === topic).map((l) => l.order)) + 1;
+  const id = slugify(title);
+  const dir = path.join(folder, id);
+  writeLessonTemplate(dir, title, placePick.place, order, style.style);
+
+  await ensureRegistered(folder, deps);
+  deps.reload();
+
+  await vscode.window.showTextDocument(vscode.Uri.file(path.join(dir, 'lesson.md')), { viewColumn: vscode.ViewColumn.One, preview: false });
+  await vscode.window.showTextDocument(vscode.Uri.file(path.join(dir, 'lesson.json')), { viewColumn: vscode.ViewColumn.Two, preview: false });
+  const preview = tr('Preview', 'Visualizar');
+  const guide = tr('Open Guide', 'Abrir o guia');
+  const choice = await vscode.window.showInformationMessage(
+    tr(
+      `Created the lesson "${title}". Write the summary in lesson.md, then the objectives and readings in lesson.json. Save and press Preview to see it as students will.`,
+      `A lição "${title}" foi criada. Escreva o resumo no lesson.md, depois os objetivos e as leituras no lesson.json. Salve e clique em Visualizar para vê-la como os alunos verão.`,
+    ),
+    preview,
+    guide,
+  );
+  if (choice === preview) {
+    deps.reload();
+    await vscode.commands.executeCommand('sphinx.openLesson', id);
+  } else if (choice === guide) {
+    vscode.env.openExternal(vscode.Uri.parse('https://github.com/lleonardogr/sphinx-vscode/blob/main/docs/content-guide.md#reading-guides'));
   }
 }
 

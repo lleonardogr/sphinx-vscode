@@ -8,6 +8,7 @@ import type { ClassReport } from '../../classResults';
 import { migrateOldStorage, migrateSphynxState } from '../../extension';
 import { javacMajorVersion } from '../../runner';
 import { extractZip, findImportables, findSolutions } from '../../importCore';
+import { validateChallenges } from '../../validator';
 import { dialogs, test, waitFor } from './harness';
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
@@ -441,6 +442,62 @@ test('a teacher deletes an imported challenge and lesson, but never built-in con
   await vscode.commands.executeCommand('sphinx.deleteItem', { kind: 'lesson', lesson });
   assert.equal(fs.existsSync(lesson.dir), false, 'the imported lesson is removed');
   assert.equal(api.lessons().some((l) => l.title === 'Class Reading'), false);
+});
+
+test('a teacher creates a quick guide for a Java unit and a reading guide for a CS unit', async () => {
+  const workspace = vscode.workspace.workspaceFolders![0].uri.fsPath;
+  const folder = path.join(workspace, 'my-challenges');
+  const config = vscode.workspace.getConfiguration('sphinx');
+  const before = config.get<string[]>('extraChallengePaths', []);
+  const create = async (title: string, unit: string, kind: string) => {
+    dialogs.inputBox = title;
+    dialogs.answer = () => undefined;
+    dialogs.choose = (items, options) => {
+      const step = String(options?.title ?? '');
+      if (step.includes('(1/4)')) return items.find((i) => i.label === 'my-challenges');
+      if (step.includes('(3/4)')) return items.find((i) => i.label.endsWith(unit));
+      if (step.includes('(4/4)')) return items.find((i) => i.label === kind);
+      return undefined;
+    };
+    try {
+      await vscode.commands.executeCommand('sphinx.createLesson');
+    } finally {
+      dialogs.choose = undefined;
+    }
+  };
+  try {
+    // Java is a programming subject: a quick guide, after the unit's built-in guide.
+    await create('Reading Input', '1 · Basics', 'Quick guide');
+    const quick = api.lessons().find((l) => l.title === 'Reading Input');
+    assert.ok(quick, 'the lesson was not loaded');
+    assert.equal(quick.topic, 'Basics');
+    assert.equal(quick.order, 2);
+    assert.equal(quick.objectives.length, 2);
+    assert.match(read(path.join(quick.dir, 'lesson.md')), /```java[\s\S]*\*\*Watch out:\*\*[\s\S]*<!-- readings -->/);
+    // CS is a theory subject: a reading guide with "Check yourself" questions.
+    await create('Octal Numbers', '2 · Number Systems', 'Reading guide');
+    const reading = api.lessons().find((l) => l.title === 'Octal Numbers')!;
+    assert.equal(reading.topic, 'NumberSystems');
+    assert.equal(reading.objectives.length, 3);
+    assert.match(read(path.join(reading.dir, 'lesson.md')), /<!-- readings -->[\s\S]*## Check yourself/);
+
+    // Both load and validate; the validator reminds the teacher to replace the example reading.
+    const report = await validateChallenges([folder]);
+    assert.deepEqual(report.loadErrors, []);
+    for (const lesson of report.challenges) {
+      assert.deepEqual(lesson.problems, [], lesson.id);
+      assert.ok(lesson.warnings?.some((w) => w.includes('still has the example link')), `${lesson.id}: ${lesson.warnings?.join(' | ')}`);
+    }
+    // The folder was registered, and the teacher view lists them as the teacher's own lessons.
+    assert.ok(vscode.workspace.getConfiguration('sphinx').get<string[]>('extraChallengePaths', []).includes(folder));
+    const t = api.teacherTree;
+    const content = t.getChildren(t.getChildren()[1]).map((n) => String(t.getTreeItem(n as never).label));
+    assert.ok(content.includes('Reading Input') && content.includes('Octal Numbers'), content.join(', '));
+  } finally {
+    await config.update('extraChallengePaths', before, vscode.ConfigurationTarget.Global);
+    fs.rmSync(folder, { recursive: true, force: true });
+    await vscode.commands.executeCommand('sphinx.refresh');
+  }
 });
 
 test('state saved under the old "sphynx." keys moves to "sphinx." keys, once', () => {
