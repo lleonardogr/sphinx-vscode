@@ -1,15 +1,33 @@
 name: Reading links
 
-# Every Monday, check that the curated readings of every lesson still open.
+# Checks that the curated readings of every lesson still open: every Monday, when run by hand,
+# and on pull requests that change a lesson's readings. The weekly and manual runs keep one issue
+# up to date with the links that need attention, and close it once every link opens again.
 on:
   schedule:
     - cron: '0 9 * * 1'
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'subjects/**/lesson.json'
+      - 'scripts/check-links.js'
+      - '.github/workflows/links.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: reading-links-${{ github.event_name == 'pull_request' && github.ref || 'main' }}
 
 jobs:
   links:
     name: Check reading links
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      LABEL: reading-links
+      TITLE: Reading links need attention
     steps:
       - uses: actions/checkout@v5
 
@@ -17,4 +35,41 @@ jobs:
         with:
           node-version: 22
 
-      - run: node scripts/check-links.js
+      # The open issue holds the previous check's temporary problems: one that persists becomes broken.
+      - name: Find the open issue
+        id: issue
+        if: github.event_name != 'pull_request'
+        run: |
+          number=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number // empty')
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+          if [ -n "$number" ]; then gh issue view "$number" --json body --jq .body > previous.md; fi
+
+      - name: Check the links
+        id: check
+        continue-on-error: true
+        run: node scripts/check-links.js --retry-after 60 --previous previous.md --report report.md
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ -f report.md ]; then cat report.md >> "$GITHUB_STEP_SUMMARY"; else echo "Every reading link opens." >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Open, update or close the issue
+        if: github.event_name != 'pull_request'
+        env:
+          NUMBER: ${{ steps.issue.outputs.number }}
+        run: |
+          if [ -f report.md ]; then
+            if [ -n "$NUMBER" ]; then
+              gh issue edit "$NUMBER" --body-file report.md
+            else
+              gh label create "$LABEL" --color d93f0b --description "Lesson readings whose links stopped working" --force
+              gh issue create --title "$TITLE" --label "$LABEL" --body-file report.md
+            fi
+          elif [ -n "$NUMBER" ]; then
+            gh issue close "$NUMBER" --comment "Every reading link opens again."
+          fi
+
+      - name: Fail when a link is broken
+        if: steps.check.outcome == 'failure'
+        run: exit 1
