@@ -92,7 +92,14 @@ describe('exam subjects', () => {
     const challenges = loadChallenges(CONTENT_ROOTS).challenges;
     const quizzes = loadQuizzes(CONTENT_ROOTS).quizzes;
     const builtIn = loadExams([path.join(ROOT, 'exams')], challenges, quizzes).exams;
-    assert.deepEqual([...new Set(builtIn.map((e) => e.subject))], ['java']);
+    assert.deepEqual(Object.fromEntries(builtIn.map((e) => [e.id, e.subject])), {
+      'cs-exam-1': 'cs',
+      'cs-final-exam': 'cs',
+      'exam-1': 'java',
+      'exam-2': 'java',
+      'final-exam': 'java',
+      'sample-exam': 'java',
+    });
     const root = tempDir();
     const exam = (id: string, meta: object) => {
       fs.mkdirSync(path.join(root, id));

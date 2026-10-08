@@ -1,0 +1,117 @@
+{
+  "title": "CS Exam 1 Quiz",
+  "description": "Eight questions. You can submit the quiz only once.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "A program adds up an array of 10 million `int`s twice: first in order, from index 0 to the end, then visiting the same indexes in a random order. Which pass is faster, and why?",
+      "options": [
+        "In order: each cache line brings in the next few elements too, so most reads are cache hits",
+        "The same: RAM is random access, so every element takes the same time to read",
+        "Random order: the CPU spreads the reads over all its cores",
+        "In order: the CPU skips the elements it has already added"
+      ],
+      "answer": 0,
+      "explanation": "Memory moves to the cache in lines of about 64 bytes, 16 `int`s. Reading in order uses all of them (spatial locality); random order wastes most of each line and waits for RAM far more often. \"Random access\" means any address can be read, not that every read is equally fast."
+    },
+    {
+      "type": "number",
+      "prompt": "Write 2026 in hexadecimal.",
+      "answer": "7EA",
+      "base": 16,
+      "explanation": "2026 = 7 × 256 + 14 × 16 + 10, so the digits are 7, E (14) and A (10)."
+    },
+    {
+      "type": "output",
+      "code": "IO.println(0x1F + 010 + 0b11);",
+      "answer": "42",
+      "explanation": "`0x1F` is hex (31), `0b11` is binary (3), and a leading `0` makes `010` **octal**: 8, not 10. So 31 + 8 + 3."
+    },
+    {
+      "type": "number",
+      "prompt": "How many different values can 12 bits hold?",
+      "answer": "4096",
+      "explanation": "Each extra bit doubles the number of patterns: 2¹² = 4096. Not 12 × 2 = 24."
+    },
+    {
+      "type": "output",
+      "code": "byte b = (byte) 200;\nIO.println(b);",
+      "answer": "-56",
+      "explanation": "A `byte` has 8 bits in two's complement, from −128 to 127. 200 is `1100 1000`; with the top bit set it reads as 200 − 256 = −56."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why does `0.1 + 0.2 == 0.3` give `false` in Java?",
+      "options": [
+        "0.1 and 0.2 have no exact binary form, like 1/3 in decimal, so the sum is a tiny bit off",
+        "Java has a bug in `double` addition",
+        "A `double` keeps only two decimal places",
+        "`==` compares where the numbers are stored, not their values"
+      ],
+      "answer": 0,
+      "explanation": "In binary, 0.1 is a repeating fraction, so a `double` stores the nearest value it can. The sum is 0.30000000000000004. Compare decimals with a tolerance, such as `Math.abs(a - b) < 1e-9`."
+    },
+    {
+      "type": "number",
+      "prompt": "In UTF-8, how many bytes does the text `Olá!` take?",
+      "answer": "5",
+      "explanation": "`O`, `l` and `!` are ASCII: 1 byte each. `á` is outside ASCII and takes 2 bytes. 1 + 1 + 2 + 1 = 5."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "An uncompressed 100 × 100 image with 24-bit color takes 30,000 bytes.",
+      "answer": true,
+      "explanation": "24 bits are 3 bytes per pixel (red, green, blue), and there are 100 × 100 = 10,000 pixels: 30,000 bytes."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz da prova 1 de Fundamentos",
+      "description": "Oito questões. Você pode enviar o quiz só uma vez.",
+      "questions": [
+        {
+          "prompt": "Um programa soma um array de 10 milhões de `int`s duas vezes: primeiro em ordem, do índice 0 até o fim, depois visitando os mesmos índices em ordem aleatória. Qual passada é mais rápida, e por quê?",
+          "options": [
+            "Em ordem: cada linha de cache traz os próximos elementos também, então a maioria das leituras são acertos no cache",
+            "Iguais: a RAM é de acesso aleatório, então todo elemento demora o mesmo para ser lido",
+            "Ordem aleatória: a CPU espalha as leituras por todos os núcleos",
+            "Em ordem: a CPU pula os elementos que já somou"
+          ],
+          "explanation": "A memória vai para o cache em linhas de uns 64 bytes, 16 `int`s. Ler em ordem usa todos eles (localidade espacial); a ordem aleatória desperdiça a maior parte de cada linha e espera pela RAM muito mais vezes. \"Acesso aleatório\" quer dizer que qualquer endereço pode ser lido, não que toda leitura é igualmente rápida."
+        },
+        {
+          "prompt": "Escreva 2026 em hexadecimal.",
+          "explanation": "2026 = 7 × 256 + 14 × 16 + 10, então os dígitos são 7, E (14) e A (10)."
+        },
+        {
+          "explanation": "`0x1F` é hexadecimal (31), `0b11` é binário (3), e um `0` na frente torna `010` **octal**: 8, não 10. Então 31 + 8 + 3."
+        },
+        {
+          "prompt": "Quantos valores diferentes 12 bits podem guardar?",
+          "explanation": "Cada bit a mais dobra o número de padrões: 2¹² = 4096. Não 12 × 2 = 24."
+        },
+        {
+          "explanation": "Um `byte` tem 8 bits em complemento de dois, de −128 a 127. 200 é `1100 1000`; com o bit mais alto ligado, ele é lido como 200 − 256 = −56."
+        },
+        {
+          "prompt": "Por que `0.1 + 0.2 == 0.3` dá `false` em Java?",
+          "options": [
+            "0.1 e 0.2 não têm forma binária exata, como 1/3 em decimal, então a soma fica um pouquinho diferente",
+            "O Java tem um bug na soma de `double`",
+            "Um `double` guarda só duas casas decimais",
+            "`==` compara onde os números estão guardados, não os valores"
+          ],
+          "explanation": "Em binário, 0.1 é uma dízima periódica, então um `double` guarda o valor mais próximo que consegue. A soma é 0.30000000000000004. Compare decimais com uma tolerância, como `Math.abs(a - b) < 1e-9`."
+        },
+        {
+          "prompt": "Em UTF-8, quantos bytes ocupa o texto `Olá!`?",
+          "explanation": "`O`, `l` e `!` são ASCII: 1 byte cada. `á` está fora do ASCII e ocupa 2 bytes. 1 + 1 + 2 + 1 = 5."
+        },
+        {
+          "prompt": "Uma imagem de 100 × 100 sem compressão, com cor de 24 bits, ocupa 30.000 bytes.",
+          "explanation": "24 bits são 3 bytes por pixel (vermelho, verde, azul), e são 100 × 100 = 10.000 pixels: 30.000 bytes."
+        }
+      ]
+    }
+  }
+}

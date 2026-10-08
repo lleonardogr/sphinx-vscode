@@ -1,0 +1,68 @@
+{
+  "title": "Fits in a Type",
+  "difficulty": "Easy",
+  "hints": [
+    "A type with b bits in two's complement holds −2^(b−1) to 2^(b−1) − 1: byte −128 to 127, short −32768 to 32767.",
+    "Check the types from the smallest to the largest and stop at the first that fits.",
+    "Read the numbers as long: every input fits in one. Write the limits of int with an L, such as 2147483647L."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Cabe em qual tipo",
+      "hints": [
+        "Um tipo com b bits em complemento de dois guarda de −2^(b−1) a 2^(b−1) − 1: byte de −128 a 127, short de −32768 a 32767.",
+        "Teste os tipos do menor para o maior e pare no primeiro que couber.",
+        "Leia os números como long: toda entrada cabe num. Escreva os limites do int com um L, como 2147483647L."
+      ],
+      "mustNotContain": [
+        "Calcule os limites pelo número de bits: MIN_VALUE, MAX_VALUE e conversões (casts) não valem aqui."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "\\b(Byte|Short|Integer|Long)\\s*\\.\\s*(MIN|MAX)_VALUE|\\(\\s*(byte|short|int)\\s*\\)",
+      "message": "Work the limits out from the number of bits: MIN_VALUE, MAX_VALUE and casts aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "4\n100\n200\n-129\n40000\n",
+      "output": "100: byte\n200: short\n-129: short\n40000: int\n"
+    },
+    {
+      "input": "3\n0\n-128\n3000000000\n",
+      "output": "0: byte\n-128: byte\n3000000000: long\n"
+    },
+    {
+      "input": "2\n127\n128\n",
+      "output": "127: byte\n128: short\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n-128\n-129\n",
+      "output": "-128: byte\n-129: short\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n32767\n32768\n-32768\n-32769\n",
+      "output": "32767: short\n32768: int\n-32768: short\n-32769: int\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n2147483647\n2147483648\n-2147483648\n-2147483649\n",
+      "output": "2147483647: int\n2147483648: long\n-2147483648: int\n-2147483649: long\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n9223372036854775807\n-9223372036854775808\n-1\n",
+      "output": "9223372036854775807: long\n-9223372036854775808: long\n-1: byte\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n65535\n",
+      "output": "65535: int\n",
+      "hidden": true
+    }
+  ]
+}
