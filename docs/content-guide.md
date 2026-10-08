@@ -126,7 +126,11 @@ A reading guide is a lesson folder: `lesson.json` lists the objectives and readi
 }
 ```
 
-Readings open in the browser. The validator checks the fields and the Portuguese `lookFor` notes, and warns when the summary is outside 100–350 words or the objectives aren't 3 to 5. `node scripts/check-links.js` checks that every reading still opens; the **Reading links** workflow runs it every Monday.
+Readings open in the browser. The validator checks the fields and the Portuguese `lookFor` notes, and warns when the summary is outside 100–350 words or the objectives aren't 3 to 5. `node scripts/check-links.js` checks that every reading still opens. The **Reading links** workflow runs it every Monday and on pull requests that change a lesson's readings. A link that is gone (404 or 410) fails the check. Every problem goes into one issue, **Reading links need attention**, which is updated each week and closes itself once every link opens:
+
+- **Broken:** the page is gone, its site no longer exists, or it was already failing the week before.
+- **Failing for now:** server errors (5xx) and timeouts, after a second try a minute later. A link that still fails the next week moves to Broken.
+- **Could not be verified:** the site refused the checker (401, 403 or 429). Prefer sources that allow checks.
 
 ## Quick guides for programming subjects
 
