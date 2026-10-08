@@ -8,11 +8,12 @@ import { checkImportables, extractZip, findImportables, findSolutions } from '..
 import { loadQuizzes } from '../../quizzes';
 import { CONTENT_ROOTS, ROOT, tempDir } from './helpers';
 
-/** A teacher's folder: one challenge (with its solution), one quiz and one exam. */
+/** A teacher's folder: one challenge (with its solution), one quiz, one lesson and one exam. */
 function teacherFolder(): string {
   const dir = tempDir();
   fs.cpSync(path.join(ROOT, 'challenges', 'fizzbuzz'), path.join(dir, 'my-fizzbuzz'), { recursive: true });
   fs.cpSync(path.join(ROOT, 'quizzes', 'loops-quiz'), path.join(dir, 'my-quiz'), { recursive: true });
+  fs.cpSync(path.join(ROOT, 'subjects', 'cs', 'lessons', 'bits-and-bytes'), path.join(dir, 'my-lesson'), { recursive: true });
   fs.cpSync(path.join(ROOT, 'exams', 'exam-1'), path.join(dir, 'my-exam'), { recursive: true });
   return dir;
 }
@@ -21,16 +22,17 @@ describe('import', () => {
   const builtIn = loadChallenges(CONTENT_ROOTS).challenges;
   const builtInQuizzes = loadQuizzes(CONTENT_ROOTS).quizzes;
 
-  it('finds challenges, quizzes and exams in a folder', () => {
+  it('finds challenges, quizzes, lessons and exams in a folder', () => {
     const found = findImportables(teacherFolder(), 'shared');
-    assert.deepEqual(found.map((f) => `${f.kind}:${f.name}`).sort(), ['challenge:my-fizzbuzz', 'exam:my-exam', 'quiz:my-quiz']);
+    assert.deepEqual(found.map((f) => `${f.kind}:${f.name}`).sort(), ['challenge:my-fizzbuzz', 'exam:my-exam', 'lesson:my-lesson', 'quiz:my-quiz']);
   });
 
   it('accepts valid items and finds the reference solutions', () => {
     const dir = teacherFolder();
     const { ok, errors } = checkImportables(findImportables(dir, 'shared'), builtIn, builtInQuizzes);
     assert.deepEqual(errors, []);
-    assert.equal(ok.length, 3);
+    assert.equal(ok.length, 4);
+    assert.equal(ok.find((i) => i.kind === 'lesson')?.title, 'Bits and Bytes');
     assert.deepEqual(findSolutions(path.join(dir, 'my-fizzbuzz')).map((f) => path.basename(f)).sort(), ['Solution.classic.java', 'Solution.java']);
   });
 
@@ -41,6 +43,15 @@ describe('import', () => {
     const { ok, errors } = checkImportables(findImportables(dir, 'shared'), builtIn, builtInQuizzes);
     assert.equal(ok.length, 0);
     assert.equal(errors.length, 1);
+  });
+
+  it('rejects a lesson with a broken reading', () => {
+    const dir = tempDir();
+    fs.mkdirSync(path.join(dir, 'bad-lesson'));
+    fs.writeFileSync(path.join(dir, 'bad-lesson', 'lesson.json'), '{ "title": "Bad" ');
+    const { ok, errors } = checkImportables(findImportables(dir, 'shared'), builtIn, builtInQuizzes);
+    assert.equal(ok.length, 0);
+    assert.match(errors[0], /^bad-lesson: /);
   });
 
   it('extracts a zip', () => {

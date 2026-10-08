@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Lessons in packs**: **Import** and **Export a Pack** now carry lessons (reading guides included), with their diagrams and translations. Imported lessons appear in their unit, and in the teacher view under **My Challenges, Quizzes & Lessons**, where they can be exported or deleted.
+
+### Changed
+
+- The teacher view only edits the teacher's own content. Built-in exams and their questions no longer offer **Edit**, **Show in Folder** or **Export**: they're part of the extension, and an update would undo any change. **Try Exam (Preview)** and **Class Results** still work for every exam.
+- **Export a Pack** lists only your own exams, challenges, quizzes and lessons, since students already have the built-in ones.
+- The import commands are now **Import Challenges, Quizzes, Lessons or Exams…** and **Remove Imported Challenges, Quizzes, Lessons or Exams…**.
+
 ## [1.5.0] - 2026-10-07
 
 ### Added

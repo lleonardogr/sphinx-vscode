@@ -1,4 +1,4 @@
-// Export Pack: zips the teacher's chosen challenges, quizzes and exams for students to import.
+// Export Pack: zips the teacher's chosen exams, challenges, quizzes and lessons for students to import.
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
@@ -7,6 +7,7 @@ import { Challenge } from './challenges';
 import { ExamDefinition } from './exams';
 import { PackItem, buildPack, examDependencies } from './exportCore';
 import { QuizDefinition } from './quizzes';
+import { LessonDefinition } from './lessons';
 import { Origin, TeacherNode } from './teacherView';
 import { plural, tr } from './i18n';
 
@@ -14,6 +15,7 @@ export interface ExportDeps {
   challenges(): Challenge[];
   quizzes(): QuizDefinition[];
   exams(): ExamDefinition[];
+  lessons(): LessonDefinition[];
   origin(dir: string): Origin;
   extensionPath: string;
 }
@@ -23,7 +25,8 @@ type Pick = vscode.QuickPickItem & { item?: PackItem; title?: string };
 const ORIGIN: Record<Origin, [string, string]> = { builtIn: ['built-in', 'incluída'], imported: ['imported', 'importada'], folder: ['your folder', 'sua pasta'] };
 
 export async function exportPack(deps: ExportDeps, from?: TeacherNode): Promise<void> {
-  const preselected = from && 'exam' in from ? from.exam.dir : from?.kind === 'challenge' ? from.challenge.dir : from?.kind === 'quiz' ? from.quiz.dir : undefined;
+  const preselected =
+    from && 'exam' in from ? from.exam.dir : from?.kind === 'challenge' ? from.challenge.dir : from?.kind === 'quiz' ? from.quiz.dir : from?.kind === 'lesson' ? from.lesson.dir : undefined;
   const entry = (kind: PackItem['kind'], title: string, dir: string, detail: string): Pick => ({
     label: title,
     description: `${detail} · ${tr(...ORIGIN[deps.origin(dir)])}`,
@@ -31,18 +34,30 @@ export async function exportPack(deps: ExportDeps, from?: TeacherNode): Promise<
     title,
     picked: dir === preselected,
   });
-  const exams = deps.exams().filter((e) => !e.preview);
+  // Only the teacher's own content: students already have everything built in.
+  const exams = deps.exams().filter((e) => !e.preview && deps.origin(e.dir) !== 'builtIn');
   const challenges = deps.challenges().filter((c) => deps.origin(c.dir) !== 'builtIn');
   const quizzes = deps.quizzes().filter((q) => deps.origin(q.dir) !== 'builtIn');
+  const lessons = deps.lessons().filter((l) => deps.origin(l.dir) !== 'builtIn');
   const separator = (label: string): Pick => ({ label, kind: vscode.QuickPickItemKind.Separator });
   const picks: Pick[] = [
-    ...(exams.length ? [separator(tr('Exams', 'Provas')), ...exams.map((e) => entry('exam', e.title, e.dir, plural(e.questions.length, ['question', 'questions'], ['questão', 'questões'])))] : []),
+    ...(exams.length ? [separator(tr('Your exams', 'Suas provas')), ...exams.map((e) => entry('exam', e.title, e.dir, plural(e.questions.length, ['question', 'questions'], ['questão', 'questões'])))] : []),
     ...(challenges.length ? [separator(tr('Your challenges', 'Seus desafios')), ...challenges.map((c) => entry('challenge', c.title, c.dir, c.difficulty))] : []),
     ...(quizzes.length ? [separator(tr('Your quizzes', 'Seus quizzes')), ...quizzes.map((q) => entry('quiz', q.title, q.dir, 'Quiz'))] : []),
+    ...(lessons.length ? [separator(tr('Your lessons', 'Suas lições')), ...lessons.map((l) => entry('lesson', l.title, l.dir, tr('Lesson', 'Lição')))] : []),
   ];
+  if (picks.length === 0) {
+    vscode.window.showInformationMessage(
+      tr(
+        'There is nothing of your own to export yet. Built-in content is already in every student\'s Sphinx; packs carry the exams, challenges, quizzes and lessons you import or add from a folder.',
+        'Ainda não há conteúdo seu para exportar. O conteúdo incluído já está no Sphinx de todo aluno; pacotes levam as provas, desafios, quizzes e lições que você importa ou adiciona de uma pasta.',
+      ),
+    );
+    return;
+  }
   const chosen = ((await vscode.window.showQuickPick(picks, {
     title: tr('Export a pack (1/3): what goes in it?', 'Exportar um pacote (1/3): o que vai nele?'),
-    placeHolder: tr('Choose the exams, challenges and quizzes to share', 'Escolha as provas, desafios e quizzes para compartilhar'),
+    placeHolder: tr('Choose the exams, challenges, quizzes and lessons to share', 'Escolha as provas, desafios, quizzes e lições para compartilhar'),
     canPickMany: true,
     ignoreFocusOut: true,
   })) ?? []) as Pick[];

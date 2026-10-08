@@ -1,4 +1,4 @@
-// Finds challenges and exams in a folder or .zip a teacher shared, so they can be copied into the
+// Finds challenges, quizzes, lessons and exams in a folder or .zip a teacher shared, so they can be copied into the
 // extension's library. No vscode dependency so it can be tested on its own.
 import * as fs from 'fs';
 import * as path from 'path';
@@ -6,9 +6,10 @@ import { unzipSync } from 'fflate';
 import { Challenge, loadChallenge } from './challenges';
 import { loadExams } from './exams';
 import { QuizDefinition, loadQuiz } from './quizzes';
+import { loadLesson } from './lessons';
 
 export interface Importable {
-  kind: 'challenge' | 'exam' | 'quiz';
+  kind: 'challenge' | 'exam' | 'quiz' | 'lesson';
   /** Folder to copy. */
   dir: string;
   /** Folder name in the library, which is also the id. */
@@ -45,7 +46,7 @@ export function extractZip(zipFile: string, dest: string): void {
 const skip = (name: string) => name.startsWith('.') || name === '__MACOSX' || name === 'node_modules';
 
 /**
- * Finds every challenge (challenge.json), quiz (quiz.json) and exam (exam.json) folder under `root`.
+ * Finds every challenge (challenge.json), quiz (quiz.json), lesson (lesson.json) and exam (exam.json) folder under `root`.
  * An exam's private questions belong to the exam and are not listed on their own.
  * `rootName` names a challenge or exam whose files sit directly in `root` (e.g. a zip of the files).
  */
@@ -63,6 +64,10 @@ export function findImportables(root: string, rootName: string): Importable[] {
     }
     if (fs.existsSync(path.join(dir, 'quiz.json'))) {
       found.push({ kind: 'quiz', dir, name, title: name });
+      return;
+    }
+    if (fs.existsSync(path.join(dir, 'lesson.json'))) {
+      found.push({ kind: 'lesson', dir, name, title: name });
       return;
     }
     if (depth >= MAX_DEPTH) {
@@ -92,6 +97,13 @@ export function checkImportables(items: Importable[], known: Challenge[], knownQ
       const quiz = loadQuiz(item.dir);
       importedQuizzes.push(quiz);
       ok.push({ ...item, title: quiz.title, questions: quiz.questions.length });
+    } catch (e) {
+      errors.push(`${item.name}: ${(e as Error).message}`);
+    }
+  }
+  for (const item of items.filter((i) => i.kind === 'lesson')) {
+    try {
+      ok.push({ ...item, title: loadLesson(item.dir).title });
     } catch (e) {
       errors.push(`${item.name}: ${(e as Error).message}`);
     }

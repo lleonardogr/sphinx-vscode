@@ -136,7 +136,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     }
     return inside(libraryDir()) ? 'imported' : 'folder';
   };
-  const teacherTree = new TeacherTreeProvider(() => challenges, () => quizzes, () => exams, origin, examManager, (exam) => exams.find((e) => e.id === exam.id + PREVIEW_SUFFIX));
+  const teacherTree = new TeacherTreeProvider(() => challenges, () => quizzes, () => exams, origin, examManager, (exam) => exams.find((e) => e.id === exam.id + PREVIEW_SUFFIX), () => lessons);
   /** Re-grades results files for the class dashboard's "Verify all". */
   async function verifyFiles(files: string[]): Promise<{ file: string; matches: boolean; recomputed?: number; error?: string }[]> {
     const out: { file: string; matches: boolean; recomputed?: number; error?: string }[] = [];
@@ -871,6 +871,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     challenges: () => challenges,
     exams: () => exams,
     quizzes: () => quizzes,
+    lessons: () => lessons,
     reload,
   };
 
@@ -916,8 +917,23 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     return true;
   }
 
+  /** The file to edit for a teacher's own item; built-in content is part of the extension and can't be edited. */
+  function ownFile(node: TeacherNode): string | undefined {
+    const file = sourceFile(node);
+    if (file && origin(file) === 'builtIn') {
+      vscode.window.showInformationMessage(
+        tr(
+          'Built-in content is part of the extension and can\'t be edited: changes would be lost on the next update. You can try it, use it in exams and see its class results.',
+          'O conteúdo incluído faz parte da extensão e não pode ser editado: as mudanças se perderiam na próxima atualização. Você pode testá-lo, usá-lo em provas e ver os resultados da turma.',
+        ),
+      );
+      return undefined;
+    }
+    return file;
+  }
+
   /**
-   * Teachers: deletes one of their own exams, challenges, tests or quizzes. Imported items are removed
+   * Teachers: deletes one of their own exams, challenges, tests, quizzes or lessons. Imported items are removed
    * from the library (a copy); items from the teacher's own folders go to the Trash. Built-in content can't be deleted.
    */
   async function deleteItem(node?: TeacherNode): Promise<void> {
@@ -928,7 +944,9 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
           ? { dir: node.challenge.dir, title: node.challenge.title }
           : node?.kind === 'quiz'
             ? { dir: node.quiz.dir, title: node.quiz.title }
-            : undefined;
+            : node?.kind === 'lesson'
+              ? { dir: node.lesson.dir, title: node.lesson.title }
+              : undefined;
     if (!item || origin(item.dir) === 'builtIn') {
       return;
     }
@@ -1168,7 +1186,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       return report;
     }),
     vscode.commands.registerCommand('sphinx.exportPack', (node?: TeacherNode) =>
-      exportPack({ challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, origin, extensionPath: context.extensionPath }, node),
+      exportPack({ challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, lessons: () => lessons, origin, extensionPath: context.extensionPath }, node),
     ),
     vscode.commands.registerCommand('sphinx.restartPreview', async (node?: { exam?: ExamDefinition }) => {
       if (node?.exam?.preview) {
@@ -1177,13 +1195,13 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     }),
     vscode.commands.registerCommand('sphinx.switchToStudentView', () => setView('student')),
     vscode.commands.registerCommand('sphinx.editItem', async (node?: TeacherNode) => {
-      const file = node && sourceFile(node);
+      const file = node && ownFile(node);
       if (file) {
         await vscode.window.showTextDocument(vscode.Uri.file(file), { preview: false });
       }
     }),
     vscode.commands.registerCommand('sphinx.revealItem', async (node?: TeacherNode) => {
-      const file = node && sourceFile(node);
+      const file = node && ownFile(node);
       if (file) {
         await vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(file));
       }

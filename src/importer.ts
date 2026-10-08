@@ -1,4 +1,4 @@
-// "Import Challenges, Quizzes, Tests or Exams…": copies what a teacher shared (a folder or a .zip) into the
+// "Import Challenges, Quizzes, Lessons or Exams…": copies what a teacher shared (a folder or a .zip) into the
 // extension's library, which is loaded like the built-in challenges. Copying means the import keeps
 // working after the original folder, download or USB stick is gone.
 import * as fs from 'fs';
@@ -9,6 +9,7 @@ import { slugify } from './authoring';
 import { Challenge } from './challenges';
 import { ExamDefinition } from './exams';
 import { QuizDefinition } from './quizzes';
+import { LessonDefinition } from './lessons';
 import { plural, tr } from './i18n';
 import { unitName } from './path';
 import { Importable, checkImportables, extractZip, findImportables, findSolutions } from './importCore';
@@ -20,11 +21,12 @@ export interface ImportDeps {
   challenges: () => Challenge[];
   exams: () => ExamDefinition[];
   quizzes: () => QuizDefinition[];
+  lessons: () => LessonDefinition[];
   reload: () => void;
 }
 
 export function libraryRoots(libraryDir: string): string[] {
-  return ['challenges', 'quizzes', 'exams'].map((d) => path.join(libraryDir, d));
+  return ['challenges', 'quizzes', 'lessons', 'exams'].map((d) => path.join(libraryDir, d));
 }
 
 const isInside = (child: string, parent: string) => path.resolve(child).startsWith(path.resolve(parent) + path.sep);
@@ -34,10 +36,12 @@ function describe(items: Importable[]): string {
   const challenges = items.filter((i) => i.kind === 'challenge').length - tests;
   const exams = items.filter((i) => i.kind === 'exam').length;
   const quizzes = items.filter((i) => i.kind === 'quiz').length;
+  const lessons = items.filter((i) => i.kind === 'lesson').length;
   const parts = [
     challenges && plural(challenges, ['challenge', 'challenges'], ['desafio', 'desafios']),
     tests && plural(tests, ['test', 'tests'], ['teste', 'testes']),
     quizzes && plural(quizzes, ['quiz', 'quizzes'], ['quiz', 'quizzes']),
+    lessons && plural(lessons, ['lesson', 'lessons'], ['lição', 'lições']),
     exams && plural(exams, ['exam', 'exams'], ['prova', 'provas']),
   ].filter(Boolean);
   return parts.length > 1 ? `${parts.slice(0, -1).join(', ')} ${tr('and', 'e')} ${parts[parts.length - 1]}` : String(parts[0] ?? tr('nothing', 'nada'));
@@ -45,7 +49,7 @@ function describe(items: Importable[]): string {
 
 export async function importContent(deps: ImportDeps): Promise<void> {
   const picked = await vscode.window.showOpenDialog({
-    title: tr('Import challenges, quizzes, tests or exams', 'Importar desafios, quizzes, testes ou provas'),
+    title: tr('Import challenges, quizzes, lessons or exams', 'Importar desafios, quizzes, lições ou provas'),
     openLabel: tr('Import', 'Importar'),
     canSelectFiles: true,
     canSelectFolders: true,
@@ -85,8 +89,8 @@ export async function importContent(deps: ImportDeps): Promise<void> {
         errors.length
           ? tr(`Nothing could be imported from ${path.basename(source)}. See the "Sphinx" output for the problems.`, `Nada pôde ser importado de ${path.basename(source)}. Veja os problemas na saída "Sphinx".`)
           : tr(
-              `No challenges or exams found in ${path.basename(source)}. Each one needs a folder with a challenge.json, quiz.json or exam.json.`,
-              `Nenhum desafio ou prova encontrado em ${path.basename(source)}. Cada um precisa de uma pasta com challenge.json, quiz.json ou exam.json.`,
+              `No challenges, quizzes, lessons or exams found in ${path.basename(source)}. Each one needs a folder with a challenge.json, quiz.json, lesson.json or exam.json.`,
+              `Nenhum desafio, quiz, lição ou prova encontrado em ${path.basename(source)}. Cada um precisa de uma pasta com challenge.json, quiz.json, lesson.json ou exam.json.`,
             ),
       );
       return;
@@ -124,10 +128,12 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     const otherIds = new Set(deps.challenges().filter((c) => !isInside(c.dir, deps.libraryDir)).map((c) => c.id));
     const otherExamIds = new Set(deps.exams().filter((e) => !isInside(e.dir, deps.libraryDir)).map((e) => e.id));
     const otherQuizIds = new Set(deps.quizzes().filter((q) => !isInside(q.dir, deps.libraryDir)).map((q) => q.id));
+    const otherLessonIds = new Set(deps.lessons().filter((l) => !isInside(l.dir, deps.libraryDir)).map((l) => l.id));
     const clashes: string[] = [];
     const plan = ok.map((item) => {
-      const clash = (item.kind === 'challenge' ? otherIds : item.kind === 'quiz' ? otherQuizIds : otherExamIds).has(item.name);
-      const folder = item.kind === 'exam' ? 'exams' : item.kind === 'quiz' ? 'quizzes' : 'challenges';
+      const ids = { challenge: otherIds, quiz: otherQuizIds, lesson: otherLessonIds, exam: otherExamIds }[item.kind];
+      const clash = ids.has(item.name);
+      const folder = { challenge: 'challenges', quiz: 'quizzes', lesson: 'lessons', exam: 'exams' }[item.kind];
       const dest = path.join(deps.libraryDir, folder, clash ? `${item.name}-imported` : item.name);
       if (clash) {
         clashes.push(`${item.title} → ${path.basename(dest)}`);
@@ -195,13 +201,14 @@ export async function removeImported(deps: ImportDeps): Promise<void> {
   const items = [
     ...deps.exams().filter((e) => isInside(e.dir, deps.libraryDir)).map((e) => ({ label: `$(checklist) ${e.title}`, description: `${tr('exam', 'prova')} · ${plural(e.questions.length, ['question', 'questions'], ['questão', 'questões'])}`, dir: e.dir })),
     ...deps.quizzes().filter((q) => isInside(q.dir, deps.libraryDir)).map((q) => ({ label: `$(question) ${q.title}`, description: `quiz · ${plural(q.questions.length, ['question', 'questions'], ['questão', 'questões'])}`, dir: q.dir })),
+    ...deps.lessons().filter((l) => isInside(l.dir, deps.libraryDir)).map((l) => ({ label: `$(book) ${l.title}`, description: tr('lesson', 'lição'), dir: l.dir })),
     ...deps.challenges().filter((c) => isInside(c.dir, deps.libraryDir)).map((c) => ({ label: `$(symbol-event) ${c.title}`, description: `${unitName(c.topic)} · ${c.difficulty}`, dir: c.dir })),
   ];
   if (items.length === 0) {
-    vscode.window.showInformationMessage(tr('Nothing has been imported yet. Use "Import Challenges, Quizzes, Tests or Exams…" to add some.', 'Nada foi importado ainda. Use "Importar desafios, quizzes, testes ou provas…" para adicionar.'));
+    vscode.window.showInformationMessage(tr('Nothing has been imported yet. Use "Import Challenges, Quizzes, Lessons or Exams…" to add some.', 'Nada foi importado ainda. Use "Importar desafios, quizzes, lições ou provas…" para adicionar.'));
     return;
   }
-  const picks = await vscode.window.showQuickPick(items, { title: tr('Remove imported challenges, quizzes, tests or exams', 'Remover desafios, quizzes, testes ou provas importados'), canPickMany: true, ignoreFocusOut: true });
+  const picks = await vscode.window.showQuickPick(items, { title: tr('Remove imported challenges, quizzes, lessons or exams', 'Remover desafios, quizzes, lições ou provas importados'), canPickMany: true, ignoreFocusOut: true });
   if (!picks?.length) {
     return;
   }

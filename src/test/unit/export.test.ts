@@ -26,16 +26,19 @@ describe('export a pack', () => {
     const items = [
       { kind: 'challenge' as const, dir: path.join(ROOT, 'challenges', 'fizzbuzz') },
       { kind: 'quiz' as const, dir: path.join(ROOT, 'quizzes', 'loops-quiz') },
+      { kind: 'lesson' as const, dir: path.join(ROOT, 'subjects', 'cs', 'lessons', 'bits-and-bytes') },
       { kind: 'exam' as const, dir: path.join(ROOT, 'exams', 'exam-1') },
     ];
     const pack = buildPack(items, 'class-7b', false);
     assert.ok(pack.solutionsRemoved >= 2 + 6, `only ${pack.solutionsRemoved} solutions removed`);
     const { dest, found } = roundTrip(pack.zip);
-    assert.deepEqual(found.map((f) => `${f.kind}:${f.name}`).sort(), ['challenge:fizzbuzz', 'exam:exam-1', 'quiz:loops-quiz']);
+    assert.deepEqual(found.map((f) => `${f.kind}:${f.name}`).sort(), ['challenge:fizzbuzz', 'exam:exam-1', 'lesson:bits-and-bytes', 'quiz:loops-quiz']);
     assert.deepEqual(findSolutions(dest), []);
     const { ok, errors } = checkImportables(found, builtIn, builtInQuizzes);
     assert.deepEqual(errors, []);
-    assert.equal(ok.length, 3);
+    assert.equal(ok.length, 4);
+    // The lesson keeps its translation and its diagrams.
+    for (const file of ['lesson.pt-br.md', 'bit-patterns.svg']) assert.ok(fs.existsSync(path.join(dest, 'class-7b', 'bits-and-bytes', file)), file);
     // The exam keeps its private questions.
     assert.ok(fs.existsSync(path.join(dest, 'class-7b', 'exam-1', 'parking-fee', 'challenge.json')));
   });
