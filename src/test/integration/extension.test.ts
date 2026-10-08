@@ -56,10 +56,23 @@ test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.deepEqual(api.exams().filter((e) => e.subject === 'cs').map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam']);
 });
 
-test('opening a challenge creates Main.java with the starter code', async () => {
+test('opening a challenge creates Main.java with the starter code, beside the description', async () => {
   await vscode.commands.executeCommand('sphinx.open', 'fizzbuzz');
   assert.ok(fs.existsSync(api.codePath(challenge('fizzbuzz'))));
   assert.ok(isStarter('fizzbuzz'));
+  // The description on the left, the code on the right: two editor groups.
+  const layout = vscode.window.tabGroups.all.map((g) => `${g.viewColumn}:${g.tabs.map((t) => t.label).join(',')}`);
+  const groupOf = (match: (t: vscode.Tab) => boolean) => vscode.window.tabGroups.all.find((g) => g.tabs.some(match))?.viewColumn;
+  const descriptionColumn = groupOf((t) => t.input instanceof vscode.TabInputWebview);
+  const codeColumn = groupOf((t) => t.input instanceof vscode.TabInputText && t.input.uri.fsPath === api.codePath(challenge('fizzbuzz')));
+  assert.ok(descriptionColumn && codeColumn && descriptionColumn !== codeColumn, `the description and the code share a column: ${layout.join(' | ')}`);
+
+  // Cursor has been seen to open the code as a tab next to the description: Sphinx moves it to its own column.
+  await vscode.commands.executeCommand('workbench.action.joinAllGroups');
+  assert.equal(vscode.window.tabGroups.all.length, 1);
+  await api.moveCodeBesideDescription(api.codePath(challenge('fizzbuzz')));
+  const after = vscode.window.tabGroups.all.map((g) => `${g.viewColumn}:${g.tabs.map((t) => t.label).join(',')}`);
+  assert.deepEqual(after, ['1:FizzBuzz', '2:Main.java']);
 });
 
 test('submitting a correct solution solves the challenge', async () => {

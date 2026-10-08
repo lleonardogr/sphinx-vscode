@@ -66,6 +66,8 @@ export interface SphinxApi {
   quizzes(): QuizDefinition[];
   exams(): ExamDefinition[];
   codePath(c: Challenge): string;
+  /** Moves a challenge's code out of the description's column, as when it is opened (for tests). */
+  moveCodeBesideDescription(file: string): Promise<vscode.TextEditor | undefined>;
 }
 
 /**
@@ -416,13 +418,33 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     }
     await panel.show(c);
     postExamStatus(c);
-    const file = ensureCodeFile(c);
-    await vscode.window.showTextDocument(vscode.Uri.file(file), { viewColumn: vscode.ViewColumn.Two, preview: false });
+    await showCodeBeside(ensureCodeFile(c));
+  }
+
+  /** Opens the code in the second column, beside the description. */
+  async function showCodeBeside(file: string): Promise<vscode.TextEditor> {
+    const editor = await vscode.window.showTextDocument(vscode.Uri.file(file), { viewColumn: vscode.ViewColumn.Two, preview: false });
+    return (await moveCodeBesideDescription(file)) ?? editor;
+  }
+
+  /**
+   * Some editors built on VS Code (seen in Cursor) open the code as a tab in the description's
+   * column instead of a second one. Move it to a column on the right, which is created if needed.
+   */
+  async function moveCodeBesideDescription(file: string): Promise<vscode.TextEditor | undefined> {
+    const isCode = (t: vscode.Tab) => t.input instanceof vscode.TabInputText && t.input.uri.fsPath === vscode.Uri.file(file).fsPath;
+    const isDescription = (t: vscode.Tab) => t.input instanceof vscode.TabInputWebview && t.input.viewType.endsWith('javaChallenge');
+    const shared = vscode.window.tabGroups.all.find((g) => g.tabs.some(isCode) && g.tabs.some(isDescription));
+    if (!shared || vscode.window.tabGroups.all.some((g) => g !== shared && g.tabs.some(isCode))) {
+      return undefined;
+    }
+    await vscode.window.showTextDocument(vscode.Uri.file(file), { viewColumn: shared.viewColumn, preview: false });
+    await vscode.commands.executeCommand('workbench.action.moveEditorToRightGroup');
+    return vscode.window.activeTextEditor;
   }
 
   async function revealCode(c: Challenge, line?: number, column?: number): Promise<void> {
-    const file = ensureCodeFile(c);
-    const editor = await vscode.window.showTextDocument(vscode.Uri.file(file), { viewColumn: vscode.ViewColumn.Two, preview: false });
+    const editor = await showCodeBeside(ensureCodeFile(c));
     if (line) {
       const pos = new vscode.Position(Math.max(0, line - 1), Math.max(0, column ?? 0));
       editor.selection = new vscode.Selection(pos, pos);
@@ -1264,7 +1286,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   context.subscriptions.push(javaSetup);
   void javaSetup.checkQuietly();
   updateContextKey();
-  return { progress, lessonProgress, lessons: () => lessons, teacherTree, verifyFiles, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath };
+  return { progress, lessonProgress, lessons: () => lessons, teacherTree, verifyFiles, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath, moveCodeBesideDescription };
 }
 
 export function deactivate(): void {}
