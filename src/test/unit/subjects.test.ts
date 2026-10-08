@@ -4,7 +4,7 @@ import * as path from 'path';
 import { describe, it } from 'node:test';
 import { Challenge } from '../../challenges';
 import { loadLesson, parseReadings, readingMinutes, resolveLessonImages } from '../../lessons';
-import { readingProblems } from '../../validator';
+import { readingProblems, validateChallenges } from '../../validator';
 import { buildPath, nextInPath, pathItemId, requirementStatus, subjectOf, unitKey, unitName } from '../../path';
 import { QuizQuestion, isCorrect, loadQuiz, parseNumberAnswer } from '../../quizzes';
 import { allSubjects, findSubject, findUnit, loadSubjects } from '../../subjects';
@@ -146,6 +146,25 @@ describe('lessons and the path', () => {
     assert.ok(problems.some((p) => p.includes('reading 2: "type"')), problems.join('\n'));
     assert.ok(problems.some((p) => p.includes('reading 3: needs "source"')), problems.join('\n'));
     assert.deepEqual(readingProblems([]), ['"readings" must list 1 to 3 readings']);
+    assert.deepEqual(readingProblems([good, good, good], 2), ['"readings" must list 1 to 2 readings']);
+  });
+
+  it('holds programming subjects to the quick guide limits, and theory subjects to the full ones', async () => {
+    const reading = { title: 'T', source: 'S', url: 'https://example.com/a', type: 'article', minutes: 5, lang: 'en', lookFor: 'L' };
+    const guide = (topic: string, readings: number) => {
+      const dir = path.join(tempDir(), 'guide');
+      fs.mkdirSync(dir);
+      fs.writeFileSync(path.join(dir, 'lesson.json'), JSON.stringify({ title: 'Guide', topic, order: 1, objectives: ['One', 'Two'], readings: Array(readings).fill(reading) }));
+      fs.writeFileSync(path.join(dir, 'lesson.md'), `## In short\n\n${'word '.repeat(70)}\n\n<!-- readings -->\n`);
+      return dir;
+    };
+    const report = async (dir: string) => (await validateChallenges([path.dirname(dir)])).challenges[0];
+    // Java: 2 objectives and a 70-word summary are a good quick guide; 3 readings are too many.
+    assert.deepEqual((await report(guide('Basics', 1))).warnings ?? [], []);
+    assert.deepEqual((await report(guide('Basics', 3))).problems, ['"readings" must list 1 to 2 readings']);
+    // CS: the same guide is too short for a reading guide.
+    const cs = (await report(guide('Logic', 1))).warnings ?? [];
+    assert.ok(cs.some((w) => w.includes('aim for 150 to 250')) && cs.some((w) => w.includes('2 objectives; a unit has 3 to 5')), cs.join('\n'));
   });
 
   it('loads relative images from the lesson folder only', () => {

@@ -93,7 +93,7 @@ describe('learning path', () => {
   it('suggests the next item after each one', () => {
     const id = (it: Parameters<typeof pathItemId>[0] | undefined) => (it ? pathItemId(it) : undefined);
     const sequence = pathSequence(groups);
-    assert.equal(id(nextInPath(groups, 'hello-world')), id(sequence[1]));
+    assert.equal(id(nextInPath(groups, 'hello-world')), id(sequence[sequence.findIndex((it) => id(it) === 'hello-world') + 1]));
     const lastChallenge = units[0].challenges.at(-1)!;
     assert.equal(id(nextInPath(groups, lastChallenge.id)), units[0].quizzes[0].id);
   });

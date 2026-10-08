@@ -11,7 +11,7 @@ Put a script anywhere outside the repository (it is a working file, not content)
 ```python
 import sys
 sys.path.insert(0, '/path/to/sphinx-vscode/scripts/content')
-from sphinx_content import challenge, classic, quiz, num, choice, out, tf, short, reading, reading_guide
+from sphinx_content import challenge, classic, quiz, num, choice, out, tf, short, reading, reading_guide, quick_guide
 
 challenge('subjects/cs/challenges/fast-power',
     title='Fast Power', title_pt='Potência rápida', topic='Algorithms', difficulty='Medium', order=3, requires=['Loops'],
@@ -36,6 +36,8 @@ reading_guide('subjects/cs/lessons/algorithms-and-complexity', title='Algorithms
     md='''## In short\n\n…\n\n![…](growth.svg)\n\n…\n\n<!-- readings -->\n\n## Check yourself\n\n1. …''',
     md_pt='''## Em resumo\n\n…''', files={'growth.svg': '<svg …>', 'growth.pt-br.svg': '<svg …>'})
 ```
+
+For a programming subject such as Java, use `quick_guide` instead of `reading_guide`: the same arguments without `files`, 2 or 3 objectives, 1 or 2 readings, and a lesson.md with "In short", one code example and a "Watch out" line (see the [content guide](../../docs/content-guide.md#quick-guides-for-programming-subjects)).
 
 Every built-in CS unit is an example of the finished files: see [`subjects/cs`](../../subjects/cs).
 

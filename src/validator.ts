@@ -10,7 +10,7 @@ import { RunOutcome, RunRequest, javacMajorVersion, normalizeOutput, runChalleng
 import { findExamDirs, loadExams } from './exams';
 import { findQuizDirs, isWholeProgram, loadQuiz, loadQuizzes, quizProgram } from './quizzes';
 import { READINGS_MARKER, READING_TYPES, findLessonDirs, loadLesson } from './lessons';
-import { unitKey } from './path';
+import { subjectOf, unitKey } from './path';
 import { findSubject } from './subjects';
 
 export interface ChallengeReport {
@@ -217,13 +217,17 @@ function validateLesson(dir: string): ChallengeReport {
     const raw = JSON.parse(fs.readFileSync(path.join(dir, 'lesson.json'), 'utf8'));
     if (raw.readings !== undefined) {
       // A reading guide (docs/content-guide.md#reading-guides): a short summary and curated readings.
-      problems.push(...readingProblems(raw.readings));
+      // Programming subjects use quick guides: the challenges teach, so the guide is shorter.
+      const quick = findSubject(subjectOf(lesson))?.kind === 'programming';
+      problems.push(...readingProblems(raw.readings, quick ? 2 : 3));
       const summary = lesson.body.split(READINGS_MARKER)[0].split(/\s+/).filter(Boolean).length;
-      if (summary < 100 || summary > 350) {
-        warnings.push(`the "In short" summary has ${summary} words; aim for 150 to 250`);
+      const [fewest, most, aim] = quick ? [40, 180, '60 to 120'] : [100, 350, '150 to 250'];
+      if (summary < fewest || summary > most) {
+        warnings.push(`the "In short" summary has ${summary} words; aim for ${aim}`);
       }
-      if (lesson.objectives.length < 3 || lesson.objectives.length > 5) {
-        warnings.push(`${lesson.objectives.length} objectives; a unit has 3 to 5`);
+      const [fewestObjectives, mostObjectives] = quick ? [2, 3] : [3, 5];
+      if (lesson.objectives.length < fewestObjectives || lesson.objectives.length > mostObjectives) {
+        warnings.push(`${lesson.objectives.length} objectives; a ${quick ? 'quick guide' : 'unit'} has ${fewestObjectives} to ${mostObjectives}`);
       }
     } else {
       if (words < 250) {
@@ -240,9 +244,9 @@ function validateLesson(dir: string): ChallengeReport {
 }
 
 /** Each reading needs a title, a source, an https link, a type, its minutes and what to look for. */
-export function readingProblems(readings: unknown): string[] {
-  if (!Array.isArray(readings) || readings.length === 0 || readings.length > 3) {
-    return ['"readings" must list 1 to 3 readings'];
+export function readingProblems(readings: unknown, most = 3): string[] {
+  if (!Array.isArray(readings) || readings.length === 0 || readings.length > most) {
+    return [`"readings" must list 1 to ${most} readings`];
   }
   const problems: string[] = [];
   readings.forEach((r, i) => {
