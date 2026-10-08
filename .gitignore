@@ -6,3 +6,4 @@ sphinx/
 java-challenges/
 .vscode-test/
 .DS_Store
+__pycache__/

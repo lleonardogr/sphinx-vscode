@@ -1,0 +1,68 @@
+{
+  "title": "DNS Resolver",
+  "difficulty": "Hard",
+  "hints": [
+    "Store the records first, with every name in lower case. Then resolve each query with a loop: look the current name up; a CNAME gives the next name to look up, A records end the search.",
+    "A name can have several A records: collect all of them, in the order they were given.",
+    "Keep the names already visited in this query. If a CNAME leads back to one of them, print it and LOOP instead of going round forever."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Resolvedor de DNS",
+      "hints": [
+        "Guarde os registros primeiro, com todo nome em minúsculas. Depois resolva cada consulta com um laço: procure o nome atual; um CNAME dá o próximo nome a procurar, registros A terminam a busca.",
+        "Um nome pode ter vários registros A: junte todos eles, na ordem em que foram dados.",
+        "Guarde os nomes já visitados nesta consulta. Se um CNAME levar de volta a um deles, imprima-o e LOOP em vez de dar voltas para sempre."
+      ],
+      "mustNotContain": [
+        "Resolva os nomes você mesmo, a partir dos registros: java.net e JNDI não valem aqui."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "java\\.net|InetAddress|javax\\.naming",
+      "message": "Resolve the names yourself, from the records: java.net and JNDI aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\nexample.com A 93.184.216.34\nwww.example.com CNAME example.com\nshop.example.com CNAME www.example.com\ncdn.net A 151.101.1.1\ncdn.net A 151.101.65.1\nstatic.example.com CNAME cdn.net\n3\nWWW.Example.com\nstatic.example.com\nmail.example.com\n",
+      "output": "www.example.com -> example.com -> 93.184.216.34\nstatic.example.com -> cdn.net -> 151.101.1.1, 151.101.65.1\nmail.example.com -> NXDOMAIN\n"
+    },
+    {
+      "input": "6\nexample.com A 93.184.216.34\nwww.example.com CNAME example.com\nshop.example.com CNAME www.example.com\ncdn.net A 151.101.1.1\ncdn.net A 151.101.65.1\nstatic.example.com CNAME cdn.net\n2\nshop.example.com\ncdn.net\n",
+      "output": "shop.example.com -> www.example.com -> example.com -> 93.184.216.34\ncdn.net -> 151.101.1.1, 151.101.65.1\n"
+    },
+    {
+      "input": "3\na.test CNAME b.test\nb.test CNAME c.test\nc.test CNAME a.test\n2\na.test\nc.test\n",
+      "output": "a.test -> b.test -> c.test -> a.test -> LOOP\nc.test -> a.test -> b.test -> c.test -> LOOP\n",
+      "hidden": true
+    },
+    {
+      "input": "2\nwww.site.org CNAME old.site.org\nsite.org A 10.0.0.1\n2\nwww.site.org\nsite.org\n",
+      "output": "www.site.org -> old.site.org -> NXDOMAIN\nsite.org -> 10.0.0.1\n",
+      "hidden": true
+    },
+    {
+      "input": "1\nself.loop CNAME SELF.LOOP\n1\nself.loop\n",
+      "output": "self.loop -> self.loop -> LOOP\n",
+      "hidden": true
+    },
+    {
+      "input": "4\nLB.App.io A 10.0.0.1\nlb.app.io A 10.0.0.2\napi.app.io CNAME lb.app.io\nlb.app.io A 10.0.0.3\n2\nAPI.APP.IO\nlb.app.io\n",
+      "output": "api.app.io -> lb.app.io -> 10.0.0.1, 10.0.0.2, 10.0.0.3\nlb.app.io -> 10.0.0.1, 10.0.0.2, 10.0.0.3\n",
+      "hidden": true
+    },
+    {
+      "input": "5\na.x CNAME b.x\nb.x CNAME c.x\nc.x CNAME d.x\nd.x CNAME e.x\ne.x A 1.1.1.1\n3\na.x\nc.x\nf.x\n",
+      "output": "a.x -> b.x -> c.x -> d.x -> e.x -> 1.1.1.1\nc.x -> d.x -> e.x -> 1.1.1.1\nf.x -> NXDOMAIN\n",
+      "hidden": true
+    },
+    {
+      "input": "2\nloop1.net CNAME loop2.net\nloop2.net CNAME loop2.net\n1\nloop1.net\n",
+      "output": "loop1.net -> loop2.net -> loop2.net -> LOOP\n",
+      "hidden": true
+    }
+  ]
+}

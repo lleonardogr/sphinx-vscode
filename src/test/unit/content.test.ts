@@ -47,7 +47,7 @@ describe('built-in content', () => {
 
   it('ships the exams with their questions', () => {
     const ids = examLoad.exams.map((e) => e.id).sort();
-    assert.deepEqual(ids, ['exam-1', 'exam-2', 'final-exam', 'sample-exam']);
+    assert.deepEqual(ids, ['cs-exam-1', 'cs-final-exam', 'exam-1', 'exam-2', 'final-exam', 'sample-exam']);
     for (const e of examLoad.exams) {
       assert.ok(e.questions.length > 0 && e.questions.every((q) => q.points > 0), `${e.id} has a question without points`);
     }

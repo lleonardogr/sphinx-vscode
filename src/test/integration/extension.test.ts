@@ -49,10 +49,11 @@ test('Java 25+ is available to the extension', async () => {
 
 test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
-  assert.equal(api.challenges().length, 132);
+  assert.equal(api.challenges().length, 134);
   assert.equal(api.quizzes().length, 19);
   assert.equal(api.lessons().length, 8);
-  assert.deepEqual(api.exams().map((e) => e.id).sort(), ['exam-1', 'exam-2', 'final-exam', 'sample-exam']);
+  assert.deepEqual(api.exams().map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam', 'exam-1', 'exam-2', 'final-exam', 'sample-exam']);
+  assert.deepEqual(api.exams().filter((e) => e.subject === 'cs').map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam']);
 });
 
 test('opening a challenge creates Main.java with the starter code', async () => {
@@ -133,7 +134,10 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
   await vscode.commands.executeCommand('sphinx.switchSubject', 'cs');
   try {
     assert.equal(api.tree.subject, 'cs');
-    assert.ok(!api.tree.getChildren().some((n) => (n as { kind: string }).kind === 'examsRoot'), 'the Java exams are not listed under CS');
+    // Only the CS exams are listed under CS.
+    const examsRoot = api.tree.getChildren().find((n) => (n as { kind: string }).kind === 'examsRoot');
+    assert.ok(examsRoot, 'the CS exams are listed');
+    assert.deepEqual(api.tree.getChildren(examsRoot).map(label), ['CS Exam 1: Data Representation', 'CS Final Exam']);
     const groups = api.tree.getChildren().filter((n) => (n as { kind: string }).kind === 'group');
     assert.deepEqual(groups.map(label), [
       '1 · How Computers Work',
@@ -146,12 +150,16 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
       '8 · Networks and the Internet',
     ]);
     // Every unit: its lessons (a reading guide, or two lessons), four challenges and its quiz, in that order.
-    for (const group of groups) {
+    // Units 4 and 8 end their stage with a test.
+    for (const [i, group] of groups.entries()) {
       const kinds = api.tree.getChildren(group).map((n) => (n as { kind: string }).kind);
       const lessons = kinds.filter((k) => k === 'lesson').length;
       assert.ok(lessons >= 1, label(group));
-      assert.deepEqual(kinds, [...Array(lessons).fill('lesson'), 'challenge', 'challenge', 'challenge', 'challenge', 'quiz'], label(group));
+      const test = i === 3 || i === 7 ? ['challenge'] : [];
+      assert.deepEqual(kinds, [...Array(lessons).fill('lesson'), 'challenge', 'challenge', 'challenge', 'challenge', 'quiz', ...test], label(group));
     }
+    assert.equal(label(api.tree.getChildren(groups[3]).at(-1)), "Programmer's Calculator");
+    assert.equal(label(api.tree.getChildren(groups[7]).at(-1)), 'Packet Inspector');
     // Unit 1 is a reading guide: one lesson with curated readings.
     const unit1 = api.tree.getChildren(groups[0]);
     assert.deepEqual(unit1.map(label), ['How a Computer Works', 'Instruction Decoder', 'Stack Machine', 'Cache Simulator', 'Tiny CPU', 'How Computers Work Quiz']);
@@ -272,7 +280,7 @@ test('the teacher view lists the teacher\'s exams, own content and tools, edits 
   const label = (n: unknown) => String(t.getTreeItem(n as never).label);
   const [exams, content, tools] = t.getChildren();
   assert.deepEqual([exams, content, tools].map(label), ['My Exams', 'My Challenges, Quizzes & Lessons', 'Tools']);
-  assert.deepEqual(t.getChildren(exams).map(label).sort(), ['Class Exam', 'Exam 1: Basics to Strings', 'Exam 2: Building Blocks', 'Final Exam', 'Sample Exam: Java Basics']);
+  assert.deepEqual(t.getChildren(exams).map(label).sort(), ['CS Exam 1: Data Representation', 'CS Final Exam', 'Class Exam', 'Exam 1: Basics to Strings', 'Exam 2: Building Blocks', 'Final Exam', 'Sample Exam: Java Basics']);
   const exam = (title: string) => t.getChildren(exams).find((n) => label(n) === title)!;
   assert.match(String(t.getTreeItem(exam('Exam 1: Basics to Strings') as never).description), /^Built-in · 4 questions · 100 pts · \d+ min$/);
   assert.equal(t.getTreeItem(exam('Exam 1: Basics to Strings') as never).contextValue, 'teacherExam');
