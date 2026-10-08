@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Fixed
+
+- In **Cursor**, opening a challenge could put `Main.java` as a second tab in the description's column. Sphinx now checks, and moves the code into its own column on the right.
+
 ### Changed
 
 - The weekly **reading link check** now keeps one GitHub issue up to date with the readings that need attention, and closes it once they all open again. Failing links are tried twice before they are reported, a server error that lasts into the next week counts as broken, and pull requests that change a lesson's readings are checked too.
