@@ -1,0 +1,48 @@
+{
+  "title": "Writing Methods",
+  "topic": "Methods",
+  "order": 1,
+  "objectives": [
+    "Split a program into methods with parameters, and call them.",
+    "Return a value from a method, or use void when it only does something.",
+    "Overload a method: same name, different parameters."
+  ],
+  "readings": [
+    {
+      "title": "Java Methods (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/methods",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "Declaring a method, calling it, parameters and return values. The page writes public static before each method because its main is static; with Sphinx's void main(), methods don't need static (in the classic style they do)."
+    },
+    {
+      "title": "Java Method Overloading (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/method-overloading",
+      "type": "article",
+      "minutes": 4,
+      "lang": "en",
+      "lookFor": "Optional, for Overloaded area(): methods can share a name when their parameters differ in number or type. A different return type alone isn't enough."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Escrevendo métodos",
+      "objectives": [
+        "Dividir um programa em métodos com parâmetros, e chamá-los.",
+        "Devolver um valor de um método, ou usar void quando ele só faz algo.",
+        "Sobrecarregar um método: mesmo nome, parâmetros diferentes."
+      ],
+      "readings": [
+        {
+          "lookFor": "Declarar um método, chamá-lo, parâmetros e valores de retorno. A página escreve public static antes de cada método porque o main dela é static; com o void main() do Sphinx, os métodos não precisam de static (no estilo clássico precisam)."
+        },
+        {
+          "lookFor": "Opcional, para area() sobrecarregado: métodos podem ter o mesmo nome quando os parâmetros diferem em quantidade ou tipo. Só mudar o tipo de retorno não basta."
+        }
+      ]
+    }
+  }
+}

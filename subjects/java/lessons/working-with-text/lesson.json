@@ -1,0 +1,48 @@
+{
+  "title": "Working with Text",
+  "topic": "Strings",
+  "order": 1,
+  "objectives": [
+    "Take a String apart with length, charAt, indexOf and substring.",
+    "Compare and change text with equals, toUpperCase and friends, knowing a String never changes in place.",
+    "Build text piece by piece with StringBuilder."
+  ],
+  "readings": [
+    {
+      "title": "Java String (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/string",
+      "type": "article",
+      "minutes": 8,
+      "lang": "en",
+      "lookFor": "length, concatenation, equals and the table of methods at the end (charAt, indexOf, substring, toUpperCase…). One slip: the page says you can also compare strings with ==. Don't: == checks whether both are the same object, so two equal texts can give false. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+    },
+    {
+      "title": "String Builders",
+      "source": "dev.java",
+      "url": "https://dev.java/learn/language/constructs/numbers-strings/string-builders/",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "Optional, for String Compression: why StringBuilder exists, then append, insert and reverse in \"StringBuilder Operations\". You can skip length and capacity."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Trabalhando com texto",
+      "objectives": [
+        "Desmontar uma String com length, charAt, indexOf e substring.",
+        "Comparar e mudar texto com equals, toUpperCase e companhia, sabendo que uma String nunca muda no lugar.",
+        "Montar texto aos pedaços com StringBuilder."
+      ],
+      "readings": [
+        {
+          "lookFor": "length, concatenação, equals e a tabela de métodos no fim (charAt, indexOf, substring, toUpperCase…). Um deslize: a página diz que você também pode comparar strings com ==. Não faça isso: == confere se as duas são o mesmo objeto, então dois textos iguais podem dar false. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+        },
+        {
+          "lookFor": "Opcional, para Compressão de string: por que o StringBuilder existe, depois append, insert e reverse em \"StringBuilder Operations\". Pode pular length e capacity."
+        }
+      ]
+    }
+  }
+}

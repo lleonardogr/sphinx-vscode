@@ -1,0 +1,48 @@
+{
+  "title": "Lists, Sets and Maps",
+  "topic": "Collections",
+  "order": 1,
+  "objectives": [
+    "Choose the collection that fits: a List, a Set, a Map or a queue.",
+    "Add, find and remove items in an ArrayList, and go through it.",
+    "Count and look things up by key with a HashMap."
+  ],
+  "readings": [
+    {
+      "title": "Java ArrayList (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/arraylist",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "add, get, set, remove and size, then looping with for-each. Note why it says ArrayList<Integer> and not ArrayList<int>. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+    },
+    {
+      "title": "Java HashMap (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/hashmap",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "put, get, containsKey and remove, then going through keySet() or entrySet(). The order of a HashMap isn't the order you added things: use a TreeMap for sorted keys or a LinkedHashMap to keep the insertion order."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Listas, conjuntos e mapas",
+      "objectives": [
+        "Escolher a coleção certa: uma List, um Set, um Map ou uma fila.",
+        "Adicionar, achar e remover itens num ArrayList, e percorrê-lo.",
+        "Contar e consultar coisas por chave com um HashMap."
+      ],
+      "readings": [
+        {
+          "lookFor": "add, get, set, remove e size, depois percorrer com for-each. Repare por que ele escreve ArrayList<Integer> e não ArrayList<int>. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+        },
+        {
+          "lookFor": "put, get, containsKey e remove, depois percorrer keySet() ou entrySet(). A ordem de um HashMap não é a ordem em que você adicionou: use um TreeMap para chaves ordenadas ou um LinkedHashMap para manter a ordem de inserção."
+        }
+      ]
+    }
+  }
+}

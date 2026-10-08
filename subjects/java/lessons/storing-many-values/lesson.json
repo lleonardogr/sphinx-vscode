@@ -1,0 +1,48 @@
+{
+  "title": "Storing Many Values",
+  "topic": "Arrays",
+  "order": 1,
+  "objectives": [
+    "Create an array, fill it from the input and go through it with for and for-each.",
+    "Use indexes to compare neighbours or move values around, without going past the end.",
+    "Use a 2D array as a grid of rows and columns."
+  ],
+  "readings": [
+    {
+      "title": "Java Array (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/arrays",
+      "type": "article",
+      "minutes": 5,
+      "lang": "en",
+      "lookFor": "Creating an array, indexes from 0 to length − 1, and looping through it with for and for-each, up to the sum and average example. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+    },
+    {
+      "title": "Java Multidimensional Array (2d and 3d Array)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/multidimensional-array",
+      "type": "article",
+      "minutes": 4,
+      "lang": "en",
+      "lookFor": "Optional, for Matrix Sums and Tic-Tac-Toe Winner: a 2D array is an array of rows, and nested for loops visit every cell. You can skip 3D arrays."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Guardando muitos valores",
+      "objectives": [
+        "Criar um array, preenchê-lo com a entrada e percorrê-lo com for e for-each.",
+        "Usar índices para comparar vizinhos ou mudar valores de lugar, sem passar do fim.",
+        "Usar um array 2D como uma grade de linhas e colunas."
+      ],
+      "readings": [
+        {
+          "lookFor": "Criar um array, índices de 0 a length − 1, e percorrê-lo com for e for-each, até o exemplo de soma e média. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+        },
+        {
+          "lookFor": "Opcional, para Somas da matriz e Vencedor do jogo da velha: um array 2D é um array de linhas, e laços for aninhados visitam cada célula. Pode pular os arrays 3D."
+        }
+      ]
+    }
+  }
+}
