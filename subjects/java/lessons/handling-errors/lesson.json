@@ -1,0 +1,36 @@
+{
+  "title": "Handling Errors",
+  "topic": "Exceptions",
+  "order": 1,
+  "objectives": [
+    "Catch an exception with try and catch, and keep the program running.",
+    "Throw an exception when a method gets a value it can't accept.",
+    "Create your own exception class."
+  ],
+  "readings": [
+    {
+      "title": "Java Exception Handling (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/exception-handling",
+      "type": "article",
+      "minutes": 5,
+      "lang": "en",
+      "lookFor": "try and catch, finally (it always runs), then throw and throws. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Tratando erros",
+      "objectives": [
+        "Capturar uma exceção com try e catch, e manter o programa rodando.",
+        "Lançar uma exceção quando um método recebe um valor que não pode aceitar.",
+        "Criar sua própria classe de exceção."
+      ],
+      "readings": [
+        {
+          "lookFor": "try e catch, finally (ele sempre roda), depois throw e throws. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+        }
+      ]
+    }
+  }
+}

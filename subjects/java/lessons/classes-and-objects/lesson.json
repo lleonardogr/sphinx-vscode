@@ -1,0 +1,48 @@
+{
+  "title": "Classes and Objects",
+  "topic": "OOP",
+  "order": 1,
+  "objectives": [
+    "Write a class with private fields, a constructor and methods, and create objects from it.",
+    "Use a record for plain data and an enum for a fixed set of values.",
+    "Share behaviour with inheritance and interfaces, and override methods such as toString."
+  ],
+  "readings": [
+    {
+      "title": "Java Class and Objects (With Example)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/class-objects",
+      "type": "article",
+      "minutes": 5,
+      "lang": "en",
+      "lookFor": "A class as a blueprint, fields and methods, creating objects with new and using them with a dot. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
+    },
+    {
+      "title": "Java Inheritance (With Examples)",
+      "source": "Programiz",
+      "url": "https://www.programiz.com/java-programming/inheritance",
+      "type": "article",
+      "minutes": 7,
+      "lang": "en",
+      "lookFor": "Optional, for Shapes, Animals and Payroll: extends, overriding a method, and super. The list of inheritance types at the end is more than you need."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Classes e objetos",
+      "objectives": [
+        "Escrever uma classe com campos privados, um construtor e métodos, e criar objetos a partir dela.",
+        "Usar um record para dados simples e um enum para um conjunto fixo de valores.",
+        "Compartilhar comportamento com herança e interfaces, e sobrescrever métodos como toString."
+      ],
+      "readings": [
+        {
+          "lookFor": "Uma classe como planta, campos e métodos, criar objetos com new e usá-los com um ponto. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
+        },
+        {
+          "lookFor": "Opcional, para Formas, Animais e Folha de pagamento: extends, sobrescrever um método, e super. A lista de tipos de herança no fim é mais do que você precisa."
+        }
+      ]
+    }
+  }
+}
