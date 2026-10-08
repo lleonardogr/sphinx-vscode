@@ -1,0 +1,35 @@
+{
+  "title": "CS Final Exam",
+  "description": "Covers the whole subject, with a focus on units 6 to 8: logic and bitwise operations, algorithms and complexity, and networks. A quiz and three coding questions.",
+  "translations": {
+    "pt-br": {
+      "title": "Prova final de Fundamentos",
+      "description": "Cobre a matéria inteira, com foco nas unidades 6 a 8: lógica e operações bit a bit, algoritmos e complexidade, e redes. Um quiz e três questões de código."
+    }
+  },
+  "subject": "cs",
+  "durationMinutes": 120,
+  "mode": "closed",
+  "maxSubmissions": 3,
+  "restrictions": {
+    "level": "standard"
+  },
+  "questions": [
+    {
+      "id": "cs-final-exam-quiz",
+      "points": 20
+    },
+    {
+      "id": "gray-code",
+      "points": 25
+    },
+    {
+      "id": "merge-step",
+      "points": 25
+    },
+    {
+      "id": "dns-resolver",
+      "points": 30
+    }
+  ]
+}

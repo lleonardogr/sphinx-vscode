@@ -1,0 +1,86 @@
+{
+  "title": "Programmer's Calculator",
+  "topic": "Tests",
+  "skills": [
+    "NumberSystems",
+    "BitsBytes",
+    "NumberRepresentation"
+  ],
+  "unit": "NumberRepresentation",
+  "requires": [
+    "Loops",
+    "Strings",
+    "Methods"
+  ],
+  "difficulty": "Hard",
+  "order": 1,
+  "hints": [
+    "Keep the value as its unsigned bit pattern in a long, from 0 to 2^width − 1. Wrapping is then just keeping the lowest bits: value & ((1L << width) - 1), which works for negative numbers too.",
+    "Write one method that prints the value (bin, hex, unsigned, signed) and call it after every command. The signed reading is the unsigned one minus 2^width when the top bit is 1.",
+    "For add and sub, compute the exact result twice, in a long: once with the unsigned values (carry or borrow if it's below 0 or above 2^width − 1) and once with the signed values (overflow if it's outside −2^(width−1) to 2^(width−1) − 1)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Calculadora de programador",
+      "hints": [
+        "Guarde o valor como seu padrão de bits sem sinal num long, de 0 a 2^width − 1. Aí dar a volta é só manter os bits mais baixos: value & ((1L << width) - 1), o que funciona para números negativos também.",
+        "Escreva um método que imprime o valor (bin, hex, sem sinal, com sinal) e chame-o depois de cada comando. A leitura com sinal é a sem sinal menos 2^width quando o bit mais alto é 1.",
+        "Para add e sub, calcule o resultado exato duas vezes, num long: uma com os valores sem sinal (carry ou borrow se ficar abaixo de 0 ou acima de 2^width − 1) e outra com os valores com sinal (overflow se ficar fora de −2^(width−1) a 2^(width−1) − 1)."
+      ],
+      "mustNotContain": [
+        "Converta entre as bases você mesmo: toBinaryString, toHexString, conversão com base, formatação %x e BigInteger não valem aqui."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "to(Binary|Hex|Octal|Unsigned)String|parseUnsigned|BigInteger|HexFormat|%0?\\d*[xX]|\\b(parseInt|parseLong|valueOf|toString)\\s*\\([^()]*,",
+      "message": "Convert between bases yourself: toBinaryString, toHexString, parsing with a radix, %x formatting and BigInteger aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "dec 100\nadd 100\nadd 100\nwidth 16\nsub 300\nquit\n",
+      "output": "bin 0110 0100 | hex 64 | unsigned 100 | signed 100\nbin 1100 1000 | hex C8 | unsigned 200 | signed -56 | overflow\nbin 0010 1100 | hex 2C | unsigned 44 | signed 44 | carry\nbin 0000 0000 0010 1100 | hex 002C | unsigned 44 | signed 44\nbin 1111 1111 0000 0000 | hex FF00 | unsigned 65280 | signed -256 | borrow\n"
+    },
+    {
+      "input": "hex c8\nbin 101\nwidth 32\ndec -1\nquit\n",
+      "output": "bin 1100 1000 | hex C8 | unsigned 200 | signed -56\nbin 0000 0101 | hex 05 | unsigned 5 | signed 5\nbin 0000 0000 0000 0000 0000 0000 0000 0101 | hex 00000005 | unsigned 5 | signed 5\nbin 1111 1111 1111 1111 1111 1111 1111 1111 | hex FFFFFFFF | unsigned 4294967295 | signed -1\n"
+    },
+    {
+      "input": "hex 1G\nbin 102\nwidth 12\nmul 3\ndec 5\nquit\n",
+      "output": "Invalid hex\nInvalid binary\nInvalid width\nUnknown command\nbin 0000 0101 | hex 05 | unsigned 5 | signed 5\n",
+      "hidden": true
+    },
+    {
+      "input": "dec 127\nadd 1\nsub 1\ndec -128\nsub 1\ndec 128\nquit\n",
+      "output": "bin 0111 1111 | hex 7F | unsigned 127 | signed 127\nbin 1000 0000 | hex 80 | unsigned 128 | signed -128 | overflow\nbin 0111 1111 | hex 7F | unsigned 127 | signed 127 | overflow\nbin 1000 0000 | hex 80 | unsigned 128 | signed -128\nbin 0111 1111 | hex 7F | unsigned 127 | signed 127 | overflow\nbin 1000 0000 | hex 80 | unsigned 128 | signed -128\n",
+      "hidden": true
+    },
+    {
+      "input": "dec 200\nadd 200\ndec -100\nadd -100\nquit\n",
+      "output": "bin 1100 1000 | hex C8 | unsigned 200 | signed -56\nbin 1001 0000 | hex 90 | unsigned 144 | signed -112 | carry\nbin 1001 1100 | hex 9C | unsigned 156 | signed -100\nbin 0011 1000 | hex 38 | unsigned 56 | signed 56 | carry | overflow\n",
+      "hidden": true
+    },
+    {
+      "input": "dec -56\nwidth 16\nwidth 8\nwidth 16\ndec 4660\nwidth 8\nwidth 32\nquit\n",
+      "output": "bin 1100 1000 | hex C8 | unsigned 200 | signed -56\nbin 0000 0000 1100 1000 | hex 00C8 | unsigned 200 | signed 200\nbin 1100 1000 | hex C8 | unsigned 200 | signed -56\nbin 0000 0000 1100 1000 | hex 00C8 | unsigned 200 | signed 200\nbin 0001 0010 0011 0100 | hex 1234 | unsigned 4660 | signed 4660\nbin 0011 0100 | hex 34 | unsigned 52 | signed 52\nbin 0000 0000 0000 0000 0000 0000 0011 0100 | hex 00000034 | unsigned 52 | signed 52\n",
+      "hidden": true
+    },
+    {
+      "input": "width 32\ndec 2147483647\nadd 1\nhex FFFFFFFF\nadd 1\nsub 1\nquit\n",
+      "output": "bin 0000 0000 0000 0000 0000 0000 0000 0000 | hex 00000000 | unsigned 0 | signed 0\nbin 0111 1111 1111 1111 1111 1111 1111 1111 | hex 7FFFFFFF | unsigned 2147483647 | signed 2147483647\nbin 1000 0000 0000 0000 0000 0000 0000 0000 | hex 80000000 | unsigned 2147483648 | signed -2147483648 | overflow\nbin 1111 1111 1111 1111 1111 1111 1111 1111 | hex FFFFFFFF | unsigned 4294967295 | signed -1\nbin 0000 0000 0000 0000 0000 0000 0000 0000 | hex 00000000 | unsigned 0 | signed 0 | carry\nbin 1111 1111 1111 1111 1111 1111 1111 1111 | hex FFFFFFFF | unsigned 4294967295 | signed -1 | borrow\n",
+      "hidden": true
+    },
+    {
+      "input": "dec 300\ndec -129\nhex 1FF\nbin 111111111\nadd -1\nquit\n",
+      "output": "bin 0010 1100 | hex 2C | unsigned 44 | signed 44\nbin 0111 1111 | hex 7F | unsigned 127 | signed 127\nbin 1111 1111 | hex FF | unsigned 255 | signed -1\nbin 1111 1111 | hex FF | unsigned 255 | signed -1\nbin 1111 1110 | hex FE | unsigned 254 | signed -2 | carry\n",
+      "hidden": true
+    },
+    {
+      "input": "width 16\ndec 32767\nsub -1\ndec 0\nsub 0\nquit\n",
+      "output": "bin 0000 0000 0000 0000 | hex 0000 | unsigned 0 | signed 0\nbin 0111 1111 1111 1111 | hex 7FFF | unsigned 32767 | signed 32767\nbin 1000 0000 0000 0000 | hex 8000 | unsigned 32768 | signed -32768 | borrow | overflow\nbin 0000 0000 0000 0000 | hex 0000 | unsigned 0 | signed 0\nbin 0000 0000 0000 0000 | hex 0000 | unsigned 0 | signed 0\n",
+      "hidden": true
+    }
+  ]
+}

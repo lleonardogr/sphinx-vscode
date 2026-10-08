@@ -1,0 +1,73 @@
+{
+  "title": "Base64 Encoder",
+  "difficulty": "Hard",
+  "hints": [
+    "Take the text 3 characters at a time: 3 bytes are 24 bits, which split into four groups of 6 bits. Each group (0 to 63) is one letter of the alphabet.",
+    "With bytes a, b and c, the 24 bits are (a << 16) | (b << 8) | c. The four groups are bits >> 18, (bits >> 12) & 63, (bits >> 6) & 63 and bits & 63.",
+    "At the end, 1 leftover byte gives 2 letters and \"==\", and 2 leftover bytes give 3 letters and \"=\". Treat the missing bytes as 0."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Codificador Base64",
+      "hints": [
+        "Pegue o texto de 3 em 3 caracteres: 3 bytes são 24 bits, que se dividem em quatro grupos de 6 bits. Cada grupo (0 a 63) é uma letra do alfabeto.",
+        "Com os bytes a, b e c, os 24 bits são (a << 16) | (b << 8) | c. Os quatro grupos são bits >> 18, (bits >> 12) & 63, (bits >> 6) & 63 e bits & 63.",
+        "No fim, 1 byte sobrando dá 2 letras e \"==\", e 2 bytes sobrando dão 3 letras e \"=\". Trate os bytes que faltam como 0."
+      ],
+      "mustNotContain": [
+        "Codifique você mesmo: java.util.Base64 e DatatypeConverter não valem aqui."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "Base64\\s*\\.|getEncoder|DatatypeConverter|BigInteger",
+      "message": "Encode it yourself: java.util.Base64 and DatatypeConverter aren't allowed here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "Man\n",
+      "output": "TWFu\n"
+    },
+    {
+      "input": "Hi Sphinx!\n",
+      "output": "SGkgU3BoaW54IQ==\n"
+    },
+    {
+      "input": "M\n",
+      "output": "TQ==\n",
+      "hidden": true
+    },
+    {
+      "input": "Ma\n",
+      "output": "TWE=\n",
+      "hidden": true
+    },
+    {
+      "input": "Hello, World!\n",
+      "output": "SGVsbG8sIFdvcmxkIQ==\n",
+      "hidden": true
+    },
+    {
+      "input": "any carnal pleasure.\n",
+      "output": "YW55IGNhcm5hbCBwbGVhc3VyZS4=\n",
+      "hidden": true
+    },
+    {
+      "input": "~~~???>>>\n",
+      "output": "fn5+Pz8/Pj4+\n",
+      "hidden": true
+    },
+    {
+      "input": "a\n",
+      "output": "YQ==\n",
+      "hidden": true
+    },
+    {
+      "input": "0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ\n",
+      "output": "MDEyMzQ1Njc4OSBhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5eiBBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWg==\n",
+      "hidden": true
+    }
+  ]
+}

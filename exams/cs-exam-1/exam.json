@@ -1,0 +1,35 @@
+{
+  "title": "CS Exam 1: Data Representation",
+  "description": "Covers units 1 to 5: how a computer works, number systems, bits and bytes, representing numbers, and text, images and sound. A quiz and three coding questions, from easy to hard.",
+  "translations": {
+    "pt-br": {
+      "title": "Prova 1 de Fundamentos: representação de dados",
+      "description": "Cobre as unidades 1 a 5: como o computador funciona, sistemas de numeração, bits e bytes, representação de números, e texto, imagens e som. Um quiz e três questões de código, da mais fácil à mais difícil."
+    }
+  },
+  "subject": "cs",
+  "durationMinutes": 90,
+  "mode": "closed",
+  "maxSubmissions": 3,
+  "restrictions": {
+    "level": "standard"
+  },
+  "questions": [
+    {
+      "id": "cs-exam-1-quiz",
+      "points": 20
+    },
+    {
+      "id": "fits-in-a-type",
+      "points": 20
+    },
+    {
+      "id": "hex-dump",
+      "points": 30
+    },
+    {
+      "id": "base64-encoder",
+      "points": 30
+    }
+  ]
+}
