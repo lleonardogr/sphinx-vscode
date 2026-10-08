@@ -82,7 +82,7 @@ async function ensureRegistered(folder: string, deps: AuthoringDeps): Promise<vo
   vscode.window.showInformationMessage(tr(`Added ${folder} to sphinx.extraChallengePaths so its challenges appear in the sidebar.`, `${folder} foi adicionada a sphinx.extraChallengePaths para os desafios aparecerem na barra lateral.`));
 }
 
-/** `topic` undefined writes no "topic", so the challenge appears under Custom. */
+/** `topic` undefined writes no "topic", so the challenge appears under Others. */
 function templates(title: string, topic: string | undefined, difficulty: string, order: number): Record<string, string> {
   const challengeJson = {
     title,
@@ -196,12 +196,12 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
   }
   const id = slugify(title);
 
-  const NO_TOPIC = `$(star-empty) ${tr('Custom (no topic)', 'Personalizado (sem unidade)')}`;
+  const NO_TOPIC = `$(star-empty) ${tr('No unit (the Others section)', 'Sem unidade (a seção Outros)')}`;
   const existingTopics = [...new Set([...topicOrder(), ...deps.challenges().map((c) => c.topic)])].filter((t) => t !== CUSTOM_TOPIC);
   const NEW_TOPIC = `$(add) ${tr('New topic…', 'Nova unidade…')}`;
   const topicPick = await vscode.window.showQuickPick([NO_TOPIC, ...existingTopics, NEW_TOPIC], {
     title: tr('New challenge (3/4): unit', 'Novo desafio (3/4): unidade'),
-    placeHolder: tr('Challenges without a unit appear in the Custom section', 'Desafios sem unidade aparecem na seção Personalizados'),
+    placeHolder: tr('Challenges without a unit appear in the Others section', 'Desafios sem unidade aparecem na seção Outros'),
     ignoreFocusOut: true,
   });
   if (!topicPick) {
@@ -246,7 +246,7 @@ export async function createChallenge(deps: AuthoringDeps): Promise<void> {
 /** A quick guide (programming subjects) or a reading guide (theory subjects); see docs/content-guide.md. */
 export type LessonStyle = 'quick' | 'reading';
 
-/** Where a lesson goes: a unit, or no unit in a subject (its Custom section). */
+/** Where a lesson goes: a unit, or no unit in a subject (its Others section). */
 export type LessonPlace = { topic: string } | { subject: string };
 
 /** The example link of a new lesson: the validator warns until it is replaced. */
@@ -383,7 +383,7 @@ export async function createLesson(deps: AuthoringDeps): Promise<void> {
   const placePicks: PlacePick[] = subjects.flatMap((s) => [
     { label: subjectTitle(s), kind: vscode.QuickPickItemKind.Separator },
     ...s.units.map((u, i): PlacePick => ({ label: `${i + 1} · ${unitName(u.key)}`, place: { topic: u.key }, subject: s.id })),
-    { label: `$(star-empty) ${tr('No unit (the Custom section)', 'Sem unidade (a seção Personalizados)')}`, place: { subject: s.id }, subject: s.id },
+    { label: `$(star-empty) ${tr('No unit (the Others section)', 'Sem unidade (a seção Outros)')}`, place: { subject: s.id }, subject: s.id },
   ]);
   const placePick = await vscode.window.showQuickPick(placePicks, {
     title: tr('New lesson (3/4): unit', 'Nova lição (3/4): unidade'),

@@ -26,7 +26,7 @@ export interface SubjectDef {
   dir: string;
 }
 
-/** Content without a unit or subject (custom challenges, older teacher packs) belongs here. */
+/** Content without a unit or subject (the Others section's examples, older teacher packs) belongs here. */
 export const DEFAULT_SUBJECT = 'java';
 
 /** Folders inside a subject folder that hold its content. */

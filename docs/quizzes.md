@@ -13,7 +13,7 @@ A **quiz** is a set of short questions: multiple choice, true or false, short an
 
 ## Taking a quiz (students)
 
-1. Click the quiz at the end of a unit in the Sphinx sidebar (marked **Quiz**). Quizzes that belong to no unit are in the **Custom** section.
+1. Click the quiz at the end of a unit in the Sphinx sidebar (marked **Quiz**). Quizzes that belong to no unit are in the **Others** section.
 2. Answer the questions. Click **Check** under a question to see right away whether it's correct, with the right answer and an explanation.
 3. Click **Check all answers** at the end to get your score. Your best score is shown in the sidebar, and a quiz turns green when you get everything right.
 4. **Start over** clears your answers so you can try again.
@@ -68,9 +68,9 @@ my-quizzes/
 |-------|---------|-------------|
 | `title` | required | Shown in the sidebar and at the top of the quiz. |
 | `description` | | Shown above the questions (Markdown). |
-| `topic` | | The unit the quiz belongs to, such as `Loops` or `NumberSystems`; it's listed at the end of that unit. Leave it out (or use another name) to put it in the Custom section. |
+| `topic` | | The unit the quiz belongs to, such as `Loops` or `NumberSystems`; it's listed at the end of that unit. Leave it out (or use another name) to put it in the Others section. |
 | `requires` | | Units the student should know first, such as `["Basics"]`. Shown with the student's progress; nothing is locked. See [Prerequisites](creating-challenges.md#prerequisites). |
-| `subject` | | For a quiz without a unit: the subject whose Custom section lists it, such as `"cs"`. Default: `java`. |
+| `subject` | | For a quiz without a unit: the subject whose Others section lists it, such as `"cs"`. Default: `java`. |
 | `questions` | required | The questions, in order. See below. |
 
 Every question can also have:

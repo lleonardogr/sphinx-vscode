@@ -202,8 +202,8 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     );
     if (group.kind === 'custom') {
       item.tooltip = tr(
-        'Challenges, quizzes and tests that belong to no unit: written by your teacher, imported, or your own.',
-        'Desafios, quizzes e testes que não pertencem a nenhuma unidade: criados pelo professor, importados ou seus.',
+        'Lessons, challenges, quizzes and tests that belong to no unit: examples to learn from, and content from your teacher, imported or your own.',
+        'Lições, desafios, quizzes e testes que não pertencem a nenhuma unidade: exemplos para aprender, e conteúdo do professor, importado ou seu.',
       );
     }
     return item;

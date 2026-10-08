@@ -102,11 +102,11 @@ VS Code gives you **autocomplete, hover documentation and error checking** for t
 | Field | Required | Description |
 |-------|----------|-------------|
 | `title` | yes | Name shown in the sidebar and panel. |
-| `topic` | no | The unit it belongs to. The Java units, in teaching order: `Basics`, `Conditionals`, `Loops`, `Strings`, `Methods`, `Arrays`, `Collections`, `OOP`, `Exceptions`, `Recursion` and `Streams`; the unit also decides the subject (see [Subjects](#subjects-lessons-and-prerequisites) for the CS Fundamentals units). Use `Tests` for a [mixed challenge](#tests-mixed-challenges). Any other name (for example `Recursion Extras`) gets its own group after the units. **Leave it out** to put the challenge in the **Custom** section at the bottom. See the examples in [`custom/`](../custom). |
+| `topic` | no | The unit it belongs to. The Java units, in teaching order: `Basics`, `Conditionals`, `Loops`, `Strings`, `Methods`, `Arrays`, `Collections`, `OOP`, `Exceptions`, `Recursion` and `Streams`; the unit also decides the subject (see [Subjects](#subjects-lessons-and-prerequisites) for the CS Fundamentals units). Use `Tests` for a [mixed challenge](#tests-mixed-challenges). Any other name (for example `Recursion Extras`) gets its own group after the units. **Leave it out** to put the challenge in the **Others** section at the bottom. See the examples in [`custom/`](../custom). |
 | `skills` | no | Units the challenge combines, shown as badges in the panel and the sidebar tooltip. Meant for [mixed challenges](#tests-mixed-challenges). |
-| `unit` | no | For `"topic": "Tests"` only: the unit the test closes. It's listed at the end of that unit, after its quiz. Without it, the test goes to the Custom section. |
+| `unit` | no | For `"topic": "Tests"` only: the unit the test closes. It's listed at the end of that unit, after its quiz. Without it, the test goes to the Others section. |
 | `requires` | no | Units the student should know first, such as `["Loops"]`. Shown with the student's progress; nothing is locked. See [Prerequisites](#prerequisites). |
-| `subject` | no | For a challenge without a unit: the subject whose Custom section lists it, such as `"cs"`. Default: `java`. |
+| `subject` | no | For a challenge without a unit: the subject whose Others section lists it, such as `"cs"`. Default: `java`. |
 | `difficulty` | no | `Easy` (default), `Medium` or `Hard`. |
 | `order` | no | Position inside the topic; lower comes first. |
 | `hints` | no | Hints revealed one at a time when the student clicks **Show a hint**. Order them from gentle to specific. |
@@ -228,7 +228,7 @@ A **test** is a normal challenge that is **bigger** and **mixes several topics**
 
 The built-in tests close a stage of the path: [Calculator Menu](../tests/calculator-menu) at the end of Loops, and [Grade Book Menu](../tests/grade-book-menu) and [Inventory Menu](../tests/inventory-menu) at the end of Collections. To write your own:
 
-1. Set `"topic": "Tests"`, list the units it combines in `"skills"` (the panel shows them as badges), and name the unit it closes in `"unit"`, so it's listed at the end of that unit. Leave `"unit"` out to put it in the Custom section.
+1. Set `"topic": "Tests"`, list the units it combines in `"skills"` (the panel shows them as badges), and name the unit it closes in `"unit"`, so it's listed at the end of that unit. Leave `"unit"` out to put it in the Others section.
 
    ```json
    "topic": "Tests",
@@ -263,7 +263,7 @@ Sphinx teaches more than one **subject**. Each has its own units, learning path 
 | Java Programming | `java` | `Basics`, `Conditionals`, `Loops`, `Strings`, `Methods`, `Arrays`, `Collections`, `OOP`, `Exceptions`, `Recursion`, `Streams` |
 | CS Fundamentals | `cs` | `Computers`, `NumberSystems`, `BitsBytes`, `NumberRepresentation`, `TextMedia`, `Logic`, `Algorithms`, `Networks` |
 
-**The unit decides the subject.** A challenge with `"topic": "NumberSystems"` is listed in CS Fundamentals and one with `"topic": "Loops"` in Java Programming. Unit keys are unique across subjects, so nothing else is needed. Content without a unit goes to the **Custom** section of Java Programming, or of the subject named in `"subject"` (for example `"subject": "cs"`). An exam is listed under the subject most of its questions come from, unless its `exam.json` has a `"subject"`.
+**The unit decides the subject.** A challenge with `"topic": "NumberSystems"` is listed in CS Fundamentals and one with `"topic": "Loops"` in Java Programming. Unit keys are unique across subjects, so nothing else is needed. Content without a unit goes to the **Others** section of Java Programming, or of the subject named in `"subject"` (for example `"subject": "cs"`). An exam is listed under the subject most of its questions come from, unless its `exam.json` has a `"subject"`.
 
 A unit appears as soon as it has content, and keeps its number even when earlier units are empty.
 

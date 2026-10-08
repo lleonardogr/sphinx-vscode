@@ -43,6 +43,8 @@ describe('subjects', () => {
     assert.equal(subjectOf({ topic: 'Tests', unit: 'Strings' }), 'java');
     assert.equal(subjectOf({ topic: 'Custom', subject: 'cs' }), 'cs');
     assert.equal(subjectOf({ topic: 'Custom', subject: 'unknown' }), 'java');
+    // Content without a unit is shown in the Others section; its key stays "Custom".
+    assert.equal(unitName('Custom'), 'Others');
     assert.equal(subjectOf({ topic: 'My Own Topic' }), 'java');
   });
 });

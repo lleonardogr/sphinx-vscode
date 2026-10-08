@@ -10,6 +10,7 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Changed
 
+- The **Custom** section is now called **Others** (**Outros** in Portuguese): it lists the lessons, challenges, quizzes and tests that belong to no unit. Content files that use `"topic": "Custom"` keep working.
 - The teacher view's import tool now says **Import Challenges, Quizzes, Lessons or Exams…**, like the command.
 
 ## [1.6.1] - 2026-10-08
