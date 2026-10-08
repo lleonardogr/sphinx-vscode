@@ -9,22 +9,13 @@
   ],
   "readings": [
     {
-      "title": "Java for Loop (With Examples)",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/for-loop",
+      "title": "How to Use Loops in Java",
+      "source": "freeCodeCamp, The Java Handbook",
+      "url": "https://www.freecodecamp.org/news/the-java-handbook/#heading-how-to-use-loops-in-java",
       "type": "article",
-      "minutes": 5,
+      "minutes": 7,
       "lang": "en",
-      "lookFor": "The three parts of a for loop, and the tables that follow i through every round. Skip the for-each loop for now: it comes back with Arrays. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
-    },
-    {
-      "title": "Java while and do...while Loop",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/do-while-loop",
-      "type": "article",
-      "minutes": 4,
-      "lang": "en",
-      "lookFor": "Optional: while for when you don't know how many rounds you need, and do … while, whose body always runs at least once. The examples read input with Scanner; in Sphinx, IO.readln() reads a line."
+      "lookFor": "The for loop and its three parts, then while and do-while. The for-each loop comes back with Arrays. The examples read input with Scanner and print with System.out.println; in Sphinx, IO.readln() and IO.println do the same."
     }
   ],
   "translations": {
@@ -37,10 +28,7 @@
       ],
       "readings": [
         {
-          "lookFor": "As três partes de um laço for, e as tabelas que acompanham o i em cada volta. Pule o for-each por enquanto: ele volta em Arrays. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
-        },
-        {
-          "lookFor": "Opcional: while para quando você não sabe quantas voltas precisa, e do … while, cujo corpo sempre roda pelo menos uma vez. Os exemplos leem a entrada com Scanner; no Sphinx, IO.readln() lê uma linha."
+          "lookFor": "O laço for e suas três partes, depois while e do-while. O for-each volta em Arrays. Os exemplos leem a entrada com Scanner e imprimem com System.out.println; no Sphinx, IO.readln() e IO.println fazem o mesmo."
         }
       ]
     }

@@ -9,22 +9,13 @@
   ],
   "readings": [
     {
-      "title": "Java Class and Objects (With Example)",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/class-objects",
+      "title": "Classes and Objects in Java",
+      "source": "freeCodeCamp, The Java Handbook",
+      "url": "https://www.freecodecamp.org/news/the-java-handbook/#heading-classes-and-objects-in-java",
       "type": "article",
-      "minutes": 5,
+      "minutes": 15,
       "lang": "en",
-      "lookFor": "A class as a blueprint, fields and methods, creating objects with new and using them with a dot. The examples use System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
-    },
-    {
-      "title": "Java Inheritance (With Examples)",
-      "source": "Programiz",
-      "url": "https://www.programiz.com/java-programming/inheritance",
-      "type": "article",
-      "minutes": 7,
-      "lang": "en",
-      "lookFor": "Optional, for Shapes, Animals and Payroll: extends, overriding a method, and super. The list of inheritance types at the end is more than you need."
+      "lookFor": "Classes and objects, methods, constructors, getters and setters, then inheritance and overriding a method, for Shapes, Animals and Payroll. The handbook writes System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
     }
   ],
   "translations": {
@@ -37,10 +28,7 @@
       ],
       "readings": [
         {
-          "lookFor": "Uma classe como planta, campos e métodos, criar objetos com new e usá-los com um ponto. Os exemplos usam System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
-        },
-        {
-          "lookFor": "Opcional, para Formas, Animais e Folha de pagamento: extends, sobrescrever um método, e super. A lista de tipos de herança no fim é mais do que você precisa."
+          "lookFor": "Classes e objetos, métodos, construtores, getters e setters, depois herança e sobrescrita de métodos, para Formas, Animais e Folha de pagamento. O livro escreve System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
         }
       ]
     }

@@ -57,7 +57,7 @@ The second subject covers what new students should know about **how a computer w
 | 5 · Text, Images and Sound | Text, Images and Sound (reading guide: Crash Course, Joel Spolsky on Unicode) | Case Flipper · Run-Length Encoding · Hex Colors (and readable text) · UTF-8 Encoder |
 | 6 · Logic and Bitwise Operations | Logic and Bitwise Operations (reading guide: Crash Course, NandGame, GeeksforGeeks) | Parity Bit · Permission Flags · Ripple-Carry Adder · 8-bit Register |
 | 7 · Algorithms and Complexity | Algorithms and Complexity (reading guide: Crash Course, CS50, VisuAlgo) | Search Steps · Selection Sort Trace · Fast Power (O(log n)) · Pair Sum: Slow and Fast |
-| 8 · Networks and the Internet | Networks and the Internet (reading guide: Crash Course, How DNS Works, Packet Coders) | Valid IPv4 Address · Read an HTTP Request · Subnet Calculator · Routing Table (longest prefix match) · Test: Packet Inspector |
+| 8 · Networks and the Internet | Networks and the Internet (reading guide: Crash Course, How DNS Works, freeCodeCamp) | Valid IPv4 Address · Read an HTTP Request · Subnet Calculator · Routing Table (longest prefix match) · Test: Packet Inspector |
 
 Two **tests** close the stages with a bigger program that mixes units: **Programmer's Calculator** (binary, hex and two's complement with carry and overflow flags, after unit 4) and **Packet Inspector** (decode a real IPv4 and UDP packet and check its checksum, after unit 8). Two closed **exams**, each with a quiz and three private coding questions: **CS Exam 1: Data Representation** (units 1–5, 90 minutes: Fits in a Type, Hex Dump, Base64 Encoder) and the **CS Final Exam** (the whole subject, focused on units 6–8, 120 minutes: Gray Code, Merge Step, DNS Resolver).
 

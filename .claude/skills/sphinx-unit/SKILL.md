@@ -30,6 +30,7 @@ Show the spec to the person and wait for a clear approval before writing any fil
 ### 3. Choose and check the readings
 
 - Free, without login or paywall. Accurate, for beginners, and covering the objectives.
+- **Prefer, in this order:** official docs (dev.java, MDN), non-profit and university education (freeCodeCamp, CS50, Crash Course), and well-known free resources from independent authors. Use commercial learning platforms that sell their own courses (Programiz, W3Schools) only when nothing else covers the topic. GeeksforGeeks is accepted as a widely used free reference. See the content guide's [source order](../../../docs/content-guide.md#2-readings-curated-can-be-english-only).
 - Prefer pages with diagrams, animations or interactive parts. English is fine.
 - **Check every link yourself:**
   - Open the page and confirm what it covers.
