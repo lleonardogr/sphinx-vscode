@@ -14,6 +14,8 @@
   "command.clearAiKeys": "Remove Saved AI API Keys",
   "command.createChallenge": "Create New Challenge…",
   "command.createLesson": "Create New Lesson…",
+  "command.createSubject": "Create New Subject…",
+  "command.createUnit": "Create New Unit…",
   "command.openQuiz": "Open Quiz…",
   "command.importContent": "Import Challenges, Quizzes, Lessons or Exams…",
   "command.removeImported": "Remove Imported Challenges, Quizzes, Lessons or Exams…",

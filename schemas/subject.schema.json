@@ -13,7 +13,7 @@
     },
     "id": {
       "type": "string",
-      "description": "Defaults to the folder name."
+      "description": "Defaults to the folder name. In a teacher's folder, the id of an existing subject (such as \"java\") adds this file's units after that subject's own units."
     },
     "title": {
       "type": "string"

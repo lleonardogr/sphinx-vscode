@@ -1,4 +1,4 @@
-// Finds challenges, quizzes, lessons and exams in a folder or .zip a teacher shared, so they can be copied into the
+// Finds subjects, challenges, quizzes, lessons and exams in a folder or .zip a teacher shared, so they can be copied into the
 // extension's library. No vscode dependency so it can be tested on its own.
 import * as fs from 'fs';
 import * as path from 'path';
@@ -7,9 +7,10 @@ import { Challenge, loadChallenge } from './challenges';
 import { loadExams } from './exams';
 import { QuizDefinition, loadQuiz } from './quizzes';
 import { loadLesson } from './lessons';
+import { SUBJECT_CONTENT_FOLDERS, addTeacherSubjects } from './subjects';
 
 export interface Importable {
-  kind: 'challenge' | 'exam' | 'quiz' | 'lesson';
+  kind: 'challenge' | 'exam' | 'quiz' | 'lesson' | 'subject';
   /** Folder to copy. */
   dir: string;
   /** Folder name in the library, which is also the id. */
@@ -18,6 +19,8 @@ export interface Importable {
   /** "Tests" for mixed tests, so the summary can say what was imported. */
   topic?: string;
   questions?: number;
+  /** For a subject: how many units it has (or adds to a built-in subject). */
+  units?: number;
 }
 
 const MAX_DEPTH = 4;
@@ -47,13 +50,18 @@ const skip = (name: string) => name.startsWith('.') || name === '__MACOSX' || na
 
 /**
  * Finds every challenge (challenge.json), quiz (quiz.json), lesson (lesson.json) and exam (exam.json) folder under `root`.
- * An exam's private questions belong to the exam and are not listed on their own.
+ * An exam's private questions belong to the exam and are not listed on their own, and neither is the content of
+ * a subject folder (subject.json): the subject is imported whole.
  * `rootName` names a challenge or exam whose files sit directly in `root` (e.g. a zip of the files).
  */
 export function findImportables(root: string, rootName: string): Importable[] {
   const found: Importable[] = [];
   const visit = (dir: string, depth: number) => {
     const name = dir === root ? rootName : path.basename(dir);
+    if (fs.existsSync(path.join(dir, 'subject.json'))) {
+      found.push({ kind: 'subject', dir, name, title: name });
+      return;
+    }
     if (fs.existsSync(path.join(dir, 'exam.json'))) {
       found.push({ kind: 'exam', dir, name, title: name });
       return;
@@ -115,6 +123,20 @@ export function checkImportables(items: Importable[], known: Challenge[], knownQ
       ok.push({ ...item, title: c.title, topic: c.topic });
     } catch (e) {
       errors.push(`${item.name}: ${(e as Error).message}`);
+    }
+  }
+  for (const item of items.filter((i) => i.kind === 'subject')) {
+    // The subject.json loads, and so does everything in its content folders.
+    const subject = addTeacherSubjects([], [item.dir]);
+    const inner = SUBJECT_CONTENT_FOLDERS.map((f) => path.join(item.dir, f))
+      .filter((d) => fs.existsSync(d))
+      .flatMap((d) => fs.readdirSync(d, { withFileTypes: true }).filter((e) => e.isDirectory()).flatMap((e) => findImportables(path.join(d, e.name), e.name)));
+    const content = checkImportables(inner, known, knownQuizzes);
+    const problems = [...subject.errors.map((e) => e.slice(e.indexOf(': ') + 2)), ...content.errors];
+    if (problems.length || !subject.subjects[0]) {
+      errors.push(...problems.map((p) => `${item.name}: ${p}`));
+    } else {
+      ok.push({ ...item, title: subject.subjects[0].titles.en, units: subject.subjects[0].units.length, questions: content.ok.length });
     }
   }
   for (const item of items.filter((i) => i.kind === 'exam')) {

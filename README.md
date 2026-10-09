@@ -180,7 +180,7 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 
 ## For teachers
 
-Click the 💼 button at the top of the Sphinx sidebar (**Switch to Teacher View**) to open the **teacher view**. It lists **My Exams** (with their questions; press ▶ **Try Exam (Preview)** to take an exam yourself with the real timer and rules, in a practice attempt you can restart that never counts as a real one), **My Challenges, Quizzes & Lessons** (what you created or imported; click one to try it), and the **Tools**: create a challenge or a **lesson** (a quick guide or a reading guide, ready to fill in), import, **export a pack** for your class (a `.zip` they import with one click, without the solutions), validate, and open your class's results as a **dashboard** (scores per question, time away, warnings, verification, CSV export). Your own exams, challenges, quizzes and lessons can be edited, exported and deleted from their right-click menu. Built-in content can be tried, used in your exams and graded, but not changed: it's part of the extension, and an update would undo any change. The 🎓 button switches back to the **student view**, where you can practise the learning path like your students.
+Click the 💼 button at the top of the Sphinx sidebar (**Switch to Teacher View**) to open the **teacher view**. It lists **My Exams** (with their questions; press ▶ **Try Exam (Preview)** to take an exam yourself with the real timer and rules, in a practice attempt you can restart that never counts as a real one), **My Challenges, Quizzes & Lessons** (what you created or imported; click one to try it), and the **Tools**: create a challenge or a **lesson** (a quick guide or a reading guide, ready to fill in), your own **subjects** and **units** (or units added to Java and CS Fundamentals), import, **export a pack** for your class (a `.zip` they import with one click, without the solutions), validate, and open your class's results as a **dashboard** (scores per question, time away, warnings, verification, CSV export). Your own exams, challenges, quizzes and lessons can be edited, exported and deleted from their right-click menu. Built-in content can be tried, used in your exams and graded, but not changed: it's part of the extension, and an update would undo any change. The 🎓 button switches back to the **student view**, where you can practise the learning path like your students.
 
 ### Share the extension with your class
 
@@ -220,6 +220,7 @@ Done:
 - [x] Lessons in Import and Export packs
 - [x] Quick guides for the 11 Java units
 - [x] **Create New Lesson**: a quick guide or a reading guide, ready to fill in
+- [x] Teachers' own subjects and units, and units added to the built-in subjects, shared in packs
 
 Content:
 
@@ -228,7 +229,6 @@ Content:
 
 For teachers:
 
-- [ ] Teachers' own subjects and units, from their content folders
 - [ ] Optional prerequisite locks, turned on by the teacher
 - [ ] Hide exam questions in the teacher view, or protect it with a PIN
 - [ ] AI help for writing new challenges

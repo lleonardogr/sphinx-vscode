@@ -7,7 +7,7 @@ import { loadLesson, parseReadings, readingMinutes, resolveLessonImages } from '
 import { readingProblems, validateChallenges } from '../../validator';
 import { buildPath, nextInPath, pathItemId, requirementStatus, subjectOf, unitKey, unitName } from '../../path';
 import { QuizQuestion, isCorrect, loadQuiz, parseNumberAnswer } from '../../quizzes';
-import { allSubjects, findSubject, findUnit, loadSubjects } from '../../subjects';
+import { addTeacherSubjects, allSubjects, findSubject, findUnit, loadSubjects, setSubjects, subjectContentRoots } from '../../subjects';
 import { ROOT, tempDir } from './helpers';
 
 describe('subjects', () => {
@@ -204,5 +204,70 @@ describe('lessons and the path', () => {
     for (const s of allSubjects()) {
       assert.ok(fs.existsSync(path.join(ROOT, 'subjects', s.id, 'subject.json')));
     }
+  });
+});
+
+describe("teachers' subjects and units", () => {
+  /** A teacher's folder: a new subject, units added to Java, and a subject that reuses a built-in unit key. */
+  function teacherFolder(): string {
+    const dir = tempDir();
+    const write = (file: string, data: unknown) => {
+      fs.mkdirSync(path.dirname(path.join(dir, file)), { recursive: true });
+      fs.writeFileSync(path.join(dir, file), typeof data === 'string' ? data : JSON.stringify(data));
+    };
+    write('chemistry/subject.json', { id: 'chemistry', title: 'Chemistry', kind: 'theory', units: [{ key: 'Atoms', title: 'Atoms' }, { key: 'Bonds', title: 'Bonds' }] });
+    write('chemistry/lessons/inside-an-atom/lesson.json', { title: 'Inside an Atom', topic: 'Atoms', order: 1 });
+    write('chemistry/lessons/inside-an-atom/lesson.md', `## Protons and neutrons\n\n${'word '.repeat(300)}`);
+    write('java-files/subject.json', { id: 'java', title: 'Java Programming', units: [{ key: 'Files', title: 'Files', icon: 'file' }] });
+    write('clash/subject.json', { id: 'clash', title: 'Clash', units: [{ key: 'Loops', title: 'Loops again' }] });
+    return dir;
+  }
+
+  it('adds new subjects, appends units to built-in ones, and refuses unit keys already in use', () => {
+    const folder = teacherFolder();
+    const { subjects, errors } = addTeacherSubjects(allSubjects(), [folder]);
+    const chemistry = subjects.find((s) => s.id === 'chemistry')!;
+    assert.ok(chemistry.own && chemistry.kind === 'theory');
+    assert.deepEqual(chemistry.units.map((u) => u.key), ['Atoms', 'Bonds']);
+    assert.deepEqual(subjectContentRoots(chemistry), [path.join(folder, 'chemistry', 'lessons')]);
+    // Units added to Java come after its built-in units, and Java stays built in.
+    const java = subjects.find((s) => s.id === 'java')!;
+    assert.equal(java.units.at(-1)!.key, 'Files');
+    assert.equal(java.units.length, findSubject('java')!.units.length + 1);
+    assert.ok(!java.own);
+    assert.deepEqual(java.extensionDirs, [path.join(folder, 'java-files')]);
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /clash.*unit "Loops" is already a unit of "java"/);
+    // The built-in registry is untouched until the result is registered.
+    assert.equal(findSubject('java')!.units.at(-1)!.key, 'Streams');
+    assert.equal(findSubject('chemistry'), undefined);
+  });
+
+  it('accepts a folder that is itself a subject', () => {
+    const folder = path.join(teacherFolder(), 'chemistry');
+    assert.ok(addTeacherSubjects(allSubjects(), [folder]).subjects.some((s) => s.id === 'chemistry'));
+  });
+
+  it('numbers added units after the built-in ones in the learning path', () => {
+    const before = allSubjects();
+    setSubjects(addTeacherSubjects(before, [teacherFolder()]).subjects);
+    try {
+      const files: Challenge = { id: 'read-a-file', title: 'Read a File', topic: 'Files', difficulty: 'Easy', order: 1 } as Challenge;
+      const unit = buildPath([files], [], [], 'java').find((g) => g.key === 'Files');
+      assert.equal(unit?.number, 12);
+      assert.equal(unitName('Atoms'), 'Atoms');
+    } finally {
+      setSubjects(before);
+    }
+  });
+
+  it('validates a subject folder with its units, and leaves the registry as it was', async () => {
+    const folder = teacherFolder();
+    const report = await validateChallenges([folder]);
+    assert.ok(report.loadErrors.some((e) => e.includes('unit "Loops" is already a unit of "java"')), report.loadErrors.join('\n'));
+    const lesson = report.challenges.find((c) => c.id === 'inside-an-atom');
+    assert.ok(lesson, 'the lesson inside the subject folder was validated');
+    assert.deepEqual(lesson.problems, []);
+    assert.equal(findUnit('Atoms'), undefined);
   });
 });

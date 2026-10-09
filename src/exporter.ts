@@ -10,6 +10,7 @@ import { QuizDefinition } from './quizzes';
 import { LessonDefinition } from './lessons';
 import { Origin, TeacherNode } from './teacherView';
 import { plural, tr } from './i18n';
+import { allSubjects, subjectTitle } from './subjects';
 
 export interface ExportDeps {
   challenges(): Challenge[];
@@ -39,8 +40,17 @@ export async function exportPack(deps: ExportDeps, from?: TeacherNode): Promise<
   const challenges = deps.challenges().filter((c) => deps.origin(c.dir) !== 'builtIn');
   const quizzes = deps.quizzes().filter((q) => deps.origin(q.dir) !== 'builtIn');
   const lessons = deps.lessons().filter((l) => deps.origin(l.dir) !== 'builtIn');
+  // The teacher's subjects, and the folders that add units to a built-in subject: each travels whole, with its content.
+  const subjects = allSubjects().flatMap((s) =>
+    [...(s.own ? [s.dir] : []), ...s.extensionDirs].map((dir) => ({
+      dir,
+      title: dir === s.dir ? subjectTitle(s) : tr(`Units added to ${subjectTitle(s)}`, `Unidades acrescentadas a ${subjectTitle(s)}`),
+      detail: dir === s.dir ? plural(s.units.length, ['unit', 'units'], ['unidade', 'unidades']) : tr('with their content', 'com o conteúdo delas'),
+    })),
+  );
   const separator = (label: string): Pick => ({ label, kind: vscode.QuickPickItemKind.Separator });
   const picks: Pick[] = [
+    ...(subjects.length ? [separator(tr('Your subjects', 'Suas matérias')), ...subjects.map((s) => entry('subject', s.title, s.dir, s.detail))] : []),
     ...(exams.length ? [separator(tr('Your exams', 'Suas provas')), ...exams.map((e) => entry('exam', e.title, e.dir, plural(e.questions.length, ['question', 'questions'], ['questão', 'questões'])))] : []),
     ...(challenges.length ? [separator(tr('Your challenges', 'Seus desafios')), ...challenges.map((c) => entry('challenge', c.title, c.dir, c.difficulty))] : []),
     ...(quizzes.length ? [separator(tr('Your quizzes', 'Seus quizzes')), ...quizzes.map((q) => entry('quiz', q.title, q.dir, 'Quiz'))] : []),
@@ -57,7 +67,7 @@ export async function exportPack(deps: ExportDeps, from?: TeacherNode): Promise<
   }
   const chosen = ((await vscode.window.showQuickPick(picks, {
     title: tr('Export a pack (1/3): what goes in it?', 'Exportar um pacote (1/3): o que vai nele?'),
-    placeHolder: tr('Choose the exams, challenges, quizzes and lessons to share', 'Escolha as provas, desafios, quizzes e lições para compartilhar'),
+    placeHolder: tr('Choose the subjects, exams, challenges, quizzes and lessons to share', 'Escolha as matérias, provas, desafios, quizzes e lições para compartilhar'),
     canPickMany: true,
     ignoreFocusOut: true,
   })) ?? []) as Pick[];
@@ -89,7 +99,7 @@ export async function exportPack(deps: ExportDeps, from?: TeacherNode): Promise<
     }
   }
 
-  const suggested = (items.find((p) => p.item!.kind === 'exam')?.title ?? 'sphinx-pack').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'sphinx-pack';
+  const suggested = (items.find((p) => p.item!.kind === 'subject')?.title ?? items.find((p) => p.item!.kind === 'exam')?.title ?? 'sphinx-pack').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'sphinx-pack';
   const folder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? os.homedir();
   const target = await vscode.window.showSaveDialog({
     title: tr('Export a pack (3/3): save as', 'Exportar um pacote (3/3): salvar como'),

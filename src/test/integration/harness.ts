@@ -32,7 +32,8 @@ export async function runAll(): Promise<void> {
 export const dialogs = {
   /** Picks the button to press for a warning or info message (undefined = dismiss / cancel). */
   answer: (_message: string, _buttons: string[]): string | undefined => undefined,
-  inputBox: 'Test Student' as string | undefined,
+  /** The text to type in an input box, or a function that answers by the box's title. */
+  inputBox: 'Test Student' as string | undefined | ((options?: vscode.InputBoxOptions) => string | undefined),
   openDialog: undefined as vscode.Uri[] | undefined,
   saveDialog: undefined as vscode.Uri | undefined,
   /** Index of the quick pick item to choose (undefined = cancel). */
@@ -52,7 +53,7 @@ export function stubDialogs(): void {
   w.showWarningMessage = message('warning');
   w.showInformationMessage = message('info');
   w.showErrorMessage = message('error');
-  w.showInputBox = async () => dialogs.inputBox;
+  w.showInputBox = async (options?: vscode.InputBoxOptions) => (typeof dialogs.inputBox === 'function' ? dialogs.inputBox(options) : dialogs.inputBox);
   w.showOpenDialog = async () => dialogs.openDialog;
   w.showSaveDialog = async () => dialogs.saveDialog;
   w.showQuickPick = async (items: unknown, options?: vscode.QuickPickOptions) => {

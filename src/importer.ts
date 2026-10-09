@@ -12,6 +12,7 @@ import { QuizDefinition } from './quizzes';
 import { LessonDefinition } from './lessons';
 import { plural, tr } from './i18n';
 import { unitName } from './path';
+import { allSubjects, subjectTitle } from './subjects';
 import { Importable, checkImportables, extractZip, findImportables, findSolutions } from './importCore';
 
 export interface ImportDeps {
@@ -37,7 +38,9 @@ function describe(items: Importable[]): string {
   const exams = items.filter((i) => i.kind === 'exam').length;
   const quizzes = items.filter((i) => i.kind === 'quiz').length;
   const lessons = items.filter((i) => i.kind === 'lesson').length;
+  const subjects = items.filter((i) => i.kind === 'subject').length;
   const parts = [
+    subjects && plural(subjects, ['subject', 'subjects'], ['matéria', 'matérias']),
     challenges && plural(challenges, ['challenge', 'challenges'], ['desafio', 'desafios']),
     tests && plural(tests, ['test', 'tests'], ['teste', 'testes']),
     quizzes && plural(quizzes, ['quiz', 'quizzes'], ['quiz', 'quizzes']),
@@ -89,8 +92,8 @@ export async function importContent(deps: ImportDeps): Promise<void> {
         errors.length
           ? tr(`Nothing could be imported from ${path.basename(source)}. See the "Sphinx" output for the problems.`, `Nada pôde ser importado de ${path.basename(source)}. Veja os problemas na saída "Sphinx".`)
           : tr(
-              `No challenges, quizzes, lessons or exams found in ${path.basename(source)}. Each one needs a folder with a challenge.json, quiz.json, lesson.json or exam.json.`,
-              `Nenhum desafio, quiz, lição ou prova encontrado em ${path.basename(source)}. Cada um precisa de uma pasta com challenge.json, quiz.json, lesson.json ou exam.json.`,
+              `No challenges, quizzes, lessons or exams found in ${path.basename(source)}. Each one needs a folder with a challenge.json, quiz.json, lesson.json, exam.json or subject.json.`,
+              `Nenhum desafio, quiz, lição ou prova encontrado em ${path.basename(source)}. Cada um precisa de uma pasta com challenge.json, quiz.json, lesson.json, exam.json ou subject.json.`,
             ),
       );
       return;
@@ -131,9 +134,10 @@ export async function importContent(deps: ImportDeps): Promise<void> {
     const otherLessonIds = new Set(deps.lessons().filter((l) => !isInside(l.dir, deps.libraryDir)).map((l) => l.id));
     const clashes: string[] = [];
     const plan = ok.map((item) => {
-      const ids = { challenge: otherIds, quiz: otherQuizIds, lesson: otherLessonIds, exam: otherExamIds }[item.kind];
+      // A subject keeps its folder name: its subject.json id decides whether it is new or adds units to another subject.
+      const ids = { challenge: otherIds, quiz: otherQuizIds, lesson: otherLessonIds, exam: otherExamIds, subject: new Set<string>() }[item.kind];
       const clash = ids.has(item.name);
-      const folder = { challenge: 'challenges', quiz: 'quizzes', lesson: 'lessons', exam: 'exams' }[item.kind];
+      const folder = { challenge: 'challenges', quiz: 'quizzes', lesson: 'lessons', exam: 'exams', subject: 'subjects' }[item.kind];
       const dest = path.join(deps.libraryDir, folder, clash ? `${item.name}-imported` : item.name);
       if (clash) {
         clashes.push(`${item.title} → ${path.basename(dest)}`);
@@ -199,6 +203,15 @@ export async function importContent(deps: ImportDeps): Promise<void> {
 
 export async function removeImported(deps: ImportDeps): Promise<void> {
   const items = [
+    ...allSubjects().flatMap((s) =>
+      [...(s.own ? [s.dir] : []), ...s.extensionDirs]
+        .filter((dir) => isInside(dir, deps.libraryDir))
+        .map((dir) => ({
+          label: `$(library) ${subjectTitle(s)}`,
+          description: dir === s.dir ? tr('subject, with its content', 'matéria, com o conteúdo dela') : tr('units added to this subject, with their content', 'unidades acrescentadas a esta matéria, com o conteúdo delas'),
+          dir,
+        })),
+    ),
     ...deps.exams().filter((e) => isInside(e.dir, deps.libraryDir)).map((e) => ({ label: `$(checklist) ${e.title}`, description: `${tr('exam', 'prova')} · ${plural(e.questions.length, ['question', 'questions'], ['questão', 'questões'])}`, dir: e.dir })),
     ...deps.quizzes().filter((q) => isInside(q.dir, deps.libraryDir)).map((q) => ({ label: `$(question) ${q.title}`, description: `quiz · ${plural(q.questions.length, ['question', 'questions'], ['questão', 'questões'])}`, dir: q.dir })),
     ...deps.lessons().filter((l) => isInside(l.dir, deps.libraryDir)).map((l) => ({ label: `$(book) ${l.title}`, description: tr('lesson', 'lição'), dir: l.dir })),
