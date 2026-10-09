@@ -13,6 +13,7 @@
   "command.setupAi": "Set Up AI Hints (Local Model or API Key)",
   "command.clearAiKeys": "Remove Saved AI API Keys",
   "command.createChallenge": "Create New Challenge…",
+  "command.createLesson": "Create New Lesson…",
   "command.openQuiz": "Open Quiz…",
   "command.importContent": "Import Challenges, Quizzes, Lessons or Exams…",
   "command.removeImported": "Remove Imported Challenges, Quizzes, Lessons or Exams…",

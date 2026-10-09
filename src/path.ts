@@ -1,6 +1,6 @@
 // The learning path of a subject: its units in teaching order (from the subject's subject.json), each
 // with its lessons, challenges, quiz and the tests that close a stage. Content that belongs to no
-// unit (written by a teacher or imported) goes to a Custom section at the end. No vscode dependency.
+// unit (written by a teacher or imported) goes to an Others section at the end. No vscode dependency.
 import type { Challenge } from './challenges';
 import type { LessonDefinition } from './lessons';
 import type { QuizDefinition } from './quizzes';
@@ -23,11 +23,19 @@ export function groupLabel(group: PathGroup): string {
   if (group.kind === 'unit') {
     return `${group.number} · ${unitName(group.key)}`;
   }
-  return group.kind === 'custom' ? tr('Custom', 'Personalizados') : group.key;
+  return group.kind === 'custom' ? othersName() : group.key;
+}
+
+/** The section for content without a unit. Its key stays "Custom", which content files may use. */
+export function othersName(): string {
+  return tr('Others', 'Outros');
 }
 
 /** The unit's name in the current language; other topics are returned as they are. */
 export function unitName(key: string): string {
+  if (key === CUSTOM_TOPIC) {
+    return othersName();
+  }
   const found = findUnit(key);
   return found ? (found.unit.titles[currentLang()] ?? found.unit.titles.en) : key;
 }
@@ -58,7 +66,7 @@ export interface PathGroup {
 
 const byOrder = (a: { order: number; title: string }, b: { order: number; title: string }) => a.order - b.order || a.title.localeCompare(b.title);
 
-/** The learning path of one subject: its units, then other topics, then Custom. Empty groups are left out. */
+/** The learning path of one subject: its units, then other topics, then Others. Empty groups are left out. */
 export function buildPath(challenges: Challenge[], quizzes: QuizDefinition[], lessons: LessonDefinition[] = [], subjectId: string = DEFAULT_SUBJECT): PathGroup[] {
   const subject = findSubject(subjectId);
   const empty = () => ({ lessons: [], challenges: [], quizzes: [], tests: [] });

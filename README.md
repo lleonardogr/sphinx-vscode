@@ -40,7 +40,7 @@ The sidebar lists numbered **units** in teaching order. Each unit runs from easy
 | 9 · Exceptions | Safe Division (`try`/`catch`) · Parse Numbers · Ask Until Valid · Insufficient Funds (custom exception) · Robust Calculator | Exceptions Quiz |
 | 10 · Recursion | Recursive Factorial · Recursive Digit Sum · Fibonacci (memoization) · Recursive Palindrome · Tower of Hanoi | Recursion Quiz |
 | 11 · Lambdas & Streams | Sort with a Comparator (lambdas) · Even Squares (`filter`/`map`) · Stream Statistics · Clean Up a Name List (`distinct`/`sorted`) · Pass or Fail (`partitioningBy`) · Group Words by Length (`groupingBy`) · Top 3 Scorers (comparators, `limit`) · Word Index (`flatMap`). Solved without loops. | Streams Quiz · Test: Student Report |
-| Custom | Word Counter · Grade Report · Caesar Cipher: [example custom challenges](custom/) to copy when writing your own | |
+| Others | Word Counter · Grade Report · Caesar Cipher: [example challenges](custom/) to copy when writing your own | |
 
 Three exams close the stages, each with a quiz and three private coding questions: **Exam 1: Basics to Strings** (units 1–4, 60 minutes), **Exam 2: Building Blocks** (units 5–7, 75 minutes) and the **Final Exam** (the whole course, focused on units 8–11, 120 minutes).
 
@@ -180,7 +180,7 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 
 ## For teachers
 
-Click the 💼 button at the top of the Sphinx sidebar (**Switch to Teacher View**) to open the **teacher view**. It lists **My Exams** (with their questions; press ▶ **Try Exam (Preview)** to take an exam yourself with the real timer and rules, in a practice attempt you can restart that never counts as a real one), **My Challenges, Quizzes & Lessons** (what you created or imported; click one to try it), and the **Tools**: create, import, **export a pack** for your class (a `.zip` they import with one click, without the solutions), validate, and open your class's results as a **dashboard** (scores per question, time away, warnings, verification, CSV export). Your own exams, challenges, quizzes and lessons can be edited, exported and deleted from their right-click menu. Built-in content can be tried, used in your exams and graded, but not changed: it's part of the extension, and an update would undo any change. The 🎓 button switches back to the **student view**, where you can practise the learning path like your students.
+Click the 💼 button at the top of the Sphinx sidebar (**Switch to Teacher View**) to open the **teacher view**. It lists **My Exams** (with their questions; press ▶ **Try Exam (Preview)** to take an exam yourself with the real timer and rules, in a practice attempt you can restart that never counts as a real one), **My Challenges, Quizzes & Lessons** (what you created or imported; click one to try it), and the **Tools**: create a challenge or a **lesson** (a quick guide or a reading guide, ready to fill in), import, **export a pack** for your class (a `.zip` they import with one click, without the solutions), validate, and open your class's results as a **dashboard** (scores per question, time away, warnings, verification, CSV export). Your own exams, challenges, quizzes and lessons can be edited, exported and deleted from their right-click menu. Built-in content can be tried, used in your exams and graded, but not changed: it's part of the extension, and an update would undo any change. The 🎓 button switches back to the **student view**, where you can practise the learning path like your students.
 
 ### Share the extension with your class
 
@@ -200,7 +200,7 @@ For a classroom without internet access, AI hints can use a model running on eac
 
 Everything you need is in **[docs/creating-challenges.md](docs/creating-challenges.md)**: a 5-minute quick start, the file format, writing tests, the rules cookbook, validating, and sharing challenges with your class without rebuilding the extension.
 
-In short: run **Sphinx: Create New Challenge…**, edit the generated files, then run **Sphinx: Validate Challenges in a Folder…** to check everything and fill in the expected outputs. Challenges without a `topic` appear in the **Custom** group. The [`custom/`](custom/) folder has three examples you can copy.
+In short: run **Sphinx: Create New Challenge…**, edit the generated files, then run **Sphinx: Validate Challenges in a Folder…** to check everything and fill in the expected outputs. Challenges without a `topic` appear in the **Others** section. The [`custom/`](custom/) folder has three examples you can copy.
 
 ### Give an exam
 
@@ -219,6 +219,7 @@ Done:
 - [x] Exam retakes after a wait, and deleting your own content in the teacher view
 - [x] Lessons in Import and Export packs
 - [x] Quick guides for the 11 Java units
+- [x] **Create New Lesson**: a quick guide or a reading guide, ready to fill in
 
 Content:
 
@@ -227,7 +228,6 @@ Content:
 
 For teachers:
 
-- [ ] **Create New Lesson**, like **Create New Challenge**
 - [ ] Teachers' own subjects and units, from their content folders
 - [ ] Optional prerequisite locks, turned on by the teacher
 - [ ] Hide exam questions in the teacher view, or protect it with a PIN

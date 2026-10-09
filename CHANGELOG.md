@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Create New Lesson…**: in the teacher view (Tools) or the Command Palette, choose a folder, a title and a unit, then a **quick guide** (recommended for programming subjects) or a **reading guide** (for theory subjects). Sphinx writes the lesson with guidance in comments, registers its folder so it appears in its unit, and offers a preview. The validator warns while the example reading link is still there.
+
+### Changed
+
+- The **Custom** section is now called **Others** (**Outros** in Portuguese): it lists the lessons, challenges, quizzes and tests that belong to no unit. Content files that use `"topic": "Custom"` keep working.
+- The teacher view's import tool now says **Import Challenges, Quizzes, Lessons or Exams…**, like the command.
+
 ## [1.6.1] - 2026-10-08
 
 ### Changed

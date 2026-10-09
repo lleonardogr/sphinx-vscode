@@ -240,6 +240,12 @@
         "category": "Sphinx"
       },
       {
+        "command": "sphinx.createLesson",
+        "title": "%command.createLesson%",
+        "category": "Sphinx",
+        "icon": "$(book)"
+      },
+      {
         "command": "sphinx.validateChallenges",
         "title": "%command.validateChallenges%",
         "category": "Sphinx",
@@ -359,6 +365,11 @@
           "command": "sphinx.switchToStudentView",
           "when": "view == sphinx.teacher",
           "group": "navigation@3"
+        },
+        {
+          "command": "sphinx.createLesson",
+          "when": "view == sphinx.teacher",
+          "group": "authoring"
         },
         {
           "command": "sphinx.validateChallenges",

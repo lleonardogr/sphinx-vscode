@@ -220,6 +220,11 @@ function validateLesson(dir: string): ChallengeReport {
       // Programming subjects use quick guides: the challenges teach, so the guide is shorter.
       const quick = findSubject(subjectOf(lesson))?.kind === 'programming';
       problems.push(...readingProblems(raw.readings, quick ? 2 : 3));
+      (Array.isArray(raw.readings) ? raw.readings : []).forEach((r: { url?: unknown }, i: number) => {
+        if (typeof r?.url === 'string' && /^https:\/\/example\.com\//.test(r.url)) {
+          warnings.push(`reading ${i + 1} still has the example link: replace it with the page students should read`);
+        }
+      });
       const summary = lesson.body.split(READINGS_MARKER)[0].split(/\s+/).filter(Boolean).length;
       const [fewest, most, aim] = quick ? [40, 180, '60 to 120'] : [100, 350, '150 to 250'];
       if (summary < fewest || summary > most) {

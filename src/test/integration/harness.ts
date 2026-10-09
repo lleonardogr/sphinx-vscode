@@ -37,6 +37,8 @@ export const dialogs = {
   saveDialog: undefined as vscode.Uri | undefined,
   /** Index of the quick pick item to choose (undefined = cancel). */
   quickPick: 0 as number | undefined,
+  /** When set, chooses the quick pick item instead of `quickPick`, for example by its label. */
+  choose: undefined as ((items: vscode.QuickPickItem[], options?: vscode.QuickPickOptions) => vscode.QuickPickItem | undefined) | undefined,
   messages: [] as string[],
 };
 
@@ -55,6 +57,9 @@ export function stubDialogs(): void {
   w.showSaveDialog = async () => dialogs.saveDialog;
   w.showQuickPick = async (items: unknown, options?: vscode.QuickPickOptions) => {
     const list = (await items) as vscode.QuickPickItem[];
+    if (dialogs.choose) {
+      return dialogs.choose(list, options);
+    }
     if (options?.canPickMany) {
       // Multi-select: accept what the extension preselected.
       return dialogs.quickPick === undefined ? undefined : list.filter((i) => i.picked);

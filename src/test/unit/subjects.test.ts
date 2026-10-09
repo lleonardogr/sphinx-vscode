@@ -43,6 +43,8 @@ describe('subjects', () => {
     assert.equal(subjectOf({ topic: 'Tests', unit: 'Strings' }), 'java');
     assert.equal(subjectOf({ topic: 'Custom', subject: 'cs' }), 'cs');
     assert.equal(subjectOf({ topic: 'Custom', subject: 'unknown' }), 'java');
+    // Content without a unit is shown in the Others section; its key stays "Custom".
+    assert.equal(unitName('Custom'), 'Others');
     assert.equal(subjectOf({ topic: 'My Own Topic' }), 'java');
   });
 });
@@ -150,7 +152,7 @@ describe('lessons and the path', () => {
   });
 
   it('holds programming subjects to the quick guide limits, and theory subjects to the full ones', async () => {
-    const reading = { title: 'T', source: 'S', url: 'https://example.com/a', type: 'article', minutes: 5, lang: 'en', lookFor: 'L' };
+    const reading = { title: 'T', source: 'S', url: 'https://example.org/a', type: 'article', minutes: 5, lang: 'en', lookFor: 'L' };
     const guide = (topic: string, readings: number) => {
       const dir = path.join(tempDir(), 'guide');
       fs.mkdirSync(dir);

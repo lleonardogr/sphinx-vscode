@@ -13,6 +13,7 @@
   "command.setupAi": "Configurar dicas de IA (modelo local ou chave de API)",
   "command.clearAiKeys": "Remover as chaves de API salvas",
   "command.createChallenge": "Criar novo desafio…",
+  "command.createLesson": "Criar nova lição…",
   "command.openQuiz": "Abrir quiz…",
   "command.importContent": "Importar desafios, quizzes, lições ou provas…",
   "command.removeImported": "Remover desafios, quizzes, lições ou provas importados…",
