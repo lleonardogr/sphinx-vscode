@@ -24,6 +24,10 @@ export interface SubjectDef {
   order: number;
   units: UnitDef[];
   dir: string;
+  /** True for a subject from a teacher's folder (or an imported pack), false for a built-in one. */
+  own: boolean;
+  /** Teachers' folders whose subject.json adds units to this subject, and whose content belongs to it. */
+  extensionDirs: string[];
 }
 
 /** Content without a unit or subject (the Others section's examples, older teacher packs) belongs here. */
@@ -72,12 +76,63 @@ export function unitRank(key: string | undefined): number {
   return found ? registry.indexOf(found.subject) * 1000 + found.index : Number.MAX_SAFE_INTEGER - 1;
 }
 
-/** Folders with this subject's challenges, quizzes, lessons and tests (those that exist). */
+/** Folders with this subject's challenges, quizzes, lessons and tests (those that exist), its extensions' included. */
 export function subjectContentRoots(s: SubjectDef): string[] {
-  return SUBJECT_CONTENT_FOLDERS.map((f) => path.join(s.dir, f)).filter((d) => fs.existsSync(d));
+  return [s.dir, ...s.extensionDirs].flatMap((dir) => SUBJECT_CONTENT_FOLDERS.map((f) => path.join(dir, f))).filter((d) => fs.existsSync(d));
 }
 
-function parseSubject(dir: string): SubjectDef {
+/** The subject folders in a teacher's folder: the folder itself when it has a subject.json, or its sub-folders that do. */
+export function findSubjectDirs(folder: string): string[] {
+  if (!fs.existsSync(folder) || !fs.statSync(folder).isDirectory()) {
+    return [];
+  }
+  if (fs.existsSync(path.join(folder, 'subject.json'))) {
+    return [folder];
+  }
+  return fs
+    .readdirSync(folder, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && fs.existsSync(path.join(folder, e.name, 'subject.json')))
+    .map((e) => path.join(folder, e.name));
+}
+
+/**
+ * Adds the subjects in teachers' folders to `subjects` (the built-in ones). A subject.json whose id is
+ * an existing subject's adds its units after that subject's units, so a teacher can extend Java;
+ * otherwise it is a new subject. Unit keys stay unique across every subject.
+ */
+export function addTeacherSubjects(subjects: SubjectDef[], folders: string[]): { subjects: SubjectDef[]; errors: string[] } {
+  const result = subjects.map((s) => ({ ...s, units: [...s.units], extensionDirs: [...s.extensionDirs] }));
+  const errors: string[] = [];
+  const owner = (key: string) => result.find((s) => s.units.some((u) => u.key === key || u.aliases.includes(key)))?.id;
+  const seen = new Set<string>();
+  for (const dir of folders.flatMap(findSubjectDirs)) {
+    if (seen.has(path.resolve(dir))) {
+      continue;
+    }
+    seen.add(path.resolve(dir));
+    try {
+      const subject = parseSubject(dir, true);
+      for (const u of subject.units) {
+        const taken = [u.key, ...u.aliases].map((k) => [k, owner(k)]).find(([, o]) => o);
+        if (taken) {
+          throw new Error(`unit "${taken[0]}" is already a unit of "${taken[1]}" (unit keys must be unique across subjects)`);
+        }
+      }
+      const existing = result.find((s) => s.id === subject.id);
+      if (existing) {
+        existing.units.push(...subject.units);
+        existing.extensionDirs.push(dir);
+      } else {
+        result.push(subject);
+      }
+    } catch (e) {
+      errors.push(`${dir}: ${(e as Error).message}`);
+    }
+  }
+  return { subjects: result, errors };
+}
+
+function parseSubject(dir: string, own = false): SubjectDef {
   const meta = JSON.parse(fs.readFileSync(path.join(dir, 'subject.json'), 'utf8'));
   const id = meta.id ?? path.basename(dir);
   if (typeof meta.title !== 'string' || !meta.title.trim()) {
@@ -116,6 +171,8 @@ function parseSubject(dir: string): SubjectDef {
     order: typeof meta.order === 'number' ? meta.order : 100,
     units,
     dir,
+    own,
+    extensionDirs: [],
   };
 }
 

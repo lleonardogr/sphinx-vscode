@@ -9,6 +9,7 @@ import { migrateOldStorage, migrateSphynxState } from '../../extension';
 import { javacMajorVersion } from '../../runner';
 import { extractZip, findImportables, findSolutions } from '../../importCore';
 import { validateChallenges } from '../../validator';
+import { findSubject } from '../../subjects';
 import { dialogs, test, waitFor } from './harness';
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
@@ -498,6 +499,73 @@ test('a teacher creates a quick guide for a Java unit and a reading guide for a 
     fs.rmSync(folder, { recursive: true, force: true });
     await vscode.commands.executeCommand('sphinx.refresh');
   }
+});
+
+test("a teacher creates a subject, adds units to it and to Java, and fills a new Java unit", async () => {
+  const workspace = vscode.workspace.workspaceFolders![0].uri.fsPath;
+  const folder = path.join(workspace, 'my-challenges');
+  const config = vscode.workspace.getConfiguration('sphinx');
+  const before = config.get<string[]>('extraChallengePaths', []);
+  const label = (n: unknown) => String(api.tree.getTreeItem(n as never).label);
+  const answers = (picks: Record<string, string>, inputs: Record<string, string>) => {
+    dialogs.answer = () => undefined;
+    dialogs.choose = (items, options) => {
+      const title = String(options?.title ?? options?.placeHolder ?? '');
+      const want = Object.entries(picks).find(([step]) => title.includes(step))?.[1];
+      return want === undefined ? undefined : items.find((i) => i.label === want || i.label.endsWith(want));
+    };
+    dialogs.inputBox = (options) => Object.entries(inputs).find(([step]) => String(options?.title).includes(step))?.[1];
+  };
+  try {
+    // A new theory subject with its first unit; the sidebar switches to it.
+    answers({ '(1/4)': 'my-challenges', '(3/4)': 'Theory' }, { '(2/4)': 'Chemistry', '(4/4)': 'Atoms and Molecules' });
+    await vscode.commands.executeCommand('sphinx.createSubject');
+    const chemistry = findSubject('chemistry');
+    assert.ok(chemistry?.own, 'the subject was not loaded');
+    assert.equal(chemistry.kind, 'theory');
+    assert.deepEqual(chemistry.units.map((u) => u.key), ['AtomsAndMolecules']);
+    assert.equal(api.tree.subject, 'chemistry');
+    assert.ok(vscode.workspace.getConfiguration('sphinx').get<string[]>('extraChallengePaths', []).includes(folder), 'the folder was registered');
+
+    // A second unit, in the subject's own subject.json.
+    answers({ '(1/2)': 'Chemistry' }, { '(2/2)': 'Bonds' });
+    await vscode.commands.executeCommand('sphinx.createUnit');
+    assert.deepEqual(findSubject('chemistry')!.units.map((u) => u.key), ['AtomsAndMolecules', 'Bonds']);
+
+    // A unit added to Java goes in my-challenges/java and comes after the 11 built-in units.
+    answers({ '(1/2)': 'Java Programming', 'added units go': 'my-challenges' }, { '(2/2)': 'Files' });
+    await vscode.commands.executeCommand('sphinx.createUnit');
+    const java = findSubject('java')!;
+    assert.equal(java.units.length, 12);
+    assert.equal(java.units[11].key, 'Files');
+    assert.ok(!java.own);
+    assert.deepEqual(java.extensionDirs, [path.join(folder, 'java')]);
+    assert.equal(api.tree.subject, 'java');
+
+    // Create New Lesson offers the added unit's lessons folder; the lesson opens unit 12 in the sidebar.
+    answers({ '(1/4)': 'java/lessons', '(3/4)': '12 · Files', '(4/4)': 'Quick guide' }, { '(2/4)': 'Reading and Writing Files' });
+    await vscode.commands.executeCommand('sphinx.createLesson');
+    const lesson = api.lessons().find((l) => l.title === 'Reading and Writing Files');
+    assert.ok(lesson, 'the lesson was not loaded');
+    assert.equal(path.dirname(lesson.dir), path.join(folder, 'java', 'lessons'));
+    const files = api.tree.getChildren().find((n) => label(n) === '12 · Files');
+    assert.ok(files, `no "12 · Files" group: ${api.tree.getChildren().map(label).join(', ')}`);
+    assert.deepEqual(api.tree.getChildren(files).map(label), ['Reading and Writing Files']);
+
+    // The whole folder validates with its subjects registered.
+    const report = await validateChallenges([folder]);
+    assert.deepEqual(report.loadErrors, []);
+    assert.ok(report.challenges.every((c) => c.problems.length === 0), JSON.stringify(report.challenges.map((c) => [c.id, c.problems])));
+  } finally {
+    dialogs.choose = undefined;
+    dialogs.inputBox = 'Test Student';
+    await vscode.commands.executeCommand('sphinx.switchSubject', 'java');
+    await config.update('extraChallengePaths', before, vscode.ConfigurationTarget.Global);
+    fs.rmSync(folder, { recursive: true, force: true });
+    await vscode.commands.executeCommand('sphinx.refresh');
+  }
+  assert.equal(findSubject('chemistry'), undefined);
+  assert.equal(findSubject('java')!.units.length, 11);
 });
 
 test('state saved under the old "sphynx." keys moves to "sphinx." keys, once', () => {

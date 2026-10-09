@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { AiHints } from './ai/hints';
-import { createChallenge, createLesson, validateFolder } from './authoring';
+import { createChallenge, createLesson, createSubject, createUnit, validateFolder } from './authoring';
 import { ChallengePanel, PanelAction, PanelExamInfo, examStatusText } from './challengePanel';
 import { Challenge, loadChallenges } from './challenges';
 import { Progress } from './progress';
@@ -14,7 +14,7 @@ import { importContent, libraryRoots, removeImported } from './importer';
 import { QuizController, QuizProgress } from './quizController';
 import { QuizDefinition, loadQuizzes } from './quizzes';
 import { PathItem, buildPath, nextInPath, pathItemTitle, requirementStatus, subjectOf } from './path';
-import { DEFAULT_SUBJECT, allSubjects, findSubject, loadSubjects, setSubjects, subjectContentRoots, subjectTitle } from './subjects';
+import { DEFAULT_SUBJECT, addTeacherSubjects, allSubjects, findSubject, loadSubjects, setSubjects, subjectContentRoots, subjectTitle } from './subjects';
 import { LessonDefinition, loadLessons } from './lessons';
 import { LessonPanel, LessonProgress } from './lessonPanel';
 import { plural, setLanguage, tr } from './i18n';
@@ -215,13 +215,16 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   }
 
   function reload(): void {
-    // Subjects first: they define the units the rest of the content is sorted into.
-    const subjectLoad = loadSubjects([path.join(context.extensionPath, 'subjects')]);
-    setSubjects(subjectLoad.subjects);
+    // Subjects first: they define the units the rest of the content is sorted into. Teachers' folders
+    // and imported packs can add subjects, or units to a built-in subject.
+    const extra = config().get<string[]>('extraChallengePaths', []);
+    const builtInSubjects = loadSubjects([path.join(context.extensionPath, 'subjects')]);
+    const teacherSubjects = addTeacherSubjects(builtInSubjects.subjects, [...extra, path.join(libraryDir(), 'subjects')]);
+    const subjectLoad = { errors: [...builtInSubjects.errors, ...teacherSubjects.errors] };
+    setSubjects(teacherSubjects.subjects);
     if (!findSubject(tree.subject)) {
       tree.subject = DEFAULT_SUBJECT;
     }
-    const extra = config().get<string[]>('extraChallengePaths', []);
     const builtIn = [
       ...['challenges', 'custom', 'tests', 'exams', 'quizzes'].map((dir) => path.join(context.extensionPath, dir)),
       ...allSubjects().flatMap(subjectContentRoots),
@@ -1233,6 +1236,8 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     vscode.commands.registerCommand('sphinx.deleteItem', (node?: TeacherNode) => deleteItem(node)),
     vscode.commands.registerCommand('sphinx.createChallenge', () => createChallenge(authoringDeps)),
     vscode.commands.registerCommand('sphinx.createLesson', () => createLesson(authoringDeps)),
+    vscode.commands.registerCommand('sphinx.createSubject', () => createSubject(authoringDeps)),
+    vscode.commands.registerCommand('sphinx.createUnit', () => createUnit(authoringDeps)),
     vscode.commands.registerCommand('sphinx.importContent', () => importContent(importDeps)),
     vscode.commands.registerCommand('sphinx.removeImported', () => removeImported(importDeps)),
     vscode.commands.registerCommand('sphinx.validateChallenges', () => validateFolder(authoringDeps)),

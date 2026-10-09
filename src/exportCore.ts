@@ -1,4 +1,4 @@
-// Builds a pack (.zip) of challenges, quizzes, lessons and exams that students import with one click.
+// Builds a pack (.zip) of subjects, challenges, quizzes, lessons and exams that students import with one click.
 // No vscode dependency, so it can be tested with the importer.
 import * as fs from 'fs';
 import * as path from 'path';
@@ -6,8 +6,8 @@ import { zipSync } from 'fflate';
 import { ExamDefinition } from './exams';
 
 export interface PackItem {
-  kind: 'challenge' | 'quiz' | 'lesson' | 'exam';
-  /** The item's folder (with challenge.json, quiz.json, lesson.json or exam.json), copied whole, images included. */
+  kind: 'challenge' | 'quiz' | 'lesson' | 'exam' | 'subject';
+  /** The item's folder (with challenge.json, quiz.json, lesson.json, exam.json or subject.json), copied whole, images included. */
   dir: string;
 }
 
@@ -32,7 +32,8 @@ export function examDependencies(exam: ExamDefinition, builtInDir: string): Pack
 
 /**
  * Zips the items under one top folder, `packName/<item folder>/…`. Reference solutions (Solution*.java)
- * are left out unless `keepSolutions`. Items with the same folder name are kept once.
+ * are left out unless `keepSolutions`. Items with the same folder name are kept once, and an item inside another
+ * one (a challenge in a subject folder) travels with it.
  */
 export function buildPack(items: PackItem[], packName: string, keepSolutions: boolean): { zip: Uint8Array; files: number; solutionsRemoved: number } {
   const entries: Record<string, Uint8Array> = {};
@@ -57,7 +58,7 @@ export function buildPack(items: PackItem[], packName: string, keepSolutions: bo
   };
   for (const item of items) {
     const name = path.basename(item.dir);
-    if (seen.has(name)) {
+    if (seen.has(name) || items.some((other) => other !== item && inside(item.dir, other.dir))) {
       continue;
     }
     seen.add(name);

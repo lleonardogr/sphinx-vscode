@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import { CUSTOM_TOPIC, Challenge, topicOrder } from './challenges';
 import { formatReport, reportPassed, validateChallenges } from './validator';
 import { LessonDefinition } from './lessons';
-import { allSubjects, findSubject, subjectTitle } from './subjects';
+import { SubjectDef, allSubjects, findSubject, findUnit, subjectTitle } from './subjects';
 import { unitName } from './path';
 import { tr } from './i18n';
 
@@ -32,16 +32,26 @@ export function slugify(title: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-/** Folders the author is likely to put challenges in. */
-function candidateFolders(deps: AuthoringDeps): { label: string; description?: string; folder?: string }[] {
+/** The folders of the teacher's subjects: their own subject folders, and the ones that add units to a built-in subject. */
+function teacherSubjectDirs(): { subject: SubjectDef; dir: string }[] {
+  return allSubjects().flatMap((s) => [...(s.own ? [s.dir] : []), ...s.extensionDirs].map((dir) => ({ subject: s, dir })));
+}
+
+/** Folders the author is likely to put content in; `content` offers that folder of each of the teacher's subjects first. */
+function candidateFolders(deps: AuthoringDeps, content?: 'challenges' | 'lessons'): { label: string; description?: string; folder?: string }[] {
   const items: { label: string; description?: string; folder?: string }[] = [];
   const seen = new Set<string>();
-  const add = (folder: string, description: string) => {
+  const add = (folder: string, description: string, label = path.basename(folder) || folder) => {
     if (!seen.has(folder)) {
       seen.add(folder);
-      items.push({ label: path.basename(folder) || folder, description: `${description} · ${folder}`, folder });
+      items.push({ label, description: `${description} · ${folder}`, folder });
     }
   };
+  if (content) {
+    for (const { subject, dir } of teacherSubjectDirs()) {
+      add(path.join(dir, content), tr(`your subject ${subjectTitle(subject)}`, `sua matéria ${subjectTitle(subject)}`), `${path.basename(dir)}/${content}`);
+    }
+  }
   for (const p of config().get<string[]>('extraChallengePaths', [])) {
     add(p, tr('from extraChallengePaths', 'de extraChallengePaths'));
   }
@@ -57,8 +67,12 @@ function candidateFolders(deps: AuthoringDeps): { label: string; description?: s
   return items;
 }
 
-async function pickFolder(deps: AuthoringDeps, title: string): Promise<string | undefined> {
-  const pick = await vscode.window.showQuickPick(candidateFolders(deps), { title, placeHolder: tr('Where are your challenges stored?', 'Onde ficam os seus desafios?'), ignoreFocusOut: true });
+async function pickFolder(deps: AuthoringDeps, title: string, content?: 'challenges' | 'lessons', placeHolder?: string): Promise<string | undefined> {
+  const pick = await vscode.window.showQuickPick(candidateFolders(deps, content), {
+    title,
+    placeHolder: placeHolder ?? tr('Where are your challenges stored?', 'Onde ficam os seus desafios?'),
+    ignoreFocusOut: true,
+  });
   if (!pick) {
     return undefined;
   }
@@ -74,6 +88,10 @@ async function ensureRegistered(folder: string, deps: AuthoringDeps): Promise<vo
   const builtIn = path.join(deps.extensionPath, 'challenges');
   const paths = config().get<string[]>('extraChallengePaths', []);
   if (path.resolve(folder) === path.resolve(builtIn) || paths.some((p) => path.resolve(p) === path.resolve(folder))) {
+    return;
+  }
+  // A content folder of one of the teacher's subjects is loaded with its subject.
+  if (teacherSubjectDirs().some(({ dir }) => path.resolve(path.dirname(folder)) === path.resolve(dir))) {
     return;
   }
   // Inside a repository checkout the built-in folder is loaded only when running the dev build,
@@ -174,7 +192,7 @@ export function writeChallengeTemplate(dir: string, title: string, topic: string
 }
 
 export async function createChallenge(deps: AuthoringDeps): Promise<void> {
-  const folder = await pickFolder(deps, tr('New challenge (1/4): folder', 'Novo desafio (1/4): pasta'));
+  const folder = await pickFolder(deps, tr('New challenge (1/4): folder', 'Novo desafio (1/4): pasta'), 'challenges');
   if (!folder) {
     return;
   }
@@ -355,7 +373,7 @@ export function writeLessonTemplate(dir: string, title: string, place: LessonPla
 }
 
 export async function createLesson(deps: AuthoringDeps): Promise<void> {
-  const folder = await pickFolder(deps, tr('New lesson (1/4): folder', 'Nova lição (1/4): pasta'));
+  const folder = await pickFolder(deps, tr('New lesson (1/4): folder', 'Nova lição (1/4): pasta'), 'lessons', tr('Where are your lessons stored?', 'Onde ficam as suas lições?'));
   if (!folder) {
     return;
   }
@@ -444,6 +462,171 @@ export async function createLesson(deps: AuthoringDeps): Promise<void> {
   } else if (choice === guide) {
     vscode.env.openExternal(vscode.Uri.parse('https://github.com/lleonardogr/sphinx-vscode/blob/main/docs/content-guide.md#reading-guides'));
   }
+}
+
+/** A unit key from its title ("Linked Lists" → "LinkedLists"), made unique across every subject. */
+export function unitKeyFor(title: string): string {
+  const base = slugify(title).split('-').filter(Boolean).map((w) => w[0].toUpperCase() + w.slice(1)).join('') || 'Unit';
+  const start = /^[A-Za-z]/.test(base) ? base : `Unit${base}`;
+  let key = start;
+  for (let n = 2; findUnit(key); n++) {
+    key = `${start}${n}`;
+  }
+  return key;
+}
+
+function readJson(file: string): Record<string, unknown> {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function writeJson(file: string, data: unknown): void {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n');
+}
+
+/** Writes a subject folder: subject.json with one unit, and empty folders for its content. */
+export function writeSubjectTemplate(dir: string, id: string, title: string, kind: 'programming' | 'theory', unit: { key: string; title: string }): void {
+  fs.mkdirSync(dir, { recursive: true });
+  writeJson(path.join(dir, 'subject.json'), { id, title, kind, order: 100, units: [{ key: unit.key, title: unit.title, icon: 'folder' }] });
+  for (const content of ['lessons', 'challenges', 'quizzes']) {
+    fs.mkdirSync(path.join(dir, content), { recursive: true });
+  }
+}
+
+/** Adds a unit to the subject.json in `dir` (a teacher's subject, or the folder that adds units to a built-in one). */
+export function addUnitToSubjectFile(dir: string, unit: { key: string; title: string }): void {
+  const file = path.join(dir, 'subject.json');
+  const meta = readJson(file);
+  const units = Array.isArray(meta.units) ? meta.units : [];
+  writeJson(file, { ...meta, units: [...units, { key: unit.key, title: unit.title, icon: 'folder' }] });
+}
+
+/** After a subject or unit is created: show it in the sidebar and offer the next step. */
+async function afterSubjectChange(deps: AuthoringDeps, subjectId: string, message: string): Promise<void> {
+  deps.reload();
+  await vscode.commands.executeCommand('sphinx.switchSubject', subjectId);
+  const lesson = tr('Create a Lesson', 'Criar uma lição');
+  const challenge = tr('Create a Challenge', 'Criar um desafio');
+  const choice = await vscode.window.showInformationMessage(message, lesson, challenge);
+  if (choice === lesson) {
+    await vscode.commands.executeCommand('sphinx.createLesson');
+  } else if (choice === challenge) {
+    await vscode.commands.executeCommand('sphinx.createChallenge');
+  }
+}
+
+export async function createSubject(deps: AuthoringDeps): Promise<void> {
+  const folder = await pickFolder(deps, tr('New subject (1/4): folder', 'Nova matéria (1/4): pasta'), undefined, tr('Where should the subject folder go?', 'Onde deve ficar a pasta da matéria?'));
+  if (!folder) {
+    return;
+  }
+  const title = await vscode.window.showInputBox({
+    title: tr('New subject (2/4): name', 'Nova matéria (2/4): nome'),
+    prompt: tr('The name students see in the subject switcher, e.g. "Data Structures"', 'O nome que os alunos veem na troca de matéria, por exemplo "Estruturas de dados"'),
+    ignoreFocusOut: true,
+    validateInput: (v) => {
+      const id = slugify(v);
+      if (!id) {
+        return tr('Type a name', 'Digite um nome');
+      }
+      if (findSubject(id)) {
+        return tr(`There is already a subject with the id "${id}"`, `Já existe uma matéria com o id "${id}"`);
+      }
+      return fs.existsSync(path.join(folder, id)) ? tr(`A folder named "${id}" already exists`, `Já existe uma pasta chamada "${id}"`) : undefined;
+    },
+  });
+  if (!title) {
+    return;
+  }
+  const kind = await vscode.window.showQuickPick(
+    [
+      { label: tr('Programming', 'Programação'), detail: tr('Students learn by writing code: units open with a quick guide.', 'Os alunos aprendem escrevendo código: as unidades abrem com um guia rápido.'), subjectKind: 'programming' as const },
+      { label: tr('Theory', 'Teoria'), detail: tr('Ideas to understand first: units open with a reading guide.', 'Ideias para entender primeiro: as unidades abrem com um guia de leitura.'), subjectKind: 'theory' as const },
+    ],
+    { title: tr('New subject (3/4): kind', 'Nova matéria (3/4): tipo'), ignoreFocusOut: true },
+  );
+  if (!kind) {
+    return;
+  }
+  const unitTitle = await vscode.window.showInputBox({
+    title: tr('New subject (4/4): first unit', 'Nova matéria (4/4): primeira unidade'),
+    prompt: tr('The name of the first unit, e.g. "Linked Lists". Add more later with Create New Unit.', 'O nome da primeira unidade, por exemplo "Listas ligadas". Acrescente outras depois com Criar nova unidade.'),
+    ignoreFocusOut: true,
+    validateInput: (v) => (slugify(v) ? undefined : tr('Type a name', 'Digite um nome')),
+  });
+  if (!unitTitle) {
+    return;
+  }
+  const id = slugify(title);
+  const unit = { key: unitKeyFor(unitTitle), title: unitTitle.trim() };
+  writeSubjectTemplate(path.join(folder, id), id, title.trim(), kind.subjectKind, unit);
+  await ensureRegistered(folder, deps);
+  await afterSubjectChange(
+    deps,
+    id,
+    tr(
+      `Created the subject "${title.trim()}" with its first unit, "${unit.title}". Its lessons, challenges and quizzes go in its folder (${path.join(folder, id)}).`,
+      `A matéria "${title.trim()}" foi criada com a primeira unidade, "${unit.title}". As lições, desafios e quizzes dela ficam na pasta dela (${path.join(folder, id)}).`,
+    ),
+  );
+}
+
+export async function createUnit(deps: AuthoringDeps): Promise<void> {
+  const current = deps.subject?.();
+  const subjects = [...allSubjects()].sort((a, b) => Number(b.id === current) - Number(a.id === current));
+  const subjectPick = await vscode.window.showQuickPick(
+    subjects.map((s) => ({
+      label: subjectTitle(s),
+      description: s.own
+        ? tr(`your subject · ${s.units.length} units`, `sua matéria · ${s.units.length} unidades`)
+        : tr(`built in · the new unit comes after unit ${s.units.length}`, `incluída · a nova unidade vem depois da unidade ${s.units.length}`),
+      subject: s,
+    })),
+    { title: tr('New unit (1/2): subject', 'Nova unidade (1/2): matéria'), ignoreFocusOut: true },
+  );
+  if (!subjectPick) {
+    return;
+  }
+  const subject = subjectPick.subject;
+  const unitTitle = await vscode.window.showInputBox({
+    title: tr('New unit (2/2): name', 'Nova unidade (2/2): nome'),
+    prompt: tr('The unit name students see, e.g. "Files"', 'O nome da unidade que os alunos veem, por exemplo "Arquivos"'),
+    ignoreFocusOut: true,
+    validateInput: (v) => (slugify(v) ? undefined : tr('Type a name', 'Digite um nome')),
+  });
+  if (!unitTitle) {
+    return;
+  }
+  const unit = { key: unitKeyFor(unitTitle), title: unitTitle.trim() };
+  // A teacher's subject keeps its units in its own subject.json. Units added to a built-in subject go in a
+  // teacher's folder named after it, with a subject.json that only lists the added units.
+  let dir = subject.own ? subject.dir : subject.extensionDirs[0];
+  if (dir) {
+    addUnitToSubjectFile(dir, unit);
+  } else {
+    const folder = await pickFolder(deps, tr('Where should the added units go?', 'Onde devem ficar as unidades acrescentadas?'), undefined, tr(`A "${subject.id}" folder is created there for your units and their content`, `Uma pasta "${subject.id}" é criada ali para as suas unidades e o conteúdo delas`));
+    if (!folder) {
+      return;
+    }
+    dir = path.join(folder, subject.id);
+    if (fs.existsSync(path.join(dir, 'subject.json'))) {
+      addUnitToSubjectFile(dir, unit);
+    } else {
+      fs.mkdirSync(dir, { recursive: true });
+      writeJson(path.join(dir, 'subject.json'), { id: subject.id, title: subject.titles.en, units: [{ key: unit.key, title: unit.title, icon: 'folder' }] });
+      for (const content of ['lessons', 'challenges', 'quizzes']) {
+        fs.mkdirSync(path.join(dir, content), { recursive: true });
+      }
+    }
+    await ensureRegistered(folder, deps);
+  }
+  await afterSubjectChange(
+    deps,
+    subject.id,
+    tr(
+      `Added the unit "${unit.title}" to ${subjectTitle(subject)}, as unit ${subject.units.length + 1}. Its key, for "topic" in content files, is ${unit.key}.`,
+      `A unidade "${unit.title}" foi acrescentada a ${subjectTitle(subject)}, como unidade ${subject.units.length + 1}. A chave dela, para o "topic" dos arquivos de conteúdo, é ${unit.key}.`,
+    ),
+  );
 }
 
 export async function validateFolder(deps: AuthoringDeps): Promise<void> {

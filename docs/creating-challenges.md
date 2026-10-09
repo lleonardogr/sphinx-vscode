@@ -267,7 +267,49 @@ Sphinx teaches more than one **subject**. Each has its own units, learning path 
 
 A unit appears as soon as it has content, and keeps its number even when earlier units are empty.
 
-Subjects are defined in `subjects/<id>/subject.json` and ship with the extension, with their content in `subjects/<id>/challenges`, `quizzes`, `lessons` and `tests`. To propose a new one (C, SQL, graph theory…), open an issue.
+The built-in subjects are defined in `subjects/<id>/subject.json` and ship with the extension, with their content in `subjects/<id>/challenges`, `quizzes`, `lessons` and `tests`.
+
+### Your own subjects and units
+
+Teachers can add **their own subjects**, and **units at the end of a built-in subject**, such as a "12 · Files" unit after Java's 11 units. The quick way is in the teacher view (💼), under **Tools**:
+
+- **Create New Subject…**: a folder, a name, the kind (**programming** subjects open their units with quick guides, **theory** subjects with reading guides) and the first unit. The sidebar switches to the new subject.
+- **Create New Unit…**: a subject and the unit's name. For your own subject, the unit is added to its `subject.json`. For a built-in subject, Sphinx creates a folder named after it (such as `my-challenges/java`) whose `subject.json` lists only the units you add.
+
+After that, **Create New Lesson** and **Create New Challenge** offer the subject's own `lessons` and `challenges` folders, and list the new units.
+
+A subject of your own is a folder like the built-in ones, inside one of your content folders (`sphinx.extraChallengePaths`), or the content folder itself:
+
+```
+my-challenges/
+├── chemistry/                ← your own subject
+│   ├── subject.json
+│   ├── lessons/
+│   ├── challenges/
+│   └── quizzes/
+└── java/                     ← units added to Java Programming
+    ├── subject.json
+    └── lessons/
+```
+
+```json
+{
+  "id": "chemistry",
+  "title": "Chemistry",
+  "kind": "theory",
+  "units": [
+    { "key": "Atoms", "title": "Atoms", "icon": "circle-outline" },
+    { "key": "Bonds", "title": "Bonds" }
+  ],
+  "translations": { "pt-br": { "title": "Química", "units": { "Atoms": "Átomos", "Bonds": "Ligações" } } }
+}
+```
+
+- `id`: when it matches an existing subject (`java`, `cs`), the units are added after that subject's own units; otherwise it is a new subject.
+- `kind`: `programming` or `theory`. `order`: its position in **Switch Subject…** (built-in subjects use 1 and 2).
+- Each unit has a `key`, unique across all subjects (content refers to it in `topic`), a `title`, and optionally a [codicon](https://microsoft.github.io/vscode-codicons/dist/codicon.html) name in `icon`.
+
+**Sharing a subject:** **Export a Pack** lists your subjects (and the units you added to built-in ones) under **Your subjects**. Each one travels whole, with everything in its folder. Students import the pack as usual, and the subject appears in their **Switch Subject…**. **Validate Challenges in a Folder…** on your content folder checks your subjects too.
 
 ### Lessons
 

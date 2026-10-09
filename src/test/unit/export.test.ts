@@ -43,6 +43,40 @@ describe('export a pack', () => {
     assert.ok(fs.existsSync(path.join(dest, 'class-7b', 'exam-1', 'parking-fee', 'challenge.json')));
   });
 
+  it('carries a whole subject, with the content inside it and without its solutions', () => {
+    // A teacher's subject with a lesson and a challenge in its own folders.
+    const subject = path.join(tempDir(), 'chemistry');
+    fs.mkdirSync(path.join(subject, 'lessons'), { recursive: true });
+    fs.writeFileSync(path.join(subject, 'subject.json'), JSON.stringify({ id: 'chemistry', title: 'Chemistry', kind: 'theory', units: [{ key: 'Atoms', title: 'Atoms' }] }));
+    fs.cpSync(path.join(ROOT, 'subjects', 'cs', 'lessons', 'bits-and-bytes'), path.join(subject, 'lessons', 'inside-an-atom'), { recursive: true });
+    fs.cpSync(path.join(ROOT, 'challenges', 'fizzbuzz'), path.join(subject, 'challenges', 'atom-fizz'), { recursive: true });
+    // The teacher also ticked the lesson on its own: it travels with the subject, once.
+    const pack = buildPack([{ kind: 'subject', dir: subject }, { kind: 'lesson', dir: path.join(subject, 'lessons', 'inside-an-atom') }], 'chem', false);
+    assert.equal(pack.solutionsRemoved, 2);
+    const { dest, found } = roundTrip(pack.zip);
+    // The importer sees one subject, not the items inside it.
+    assert.deepEqual(found.map((f) => `${f.kind}:${f.name}`), ['subject:chemistry']);
+    const { ok, errors } = checkImportables(found, builtIn, builtInQuizzes);
+    assert.deepEqual(errors, []);
+    assert.equal(ok[0].title, 'Chemistry');
+    assert.equal(ok[0].units, 1);
+    assert.equal(ok[0].questions, 2, 'the lesson and the challenge inside were checked');
+    assert.ok(fs.existsSync(path.join(dest, 'chem', 'chemistry', 'lessons', 'inside-an-atom', 'lesson.json')));
+    assert.ok(!fs.existsSync(path.join(dest, 'chem', 'inside-an-atom')), 'the lesson is not packed twice');
+    assert.deepEqual(findSolutions(dest), []);
+  });
+
+  it('reports a broken subject, or broken content inside it', () => {
+    const dir = tempDir();
+    fs.mkdirSync(path.join(dir, 'bad', 'challenges', 'broken'), { recursive: true });
+    fs.writeFileSync(path.join(dir, 'bad', 'subject.json'), JSON.stringify({ id: 'bad', title: 'Bad', units: [{ title: 'No key' }] }));
+    fs.writeFileSync(path.join(dir, 'bad', 'challenges', 'broken', 'challenge.json'), '{ "title": ');
+    const { ok, errors } = checkImportables(findImportables(dir, 'pack'), builtIn, builtInQuizzes);
+    assert.equal(ok.length, 0);
+    assert.ok(errors.some((e) => /^bad: unit 1 needs a "key"/.test(e)), errors.join(' | '));
+    assert.ok(errors.some((e) => /^bad: broken: /.test(e)), errors.join(' | '));
+  });
+
   it('keeps the solutions for teachers', () => {
     const pack = buildPack([{ kind: 'challenge', dir: path.join(ROOT, 'challenges', 'fizzbuzz') }], 'p', true);
     assert.equal(pack.solutionsRemoved, 0);

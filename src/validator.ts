@@ -11,7 +11,7 @@ import { findExamDirs, loadExams } from './exams';
 import { findQuizDirs, isWholeProgram, loadQuiz, loadQuizzes, quizProgram } from './quizzes';
 import { READINGS_MARKER, READING_TYPES, findLessonDirs, loadLesson } from './lessons';
 import { subjectOf, unitKey } from './path';
-import { findSubject } from './subjects';
+import { SUBJECT_CONTENT_FOLDERS, addTeacherSubjects, allSubjects, findSubject, findSubjectDirs, setSubjects } from './subjects';
 
 export interface ChallengeReport {
   /** "quiz" reports count questions in `tests` and code snippets run in `solutions`; "lesson" reports count words in `tests`. */
@@ -295,6 +295,22 @@ export function contentWarnings(c: Challenge): string[] {
 }
 
 export async function validateChallenges(roots: string[], opts: ValidateOptions = {}): Promise<ValidationReport> {
+  // A teacher's subject folder: validate its content too, with its subject (or units) registered for this run.
+  const subjectDirs = roots.flatMap(findSubjectDirs);
+  const before = allSubjects();
+  const known = new Set(before.flatMap((s) => [s.dir, ...s.extensionDirs]).map((d) => path.resolve(d)));
+  const added = addTeacherSubjects(before, subjectDirs.filter((d) => !known.has(path.resolve(d))));
+  setSubjects(added.subjects);
+  try {
+    const contentRoots = subjectDirs.flatMap((d) => SUBJECT_CONTENT_FOLDERS.map((f) => path.join(d, f))).filter((d) => fs.existsSync(d));
+    const report = await validateRoots([...roots, ...contentRoots], opts);
+    return { ...report, loadErrors: [...added.errors, ...report.loadErrors] };
+  } finally {
+    setSubjects(before);
+  }
+}
+
+async function validateRoots(roots: string[], opts: ValidateOptions): Promise<ValidationReport> {
   const practice = loadChallenges(roots);
   // Private questions live in folders next to an exam.json; validate them too, plus the exam files themselves.
   const examDirs = findExamDirs(roots);

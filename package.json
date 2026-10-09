@@ -246,6 +246,18 @@
         "icon": "$(book)"
       },
       {
+        "command": "sphinx.createSubject",
+        "title": "%command.createSubject%",
+        "category": "Sphinx",
+        "icon": "$(library)"
+      },
+      {
+        "command": "sphinx.createUnit",
+        "title": "%command.createUnit%",
+        "category": "Sphinx",
+        "icon": "$(list-tree)"
+      },
+      {
         "command": "sphinx.validateChallenges",
         "title": "%command.validateChallenges%",
         "category": "Sphinx",
@@ -368,6 +380,16 @@
         },
         {
           "command": "sphinx.createLesson",
+          "when": "view == sphinx.teacher",
+          "group": "authoring"
+        },
+        {
+          "command": "sphinx.createSubject",
+          "when": "view == sphinx.teacher",
+          "group": "authoring"
+        },
+        {
+          "command": "sphinx.createUnit",
           "when": "view == sphinx.teacher",
           "group": "authoring"
         },
