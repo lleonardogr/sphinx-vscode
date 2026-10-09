@@ -6,6 +6,7 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **Prerequisite locks**, off by default. With `sphinx.lockPrerequisites` set to `half` or `all`, or `"lockPrerequisites"` in a subject's `subject.json`, a challenge, test or quiz opens only once half (or all) of the challenges of each unit it needs are solved. Locked items show a 🔒 with what they need; opening one explains why and offers the next challenge to practise. Lessons, exams, the teacher view and items already solved are never locked.
 - **Your own subjects and units.** A teacher's content folder can hold subjects of its own (a folder with a `subject.json`, laid out like the built-in ones), and units added at the end of a built-in subject, such as a "12 · Files" unit for Java. **Create New Subject…** and **Create New Unit…** in the teacher view set them up; Create New Lesson and Create New Challenge then offer the subject's folders and units. **Export a Pack** carries whole subjects with their content, students import them as usual, and the validator checks them.
 - **Create New Lesson…**: in the teacher view (Tools) or the Command Palette, choose a folder, a title and a unit, then a **quick guide** (recommended for programming subjects) or a **reading guide** (for theory subjects). Sphinx writes the lesson with guidance in comments, registers its folder so it appears in its unit, and offers a preview. The validator warns while the example reading link is still there.
 

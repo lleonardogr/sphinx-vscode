@@ -105,7 +105,7 @@ VS Code gives you **autocomplete, hover documentation and error checking** for t
 | `topic` | no | The unit it belongs to. The Java units, in teaching order: `Basics`, `Conditionals`, `Loops`, `Strings`, `Methods`, `Arrays`, `Collections`, `OOP`, `Exceptions`, `Recursion` and `Streams`; the unit also decides the subject (see [Subjects](#subjects-lessons-and-prerequisites) for the CS Fundamentals units). Use `Tests` for a [mixed challenge](#tests-mixed-challenges). Any other name (for example `Recursion Extras`) gets its own group after the units. **Leave it out** to put the challenge in the **Others** section at the bottom. See the examples in [`custom/`](../custom). |
 | `skills` | no | Units the challenge combines, shown as badges in the panel and the sidebar tooltip. Meant for [mixed challenges](#tests-mixed-challenges). |
 | `unit` | no | For `"topic": "Tests"` only: the unit the test closes. It's listed at the end of that unit, after its quiz. Without it, the test goes to the Others section. |
-| `requires` | no | Units the student should know first, such as `["Loops"]`. Shown with the student's progress; nothing is locked. See [Prerequisites](#prerequisites). |
+| `requires` | no | Units the student should know first, such as `["Loops"]`. Shown with the student's progress, and locks the item when the teacher turns [locks](#prerequisite-locks) on. See [Prerequisites](#prerequisites). |
 | `subject` | no | For a challenge without a unit: the subject whose Others section lists it, such as `"cs"`. Default: `java`. |
 | `difficulty` | no | `Easy` (default), `Medium` or `Hard`. |
 | `order` | no | Position inside the topic; lower comes first. |
@@ -364,7 +364,21 @@ Challenges, quizzes and lessons can list the units a student should know first:
 "requires": ["Loops"],
 ```
 
-The sidebar shows *needs Loops* next to the item, and the panel shows **Needs: Java Programming · Loops · 7/12**, with the student's progress in that unit (green once every challenge in it is solved). Prerequisites are advice: nothing is locked. They can name a unit of any subject, which is how a CS Fundamentals challenge says which Java it needs. The validator rejects unit names that don't exist.
+The sidebar shows *needs Loops* next to the item, and the panel shows **Needs: Java Programming · Loops · 7/12**, with the student's progress in that unit (green once every challenge in it is solved). By default prerequisites are advice: nothing is locked. They can name a unit of any subject, which is how a CS Fundamentals challenge says which Java it needs. The validator rejects unit names that don't exist.
+
+#### Prerequisite locks
+
+A teacher can make prerequisites binding. A locked challenge, test or quiz shows a 🔒 in the sidebar, with what it needs in the tooltip. Opening it says what to practise first and offers the next unsolved challenge of that unit. There are two rules:
+
+- **`half`**: an item opens once half of the challenges of each unit it needs are solved (rounded up: 6 of Loops' 12).
+- **`all`**: every challenge of each unit it needs must be solved.
+
+Two ways to turn them on; the stricter one applies:
+
+- **For a subject:** `"lockPrerequisites": "half"` (or `"all"`) in its `subject.json`. It travels in packs, so students get it when they import your subject. In a folder that adds units to a built-in subject, it applies to that whole subject.
+- **For a class:** the `sphinx.lockPrerequisites` setting (`off`, `half` or `all`), for example in the `.vscode/settings.json` of the workspace your students open.
+
+Lessons are never locked (reading helps), and neither are exams, the teacher view (for previews), or items a student already solved before the locks were turned on.
 
 ---
 

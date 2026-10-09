@@ -5,7 +5,8 @@ import { ExamManager, formatDuration, formatWait } from './examSession';
 import { ExamDefinition, ExamQuestion, maxScore, questionKey, questionTitle } from './exams';
 import { QuizProgress } from './quizController';
 import { QuizDefinition } from './quizzes';
-import { PathGroup, PathItem, TESTS_TOPIC, buildPath, groupLabel, pathSequence, requirementStatus, unitIcon, unitName } from './path';
+import { PathGroup, PathItem, Requirement, TESTS_TOPIC, buildPath, groupLabel, pathSequence, requirementStatus, solvedToUnlock, unitIcon, unitName } from './path';
+import { LockRule } from './subjects';
 import { LessonDefinition } from './lessons';
 import { LessonProgress, readingCount } from './lessonPanel';
 import { DEFAULT_SUBJECT } from './subjects';
@@ -37,6 +38,8 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
   mode: GroupMode = 'path';
   /** The subject shown (see subjects.ts); the extension remembers it. */
   subject: string = DEFAULT_SUBJECT;
+  /** Prerequisite locks, set by the extension: the units an item still needs, and the rule they follow. */
+  locks?: { lockedBy(item: Challenge | QuizDefinition, done: boolean): Requirement[]; rule(item: Challenge | QuizDefinition): LockRule };
 
   constructor(
     private readonly getChallenges: () => Challenge[],
@@ -236,13 +239,28 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     } else {
       item.iconPath = new vscode.ThemeIcon(isTest ? 'beaker' : 'circle-large-outline');
     }
+    const locked = this.lockLines(c, p?.status === 'solved', item);
     item.tooltip = new vscode.MarkdownString(
       `**${c.title}** · ${isTest ? tr('Test', 'Teste') : unitName(c.topic)} · ${difficultyName(c.difficulty)}\n\n` +
         (c.skills.length ? `${tr('Mixes', 'Combina')}: ${c.skills.map(unitName).join(', ')}\n\n` : '') +
         (p?.status === 'solved' ? tr('✅ Solved', '✅ Resolvido') : p ? `${tr('Attempts', 'Tentativas')}: ${p.attempts}` : tr('Not started', 'Não iniciado')) +
-        this.requirementsText(c.requires),
+        this.requirementsText(c.requires) +
+        locked,
     );
     return item;
+  }
+
+  /** For a locked item: a lock icon, "locked" in the description, and what unlocks it, for the tooltip. */
+  private lockLines(target: Challenge | QuizDefinition, done: boolean, item: vscode.TreeItem): string {
+    const unmet = this.locks?.lockedBy(target, done) ?? [];
+    if (!unmet.length) {
+      return '';
+    }
+    const rule = this.locks!.rule(target);
+    item.iconPath = new vscode.ThemeIcon('lock');
+    item.description = `${item.description} · ${tr('locked', 'bloqueado')}`;
+    const lines = unmet.map((r) => `- ${tr(`${r.label}: solve ${solvedToUnlock(r, rule)} of ${r.total}`, `${r.label}: resolva ${solvedToUnlock(r, rule)} de ${r.total}`)}`);
+    return `\n\n🔒 ${tr('Opens once you have practised', 'Abre quando você tiver praticado')}:\n${lines.join('\n')}`;
   }
 
   /** "Needs: Java Programming · Loops (4/12 solved)" lines for a tooltip. */
@@ -337,7 +355,8 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
       `**${quiz.title}** · Quiz${quiz.topic ? ` · ${unitName(quiz.topic)}` : ''}\n\n${quiz.description ? `${quiz.description}\n\n` : ''}` +
         plural(quiz.questions.length, ['question', 'questions'], ['questão', 'questões']) +
         (score ? `\n\n${tr('Best score', 'Melhor nota')}: ${score.best} / ${score.total} (${plural(score.attempts, ['attempt', 'attempts'], ['tentativa', 'tentativas'])})` : '') +
-        this.requirementsText(quiz.requires ?? []),
+        this.requirementsText(quiz.requires ?? []) +
+        this.lockLines(quiz, !!score, item),
     );
     return item;
   }

@@ -66,6 +66,8 @@ export class QuizController implements vscode.Disposable {
     private readonly exams: () => ExamDefinition[],
     /** The units a quiz needs, with the student's progress (prerequisites are shown in practice only). */
     private readonly requirements: (requires: string[]) => Requirement[] = () => [],
+    /** Whether a practice quiz may open (prerequisite locks); it explains why not. */
+    private readonly canOpen: (quiz: QuizDefinition) => Promise<boolean> = async () => true,
   ) {
     this.panel = new QuizPanel(extensionUri, (msg, quiz) => void this.onMessage(msg, quiz));
   }
@@ -130,6 +132,9 @@ export class QuizController implements vscode.Disposable {
     const quiz = this.quizzes().find((q) => q.id === id);
     if (!quiz) {
       vscode.window.showWarningMessage(tr(`Quiz "${id}" was not found.`, `O quiz "${id}" não foi encontrado.`));
+      return;
+    }
+    if (!(await this.canOpen(quiz))) {
       return;
     }
     const score = this.progress.get(quiz.id);

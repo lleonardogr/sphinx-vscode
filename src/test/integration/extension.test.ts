@@ -568,6 +568,52 @@ test("a teacher creates a subject, adds units to it and to Java, and fills a new
   assert.equal(findSubject('java')!.units.length, 11);
 });
 
+test('with prerequisite locks on, a student must practise the units an item needs first; the teacher view opens everything', async () => {
+  const config = vscode.workspace.getConfiguration('sphinx');
+  const label = (n: unknown) => String(api.tree.getTreeItem(n as never).label);
+  const b2d = () => {
+    const unit = api.tree.getChildren().find((n) => label(n) === '2 · Number Systems');
+    return api.tree.getTreeItem(api.tree.getChildren(unit).find((n) => label(n) === 'Binary to Decimal') as never);
+  };
+  await config.update('lockPrerequisites', 'half', vscode.ConfigurationTarget.Global);
+  await vscode.commands.executeCommand('sphinx.switchSubject', 'cs');
+  try {
+    // Binary to Decimal needs Java's Loops unit, which the test student has barely started.
+    assert.equal((b2d().iconPath as vscode.ThemeIcon).id, 'lock');
+    assert.match(String(b2d().description), /locked$/);
+    assert.match((b2d().tooltip as vscode.MarkdownString).value, /🔒 Opens once you have practised:\n- Java Programming · Loops: solve 6 of 12/);
+
+    // Opening it explains why, and offers the next Loops challenge, which opens in Java.
+    const b2dCode = api.codePath(challenge('binary-to-decimal'));
+    const loops = api.challenges().filter((c) => c.topic === 'Loops' && !api.progress.isSolved(c.id)).sort((a, b) => a.order - b.order)[0];
+    let offered: string[] = [];
+    dialogs.answer = (m, buttons) => {
+      offered = buttons;
+      return m.includes('🔒') ? buttons[0] : undefined;
+    };
+    await vscode.commands.executeCommand('sphinx.open', 'binary-to-decimal');
+    assert.deepEqual(offered, [`Open ${loops.title}`]);
+    assert.equal(fs.existsSync(b2dCode), false, 'the locked challenge must not open');
+    assert.ok(fs.existsSync(api.codePath(loops)), 'the offered Loops challenge opens');
+    assert.equal(api.tree.subject, 'java');
+
+    // The teacher view opens anything, for previews.
+    await vscode.commands.executeCommand('sphinx.switchToTeacherView');
+    await vscode.commands.executeCommand('sphinx.open', 'binary-to-decimal');
+    assert.ok(fs.existsSync(b2dCode));
+    await vscode.commands.executeCommand('sphinx.switchToStudentView');
+
+    // Off again: nothing is locked.
+    await config.update('lockPrerequisites', 'off', vscode.ConfigurationTarget.Global);
+    await vscode.commands.executeCommand('sphinx.switchSubject', 'cs');
+    assert.notEqual((b2d().iconPath as vscode.ThemeIcon).id, 'lock');
+  } finally {
+    dialogs.answer = () => undefined;
+    await config.update('lockPrerequisites', undefined, vscode.ConfigurationTarget.Global);
+    await vscode.commands.executeCommand('sphinx.switchSubject', 'java');
+  }
+});
+
 test('state saved under the old "sphynx." keys moves to "sphinx." keys, once', () => {
   const data = new Map<string, unknown>([
     ['sphynx.progress', { 'hello-world': { solved: true } }],

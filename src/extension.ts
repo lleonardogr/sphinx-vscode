@@ -13,8 +13,8 @@ import { ExamManager } from './examSession';
 import { importContent, libraryRoots, removeImported } from './importer';
 import { QuizController, QuizProgress } from './quizController';
 import { QuizDefinition, loadQuizzes } from './quizzes';
-import { PathItem, buildPath, nextInPath, pathItemTitle, requirementStatus, subjectOf } from './path';
-import { DEFAULT_SUBJECT, addTeacherSubjects, allSubjects, findSubject, loadSubjects, setSubjects, subjectContentRoots, subjectTitle } from './subjects';
+import { PathItem, Requirement, TESTS_TOPIC, buildPath, nextInPath, pathItemTitle, requirementStatus, solvedToUnlock, subjectOf, unitKey, unmetRequirements } from './path';
+import { DEFAULT_SUBJECT, LockRule, addTeacherSubjects, stricterLock, allSubjects, findSubject, loadSubjects, setSubjects, subjectContentRoots, subjectTitle } from './subjects';
 import { LessonDefinition, loadLessons } from './lessons';
 import { LessonPanel, LessonProgress } from './lessonPanel';
 import { plural, setLanguage, tr } from './i18n';
@@ -124,7 +124,10 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   tree.subject = store.get<string>(SUBJECT_KEY, DEFAULT_SUBJECT);
   /** The units an item needs, with the student's progress in each. */
   const requirementsOf = (requires: string[]) => requirementStatus(requires, challenges, (id) => progress.isSolved(id));
-  const quizController = new QuizController(context.extensionUri, quizProgress, examManager, () => quizzes, () => exams, requirementsOf);
+  tree.locks = { lockedBy: (item, done) => lockedBy(item, done), rule: (item) => lockRuleFor(item) };
+  const quizController = new QuizController(context.extensionUri, quizProgress, examManager, () => quizzes, () => exams, requirementsOf, (quiz) =>
+    allowedToOpen(quiz, quiz.title, !!quizProgress.get(quiz.id)),
+  );
   const lessonPanel = new LessonPanel(context.extensionUri, (msg, lesson) => void onLessonMessage(msg.type, lesson));
   const treeView = vscode.window.createTreeView('sphinx.list', { treeDataProvider: tree });
 
@@ -413,9 +416,50 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     return pick?.challenge;
   }
 
+  /** How strictly an item's prerequisites lock it: the stricter of the setting and its subject's subject.json. */
+  function lockRuleFor(item: { topic?: string; unit?: string; subject?: string }): LockRule {
+    const setting = config().get<string>('lockPrerequisites', 'off');
+    return stricterLock(setting === 'half' || setting === 'all' ? setting : 'off', findSubject(subjectOf(item))?.lock ?? 'off');
+  }
+
+  /** The required units an item still needs before it opens: none when it isn't locked. Items already done never lock. */
+  function lockedBy(item: { requires?: string[]; topic?: string; unit?: string; subject?: string }, done: boolean): Requirement[] {
+    return done ? [] : unmetRequirements(item.requires ?? [], challenges, (id) => progress.isSolved(id), lockRuleFor(item));
+  }
+
+  /**
+   * Whether a practice item may open. A locked one says what to finish first and offers the next
+   * challenge there. The teacher view opens everything.
+   */
+  async function allowedToOpen(item: { requires?: string[]; topic?: string; unit?: string; subject?: string }, title: string, done: boolean): Promise<boolean> {
+    const unmet = currentView() === 'teacher' ? [] : lockedBy(item, done);
+    if (!unmet.length) {
+      return true;
+    }
+    const rule = lockRuleFor(item);
+    const needs = unmet.map((r) => tr(`${r.label} (${r.solved} of ${solvedToUnlock(r, rule)} challenges solved)`, `${r.label} (${r.solved} de ${solvedToUnlock(r, rule)} desafios resolvidos)`));
+    const inUnit = (c: Challenge) => unitKey(c.topic === TESTS_TOPIC ? c.unit : c.topic) === unmet[0].unit;
+    const next = challenges.filter((c) => inUnit(c) && !progress.isSolved(c.id)).sort((a, b) => Number(a.topic === TESTS_TOPIC) - Number(b.topic === TESTS_TOPIC) || a.order - b.order)[0];
+    const go = next && tr(`Open ${next.title}`, `Abrir ${next.title}`);
+    const choice = await vscode.window.showInformationMessage(
+      tr(`🔒 "${title}" opens once you have practised what it needs: ${needs.join('; ')}.`, `🔒 "${title}" abre quando você praticar o que ele precisa: ${needs.join('; ')}.`),
+      ...(go ? [go] : []),
+    );
+    if (go && choice === go) {
+      if (subjectOf(next) !== tree.subject) {
+        await vscode.commands.executeCommand('sphinx.switchSubject', subjectOf(next));
+      }
+      await openChallenge(next);
+    }
+    return false;
+  }
+
   async function openChallenge(c: Challenge): Promise<void> {
     void checkJdkForStyle();
     const tq = examFor(c);
+    if (!tq && !(await allowedToOpen(c, c.title, progress.isSolved(c.id)))) {
+      return;
+    }
     if (tq && !examManager.state(tq.exam.id) && !(await examManager.start(tq.exam))) {
       return;
     }

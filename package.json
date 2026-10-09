@@ -705,6 +705,21 @@
           "default": [],
           "markdownDescription": "%config.extraChallengePaths.description%"
         },
+        "sphinx.lockPrerequisites": {
+          "type": "string",
+          "enum": [
+            "off",
+            "half",
+            "all"
+          ],
+          "enumDescriptions": [
+            "%config.lockPrerequisites.off%",
+            "%config.lockPrerequisites.half%",
+            "%config.lockPrerequisites.all%"
+          ],
+          "default": "off",
+          "markdownDescription": "%config.lockPrerequisites.description%"
+        },
         "sphinx.ai.provider": {
           "type": "string",
           "default": "off",

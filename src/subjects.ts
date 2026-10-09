@@ -28,6 +28,21 @@ export interface SubjectDef {
   own: boolean;
   /** Teachers' folders whose subject.json adds units to this subject, and whose content belongs to it. */
   extensionDirs: string[];
+  /** "lockPrerequisites" in subject.json: lock items until their required units are half or all solved. */
+  lock: LockRule;
+}
+
+/** How strictly prerequisites lock: not at all, until half of each required unit is solved, or all of it. */
+export type LockRule = 'off' | 'half' | 'all';
+
+/** The stricter of two lock rules. */
+export function stricterLock(a: LockRule, b: LockRule): LockRule {
+  const rank = { off: 0, half: 1, all: 2 };
+  return rank[a] >= rank[b] ? a : b;
+}
+
+function parseLock(value: unknown): LockRule {
+  return value === 'all' ? 'all' : value === 'half' || value === true ? 'half' : 'off';
 }
 
 /** Content without a unit or subject (the Others section's examples, older teacher packs) belongs here. */
@@ -122,6 +137,7 @@ export function addTeacherSubjects(subjects: SubjectDef[], folders: string[]): {
       if (existing) {
         existing.units.push(...subject.units);
         existing.extensionDirs.push(dir);
+        existing.lock = stricterLock(existing.lock, subject.lock);
       } else {
         result.push(subject);
       }
@@ -173,6 +189,7 @@ function parseSubject(dir: string, own = false): SubjectDef {
     dir,
     own,
     extensionDirs: [],
+    lock: parseLock(meta.lockPrerequisites),
   };
 }
 
