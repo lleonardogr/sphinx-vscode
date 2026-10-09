@@ -28,6 +28,15 @@
       "type": "number",
       "description": "Position in the subject switcher."
     },
+    "lockPrerequisites": {
+      "enum": [
+        "off",
+        "half",
+        "all"
+      ],
+      "default": "off",
+      "description": "Lock this subject's challenges, tests and quizzes until the units they need (\"requires\") are practised: half or all of each unit's challenges solved. Students' sphinx.lockPrerequisites setting can only make it stricter. Lessons and exams are never locked."
+    },
     "units": {
       "type": "array",
       "items": {

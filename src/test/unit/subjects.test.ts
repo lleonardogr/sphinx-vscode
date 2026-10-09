@@ -5,9 +5,9 @@ import { describe, it } from 'node:test';
 import { Challenge } from '../../challenges';
 import { loadLesson, parseReadings, readingMinutes, resolveLessonImages } from '../../lessons';
 import { readingProblems, validateChallenges } from '../../validator';
-import { buildPath, nextInPath, pathItemId, requirementStatus, subjectOf, unitKey, unitName } from '../../path';
+import { buildPath, nextInPath, pathItemId, requirementStatus, solvedToUnlock, subjectOf, unitKey, unitName, unmetRequirements } from '../../path';
 import { QuizQuestion, isCorrect, loadQuiz, parseNumberAnswer } from '../../quizzes';
-import { addTeacherSubjects, allSubjects, findSubject, findUnit, loadSubjects, setSubjects, subjectContentRoots } from '../../subjects';
+import { addTeacherSubjects, allSubjects, findSubject, findUnit, loadSubjects, setSubjects, stricterLock, subjectContentRoots } from '../../subjects';
 import { ROOT, tempDir } from './helpers';
 
 describe('subjects', () => {
@@ -198,6 +198,40 @@ describe('lessons and the path', () => {
       { unit: 'Loops', label: 'Java Programming · Loops', solved: 1, total: 2 },
       { unit: 'Nope', label: 'Nope', solved: 0, total: 0 },
     ]);
+  });
+
+  it('locks an item until half or all of each unit it needs is solved, or not at all', () => {
+    const c = (id: string, topic: string) => ({ id, topic, title: id, order: 0, requires: [] }) as unknown as Challenge;
+    const all = [c('a', 'Loops'), c('b', 'Loops'), c('c', 'Loops'), c('d', 'Strings')];
+    const solved = new Set(['a']);
+    const unmet = (rule: 'off' | 'half' | 'all', requires = ['Loops', 'Strings']) => unmetRequirements(requires, all, (id) => solved.has(id), rule).map((r) => r.unit);
+    assert.deepEqual(unmet('off'), []);
+    // Half of 3 rounds up to 2: one Loops challenge solved isn't enough yet.
+    assert.equal(solvedToUnlock({ unit: 'Loops', label: '', solved: 1, total: 3 }, 'half'), 2);
+    assert.deepEqual(unmet('half'), ['Loops', 'Strings']);
+    solved.add('b');
+    assert.deepEqual(unmet('half'), ['Strings']);
+    assert.deepEqual(unmet('all'), ['Loops', 'Strings']);
+    solved.add('c').add('d');
+    assert.deepEqual(unmet('all'), []);
+    // A unit without challenges (or an unknown one) never locks anything.
+    assert.deepEqual(unmet('all', ['Recursion', 'Nope']), []);
+    assert.equal(stricterLock('half', 'all'), 'all');
+    assert.equal(stricterLock('off', 'half'), 'half');
+  });
+
+  it('reads "lockPrerequisites" from subject.json, and the stricter rule wins for units added to a subject', () => {
+    const dir = tempDir();
+    const subject = (folder: string, data: object) => {
+      fs.mkdirSync(path.join(dir, folder));
+      fs.writeFileSync(path.join(dir, folder, 'subject.json'), JSON.stringify(data));
+    };
+    subject('art', { id: 'art', title: 'Art', lockPrerequisites: 'all', units: [{ key: 'Colour', title: 'Colour' }] });
+    subject('java-more', { id: 'java', title: 'Java Programming', lockPrerequisites: 'half', units: [{ key: 'Files', title: 'Files' }] });
+    const { subjects } = addTeacherSubjects(allSubjects(), [dir]);
+    assert.equal(subjects.find((s) => s.id === 'art')!.lock, 'all');
+    assert.equal(subjects.find((s) => s.id === 'java')!.lock, 'half');
+    assert.equal(findSubject('cs')!.lock, 'off');
   });
 
   it('ships every subject folder', () => {

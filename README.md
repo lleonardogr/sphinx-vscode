@@ -92,7 +92,7 @@ Each item shows the Java it needs, with your progress: for example **Needs: Java
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
 - **Subjects**: Java Programming and CS Fundamentals, each with its own learning path. **Switch Subject…** (📚) changes the one in the sidebar, and its name is shown in the sidebar header.
 - **Lessons**: short pages to read before a unit's quiz and challenges, with a reading time, a ✓ once read, and a button to the next item.
-- **Prerequisites**: an item can list the units it builds on, shown with the student's progress in each one. They're advice; nothing is locked.
+- **Prerequisites**: an item can list the units it builds on, shown with the student's progress in each one. They're advice, unless a teacher turns on **prerequisite locks**: then the item opens once half (or all) of each unit it needs is solved.
 - **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/100 solved` counter for the current subject in the status bar.
 - **Group by**: the filter button at the top of the sidebar groups challenges by **learning path** (units, the default), **difficulty** (Easy, Medium, Hard, then quizzes) or **progress** (not started, in progress, solved). The choice is remembered.
 
@@ -176,6 +176,7 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 | `sphinx.java.home` | (empty) | The JDK folder, if `javac` is not on your PATH. |
 | `sphinx.codeFolder` | (empty) | Where solutions are saved. |
 | `sphinx.extraChallengePaths` | `[]` | Extra challenge folders provided by your teacher. |
+| `sphinx.lockPrerequisites` | `off` | Lock challenges, tests and quizzes until the units they need are practised: `half` or `all` of each unit's challenges solved. A subject's `subject.json` can turn it on too; the stricter applies. Lessons, exams and the teacher view are never locked. |
 | `sphinx.ai.provider` | `off` | AI hints provider: `ollama`, `lmstudio`, `anthropic`, `openai-compatible` or `vscode`. Run **Set Up AI Hints** for a guided setup. |
 
 ## For teachers
@@ -221,6 +222,7 @@ Done:
 - [x] Quick guides for the 11 Java units
 - [x] **Create New Lesson**: a quick guide or a reading guide, ready to fill in
 - [x] Teachers' own subjects and units, and units added to the built-in subjects, shared in packs
+- [x] Optional prerequisite locks, turned on by the teacher for a subject or a class
 
 Content:
 
@@ -229,7 +231,6 @@ Content:
 
 For teachers:
 
-- [ ] Optional prerequisite locks, turned on by the teacher
 - [ ] Hide exam questions in the teacher view, or protect it with a PIN
 - [ ] AI help for writing new challenges
 

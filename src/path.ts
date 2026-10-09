@@ -5,7 +5,7 @@ import type { Challenge } from './challenges';
 import type { LessonDefinition } from './lessons';
 import type { QuizDefinition } from './quizzes';
 import { tr } from './i18n';
-import { DEFAULT_SUBJECT, findSubject, findUnit } from './subjects';
+import { DEFAULT_SUBJECT, LockRule, findSubject, findUnit } from './subjects';
 
 /** Group for challenges, quizzes and tests that belong to no unit. Always listed last. */
 export const CUSTOM_TOPIC = 'Custom';
@@ -157,6 +157,19 @@ export interface Requirement {
  * The units an item needs, with how many of each unit's challenges are solved (prerequisites are
  * shown, never enforced: teachers decide the order).
  */
+/** How many of the unit's challenges must be solved before items that need it unlock. */
+export function solvedToUnlock(r: Requirement, rule: LockRule): number {
+  return rule === 'all' ? r.total : rule === 'half' ? Math.ceil(r.total / 2) : 0;
+}
+
+/** The required units still short of `rule` (none: the item is open). Units without challenges never lock. */
+export function unmetRequirements(requires: string[], challenges: Challenge[], isSolved: (id: string) => boolean, rule: LockRule): Requirement[] {
+  if (rule === 'off' || !requires.length) {
+    return [];
+  }
+  return requirementStatus(requires, challenges, isSolved).filter((r) => r.total > 0 && r.solved < solvedToUnlock(r, rule));
+}
+
 export function requirementStatus(requires: string[], challenges: Challenge[], isSolved: (id: string) => boolean): Requirement[] {
   return requires.map((key) => {
     const found = findUnit(key);

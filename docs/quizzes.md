@@ -69,7 +69,7 @@ my-quizzes/
 | `title` | required | Shown in the sidebar and at the top of the quiz. |
 | `description` | | Shown above the questions (Markdown). |
 | `topic` | | The unit the quiz belongs to, such as `Loops` or `NumberSystems`; it's listed at the end of that unit. Leave it out (or use another name) to put it in the Others section. |
-| `requires` | | Units the student should know first, such as `["Basics"]`. Shown with the student's progress; nothing is locked. See [Prerequisites](creating-challenges.md#prerequisites). |
+| `requires` | | Units the student should know first, such as `["Basics"]`. Shown with the student's progress, and locks the quiz when the teacher turns [locks](creating-challenges.md#prerequisite-locks) on. See [Prerequisites](creating-challenges.md#prerequisites). |
 | `subject` | | For a quiz without a unit: the subject whose Others section lists it, such as `"cs"`. Default: `java`. |
 | `questions` | required | The questions, in order. See below. |
 
