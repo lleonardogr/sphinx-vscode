@@ -13,6 +13,8 @@ export interface HintContext {
   hintNumber: number;
   /** e.g. "pt-br", "en". */
   responseLanguage: string;
+  /** The exercise's programming language (Java by default). */
+  language?: 'java' | 'c';
 }
 
 const MAX_FIELD = 800;
@@ -27,15 +29,16 @@ export function summarizeOutcome(outcome: RunOutcome | undefined): string {
   }
   switch (outcome.kind) {
     case 'toolMissing':
-      return 'The code could not be run because Java is not installed correctly.';
+      return outcome.tool === 'c' ? 'The code could not be run because no C compiler is installed.' : 'The code could not be run because Java is not installed correctly.';
     case 'ruleViolation':
       return `The code does not meet these requirements of the exercise:\n${outcome.messages.map((m) => `- ${m}`).join('\n')}`;
     case 'compileError':
       return `The code does not compile:\n${clip(outcome.raw, 1500)}`;
     case 'tests': {
       const failed = outcome.results.filter((r) => !r.passed);
+      const warnings = outcome.warnings?.length ? `\nCompiler warnings:\n${outcome.warnings.slice(0, 5).map((w) => `- line ${w.line}: ${w.message}`).join('\n')}` : '';
       if (failed.length === 0) {
-        return `All ${outcome.results.length} tests that were run passed.`;
+        return `All ${outcome.results.length} tests that were run passed.${warnings}`;
       }
       const lines = [`${outcome.results.length - failed.length} of ${outcome.results.length} tests passed. Failures:`];
       for (const r of failed.slice(0, 3)) {
@@ -47,24 +50,30 @@ export function summarizeOutcome(outcome: RunOutcome | undefined): string {
         } else {
           lines.push(`- ${name}:\n  input: ${JSON.stringify(clip(r.input))}\n  expected output: ${JSON.stringify(clip(r.expected))}\n  actual output: ${JSON.stringify(clip(r.actual))}`);
         }
-        if (r.stderr.trim()) {
+        if (r.crash) {
+          lines.push(`  crash: ${r.crash}`);
+        } else if (r.stderr.trim()) {
           lines.push(`  error output: ${clip(r.stderr.trim().split('\n').slice(0, 4).join('\n'), 400)}`);
         }
       }
-      return lines.join('\n');
+      return lines.join('\n') + warnings;
     }
   }
 }
 
 export function buildHintPrompt(ctx: HintContext): { system: string; user: string } {
-  const system = `You are a patient programming tutor helping a beginner solve a coding exercise in Java. Your goal is that the student learns to solve it themselves.
+  const c = ctx.language === 'c';
+  const styles = c
+    ? '- The program is C (C17), compiled with warnings and, when available, memory checks. A compiler warning or a memory error (an index past the end, freed memory, a NULL pointer) is often the real bug: explain it first.'
+    : '- Modern Java (void main(), IO.println) and classic Java (public class Main, System.out.println) are both valid. Never ask the student to switch styles.';
+  const system = `You are a patient programming tutor helping a beginner solve a coding exercise in ${c ? 'C' : 'Java'}. Your goal is that the student learns to solve it themselves.
 
 Rules:
 - Never write the solution or complete methods for the student. You may show at most two short lines of code to illustrate one concept, using names that differ from the exercise.
 - Give one hint at a time, about the most important problem in the student's current code. If the code does not compile, explain that error first in plain words.
 - Escalate with each request. Hint 1 is a gentle nudge or a guiding question. Hint 2 says more specifically what to look at or change. Hint 3 and later may point to the exact line and the idea that is missing, still without writing the answer.
 - If the code already looks correct, say so and suggest edge cases to test.
-- Modern Java (void main(), IO.println) and classic Java (public class Main, System.out.println) are both valid. Never ask the student to switch styles.
+${styles}
 - Be encouraging and concise: at most 120 words. Use Markdown, with \`inline code\` for identifiers.
 - Respond in this language: ${ctx.responseLanguage}.
 

@@ -35,7 +35,25 @@ export interface Challenge {
   requires: string[];
   /** The subject, for challenges without a unit (otherwise the unit decides). */
   subject?: string;
+  /** The programming language: Java (Main.java) or C (main.c). */
+  language: CodeLanguage;
   dir: string;
+}
+
+/** The languages a challenge can be written in. */
+export type CodeLanguage = 'java' | 'c';
+
+/** The file a student writes for a challenge in this language. */
+export function codeFileName(language: CodeLanguage): string {
+  return language === 'c' ? 'main.c' : 'Main.java';
+}
+
+/** "language" in challenge.json, or C when the folder has a C starter or solution; Java otherwise. */
+export function challengeLanguage(dir: string, meta: { language?: unknown }): CodeLanguage {
+  if (meta.language === 'c' || meta.language === 'java') {
+    return meta.language;
+  }
+  return ['Starter.c', 'Solution.c'].some((f) => fs.existsSync(path.join(dir, f))) ? 'c' : 'java';
 }
 
 export { CUSTOM_TOPIC };
@@ -69,7 +87,7 @@ function translateRules(rules: Rule[] | undefined, messages: string[] | undefine
 
 /**
  * Loads a challenge in `lang`. Translations live next to the original: description.<lang>.md,
- * Starter.<lang>.java, Starter.classic.<lang>.java and the "translations" block of challenge.json.
+ * Starter.<lang>.java, Starter.classic.<lang>.java (Starter.<lang>.c for C) and the "translations" block of challenge.json.
  * Anything not translated falls back to English. Tests and solutions are shared by every language.
  */
 export function loadChallenge(dir: string, lang: Lang = language()): Challenge {
@@ -78,8 +96,10 @@ export function loadChallenge(dir: string, lang: Lang = language()): Challenge {
     throw new Error('challenge.json needs a "title" and at least one entry in "tests"');
   }
   const t: ChallengeTranslation = (lang !== 'en' && meta.translations?.[lang]) || {};
-  const local = (file: string) => (lang !== 'en' ? readOptional(dir, file.replace(/\.(md|java)$/, `.${lang}.$1`)) : '');
-  const starter = local('Starter.java') || readOptional(dir, 'Starter.java');
+  const local = (file: string) => (lang !== 'en' ? readOptional(dir, file.replace(/\.(md|java|c)$/, `.${lang}.$1`)) : '');
+  const language = challengeLanguage(dir, meta);
+  const starterFile = language === 'c' ? 'Starter.c' : 'Starter.java';
+  const starter = local(starterFile) || readOptional(dir, starterFile);
   return {
     id: meta.id ?? path.basename(dir),
     title: (typeof t.title === 'string' && t.title.trim()) || meta.title,
@@ -88,7 +108,8 @@ export function loadChallenge(dir: string, lang: Lang = language()): Challenge {
     order: meta.order ?? 0,
     description: local('description.md') || readOptional(dir, 'description.md'),
     starterCode: starter,
-    starterCodeClassic: local('Starter.classic.java') || readOptional(dir, 'Starter.classic.java') || starter,
+    // C has one style; Java also has the classic one (a class with public static void main).
+    starterCodeClassic: language === 'c' ? starter : local('Starter.classic.java') || readOptional(dir, 'Starter.classic.java') || starter,
     hints: Array.isArray(t.hints) && t.hints.length ? t.hints : meta.hints ?? [],
     mustContain: translateRules(meta.mustContain, t.mustContain),
     mustNotContain: translateRules(meta.mustNotContain, t.mustNotContain),
@@ -99,6 +120,7 @@ export function loadChallenge(dir: string, lang: Lang = language()): Challenge {
     aiHints: meta.aiHints !== false,
     requires: Array.isArray(meta.requires) ? meta.requires.filter((r: unknown): r is string => typeof r === 'string' && r.trim() !== '').map((r: string) => r.trim()) : [],
     subject: typeof meta.subject === 'string' && meta.subject.trim() ? meta.subject.trim() : undefined,
+    language,
     dir,
   };
 }

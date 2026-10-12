@@ -174,6 +174,7 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 | `sphinx.language` | `en` | Language of Sphinx: `en` (English) or `pt-br` (Português do Brasil). Challenges, quizzes, exams, panels and messages switch at once; the program's output stays the same in both. |
 | `sphinx.java.style` | `modern` | Starter code style for new challenges: `modern` (JDK 25+) or `classic` (JDK 17+). Use **Reset Code to Starter** to switch a challenge you already opened. |
 | `sphinx.java.home` | (empty) | The JDK folder, if `javac` is not on your PATH. |
+| `sphinx.c.compiler` | (empty) | The C compiler for C challenges, or the folder of a portable one. Empty: `cc`, `clang` or `gcc` on the PATH. |
 | `sphinx.codeFolder` | (empty) | Where solutions are saved. |
 | `sphinx.extraChallengePaths` | `[]` | Extra challenge folders provided by your teacher. |
 | `sphinx.lockPrerequisites` | `off` | Lock challenges, tests and quizzes until the units they need are practised: `half` or `all` of each unit's challenges solved. A subject's `subject.json` can turn it on too; the stricter applies. Lessons, exams and the teacher view are never locked. |

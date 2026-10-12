@@ -79,7 +79,7 @@
       status = tr('⏱ Time limit exceeded. Is there an infinite loop, or is the program waiting for more input?', '⏱ Tempo limite excedido. Há um laço infinito, ou o programa está esperando mais entrada?');
       kind = 'error';
     } else if (r.exitCode !== 0) {
-      status = tr(`✗ Your program crashed (exit code ${r.exitCode}).`, `✗ Seu programa travou (código de saída ${r.exitCode}).`);
+      status = r.crash ? `✗ ${esc(r.crash)}` : tr(`✗ Your program crashed (exit code ${r.exitCode}).`, `✗ Seu programa travou (código de saída ${r.exitCode}).`);
       kind = 'error';
     } else if (expected !== undefined) {
       const same = normalize(r.actual) === normalize(expected);
@@ -93,8 +93,28 @@
       const diff = firstDifference(expected, r.actual);
       if (diff) body += `<p class="diff">${diff}</p>`;
     }
-    if (r.stderr && r.stderr.trim()) body += `<div class="label">${tr('Error output', 'Saída de erro')}</div><pre class="stderr">${esc(r.stderr.trim())}</pre>`;
-    return banner(kind, status, body);
+    if (r.stderr && r.stderr.trim()) body += stderrBlock(r);
+    return banner(kind, status, warningsBlock(o) + body);
+  }
+
+  /** The compiler's warnings (C), each with a link to its line. */
+  function warningsBlock(o) {
+    if (!o.warnings || !o.warnings.length) return '';
+    const items = o.warnings
+      .map((w) => `<li><a href="#" data-line="${w.line}" data-column="${w.column}">${tr('Line', 'Linha')} ${w.line}</a>: <span>${esc(w.message)}</span></li>`)
+      .join('');
+    return `<div class="label">⚠ ${tr('Compiler warnings: often the bug itself', 'Avisos do compilador: muitas vezes é o próprio erro')}</div><ul class="errors warnings">${items}</ul>`;
+  }
+
+  /** "Line 8: …" in a crash explanation becomes a link to that line. */
+  function linkLine(text) {
+    return text.replace(/^(Line|Linha) (\d+)/, (m, word, n) => `<a href="#" data-line="${n}" data-column="0">${word} ${n}</a>`);
+  }
+
+  /** The raw error output; collapsed when a crash explanation already says what happened. */
+  function stderrBlock(r) {
+    const text = `<pre class="stderr">${esc(r.stderr.trim())}</pre>`;
+    return r.crash ? `<details><summary>${tr('Full error output', 'Saída de erro completa')}</summary>${text}</details>` : `<div class="label">${tr('Error output', 'Saída de erro')}</div>${text}`;
   }
 
   function banner(kind, title, body) {
@@ -124,7 +144,7 @@
     let status = tr('✓ Passed', '✓ Passou');
     if (!r.passed) {
       if (r.timedOut) status = tr('⏱ Time limit exceeded', '⏱ Tempo limite excedido');
-      else if (r.exitCode !== 0) status = tr('✗ Runtime error', '✗ Erro de execução');
+      else if (r.exitCode !== 0) status = r.crash ? tr('✗ Crashed', '✗ Travou') : tr('✗ Runtime error', '✗ Erro de execução');
       else status = tr('✗ Wrong answer', '✗ Resposta errada');
     }
 
@@ -143,8 +163,11 @@
         if (diff) body += `<p class="diff">${diff}</p>`;
       }
     }
+    if (r.crash) {
+      body = `<p class="crash">✗ ${linkLine(esc(r.crash))}</p>` + body;
+    }
     if (r.stderr && r.stderr.trim()) {
-      body += `<div class="label">${tr('Error output', 'Saída de erro')}</div><pre class="stderr">${esc(r.stderr.trim())}</pre>`;
+      body += stderrBlock(r);
     }
 
     return `<details class="test ${r.passed ? 'pass' : 'fail'}" ${r.passed || !body ? '' : 'open'}>
@@ -156,7 +179,7 @@
   function renderOutcome(mode, o) {
     switch (o.kind) {
       case 'toolMissing':
-        return banner('error', tr('Java not found', 'Java não encontrado'), `<p>${esc(o.message)}</p>`);
+        return banner('error', o.tool === 'c' ? tr('C compiler not found', 'Compilador de C não encontrado') : tr('Java not found', 'Java não encontrado'), `<p>${esc(o.message)}</p>`);
       case 'ruleViolation':
         return banner(
           'warning',
@@ -184,7 +207,8 @@
         if (all && mode === 'submit') title = tr('🎉 Accepted! All tests passed.', '🎉 Aceito! Todos os testes passaram.');
         else if (all) title = tr(`All ${total} sample test${total > 1 ? 's' : ''} passed. Now click Submit to run the hidden tests.`, `${total > 1 ? `Os ${total} testes de exemplo passaram` : 'O teste de exemplo passou'}. Agora clique em Enviar para rodar os testes ocultos.`);
         else title = tr(`${passed} / ${total} tests passed`, `${passed} / ${total} testes passaram`);
-        return banner(all ? 'success' : 'error', title, '') + o.results.map(renderTest).join('');
+        const notice = o.notice ? `<p class="muted">${esc(o.notice)}</p>` : '';
+        return banner(all ? 'success' : 'error', title, warningsBlock(o) + notice) + o.results.map(renderTest).join('');
       }
       default:
         return '';

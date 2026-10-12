@@ -85,6 +85,7 @@ export class AiHints {
         outcome,
         hintNumber,
         responseLanguage: this.responseLanguage(),
+        language: challenge.language,
       });
 
       cb.onStart(provider.label);

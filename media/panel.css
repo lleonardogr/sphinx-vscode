@@ -238,6 +238,21 @@ pre code {
   white-space: pre-wrap;
 }
 
+/* C: compiler warnings and the plain-words crash explanation. */
+.errors.warnings {
+  margin-top: 4px;
+}
+
+.errors.warnings a {
+  color: var(--vscode-editorWarning-foreground, var(--vscode-textLink-foreground));
+}
+
+.crash {
+  margin: 0 0 8px;
+  color: var(--vscode-errorForeground);
+  font-weight: 600;
+}
+
 a {
   color: var(--vscode-textLink-foreground);
 }

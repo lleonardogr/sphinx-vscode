@@ -1,10 +1,13 @@
-// Compiles and tests a student's Main.java. Has no dependency on the vscode API so the
-// challenge validator script (scripts/validate-challenges.js) can reuse it.
+// Compiles and tests a student's Main.java, or main.c (see cRunner.ts). Has no dependency on the vscode
+// API so the challenge validator script (scripts/validate-challenges.js) can reuse it.
 import { tr } from './i18n';
-import { spawn } from 'child_process';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
+import { exec } from './exec';
+import { compileC, explainCrash, findCCompiler, runEnvironment } from './cRunner';
+
+export { exec };
 
 export interface TestCase {
   input: string;
@@ -34,13 +37,15 @@ export interface TestResult {
   exitCode: number | null;
   timedOut: boolean;
   timeMs: number;
+  /** For C: how the program crashed, in plain words (from the sanitizer report, exit code or signal). */
+  crash?: string;
 }
 
 export type RunOutcome =
-  | { kind: 'toolMissing'; message: string }
+  | { kind: 'toolMissing'; message: string; tool?: 'java' | 'c' }
   | { kind: 'ruleViolation'; messages: string[] }
   | { kind: 'compileError'; errors: CompileError[]; raw: string; hint?: string }
-  | { kind: 'tests'; results: TestResult[] };
+  | { kind: 'tests'; results: TestResult[]; warnings?: CompileError[]; notice?: string };
 
 export interface RunRequest {
   file: string;
@@ -49,9 +54,10 @@ export interface RunRequest {
   mustNotContain?: Rule[];
   timeLimitMs?: number;
   javaHome?: string;
+  /** For C: the sphinx.c.compiler setting, and folders with Sphinx's portable compilers. */
+  cCompiler?: string;
+  cPortableDirs?: string[];
 }
-
-const MAX_OUTPUT_BYTES = 256 * 1024;
 
 // Fast JVM startup, and a fixed locale so Scanner.nextDouble() and printf("%.2f") use "."
 // as the decimal separator on every student's machine.
@@ -64,67 +70,6 @@ const JVM_FLAGS = [
   '-Dfile.encoding=UTF-8',
   '-Dstdout.encoding=UTF-8',
 ];
-
-interface ProcessResult {
-  code: number | null;
-  stdout: string;
-  stderr: string;
-  timedOut: boolean;
-  timeMs: number;
-  spawnError?: Error;
-}
-
-export function exec(cmd: string, args: string[], opts: { cwd: string; input?: string; timeoutMs: number }): Promise<ProcessResult> {
-  return new Promise((resolve) => {
-    const start = Date.now();
-    const out: Buffer[] = [];
-    const err: Buffer[] = [];
-    let outBytes = 0;
-    let errBytes = 0;
-    let timedOut = false;
-    let settled = false;
-
-    const child = spawn(cmd, args, { cwd: opts.cwd, windowsHide: true });
-    const timer = setTimeout(() => {
-      timedOut = true;
-      child.kill('SIGKILL');
-    }, opts.timeoutMs);
-
-    const finish = (extra: Partial<ProcessResult>) => {
-      if (settled) {
-        return;
-      }
-      settled = true;
-      clearTimeout(timer);
-      resolve({
-        code: null,
-        stdout: Buffer.concat(out).toString('utf8'),
-        stderr: Buffer.concat(err).toString('utf8'),
-        timedOut,
-        timeMs: Date.now() - start,
-        ...extra,
-      });
-    };
-
-    child.stdout.on('data', (d: Buffer) => {
-      if (outBytes < MAX_OUTPUT_BYTES) {
-        out.push(d);
-        outBytes += d.length;
-      }
-    });
-    child.stderr.on('data', (d: Buffer) => {
-      if (errBytes < MAX_OUTPUT_BYTES) {
-        err.push(d);
-        errBytes += d.length;
-      }
-    });
-    child.on('error', (e) => finish({ spawnError: e }));
-    child.on('close', (code) => finish({ code }));
-    // The program may exit before consuming all of its input.
-    child.stdin.on('error', () => undefined);
-    child.stdin.end(opts.input ?? '');
-  });
-}
 
 export function javaBinary(javaHome: string | undefined, name: 'java' | 'javac'): string {
   if (!javaHome) {
@@ -282,6 +227,9 @@ export async function runChallengeCode(req: RunRequest): Promise<RunOutcome> {
     return { kind: 'ruleViolation', messages: violations };
   }
 
+  if (req.file.endsWith('.c')) {
+    return runC(req);
+  }
   const compiled = await compileJava(req.file, req.javaHome);
   if (!compiled.ok) {
     return compiled.outcome;
@@ -312,6 +260,49 @@ export async function runChallengeCode(req: RunRequest): Promise<RunOutcome> {
       });
     }
     return { kind: 'tests', results };
+  } finally {
+    fs.rmSync(compiled.outDir, { recursive: true, force: true });
+  }
+}
+
+async function runC(req: RunRequest): Promise<RunOutcome> {
+  const compiler = await findCCompiler(req.cCompiler, req.cPortableDirs);
+  const compiled = await compileC(req.file, compiler);
+  if (!compiled.ok) {
+    return compiled.kind === 'toolMissing' ? { kind: 'toolMissing', tool: 'c', message: compiled.message } : { kind: 'compileError', errors: compiled.errors, raw: compiled.raw };
+  }
+  try {
+    const env = runEnvironment(compiler!);
+    const results: TestResult[] = [];
+    for (const [index, test] of req.tests.entries()) {
+      const r = await exec(compiled.exe, [], { cwd: compiled.outDir, input: test.input, timeoutMs: req.timeLimitMs ?? 5000, env });
+      results.push({
+        index,
+        hidden: !!test.hidden,
+        passed: !r.timedOut && r.code === 0 && normalizeOutput(r.stdout) === normalizeOutput(test.output),
+        input: test.input,
+        expected: test.output,
+        actual: r.stdout,
+        stderr: r.stderr,
+        exitCode: r.code,
+        timedOut: r.timedOut,
+        timeMs: r.timeMs,
+        crash: r.timedOut ? undefined : explainCrash(r.stderr, r.code, r.signal, path.basename(req.file)),
+      });
+    }
+    return {
+      kind: 'tests',
+      results,
+      ...(compiled.warnings.length ? { warnings: compiled.warnings } : {}),
+      ...(compiler!.sanitizers
+        ? {}
+        : {
+            notice: tr(
+              "Memory checks are off: this C compiler can't add them, so going past the end of an array or using freed memory may go unnoticed.",
+              'As verificações de memória estão desligadas: este compilador de C não consegue adicioná-las, então passar do fim de um array ou usar memória liberada pode passar despercebido.',
+            ),
+          }),
+    };
   } finally {
     fs.rmSync(compiled.outDir, { recursive: true, force: true });
   }

@@ -37,6 +37,10 @@ jobs:
       - name: Compile and validate challenges
         run: npm run validate
 
+      # C challenges use the system's compiler: gcc (Linux), clang (macOS), MinGW gcc without memory checks (Windows).
+      - name: C compiler
+        run: node -e "require('./out/cRunner').findCCompiler().then((c) => console.log(c ? `${c.command}: ${c.version} (memory checks: ${c.sanitizers})` : 'none'))"
+
       - name: Unit tests
         run: npm run test:unit
 
