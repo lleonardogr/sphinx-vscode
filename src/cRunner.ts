@@ -20,6 +20,11 @@ export interface CCompiler {
   version: string;
   /** Whether it can build with AddressSanitizer and UndefinedBehaviorSanitizer. */
   sanitizers: boolean;
+  /**
+   * Flags this compiler needs, found when it was probed: "-lm" for the math library where it is a separate
+   * library, and on Microsoft's C runtime "-D_CRT_SECURE_NO_WARNINGS", so scanf and strcpy don't warn.
+   */
+  flags: string[];
 }
 
 export const C_STANDARD_FLAGS = ['-std=c17', '-Wall', '-Wextra', '-g', '-O0'];
@@ -77,23 +82,39 @@ export function clearCCompilerCache(): void {
   cache.clear();
 }
 
-/** Whether `command` is a working C compiler, and whether it can link the sanitizers. */
+/**
+ * Whether `command` is a working C compiler: it must build and run a small program with Sphinx's flags.
+ * Also finds the flags it needs (see CCompiler.flags) and whether it can add the sanitizers.
+ */
 async function probe(command: string): Promise<CCompiler | undefined> {
   const version = await exec(command, ['--version'], { cwd: os.tmpdir(), timeoutMs: 30_000 });
   if (version.spawnError || version.code !== 0) {
     return undefined;
   }
+  const about = version.stdout + version.stderr;
+  // clang for Microsoft's C runtime: no separate math library, and scanf/strcpy are "deprecated".
+  const msvc = /windows-msvc/i.test(about);
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-cc-'));
   try {
-    fs.writeFileSync(path.join(dir, 'probe.c'), '#include <stdio.h>\nint main(void) { puts("ok"); return 0; }\n');
-    const build = await exec(command, [...C_STANDARD_FLAGS, ...C_SANITIZER_FLAGS, 'probe.c', '-o', exeName(dir)], { cwd: dir, timeoutMs: 60_000 });
-    let sanitizers = build.code === 0;
-    if (sanitizers) {
-      // Linking is not enough on every system: the program must also start.
-      const run = await exec(exeName(dir), [], { cwd: dir, timeoutMs: 15_000, env: runEnvironment({ command, version: '', sanitizers: true }) });
-      sanitizers = run.code === 0 && run.stdout.trim() === 'ok';
+    fs.writeFileSync(path.join(dir, 'probe.c'), '#include <math.h>\n#include <stdio.h>\nint main(void) { char s[8]; if (scanf("%7s", s) != 1) return 2; printf("%s %.0f\\n", s, sqrt(16.0)); return 0; }\n');
+    const works = async (flags: string[], env?: NodeJS.ProcessEnv) => {
+      fs.rmSync(exeName(dir), { force: true });
+      const build = await exec(command, [...flags, 'probe.c', '-o', exeName(dir), ...(msvc ? [] : ['-lm'])], { cwd: dir, timeoutMs: 60_000 });
+      if (build.code !== 0) {
+        return false;
+      }
+      // Linking is not enough on every system: the program must also start and run.
+      const run = await exec(exeName(dir), [], { cwd: dir, input: 'ok\n', timeoutMs: 15_000, env });
+      return run.code === 0 && run.stdout.trim() === 'ok 4';
+    };
+    const flags = [...(msvc ? ['-D_CRT_SECURE_NO_WARNINGS'] : []), ...(msvc ? [] : ['-lm'])];
+    const extra = msvc ? ['-D_CRT_SECURE_NO_WARNINGS'] : [];
+    if (!(await works([...C_STANDARD_FLAGS, ...extra]))) {
+      return undefined;
     }
-    return { command, version: (version.stdout || version.stderr).split(/\r?\n/)[0].trim(), sanitizers };
+    const compiler: CCompiler = { command, version: about.split(/\r?\n/)[0].trim(), sanitizers: false, flags };
+    compiler.sanitizers = await works([...C_STANDARD_FLAGS, ...C_SANITIZER_FLAGS, ...extra], runEnvironment(compiler));
+    return compiler;
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -176,7 +197,8 @@ export async function compileC(file: string, compiler: CCompiler | undefined): P
   }
   const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-c-'));
   const exe = exeName(outDir);
-  const args = [...C_STANDARD_FLAGS, ...(compiler.sanitizers ? C_SANITIZER_FLAGS : []), path.basename(file), '-o', exe, '-lm'];
+  // compiler.flags go last: "-lm" must come after the source file.
+  const args = [...C_STANDARD_FLAGS, ...(compiler.sanitizers ? C_SANITIZER_FLAGS : []), path.basename(file), '-o', exe, ...compiler.flags];
   const build = await exec(compiler.command, args, { cwd: path.dirname(file), timeoutMs: 60_000 });
   const raw = (build.stderr + build.stdout).trim();
   const { errors, warnings } = parseCompilerOutput(raw, path.basename(file));
