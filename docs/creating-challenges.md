@@ -271,7 +271,7 @@ sum-two/
 
 **Which compiler.** The `sphinx.c.compiler` setting, if set; then the portable compiler Sphinx downloaded; then `cc`, `clang` or `gcc` on the PATH. **Sphinx: Check C Setup** shows which one C challenges use and whether it has memory checks.
 
-- **Windows:** when there is no compiler, Sphinx offers to download a portable one, [llvm-mingw](https://github.com/mstorsjo/llvm-mingw) (about 180 MB), with **Sphinx: Install Portable C Compiler…**. It comes from the official release, is checked against a pinned checksum, and is unpacked into Sphinx's own folder: no installation, no admin rights, and **Sphinx: Remove Portable C Compiler** deletes it. It is the portable compiler with memory checks on Windows. For a lab, IT can instead unzip llvm-mingw once in a shared folder and set `sphinx.c.compiler` to it.
+- **Windows:** when there is no compiler, Sphinx offers to download a portable one, [llvm-mingw](https://github.com/mstorsjo/llvm-mingw) (about 180 MB to download, 500 MB unpacked), with **Sphinx: Install Portable C Compiler…**. It comes from the official release, is checked against a pinned checksum, and is unpacked into Sphinx's own folder: no installation, no admin rights, and **Sphinx: Remove Portable C Compiler** deletes it. It is the portable compiler with memory checks on Windows. For a lab, IT can instead unzip llvm-mingw once in a shared folder and set `sphinx.c.compiler` to it.
 - **macOS:** `xcode-select --install` installs clang, with memory checks.
 - **Linux:** `build-essential` (Debian, Ubuntu) installs gcc, with memory checks.
 

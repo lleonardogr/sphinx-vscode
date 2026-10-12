@@ -76,8 +76,8 @@ export class CSetup {
       {
         modal: true,
         detail: tr(
-          `It comes from its official release on GitHub (github.com/mstorsjo/llvm-mingw) and is checked against a pinned checksum. It is unpacked into Sphinx's own folder (a few hundred MB), nothing is installed on the system, and "Remove Portable C Compiler" deletes it. It includes memory checks, so memory errors are explained with their line.`,
-          `Ele vem da versão oficial no GitHub (github.com/mstorsjo/llvm-mingw) e é conferido com uma soma de verificação fixa. Ele é descompactado na pasta do próprio Sphinx (algumas centenas de MB), nada é instalado no sistema, e "Remover compilador de C portátil" o apaga. Ele inclui verificações de memória, então os erros de memória são explicados com a linha.`,
+          `It comes from its official release on GitHub (github.com/mstorsjo/llvm-mingw) and is checked against a pinned checksum. It is unpacked into Sphinx's own folder (about 500 MB), nothing is installed on the system, and "Remove Portable C Compiler" deletes it. It includes memory checks, so memory errors are explained with their line.`,
+          `Ele vem da versão oficial no GitHub (github.com/mstorsjo/llvm-mingw) e é conferido com uma soma de verificação fixa. Ele é descompactado na pasta do próprio Sphinx (cerca de 500 MB), nada é instalado no sistema, e "Remover compilador de C portátil" o apaga. Ele inclui verificações de memória, então os erros de memória são explicados com a linha.`,
         ),
       },
       download,
