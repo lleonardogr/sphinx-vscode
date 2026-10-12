@@ -20,6 +20,16 @@
         "Mantenha a assinatura do método: int gcd(int a, int b).",
         "Mantenha a assinatura do método: long lcm(int a, int b).",
         "Chame gcd dentro de lcm em vez de achar o MMC de outro jeito."
+      ],
+      "bonus": [
+        {
+          "title": "mdc recursivo",
+          "description": "Escreva `gcd` como um método recursivo, com a regra de Euclides: o MDC de `a` e `b` é o MDC de `b` e `a % b`.",
+          "hint": "O caso base é `b == 0`: aí a resposta é `a`.",
+          "mustContain": [
+            "gcd deve retornar uma chamada a si mesmo: gcd(b, a % b)."
+          ]
+        }
       ]
     }
   },
@@ -60,6 +70,20 @@
       "input": "2\n48 180\n17 51\n",
       "output": "GCD = 12, LCM = 720\nGCD = 17, LCM = 51\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "recursive-gcd",
+      "title": "Recursive gcd",
+      "description": "Write `gcd` as a recursive method, with Euclid's rule: the GCD of `a` and `b` is the GCD of `b` and `a % b`.",
+      "hint": "The base case is `b == 0`: then the answer is `a`.",
+      "mustContain": [
+        {
+          "pattern": "return\\s+gcd\\s*\\(|[?:]\\s*gcd\\s*\\(",
+          "message": "gcd should return a call to itself: gcd(b, a % b)."
+        }
+      ]
     }
   ]
 }

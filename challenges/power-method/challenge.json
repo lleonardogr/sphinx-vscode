@@ -22,6 +22,17 @@
       ],
       "mustNotContain": [
         "Use um laço: Math.pow não é permitido aqui."
+      ],
+      "bonus": [
+        {
+          "title": "Potência rápida",
+          "description": "Divida o expoente pela metade a cada passo em vez de multiplicar uma vez por unidade: 2^60 leva 6 passos, não 60.",
+          "hint": "`b^10 = (b^5)²` e `b^5 = b · b^4`. Eleve a base ao quadrado enquanto divide o expoente pela metade, e multiplique-a no resultado quando o expoente for ímpar.",
+          "mustContain": [
+            "Divida o expoente pela metade a cada passo (/ 2 ou >> 1).",
+            "Verifique se o expoente é ímpar (% 2 ou & 1)."
+          ]
+        }
       ]
     }
   },
@@ -69,6 +80,24 @@
       "input": "7 1\n",
       "output": "7^1 = 7\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "fast-power",
+      "title": "Fast power",
+      "description": "Halve the exponent at each step instead of multiplying once per unit: 2^60 then takes 6 steps, not 60.",
+      "hint": "`b^10 = (b^5)²` and `b^5 = b · b^4`. Square the base while you halve the exponent, and multiply it into the result when the exponent is odd.",
+      "mustContain": [
+        {
+          "pattern": "/=?\\s*2\\b|>>=?\\s*1\\b",
+          "message": "Halve the exponent at each step (/ 2 or >> 1)."
+        },
+        {
+          "pattern": "%\\s*2\\b|&\\s*1\\b",
+          "message": "Check whether the exponent is odd (% 2 or & 1)."
+        }
+      ]
     }
   ]
 }
