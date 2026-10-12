@@ -218,6 +218,21 @@
         "icon": "$(trash)"
       },
       {
+        "command": "sphinx.checkCSetup",
+        "title": "%command.checkCSetup%",
+        "category": "Sphinx"
+      },
+      {
+        "command": "sphinx.installCCompiler",
+        "title": "%command.installCCompiler%",
+        "category": "Sphinx"
+      },
+      {
+        "command": "sphinx.removeCCompiler",
+        "title": "%command.removeCCompiler%",
+        "category": "Sphinx"
+      },
+      {
         "command": "sphinx.createChallenge",
         "title": "%command.createChallenge%",
         "category": "Sphinx",
@@ -355,6 +370,11 @@
         },
         {
           "command": "sphinx.checkJava",
+          "when": "view == sphinx.list",
+          "group": "java"
+        },
+        {
+          "command": "sphinx.checkCSetup",
           "when": "view == sphinx.list",
           "group": "java"
         },

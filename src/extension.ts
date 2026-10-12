@@ -21,6 +21,7 @@ import { plural, setLanguage, tr } from './i18n';
 import { JavaSetup } from './javaSetup';
 import { clearJavaCache } from './runner';
 import { clearCCompilerCache } from './cRunner';
+import { CSetup } from './cSetup';
 import { formatVerification, verifyResults } from './examVerify';
 import { ExamDefinition, ExamQuestion, PREVIEW_SUFFIX, examChallengeId, loadExams, parseExamChallengeId, previewOf } from './exams';
 import { ChallengeNode, ChallengeTreeProvider, GroupMode } from './treeView';
@@ -185,13 +186,10 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   const javaHome = () => config().get<string>('java.home', '').trim() || undefined;
   const javaStyle = () => config().get<'modern' | 'classic'>('java.style', 'modern');
   const starterFor = (c: Challenge) => (c.language === 'java' && javaStyle() === 'classic' ? c.starterCodeClassic : c.starterCode);
-  /** Folders with the portable C compilers Sphinx downloaded (see cRunner.ts). */
-  const portableCompilerDirs = (): string[] => {
-    const root = path.join(context.globalStorageUri.fsPath, 'compilers');
-    return fs.existsSync(root) ? fs.readdirSync(root, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => path.join(root, e.name)) : [];
-  };
-  /** What the runner needs to find Java and the C compiler. */
-  const runnerOptions = () => ({ javaHome: javaHome(), cCompiler: config().get<string>('c.compiler', '').trim() || undefined, cPortableDirs: portableCompilerDirs() });
+  /** The C compiler: the sphinx.c.compiler setting and the portable compilers Sphinx downloaded (see cSetup.ts). */
+  const cCompilerSetting = () => config().get<string>('c.compiler', '').trim() || undefined;
+  const cSetup = new CSetup(path.join(context.globalStorageUri.fsPath, 'compilers'), cCompilerSetting, output);
+  const runnerOptions = () => ({ javaHome: javaHome(), cCompiler: cCompilerSetting(), cPortableDirs: cSetup.portableDirs() });
   let jdkChecked = false;
 
   /** Modern starter code needs JDK 25+. Offer to switch to classic once per session if the JDK is older. */
@@ -647,6 +645,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       );
 
       updateDiagnostics(file, outcome);
+      cSetup.offerAfter(outcome);
       lastOutcome.set(c.id, redact(outcome));
       panel.post({ type: 'result', mode, outcome: redact(outcome) });
 
@@ -727,6 +726,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
         () => runChallengeCode({ file, tests: [{ input, output: '' }], timeLimitMs: c.timeLimitMs, ...runnerOptions() }),
       );
       updateDiagnostics(file, outcome);
+      cSetup.offerAfter(outcome);
       // When the input is one of the visible examples, we know what the output should be.
       const example = c.tests.find((t) => !t.hidden && normalizeOutput(t.input) === normalizeOutput(input));
       panel.post({ type: 'customResult', outcome, expected: example?.output });
@@ -878,7 +878,10 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       title: c.title,
       file,
       ...runnerOptions(),
-      onCompiled: (outcome) => updateDiagnostics(file, outcome ?? { kind: 'tests', results: [] }),
+      onCompiled: (outcome) => {
+        updateDiagnostics(file, outcome ?? { kind: 'tests', results: [] });
+        cSetup.offerAfter(outcome);
+      },
     });
   }
 
@@ -1136,6 +1139,9 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     vscode.commands.registerCommand('sphinx.clearAiKeys', () => ai.clearApiKeys()),
     vscode.commands.registerCommand('sphinx.refresh', reload),
     vscode.commands.registerCommand('sphinx.checkJava', () => javaSetup.checkInteractively()),
+    vscode.commands.registerCommand('sphinx.checkCSetup', () => cSetup.check()),
+    vscode.commands.registerCommand('sphinx.installCCompiler', () => cSetup.install()),
+    vscode.commands.registerCommand('sphinx.removeCCompiler', () => cSetup.remove()),
     vscode.commands.registerCommand('sphinx.groupBy', async () => {
       const options: { mode: GroupMode; label: string; detail: string }[] = [
         { mode: 'path', label: tr('$(list-tree) Learning path', '$(list-tree) Trilha de aprendizado'), detail: tr('Units in teaching order, each with its quiz and tests (default).', 'Unidades na ordem de ensino, cada uma com seu quiz e testes (padrão).') },

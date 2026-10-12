@@ -51,6 +51,25 @@ jobs:
         if: matrix.java == 25
         run: ${{ runner.os == 'Linux' && 'xvfb-run -a ' || '' }}npm run test:integration
 
+  # What Windows students get when they have no C compiler: Sphinx downloads the pinned llvm-mingw.
+  portable-c:
+    name: Portable C compiler (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run compile
+
+      - name: Install it with Sphinx's code, and run C with memory checks
+        run: node scripts/check-portable-compiler.js
+
   package:
     name: Package
     runs-on: ubuntu-latest

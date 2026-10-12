@@ -269,7 +269,13 @@ sum-two/
 
 **How it's compiled.** Sphinx compiles `main.c` as C17 with warnings on (`-std=c17 -Wall -Wextra -g`) and links the math library (`-lm`). When the compiler supports them, it adds **memory checks** (AddressSanitizer and UndefinedBehaviorSanitizer): going past the end of an array, using freed memory or a NULL pointer (and, with some compilers, a signed overflow) stops the program, and the student sees what happened and where, such as *Line 8: your program went past the end of memory from malloc (allocated at line 6)*. A test then fails even when the output is right. Memory leaks are not reported. Compiler warnings are shown with the results, because in C they often are the bug (`scanf("%d", x)` without `&`).
 
-**Which compiler.** The `sphinx.c.compiler` setting, if set; otherwise `cc`, `clang` or `gcc` on the PATH. On macOS, `xcode-select --install` installs clang. On Linux, `build-essential` (Debian, Ubuntu) installs gcc. On Windows, a portable compiler such as [llvm-mingw](https://github.com/mstorsjo/llvm-mingw/releases) works without installing: unzip it and set `sphinx.c.compiler` to its folder. It is the portable compiler with memory checks on Windows. With a compiler that can't add memory checks, such as MinGW gcc, C challenges still run, and the results say the checks are off.
+**Which compiler.** The `sphinx.c.compiler` setting, if set; then the portable compiler Sphinx downloaded; then `cc`, `clang` or `gcc` on the PATH. **Sphinx: Check C Setup** shows which one C challenges use and whether it has memory checks.
+
+- **Windows:** when there is no compiler, Sphinx offers to download a portable one, [llvm-mingw](https://github.com/mstorsjo/llvm-mingw) (about 180 MB to download, 500 MB unpacked), with **Sphinx: Install Portable C Compiler…**. It comes from the official release, is checked against a pinned checksum, and is unpacked into Sphinx's own folder: no installation, no admin rights, and **Sphinx: Remove Portable C Compiler** deletes it. It is the portable compiler with memory checks on Windows. For a lab, IT can instead unzip llvm-mingw once in a shared folder and set `sphinx.c.compiler` to it.
+- **macOS:** `xcode-select --install` installs clang, with memory checks.
+- **Linux:** `build-essential` (Debian, Ubuntu) installs gcc, with memory checks.
+
+With a compiler that can't add memory checks, such as MinGW gcc or a clang for Microsoft's runtime, C challenges still run, and the results say the checks are off.
 
 **Rules** (`mustContain`, `mustNotContain`) work on C code too, for example to forbid `strlen` in a challenge about counting characters.
 
