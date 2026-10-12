@@ -112,6 +112,8 @@ If you can only use JDK 17–24, that works too: the extension offers to switch 
 
 Sphinx checks Java when it starts. If something is wrong, it warns you and shows **Java isn't ready** at the top of the sidebar. Run **Sphinx: Check Java Setup** at any time for a full report: which `javac` and `java` were found, their versions, whether modern and classic Java really compile and run, and how to fix each problem. If your JDK isn't on the PATH, **Sphinx: Choose JDK Folder…** points Sphinx at it. After installing Java, restart VS Code so it sees the new PATH.
 
+For C challenges, **Sphinx: Check C Setup** shows which C compiler is used and whether it has memory checks. On Windows without a compiler, **Sphinx: Install Portable C Compiler…** downloads one into Sphinx's own folder, with no installation and no admin rights.
+
 ### 2. Install the extension
 
 1. Install **Sphinx** from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lleonardogr.sphynx): open the **Extensions** view (`Ctrl+Shift+X` / `Cmd+Shift+X`), search for **Sphinx**, and click **Install**.
