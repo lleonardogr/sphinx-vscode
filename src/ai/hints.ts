@@ -44,7 +44,7 @@ export class AiHints {
   }
 
   /** Streams a hint. Resolves when finished; errors are reported through callbacks. */
-  async requestHint(challenge: Challenge, code: string, outcome: RunOutcome | undefined, cb: HintCallbacks): Promise<void> {
+  async requestHint(challenge: Challenge, code: string, outcome: RunOutcome | undefined, cb: HintCallbacks, bonus?: { title: string; description: string; achieved: boolean; reason?: string }[]): Promise<void> {
     this.cancel();
     const id = this.providerId;
     if (id === 'off') {
@@ -86,6 +86,7 @@ export class AiHints {
         hintNumber,
         responseLanguage: this.responseLanguage(),
         language: challenge.language,
+        bonus,
       });
 
       cb.onStart(provider.label);

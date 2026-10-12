@@ -3,7 +3,7 @@ and Portuguese. Used by people and AI assistants following docs/content-guide.md
 
 A unit script imports these helpers, describes each item once, and writes the folders:
 
-    from sphinx_content import challenge, classic, quiz, num, choice, out, tf, short, reading_guide
+    from sphinx_content import challenge, bonus_goal, classic, quiz, num, choice, out, tf, short, reading_guide
 
 Then fill in the expected outputs and validate (see README.md in this folder):
 
@@ -48,9 +48,34 @@ public class Main {{
 }}'''
 
 
+def bonus_goal(id, *, title, title_pt, desc, desc_pt, solution, hint=None, hint_pt=None, must=(), mustnot=(),
+               tests=(), time_limit=None, solution_classic=None):
+    """An optional, harder goal for challenge(bonus=[...]): rules and/or extra tests (inputs; outputs come from
+    `generate`), and its own reference solution, written to Solution.bonus.<id>.java (and .classic.java)."""
+    goal = {'id': id, 'title': title, 'description': desc}
+    if hint:
+        goal['hint'] = hint
+    if must:
+        goal['mustContain'] = [{'pattern': p, 'message': en} for p, en, _ in must]
+    if mustnot:
+        goal['mustNotContain'] = [{'pattern': p, 'message': en} for p, en, _ in mustnot]
+    if tests:
+        goal['tests'] = [{'input': i, 'output': ''} for i in tests]
+    if time_limit:
+        goal['timeLimitMs'] = time_limit
+    pt = {'title': title_pt, 'description': desc_pt}
+    if hint_pt:
+        pt['hint'] = hint_pt
+    if must:
+        pt['mustContain'] = [m for _, _, m in must]
+    if mustnot:
+        pt['mustNotContain'] = [m for _, _, m in mustnot]
+    return {'goal': goal, 'pt': pt, 'solution': solution, 'solution_classic': solution_classic}
+
+
 def challenge(folder, *, title, title_pt, topic, difficulty, order, hints, hints_pt, tests, desc, desc_pt,
               starter, starter_classic, solution, solution_classic, must=(), mustnot=(), comments=(),
-              requires=None, skills=None, unit=None, ai_hints=True):
+              requires=None, skills=None, unit=None, ai_hints=True, bonus=()):
     """Writes a challenge folder.
 
     tests: (input, hidden) pairs; outputs are filled in later with `generate`.
@@ -81,7 +106,14 @@ def challenge(folder, *, title, title_pt, topic, difficulty, order, hints, hints
     if not ai_hints:
         meta['aiHints'] = False
     meta['tests'] = [{'input': i, 'output': '', **({'hidden': True} if h else {})} for i, h in tests]
+    if bonus:
+        meta['bonus'] = [b['goal'] for b in bonus]
+        t['bonus'] = [b['pt'] for b in bonus]
     _write_json(f'{d}/challenge.json', meta)
+    for b in bonus:
+        _write_text(f"{d}/Solution.bonus.{b['goal']['id']}.java", b['solution'])
+        if b['solution_classic']:
+            _write_text(f"{d}/Solution.bonus.{b['goal']['id']}.classic.java", b['solution_classic'])
     _write_text(f'{d}/description.md', desc)
     _write_text(f'{d}/description.pt-br.md', desc_pt)
     _write_text(f'{d}/Starter.java', starter)

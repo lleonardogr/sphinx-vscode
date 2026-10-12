@@ -409,7 +409,42 @@ Lessons are never locked (reading helps), and neither are exams, the teacher vie
 
 ---
 
+## Bonus goals
+
+A challenge can offer up to 3 optional **bonus goals**, harder versions of the same task, such as solving it without loops, or fast enough for a huge input. When a submission passes all the tests, Submit also checks each goal and shows which were earned; earned goals become stars (★) in the panel, the sidebar and the unit's quick guide. They never change whether the challenge is solved, and exams don't use them.
+
+```json
+"bonus": [
+  {
+    "id": "no-loops",
+    "title": "Without loops",
+    "description": "Solve it with recursion: no for or while.",
+    "hint": "The sum to N is N plus the sum to N − 1.",
+    "mustNotContain": [{ "pattern": "\\b(for|while)\\b", "message": "Use recursion: no for or while." }]
+  },
+  {
+    "id": "huge-n",
+    "title": "Huge N",
+    "description": "Answer for N up to 3 billion in under 2 seconds.",
+    "timeLimitMs": 2000,
+    "tests": [{ "input": "3000000000\n", "output": "" }]
+  }
+]
+```
+
+| Field | Required | Meaning |
+|-------|----------|---------|
+| `id` | yes | Lowercase with dashes. It names the reference solution, `Solution.bonus.<id>.java` (or `.classic.java`, or `.c`). |
+| `title`, `description` | yes | What to achieve, shown in the panel. |
+| `hint` | no | One hint, behind a click. |
+| `mustContain`, `mustNotContain` | | [Rules](#rules-requiring-or-forbidding-code) the code must follow, for a different approach or a constraint. |
+| `tests` | | Extra tests, never shown to students (as hidden tests), such as a huge input. |
+| `timeLimitMs` | no | A time limit for those tests, for efficiency goals. |
+
+A goal needs rules, tests or both. The validator checks that each `Solution.bonus.<id>.*` solves the challenge, follows the goal's rules and passes its tests, and **Validate and fill in expected outputs** fills in the goal's outputs from it. Translations go in `translations.<lang>.bonus`, in the same order: `title`, `description`, `hint` and the rule messages. See the [content guide](content-guide.md#bonus-goals) for when a bonus is worth adding.
+
 ## Rules: requiring or forbidding code
+
 
 Rules check the **source code** before the tests run, so a challenge can teach specific syntax. Each rule has a JavaScript regular expression `pattern` and a `message` shown to the student. Comments are removed before checking, so a rule can't be satisfied by writing the keyword in a comment.
 

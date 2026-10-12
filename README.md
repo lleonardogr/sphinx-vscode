@@ -92,6 +92,7 @@ Each item shows the Java it needs, with your progress: for example **Needs: Java
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
 - **Subjects**: Java Programming and CS Fundamentals, each with its own learning path. **Switch Subject…** (📚) changes the one in the sidebar, and its name is shown in the sidebar header.
 - **Lessons**: short pages to read before a unit's quiz and challenges, with a reading time, a ✓ once read, and a button to the next item.
+- **Bonus goals**: a challenge can offer up to 3 optional, harder goals (solve it without loops, fast enough for a huge input…), checked when it passes. Earned goals become stars in the panel, the sidebar and the unit's guide.
 - **Prerequisites**: an item can list the units it builds on, shown with the student's progress in each one. They're advice, unless a teacher turns on **prerequisite locks**: then the item opens once half (or all) of each unit it needs is solved.
 - **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/100 solved` counter for the current subject in the status bar.
 - **Group by**: the filter button at the top of the sidebar groups challenges by **learning path** (units, the default), **difficulty** (Easy, Medium, Hard, then quizzes) or **progress** (not started, in progress, solved). The choice is remembered.
