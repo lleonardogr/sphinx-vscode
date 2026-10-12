@@ -692,6 +692,11 @@
           ],
           "markdownDescription": "%config.java.style.description%"
         },
+        "sphinx.c.compiler": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "%config.c.compiler.description%"
+        },
         "sphinx.codeFolder": {
           "type": "string",
           "default": "",

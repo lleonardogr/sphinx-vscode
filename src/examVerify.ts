@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import { runChallengeCode } from './runner';
+import { codeFileName } from './challenges';
 import { ExamDefinition, isResultsFormat, scoreOutcome } from './exams';
 import { gradeQuiz, parseAnswers, scaleQuizGrade } from './quizzes';
 import type { ExamResultsFile } from './examSession';
@@ -33,7 +34,7 @@ export interface VerificationReport {
   awaySeconds?: number;
 }
 
-export async function verifyResults(resultsPath: string, exams: ExamDefinition[], javaHome?: string): Promise<VerificationReport> {
+export async function verifyResults(resultsPath: string, exams: ExamDefinition[], javaHome?: string, cOptions: { cCompiler?: string; cPortableDirs?: string[] } = {}): Promise<VerificationReport> {
   const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8')) as ExamResultsFile;
   if (!isResultsFormat(results.format)) {
     throw new Error('This is not a Sphinx exam results file.');
@@ -53,14 +54,14 @@ export async function verifyResults(resultsPath: string, exams: ExamDefinition[]
       continue;
     }
     if (q.kind === 'quiz') {
-      // Quizzes are re-graded from the saved answers; no Java needed.
+      // Quizzes are re-graded from the saved answers; no compiler needed.
       const score = scaleQuizGrade(gradeQuiz(q.quiz, parseAnswers(saved.code)), q.points);
       questions.push({ id: q.id, points: q.points, claimed, recomputed: score.earned, passed: score.passed, total: score.total, note: 'quiz' });
       continue;
     }
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-verify-'));
     try {
-      const file = path.join(dir, 'Main.java');
+      const file = path.join(dir, codeFileName(q.challenge.language));
       fs.writeFileSync(file, saved.code);
       const outcome = await runChallengeCode({
         file,
@@ -69,6 +70,7 @@ export async function verifyResults(resultsPath: string, exams: ExamDefinition[]
         mustNotContain: q.challenge.mustNotContain,
         timeLimitMs: q.challenge.timeLimitMs,
         javaHome,
+        ...cOptions,
       });
       const score = scoreOutcome(outcome, q.points);
       questions.push({

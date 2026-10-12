@@ -248,10 +248,17 @@ export class ChallengePanel {
     ${hiddenCount ? `<p class="muted">${tr(`+ ${hiddenCount} hidden test${hiddenCount > 1 ? 's' : ''} run when you submit.`, `+ ${hiddenCount} teste${hiddenCount > 1 ? 's' : ''} oculto${hiddenCount > 1 ? 's' : ''} ao enviar.`)}</p>` : ''}
     ${customInput}
     ${hints}
-    <p class="muted style-note">${tr(
-      "Both Java styles are accepted, because only your program's output is checked. You can write modern Java 25+ with <code>void main()</code> and <code>IO.println</code>, or classic Java with <code>public class Main</code> and <code>System.out.println</code>. To get classic starter code, set <code>sphinx.java.style</code> to <code>classic</code>.",
-      'Os dois estilos de Java são aceitos, porque só a saída do programa é verificada. Você pode escrever Java moderno (25+) com <code>void main()</code> e <code>IO.println</code>, ou Java clássico com <code>public class Main</code> e <code>System.out.println</code>. Para receber o código inicial clássico, defina <code>sphinx.java.style</code> como <code>classic</code>.',
-    )}</p>
+    <p class="muted style-note">${
+      c.language === 'c'
+        ? tr(
+            'Your <code>main.c</code> is compiled as C17 with warnings on, and with memory checks when your compiler supports them: going past the end of an array, using freed memory or a NULL pointer stops the program and shows the line.',
+            'O seu <code>main.c</code> é compilado como C17 com os avisos ligados, e com verificações de memória quando o seu compilador permite: passar do fim de um array, usar memória liberada ou um ponteiro NULL para o programa e mostra a linha.',
+          )
+        : tr(
+            "Both Java styles are accepted, because only your program's output is checked. You can write modern Java 25+ with <code>void main()</code> and <code>IO.println</code>, or classic Java with <code>public class Main</code> and <code>System.out.println</code>. To get classic starter code, set <code>sphinx.java.style</code> to <code>classic</code>.",
+            'Os dois estilos de Java são aceitos, porque só a saída do programa é verificada. Você pode escrever Java moderno (25+) com <code>void main()</code> e <code>IO.println</code>, ou Java clássico com <code>public class Main</code> e <code>System.out.println</code>. Para receber o código inicial clássico, defina <code>sphinx.java.style</code> como <code>classic</code>.',
+          )
+    }</p>
   </main>
 
   <script nonce="${n}" src="${media('panel.js')}"></script>

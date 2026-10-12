@@ -254,6 +254,27 @@ Tests can also be questions in an [exam](exams.md).
 
 ---
 
+## C challenges
+
+A challenge can be written in **C** instead of Java: put a `Starter.c` and a `Solution.c` in its folder instead of the `.java` files (or set `"language": "c"` in `challenge.json`). Everything else is the same: `challenge.json`, `description.md`, tests, hints and rules. Students write `main.c`, and the tests feed it input and compare what it prints.
+
+```
+sum-two/
+├── challenge.json
+├── description.md
+├── Starter.c          ← the student's main.c starts from this
+├── Starter.pt-br.c    ← optional: the starter with Portuguese comments
+└── Solution.c         ← your reference solution, never shipped to students
+```
+
+**How it's compiled.** Sphinx compiles `main.c` as C17 with warnings on (`-std=c17 -Wall -Wextra -g`) and links the math library (`-lm`). When the compiler supports them, it adds **memory checks** (AddressSanitizer and UndefinedBehaviorSanitizer): going past the end of an array, using freed memory or a NULL pointer (and, with some compilers, a signed overflow) stops the program, and the student sees what happened and where, such as *Line 8: your program went past the end of memory from malloc (allocated at line 6)*. A test then fails even when the output is right. Memory leaks are not reported. Compiler warnings are shown with the results, because in C they often are the bug (`scanf("%d", x)` without `&`).
+
+**Which compiler.** The `sphinx.c.compiler` setting, if set; otherwise `cc`, `clang` or `gcc` on the PATH. On macOS, `xcode-select --install` installs clang. On Linux, `build-essential` (Debian, Ubuntu) installs gcc. On Windows, a portable compiler such as [llvm-mingw](https://github.com/mstorsjo/llvm-mingw/releases) works without installing: unzip it and set `sphinx.c.compiler` to its folder. It is the portable compiler with memory checks on Windows. With a compiler that can't add memory checks, such as MinGW gcc, C challenges still run, and the results say the checks are off.
+
+**Rules** (`mustContain`, `mustNotContain`) work on C code too, for example to forbid `strlen` in a challenge about counting characters.
+
+**Not yet for C:** "what does this code print?" quiz questions (they run Java), and the two Java starter styles (C has one starter).
+
 ## Subjects, lessons and prerequisites
 
 Sphinx teaches more than one **subject**. Each has its own units, learning path and progress counter, and students switch between them with **Switch Subject…** (📚) at the top of the sidebar, whose header shows the subject they're in. Two subjects ship with the extension:

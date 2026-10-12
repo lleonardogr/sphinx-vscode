@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { AiHints } from './ai/hints';
 import { createChallenge, createLesson, createSubject, createUnit, validateFolder } from './authoring';
 import { ChallengePanel, PanelAction, PanelExamInfo, examStatusText } from './challengePanel';
-import { Challenge, loadChallenges } from './challenges';
+import { Challenge, codeFileName, loadChallenges } from './challenges';
 import { Progress } from './progress';
 import { SafeState } from './safeState';
 import { RunOutcome, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
@@ -20,6 +20,7 @@ import { LessonPanel, LessonProgress } from './lessonPanel';
 import { plural, setLanguage, tr } from './i18n';
 import { JavaSetup } from './javaSetup';
 import { clearJavaCache } from './runner';
+import { clearCCompilerCache } from './cRunner';
 import { formatVerification, verifyResults } from './examVerify';
 import { ExamDefinition, ExamQuestion, PREVIEW_SUFFIX, examChallengeId, loadExams, parseExamChallengeId, previewOf } from './exams';
 import { ChallengeNode, ChallengeTreeProvider, GroupMode } from './treeView';
@@ -28,7 +29,6 @@ import { exportPack } from './exporter';
 import { ClassReport, buildClassReport, examsInResults, findResultsFiles, readResults } from './classResults';
 import { ClassResultsPanel } from './classResultsPanel';
 
-const CODE_FILE = 'Main.java';
 
 /**
  * Until 1.0.0 the extension id was class-plugin.sphynx. VS Code gives the new id an empty storage
@@ -68,6 +68,8 @@ export interface SphinxApi {
   codePath(c: Challenge): string;
   /** Moves a challenge's code out of the description's column, as when it is opened (for tests). */
   moveCodeBesideDescription(file: string): Promise<vscode.TextEditor | undefined>;
+  /** The last Run or Submit result of a challenge (for tests). */
+  lastOutcome(id: string): RunOutcome | undefined;
 }
 
 /**
@@ -147,7 +149,8 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     const out: { file: string; matches: boolean; recomputed?: number; error?: string }[] = [];
     for (const file of files) {
       try {
-        const report = await verifyResults(file, exams, javaHome());
+        const { javaHome: jh, ...cOptions } = runnerOptions();
+        const report = await verifyResults(file, exams, jh, cOptions);
         out.push({ file, matches: report.matches, recomputed: report.recomputed });
       } catch (e) {
         out.push({ file, matches: false, error: (e as Error).message });
@@ -181,7 +184,14 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   void migrateLegacySettings();
   const javaHome = () => config().get<string>('java.home', '').trim() || undefined;
   const javaStyle = () => config().get<'modern' | 'classic'>('java.style', 'modern');
-  const starterFor = (c: Challenge) => (javaStyle() === 'classic' ? c.starterCodeClassic : c.starterCode);
+  const starterFor = (c: Challenge) => (c.language === 'java' && javaStyle() === 'classic' ? c.starterCodeClassic : c.starterCode);
+  /** Folders with the portable C compilers Sphinx downloaded (see cRunner.ts). */
+  const portableCompilerDirs = (): string[] => {
+    const root = path.join(context.globalStorageUri.fsPath, 'compilers');
+    return fs.existsSync(root) ? fs.readdirSync(root, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => path.join(root, e.name)) : [];
+  };
+  /** What the runner needs to find Java and the C compiler. */
+  const runnerOptions = () => ({ javaHome: javaHome(), cCompiler: config().get<string>('c.compiler', '').trim() || undefined, cPortableDirs: portableCompilerDirs() });
   let jdkChecked = false;
 
   /** Modern starter code needs JDK 25+. Offer to switch to classic once per session if the JDK is older. */
@@ -267,7 +277,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     treeView.message = challenges.length ? undefined : 'No challenges found.';
   }
 
-  /** Folder holding one sub-folder (with a Main.java) per challenge. */
+  /** Folder holding one sub-folder (with a Main.java or main.c) per challenge. */
   function codeRoot(): string {
     const configured = config().get<string>('codeFolder', '').trim();
     if (configured) {
@@ -295,7 +305,8 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
 
   function codePath(c: Challenge): string {
     const t = parseExamChallengeId(c.id);
-    return t ? path.join(examCodeDir(t.examId), t.questionId, CODE_FILE) : path.join(codeRoot(), c.id, CODE_FILE);
+    const name = codeFileName(c.language);
+    return t ? path.join(examCodeDir(t.examId), t.questionId, name) : path.join(codeRoot(), c.id, name);
   }
 
   /** Practice challenges plus every exam question. */
@@ -342,7 +353,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   }
 
   function challengeForFile(file: string): Challenge | undefined {
-    if (path.basename(file) !== CODE_FILE) {
+    if (path.basename(file) !== codeFileName('java') && path.basename(file) !== codeFileName('c')) {
       return undefined;
     }
     const rel = path.relative(codeRoot(), path.dirname(file));
@@ -371,7 +382,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       mustContain: q.challenge.mustContain,
       mustNotContain: q.challenge.mustNotContain,
       timeLimitMs: q.challenge.timeLimitMs,
-      javaHome: javaHome(),
+      ...runnerOptions(),
     });
     return outcome.kind === 'toolMissing' ? undefined : outcome;
   }
@@ -455,7 +466,9 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   }
 
   async function openChallenge(c: Challenge): Promise<void> {
-    void checkJdkForStyle();
+    if (c.language === 'java') {
+      void checkJdkForStyle();
+    }
     const tq = examFor(c);
     if (!tq && !(await allowedToOpen(c, c.title, progress.isSolved(c.id)))) {
       return;
@@ -501,16 +514,23 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
 
   function updateDiagnostics(file: string, outcome: RunOutcome): void {
     const uri = vscode.Uri.file(file);
-    if (outcome.kind !== 'compileError') {
+    // Errors when it doesn't compile; for C, the compiler's warnings too when it does.
+    const problems =
+      outcome.kind === 'compileError'
+        ? outcome.errors.map((e) => ({ ...e, severity: vscode.DiagnosticSeverity.Error }))
+        : outcome.kind === 'tests'
+          ? (outcome.warnings ?? []).map((e) => ({ ...e, severity: vscode.DiagnosticSeverity.Warning }))
+          : [];
+    if (!problems.length) {
       diagnostics.delete(uri);
       return;
     }
     diagnostics.set(
       uri,
-      outcome.errors.map((e) => {
+      problems.map((e) => {
         const pos = new vscode.Position(Math.max(0, e.line - 1), e.column);
-        const d = new vscode.Diagnostic(new vscode.Range(pos, pos.translate(0, 1)), e.message, vscode.DiagnosticSeverity.Error);
-        d.source = 'javac';
+        const d = new vscode.Diagnostic(new vscode.Range(pos, pos.translate(0, 1)), e.message, e.severity);
+        d.source = file.endsWith('.c') ? 'C' : 'javac';
         return d;
       }),
     );
@@ -622,7 +642,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
             mustContain: c.mustContain,
             mustNotContain: c.mustNotContain,
             timeLimitMs: c.timeLimitMs,
-            javaHome: javaHome(),
+            ...runnerOptions(),
           }),
       );
 
@@ -704,7 +724,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       panel.post({ type: 'running', mode: 'custom' });
       const outcome = await vscode.window.withProgress(
         { location: vscode.ProgressLocation.Window, title: tr('Running with your input…', 'Executando com a sua entrada…') },
-        () => runChallengeCode({ file, tests: [{ input, output: '' }], timeLimitMs: c.timeLimitMs, javaHome: javaHome() }),
+        () => runChallengeCode({ file, tests: [{ input, output: '' }], timeLimitMs: c.timeLimitMs, ...runnerOptions() }),
       );
       updateDiagnostics(file, outcome);
       // When the input is one of the visible examples, we know what the output should be.
@@ -736,7 +756,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     await revealCode(c);
   }
 
-  /** Puts the starter code back in a challenge's Main.java, if the student ever opened it. */
+  /** Puts the starter code back in a challenge's code file, if the student ever opened it. */
   async function restoreStarter(c: Challenge): Promise<boolean> {
     const file = codePath(c);
     const doc = vscode.workspace.textDocuments.find((d) => d.uri.fsPath === file);
@@ -857,7 +877,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     runInTerminal({
       title: c.title,
       file,
-      javaHome: javaHome(),
+      ...runnerOptions(),
       onCompiled: (outcome) => updateDiagnostics(file, outcome ?? { kind: 'tests', results: [] }),
     });
   }
@@ -1072,7 +1092,8 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       for (const f of files) {
         progress.report({ message: path.basename(f.fsPath) });
         try {
-          const report = await verifyResults(f.fsPath, exams, javaHome());
+          const { javaHome: jh, ...cOptions } = runnerOptions();
+          const report = await verifyResults(f.fsPath, exams, jh, cOptions);
           if (!report.matches) {
             mismatches++;
           }
@@ -1307,6 +1328,9 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       quizController.refreshExamStatus();
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration('sphinx.c')) {
+        clearCCompilerCache();
+      }
       if (e.affectsConfiguration('sphinx.java')) {
         // A new JDK folder or style: re-check quietly, so the sidebar notice stays accurate.
         clearJavaCache();
@@ -1338,7 +1362,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   context.subscriptions.push(javaSetup);
   void javaSetup.checkQuietly();
   updateContextKey();
-  return { progress, lessonProgress, lessons: () => lessons, teacherTree, verifyFiles, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath, moveCodeBesideDescription };
+  return { progress, lessonProgress, lessons: () => lessons, teacherTree, verifyFiles, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath, moveCodeBesideDescription, lastOutcome: (id) => lastOutcome.get(id) };
 }
 
 export function deactivate(): void {}

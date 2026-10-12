@@ -10,6 +10,7 @@ import { javacMajorVersion } from '../../runner';
 import { extractZip, findImportables, findSolutions } from '../../importCore';
 import { validateChallenges } from '../../validator';
 import { findSubject } from '../../subjects';
+import { findCCompiler } from '../../cRunner';
 import { dialogs, test, waitFor } from './harness';
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
@@ -611,6 +612,45 @@ test('with prerequisite locks on, a student must practise the units an item need
     dialogs.answer = () => undefined;
     await config.update('lockPrerequisites', undefined, vscode.ConfigurationTarget.Global);
     await vscode.commands.executeCommand('sphinx.switchSubject', 'java');
+  }
+});
+
+test('a C challenge opens main.c from its starter, passes with a correct solution, and explains a memory error', async () => {
+  const compiler = await findCCompiler();
+  if (!compiler) {
+    console.log('    (skipped: no C compiler on this machine)');
+    return;
+  }
+  const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-c-'));
+  const dir = path.join(folder, 'sum-two-c');
+  fs.mkdirSync(dir);
+  fs.writeFileSync(path.join(dir, 'challenge.json'), JSON.stringify({ title: 'Sum Two in C', difficulty: 'Easy', tests: [{ input: '2 3\n', output: '5\n' }, { input: '0 0\n', output: '0\n', hidden: true }] }));
+  fs.writeFileSync(path.join(dir, 'description.md'), '# Sum Two in C\n\nRead two whole numbers and print their sum.');
+  fs.writeFileSync(path.join(dir, 'Starter.c'), '#include <stdio.h>\n\nint main(void) {\n    // TODO: read two numbers and print their sum\n    return 0;\n}\n');
+  const config = vscode.workspace.getConfiguration('sphinx');
+  const before = config.get<string[]>('extraChallengePaths', []);
+  await config.update('extraChallengePaths', [...before, folder], vscode.ConfigurationTarget.Global);
+  try {
+    await waitFor(() => api.challenges().some((c) => c.id === 'sum-two-c'), 'the C challenge to load');
+    const c = challenge('sum-two-c');
+    assert.equal(c.language, 'c');
+    await vscode.commands.executeCommand('sphinx.open', 'sum-two-c');
+    assert.equal(path.basename(api.codePath(c)), 'main.c');
+    assert.match(read(api.codePath(c)), /TODO: read two numbers/);
+
+    await submit('sum-two-c', '#include <stdio.h>\n\nint main(void) {\n    int a, b;\n    scanf("%d %d", &a, &b);\n    printf("%d\\n", a + b);\n    return 0;\n}\n');
+    assert.ok(api.progress.isSolved('sum-two-c'), JSON.stringify(api.lastOutcome('sum-two-c')));
+
+    if (compiler.sanitizers) {
+      // The right output, but past the end of an array: the memory check fails the test and says where.
+      await submit('sum-two-c', '#include <stdio.h>\n\nint main(void) {\n    int a, b, last[1];\n    scanf("%d %d", &a, &b);\n    last[1] = a;\n    printf("%d\\n", a + b);\n    return 0;\n}\n');
+      const outcome = api.lastOutcome('sum-two-c');
+      assert.ok(outcome?.kind === 'tests' && !outcome.results[0].passed, JSON.stringify(outcome));
+      assert.match(outcome.results[0].crash ?? '', /^Line 6: /);
+    }
+  } finally {
+    await config.update('extraChallengePaths', before, vscode.ConfigurationTarget.Global);
+    fs.rmSync(folder, { recursive: true, force: true });
   }
 });
 

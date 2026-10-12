@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { RunOutcome } from './runner';
+import { codeFileName } from './challenges';
 import { ExamDefinition, ExamQuestion, maxScore, questionTitle, scoreOutcome } from './exams';
 import { gradeQuiz, parseAnswers, scaleQuizGrade } from './quizzes';
 import { tr } from './i18n';
@@ -108,7 +109,7 @@ export class ExamManager implements vscode.Disposable {
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    /** Folder holding an exam's code: <root>/<questionId>/Main.java */
+    /** Folder holding an exam's code: <root>/<questionId>/Main.java (or main.c) */
     private readonly codeDir: (examId: string) => string,
     /** Runs every test of a question against the student's current code (used for auto-submit). */
     private readonly gradeQuestion: (exam: ExamDefinition, q: ExamQuestion) => Promise<RunOutcome | undefined>,
@@ -172,9 +173,9 @@ export class ExamManager implements vscode.Disposable {
     return Math.max(0, this.maxSubmissions(exam, questionId) - (this.state(exam.id)?.questions[questionId]?.submissions ?? 0));
   }
 
-  /** The file holding a question's current answer: Main.java, or answers.json for a quiz. */
+  /** The file holding a question's current answer: Main.java or main.c, or answers.json for a quiz. */
   answerFile(exam: ExamDefinition, q: ExamQuestion): string {
-    return path.join(this.codeDir(exam.id), q.id, q.kind === 'quiz' ? 'answers.json' : 'Main.java');
+    return path.join(this.codeDir(exam.id), q.id, q.kind === 'quiz' ? 'answers.json' : codeFileName(q.challenge.language));
   }
 
   score(exam: ExamDefinition): { earned: number; max: number } {

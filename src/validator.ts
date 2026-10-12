@@ -1,11 +1,11 @@
-// Checks challenge folders: every Starter*.java must compile, and every Solution*.java must
-// satisfy the rules and pass every test. Files without ".classic" in their name use Java 25+
-// syntax and are skipped on older JDKs. Shared by `npm run validate` and the
+// Checks challenge folders: every Starter*.java (Starter*.c) must compile, and every Solution*.java
+// (Solution*.c) must satisfy the rules and pass every test. Java files without ".classic" in their
+// name use Java 25+ syntax and are skipped on older JDKs. Shared by `npm run validate` and the
 // "Validate Challenges" command, so it has no vscode dependency.
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import { Challenge, loadChallenges } from './challenges';
+import { Challenge, codeFileName, loadChallenges } from './challenges';
 import { RunOutcome, RunRequest, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
 import { findExamDirs, loadExams } from './exams';
 import { findQuizDirs, isWholeProgram, loadQuiz, loadQuizzes, quizProgram } from './quizzes';
@@ -38,6 +38,9 @@ export interface ValidateOptions {
   /** Fill every test's "output" from the reference solution and save challenge.json. */
   generate?: boolean;
   javaHome?: string;
+  /** For C challenges: the compiler to use (as the sphinx.c.compiler setting), and Sphinx's portable compilers. */
+  cCompiler?: string;
+  cPortableDirs?: string[];
   /** Extra challenge folders used only to resolve test questions that reference a challenge by id (e.g. the built-in ones). */
   referenceRoots?: string[];
   /** Treat content-standard warnings as failures (used in CI for the built-in content). */
@@ -48,9 +51,9 @@ export interface ValidateOptions {
   onChallenge?: (report: ChallengeReport) => void;
 }
 
-async function runAs(source: string, request: Omit<RunRequest, 'file'>): Promise<RunOutcome> {
+async function runAs(source: string, request: Omit<RunRequest, 'file'>, fileName = 'Main.java'): Promise<RunOutcome> {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'challenge-validate-'));
-  const file = path.join(dir, 'Main.java');
+  const file = path.join(dir, fileName);
   fs.writeFileSync(file, source);
   try {
     return await runChallengeCode({ ...request, file });
@@ -93,25 +96,29 @@ function examSubjectProblems(dir: string): string[] {
 async function validateOne(c: Challenge, javacVersion: number | undefined, opts: ValidateOptions, counters: { checked: number; skipped: number }): Promise<ChallengeReport> {
   const problems: string[] = [...referenceProblems(c)];
   const files = fs.readdirSync(c.dir).sort();
-  const runnable = (f: string) => f.includes('.classic.') || (javacVersion ?? 0) >= 25;
+  // C files always run (a missing compiler is reported); modern Java needs JDK 25.
+  const runnable = (f: string) => f.endsWith('.c') || f.includes('.classic.') || (javacVersion ?? 0) >= 25;
+  const codeName = codeFileName(c.language);
+  const tools = { javaHome: opts.javaHome, cCompiler: opts.cCompiler, cPortableDirs: opts.cPortableDirs };
 
-  for (const starterFile of files.filter((f) => /^Starter.*\.java$/.test(f))) {
+  for (const starterFile of files.filter((f) => /^Starter.*\.(java|c)$/.test(f))) {
     if (!runnable(starterFile)) {
       continue;
     }
-    const starter = await runAs(fs.readFileSync(path.join(c.dir, starterFile), 'utf8'), { tests: [], javaHome: opts.javaHome });
+    const starter = await runAs(fs.readFileSync(path.join(c.dir, starterFile), 'utf8'), { tests: [], ...tools }, codeName);
     if (starter.kind !== 'tests') {
       problems.push(`${starterFile} ${describe(starter)}`);
     }
   }
 
-  // Solution.java first: with `generate`, the first runnable solution produces the expected
+  // Solution.java (Solution.c) first: with `generate`, the first runnable solution produces the expected
   // outputs and the others are then checked against them.
+  const main = c.language === 'c' ? 'Solution.c' : 'Solution.java';
   const solutions = files
-    .filter((f) => /^Solution.*\.java$/.test(f))
-    .sort((a, b) => Number(b === 'Solution.java') - Number(a === 'Solution.java'));
+    .filter((f) => (c.language === 'c' ? /^Solution.*\.c$/ : /^Solution.*\.java$/).test(f))
+    .sort((a, b) => Number(b === main) - Number(a === main));
   if (solutions.length === 0) {
-    problems.push('No Solution.java: add a reference solution so the tests can be checked.');
+    problems.push(`No ${main}: add a reference solution so the tests can be checked.`);
   }
   const generator = solutions.find(runnable);
 
@@ -126,8 +133,8 @@ async function validateOne(c: Challenge, javacVersion: number | undefined, opts:
       mustContain: c.mustContain,
       mustNotContain: c.mustNotContain,
       timeLimitMs: c.timeLimitMs,
-      javaHome: opts.javaHome,
-    });
+      ...tools,
+    }, codeName);
     if (outcome.kind !== 'tests') {
       problems.push(`${solutionFile} ${describe(outcome)}`);
       continue;
@@ -147,7 +154,7 @@ async function validateOne(c: Challenge, javacVersion: number | undefined, opts:
       continue;
     }
     for (const r of outcome.results.filter((x) => !x.passed)) {
-      const why = r.timedOut ? 'timed out' : r.exitCode !== 0 ? `crashed\n${r.stderr}` : `expected ${JSON.stringify(r.expected)} but printed ${JSON.stringify(r.actual)}`;
+      const why = r.timedOut ? 'timed out' : r.exitCode !== 0 ? `crashed${r.crash ? `: ${r.crash}` : ''}\n${r.stderr}` : `expected ${JSON.stringify(r.expected)} but printed ${JSON.stringify(r.actual)}`;
       problems.push(`${solutionFile}: test ${r.index + 1} ${why}`);
     }
   }
