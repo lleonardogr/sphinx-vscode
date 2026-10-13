@@ -1,6 +1,6 @@
 # Publishing to the VS Code Marketplace
 
-Releases are published by the **Release** workflow when a `vX.Y.Z` tag is pushed. It always creates a GitHub Release with the `.vsix`. It also publishes to the VS Code Marketplace and Open VSX when their tokens are saved as repository secrets.
+Releases are published by the **Release** workflow when a `vX.Y.Z` tag is pushed. It always creates a GitHub Release with the `.vsix`. It also publishes to the VS Code Marketplace (signing in with Microsoft Entra ID) and to Open VSX, when their secrets are set.
 
 ## One-time setup
 
@@ -10,21 +10,38 @@ Releases are published by the **Release** workflow when a `vX.Y.Z` tag is pushed
 2. Click **Create publisher** and choose an **ID** (Sphinx uses `lleonardogr`). The ID is permanent and becomes part of the extension ID (`<publisher>.sphinx`).
 3. The `publisher` field in `package.json` must be exactly this ID.
 
-### 2. Create a Personal Access Token (PAT)
+### 2. Publish with Microsoft Entra ID (no token to store or renew)
 
-1. Go to <https://dev.azure.com>, sign in with the same account, and create an organization if you don't have one (any name).
-2. Open **User settings → Personal access tokens → New Token**:
-   - **Organization**: *All accessible organizations*
-   - **Expiration**: up to 1 year (put a reminder to renew it)
-   - **Scopes**: *Custom defined* → **Marketplace → Manage**
-3. Copy the token. It is shown only once.
+The Release workflow signs in to the Marketplace as an Azure **managed identity**, through GitHub's OpenID Connect: GitHub proves to Azure that the job runs in this repository, and no secret token is stored. (Global Azure DevOps personal access tokens stop working on December 1, 2026.)
 
-### 3. Save the token in GitHub
+**a. Create the managed identity (Azure portal).** It needs an Azure subscription; a free one works, and a managed identity costs nothing.
 
-In the repository: **Settings → Secrets and variables → Actions → New repository secret**
+1. Search for **Managed Identities** (not "Create a resource") → **+ Create**. Choose the subscription, a resource group (create one, such as `sphinx-publishing`), a region, and a name such as `sphinx-marketplace`. **Review + create** → **Create**.
+2. App registrations don't work here: the Marketplace refuses them when publishing. Use a user-assigned managed identity.
 
-- Name: `VSCE_PAT`
-- Value: the token
+**b. Trust this repository.** On the identity: **Settings → Federated credentials → + Add credential**.
+
+- Scenario: **GitHub Actions deploying Azure resources**
+- Organization: `lleonardogr`, Repository: `sphinx-vscode`
+- Entity: **Environment**, name: `marketplace-publish` (the workflows use this environment)
+- Name: anything, such as `release`
+
+**c. Save its IDs in GitHub.** From the identity's **Properties** (or Overview), copy the **Client ID** and the **Tenant ID**, and save them as repository secrets:
+
+```bash
+gh secret set AZURE_CLIENT_ID    # paste the Client ID
+gh secret set AZURE_TENANT_ID    # paste the Tenant ID
+```
+
+**d. Find the ID the Marketplace knows it by.** Run **Actions → Marketplace identity → Run workflow**. Its second step prints an ID (a GUID). The identity's Client ID, Object ID and resource ID are *not* recognized by the Marketplace: only this one is. The last step fails until the next step is done.
+
+**e. Add it to the publisher.** At <https://marketplace.visualstudio.com/manage>, open the `lleonardogr` publisher → **Members** → **+ Add**, paste the ID from step d, and choose the **Contributor** role.
+
+**f. Check.** Run **Marketplace identity** again: the last step, `vsce verify-pat … --azure-credential`, now passes. The next release publishes with Entra ID. Once one release has gone through, delete the old `VSCE_PAT` secret (`gh secret delete VSCE_PAT`) and its token in Azure DevOps.
+
+### 3. The older way: a personal access token
+
+Until `AZURE_CLIENT_ID` is set, the workflow falls back to a `VSCE_PAT` secret: a token from <https://dev.azure.com> (**User settings → Personal access tokens**, organization *All accessible organizations*, scope **Marketplace → Manage**). Global tokens like this one are retired on December 1, 2026, so use Entra ID instead.
 
 ### 4. Open VSX (Cursor, VSCodium, Windsurf, Gitpod)
 
@@ -57,5 +74,5 @@ The Release workflow validates the content, builds the `.vsix`, creates the GitH
 ## Notes
 
 - A version can be published only once. Both publish steps use `--skip-duplicate`, so re-running a release skips a registry that already has that version and publishes to the others.
-- If the publish step fails (for example, the token expired), the GitHub Release is still created. Fix the cause (renew the token and update the secret), then re-run the failed workflow: it keeps the existing release and publishes again. You can also publish that `.vsix` by hand: `npx vsce publish --packagePath sphynx-X.Y.Z.vsix`.
+- If the publish step fails (for example, the identity lost its publisher membership, or the Open VSX token expired), the GitHub Release is still created. Fix the cause, then re-run the failed workflow: it keeps the existing release and publishes again. You can also publish that `.vsix` by hand: `npx vsce publish --packagePath sphynx-X.Y.Z.vsix`.
 - Students who installed a `.vsix` with a different publisher ID have a different extension ID, so VS Code treats the Marketplace version as a new extension (their progress doesn't carry over). Uninstall the old one to avoid having both.
