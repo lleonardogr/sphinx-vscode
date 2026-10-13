@@ -1,0 +1,65 @@
+{
+  "title": "Vigenère Cipher",
+  "topic": "CStrings",
+  "requires": [
+    "CArrays",
+    "Strings"
+  ],
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "Read the three lines with fgets and remove their newlines. strcmp(mode, \"decrypt\") == 0 tells you which way to go.",
+    "Keep a separate counter for the key: it moves on only after a letter. The shift for a key letter is tolower(letter) − 'a'.",
+    "For a letter c with base 'A' or 'a': base + (c − base + shift) % 26. Decrypting shifts by 26 − shift instead."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Cifra de Vigenère",
+      "hints": [
+        "Leia as três linhas com fgets e remova as quebras de linha. strcmp(mode, \"decrypt\") == 0 diz para que lado ir.",
+        "Mantenha um contador separado para a chave: ele só avança depois de uma letra. O deslocamento de uma letra da chave é tolower(letra) − 'a'.",
+        "Para uma letra c com base 'A' ou 'a': base + (c − base + shift) % 26. Decifrar desloca 26 − shift."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "encrypt\nLEMON\nATTACK AT DAWN\n",
+      "output": "LXFOPV EF RNHR\n"
+    },
+    {
+      "input": "decrypt\nLEMON\nLXFOPV EF RNHR\n",
+      "output": "ATTACK AT DAWN\n"
+    },
+    {
+      "input": "encrypt\nkey\nHello, World!\n",
+      "output": "Rijvs, Uyvjn!\n",
+      "hidden": true
+    },
+    {
+      "input": "decrypt\nkey\nRijvs, Uyvjn!\n",
+      "output": "Hello, World!\n",
+      "hidden": true
+    },
+    {
+      "input": "encrypt\na\nunchanged with key a\n",
+      "output": "unchanged with key a\n",
+      "hidden": true
+    },
+    {
+      "input": "encrypt\nZ\nabc XYZ\n",
+      "output": "zab WXY\n",
+      "hidden": true
+    },
+    {
+      "input": "encrypt\nSecret\n12345 -- !?\n",
+      "output": "12345 -- !?\n",
+      "hidden": true
+    },
+    {
+      "input": "decrypt\nMiXeD\nThe Quick Brown Fox Jumps Over The Lazy Dog 2026\n",
+      "output": "Hzh Mrwun Xocoq Bll Bximg Gyao Hzh Hxnq Gkd 2026\n",
+      "hidden": true
+    }
+  ]
+}

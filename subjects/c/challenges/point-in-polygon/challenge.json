@@ -1,0 +1,98 @@
+{
+  "title": "Point in Polygon",
+  "topic": "CStructs",
+  "requires": [
+    "CPointers",
+    "OOP"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "typedef struct { double x, y; } Point; and a Polygon struct with the number of corners and an array of Points. Pass the polygon to functions as a const pointer.",
+    "The area is half the absolute value of the sum of x₁y₂ − x₂y₁ over every edge (the shoelace formula); the perimeter adds the edge lengths, hypot(dx, dy).",
+    "Inside test: from the point, go right and count how many edges you cross. An edge from a to b crosses the ray when one end is above the point and the other is not, and the crossing's x is to the right of the point. Odd means inside."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Ponto no polígono",
+      "hints": [
+        "typedef struct { double x, y; } Point; e uma struct Polygon com o número de vértices e um array de Points. Passe o polígono para as funções como ponteiro const.",
+        "A área é metade do valor absoluto da soma de x₁y₂ − x₂y₁ em cada lado (a fórmula do cadarço); o perímetro soma o tamanho dos lados, hypot(dx, dy).",
+        "Teste de dentro: a partir do ponto, vá para a direita e conte quantos lados você cruza. Um lado de a até b cruza o raio quando uma ponta está acima do ponto e a outra não, e o x do cruzamento fica à direita do ponto. Ímpar quer dizer dentro."
+      ],
+      "mustContain": [
+        "Defina uma struct para os dados."
+      ],
+      "bonus": [
+        {
+          "title": "Sobre a borda",
+          "description": "Dados reais põem, sim, pontos exatamente na fronteira. Imprima `on edge` para um ponto que fica sobre um dos lados (vértices incluídos), em vez de `inside` ou `outside`.",
+          "hint": "q está no segmento de a até b quando o produto vetorial (b − a) × (q − a) é 0 e q fica dentro do retângulo que envolve o segmento. Com coordenadas inteiras o teste é exato."
+        }
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bstruct\\s+\\w+\\s*\\{|typedef\\s+struct",
+      "message": "Define a struct for the data."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\n0 0\n6 0\n6 2\n2 2\n2 5\n0 5\n4\n1 1\n4 1\n4 4\n1 4\n",
+      "output": "Area: 18.00\nPerimeter: 22.00\n(1, 1) inside\n(4, 1) inside\n(4, 4) outside\n(1, 4) inside\n"
+    },
+    {
+      "input": "3\n0 0\n4 0\n0 3\n2\n1 1\n3 3\n",
+      "output": "Area: 6.00\nPerimeter: 12.00\n(1, 1) inside\n(3, 3) outside\n"
+    },
+    {
+      "input": "4\n0 0\n10 0\n10 10\n0 10\n3\n5 5\n-1 5\n11 11\n",
+      "output": "Area: 100.00\nPerimeter: 40.00\n(5, 5) inside\n(-1, 5) outside\n(11, 11) outside\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n0 0\n4 4\n8 0\n8 8\n0 8\n4\n4 2\n4 6\n2 1\n7 3\n",
+      "output": "Area: 48.00\nPerimeter: 35.31\n(4, 2) outside\n(4, 6) inside\n(2, 1) outside\n(7, 3) inside\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n-5 -5\n5 -5\n5 5\n-5 5\n2\n0 0\n-6 0\n",
+      "output": "Area: 100.00\nPerimeter: 40.00\n(0, 0) inside\n(-6, 0) outside\n",
+      "hidden": true
+    },
+    {
+      "input": "8\n0 0\n9 0\n9 9\n6 9\n6 3\n3 3\n3 9\n0 9\n4\n4 6\n1 8\n7 8\n4 1\n",
+      "output": "Area: 63.00\nPerimeter: 48.00\n(4, 6) outside\n(1, 8) inside\n(7, 8) inside\n(4, 1) inside\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n-1000 -1000\n1000 -1000\n0 1000\n3\n0 0\n999 999\n-1 999\n",
+      "output": "Area: 2000000.00\nPerimeter: 6472.14\n(0, 0) inside\n(999, 999) outside\n(-1, 999) outside\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "on-edge",
+      "title": "On the edge",
+      "description": "Real data does put points exactly on a border. Print `on edge` for a point that lies on one of the edges (corners included), instead of `inside` or `outside`.",
+      "hint": "q is on the segment from a to b when the cross product (b − a) × (q − a) is 0 and q lies within the segment's bounding box. With integer coordinates the test is exact.",
+      "tests": [
+        {
+          "input": "6\n0 0\n6 0\n6 2\n2 2\n2 5\n0 5\n5\n0 0\n3 0\n2 3\n6 2\n1 1\n",
+          "output": "Area: 18.00\nPerimeter: 22.00\n(0, 0) on edge\n(3, 0) on edge\n(2, 3) on edge\n(6, 2) on edge\n(1, 1) inside\n"
+        },
+        {
+          "input": "3\n0 0\n4 0\n0 4\n3\n2 2\n0 2\n3 1\n",
+          "output": "Area: 8.00\nPerimeter: 13.66\n(2, 2) on edge\n(0, 2) on edge\n(3, 1) on edge\n"
+        },
+        {
+          "input": "4\n0 0\n10 0\n10 10\n0 10\n3\n10 5\n5 10\n11 5\n",
+          "output": "Area: 100.00\nPerimeter: 40.00\n(10, 5) on edge\n(5, 10) on edge\n(11, 5) outside\n"
+        }
+      ]
+    }
+  ]
+}

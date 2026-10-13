@@ -1,0 +1,94 @@
+{
+  "title": "Word Wrap",
+  "topic": "CStrings",
+  "requires": [
+    "CArrays",
+    "Strings"
+  ],
+  "difficulty": "Hard",
+  "order": 5,
+  "hints": [
+    "Read the width, then the words one at a time with scanf(\"%127s\", word): %s skips spaces and newlines for you.",
+    "Keep the length of the current line. A word goes on the same line, after a space, if the line length + 1 + the word's length still fits; otherwise it starts a new line.",
+    "The first word of a line has no space before it. After the last word, end the line with a newline."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quebra de linha",
+      "hints": [
+        "Leia a largura e depois as palavras uma por vez com scanf(\"%127s\", word): o %s pula espaços e quebras de linha para você.",
+        "Mantenha o tamanho da linha atual. Uma palavra vai na mesma linha, depois de um espaço, se tamanho da linha + 1 + tamanho da palavra ainda cabe; senão começa uma linha nova.",
+        "A primeira palavra de uma linha não tem espaço antes. Depois da última palavra, termine a linha com uma quebra de linha."
+      ],
+      "bonus": [
+        {
+          "title": "Palavras longas",
+          "description": "Trate palavras maiores que a largura: uma palavra assim começa numa linha nova e é cortada em pedaços de `largura − 1` letras, cada um seguido de `-` numa linha própria. O último pedaço (no máximo `largura` letras) começa a próxima linha normalmente.",
+          "hint": "Quando tamanho > largura, termine a linha atual se ela tiver palavras e imprima largura − 1 letras e \"-\" enquanto sobrarem mais de largura letras. printf(\"%.*s-\\n\", width - 1, &word[start]) imprime um pedaço."
+        }
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "30\nThe C programming language was created by Dennis Ritchie at Bell Labs\nin the early 1970s, to write the Unix operating system. It is small, fast\nand close to the machine, and it still runs everywhere: in phones, cars,\nwashing machines and the kernels of every major operating system.\n",
+      "output": "The C programming language was\ncreated by Dennis Ritchie at\nBell Labs in the early 1970s,\nto write the Unix operating\nsystem. It is small, fast and\nclose to the machine, and it\nstill runs everywhere: in\nphones, cars, washing machines\nand the kernels of every major\noperating system.\n"
+    },
+    {
+      "input": "10\naaa bbb ccc ddd\n",
+      "output": "aaa bbb\nccc ddd\n"
+    },
+    {
+      "input": "10\nexactlyten\nfits\n",
+      "output": "exactlyten\nfits\n",
+      "hidden": true
+    },
+    {
+      "input": "12\n   lots    of\n\n   spaces   here  \n",
+      "output": "lots of\nspaces here\n",
+      "hidden": true
+    },
+    {
+      "input": "80\nThe C programming language was created by Dennis Ritchie at Bell Labs\nin the early 1970s, to write the Unix operating system. It is small, fast\nand close to the machine, and it still runs everywhere: in phones, cars,\nwashing machines and the kernels of every major operating system.\n",
+      "output": "The C programming language was created by Dennis Ritchie at Bell Labs in the\nearly 1970s, to write the Unix operating system. It is small, fast and close to\nthe machine, and it still runs everywhere: in phones, cars, washing machines and\nthe kernels of every major operating system.\n",
+      "hidden": true
+    },
+    {
+      "input": "15\none\n",
+      "output": "one\n",
+      "hidden": true
+    },
+    {
+      "input": "20\nword word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word \n",
+      "output": "word word word word\nword word word word\nword word word word\nword word word word\nword word word word\nword word word word\nword word word word\nword word word word\nword word word word\nword word word word\n",
+      "hidden": true
+    },
+    {
+      "input": "11\nhello world hello world\n",
+      "output": "hello world\nhello world\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "hyphenate",
+      "title": "Long words",
+      "description": "Handle words longer than the width: such a word starts on a new line and is cut into pieces of `width − 1` letters, each followed by `-` on its own line. Its last piece (at most `width` letters) starts the next line as usual.",
+      "hint": "When length > width, end the current line if it has words, then print width − 1 letters and \"-\" while more than width letters are left. printf(\"%.*s-\\n\", width - 1, &word[start]) prints one piece.",
+      "tests": [
+        {
+          "input": "10\nthe internationalization of software\n",
+          "output": "the\ninternati-\nonalizati-\non of\nsoftware\n"
+        },
+        {
+          "input": "12\npneumonoultramicroscopicsilicovolcanoconiosis is a word\n",
+          "output": "pneumonoult-\nramicroscop-\nicsilicovol-\ncanoconiosis\nis a word\n"
+        },
+        {
+          "input": "10\nabcdefghijk\nabcdefghijkl x\n",
+          "output": "abcdefghi-\njk\nabcdefghi-\njkl x\n"
+        }
+      ]
+    }
+  ]
+}

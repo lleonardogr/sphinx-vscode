@@ -1,0 +1,82 @@
+{
+  "title": "Find Every Match",
+  "topic": "CPointers",
+  "requires": [
+    "CStrings"
+  ],
+  "difficulty": "Medium",
+  "order": 4,
+  "hints": [
+    "Write find(text, word) that tries each starting point of text: walk two pointers, one in text and one in word, while the characters match.",
+    "If the word pointer reaches '\\0', every character matched: return the starting pointer. If text runs out first, return NULL.",
+    "For every match, call find again from p + 1, so overlapping matches count. The position is p − line, the distance between two pointers."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Achar todas as ocorrências",
+      "hints": [
+        "Escreva find(text, word) que tenta cada ponto de partida de text: ande com dois ponteiros, um em text e um em word, enquanto os caracteres batem.",
+        "Se o ponteiro da palavra chegar ao '\\0', todos os caracteres bateram: devolva o ponteiro de partida. Se text acabar antes, devolva NULL.",
+        "A cada ocorrência, chame find de novo a partir de p + 1, para as sobrepostas contarem. A posição é p − line, a distância entre dois ponteiros."
+      ],
+      "mustContain": [
+        "Escreva uma função find que devolve um ponteiro para char."
+      ],
+      "mustNotContain": [
+        "Escreva a busca você mesmo, com ponteiros."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bchar\\s*\\*\\s*find\\s*\\(",
+      "message": "Write a find function that returns a char pointer."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(strstr|strchr\\s*\\(\\s*line|memmem|strncmp|memcmp|strspn)\\b",
+      "message": "Write the search yourself, with pointers."
+    }
+  ],
+  "tests": [
+    {
+      "input": "cat\nthe cat sat on the cat mat\ndog\n",
+      "output": "1: 4 19\n2: none\n"
+    },
+    {
+      "input": "aa\naaaa\n",
+      "output": "1: 0 1 2\n"
+    },
+    {
+      "input": "x\n\n",
+      "output": "1: none\n",
+      "hidden": true
+    },
+    {
+      "input": "needle\nneedl\n",
+      "output": "1: none\n",
+      "hidden": true
+    },
+    {
+      "input": "ab\nab ab ab\nba\nabab\n",
+      "output": "1: 0 3 6\n2: none\n3: 0 2\n",
+      "hidden": true
+    },
+    {
+      "input": "long word\nlong long word long word\n",
+      "output": "1: 5 15\n",
+      "hidden": true
+    },
+    {
+      "input": "Case\ncase CASE Case\n",
+      "output": "1: 10\n",
+      "hidden": true
+    },
+    {
+      "input": "end\nthe end",
+      "output": "1: 4\n",
+      "hidden": true
+    }
+  ]
+}

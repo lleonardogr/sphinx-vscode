@@ -1,0 +1,83 @@
+{
+  "title": "Undo and Redo",
+  "topic": "CLinked",
+  "requires": [
+    "CStructs",
+    "CMemory"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Keep every typed word in a doubly linked list (prev and next), and a pointer current to the last word that is in the document. NULL means an empty document.",
+    "undo moves current back one word; redo moves it forward, to current->next (or to the first word when current is NULL). Neither frees anything.",
+    "type after an undo throws the redo history away: free every node after current before linking the new word."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Desfazer e refazer",
+      "hints": [
+        "Guarde cada palavra digitada numa lista duplamente ligada (prev e next) e um ponteiro current para a última palavra que está no documento. NULL quer dizer documento vazio.",
+        "undo volta current uma palavra; redo o avança, para current->next (ou para a primeira palavra quando current é NULL). Nenhum dos dois libera nada.",
+        "type depois de um undo joga fora o histórico de refazer: libere cada nó depois de current antes de ligar a palavra nova."
+      ],
+      "mustContain": [
+        "Use uma lista duplamente ligada: cada nó também aponta para trás (prev)."
+      ],
+      "mustNotContain": [
+        "Guarde os dados em nós ligados, não num array.",
+        "Guarde as palavras em nós ligados, não num array 2D."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "->\\s*prev|->\\s*back|->\\s*previous",
+      "message": "Use a doubly linked list: each node also points back (prev)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(int|long|double|float|short)\\s+\\w+\\s*\\[",
+      "message": "Keep the data in linked nodes, not in an array."
+    },
+    {
+      "pattern": "\\w+\\s*\\[\\s*\\d+\\s*\\]\\s*\\[",
+      "message": "Keep the words in linked nodes, not a 2D array."
+    }
+  ],
+  "tests": [
+    {
+      "input": "type Hello\ntype big\ntype world\nundo\nshow\nredo\nshow\n",
+      "output": "Hello big\nHello big world\n"
+    },
+    {
+      "input": "undo\nredo\nshow\n",
+      "output": "nothing to undo\nnothing to redo\n(empty)\n"
+    },
+    {
+      "input": "type a\ntype b\nundo\ntype c\nredo\nshow\n",
+      "output": "nothing to redo\na c\n",
+      "hidden": true
+    },
+    {
+      "input": "type one\nundo\nundo\nshow\nredo\nredo\nshow\n",
+      "output": "nothing to undo\n(empty)\nnothing to redo\none\n",
+      "hidden": true
+    },
+    {
+      "input": "type x\ntype y\ntype z\nundo\nundo\nundo\nshow\nredo\nredo\nshow\ntype w\nshow\nredo\n",
+      "output": "(empty)\nx y\nx y w\nnothing to redo\n",
+      "hidden": true
+    },
+    {
+      "input": "type keep\nshow\nshow\n",
+      "output": "keep\nkeep\n",
+      "hidden": true
+    },
+    {
+      "input": "type a\ntype b\ntype c\nundo\nundo\ntype d\nundo\nundo\nredo\nredo\nredo\nshow\n",
+      "output": "nothing to redo\na d\n",
+      "hidden": true
+    }
+  ]
+}

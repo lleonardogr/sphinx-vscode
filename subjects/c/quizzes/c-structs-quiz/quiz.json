@@ -1,0 +1,187 @@
+{
+  "title": "Structs Quiz",
+  "topic": "CStructs",
+  "requires": [
+    "CPointers",
+    "OOP"
+  ],
+  "description": "Structs, typedef, the arrow operator, copying structs and enums.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "struct Point { int x, y; };\nstruct Point a = {1, 2};\nstruct Point b = a;\nb.x = 5;\nprintf(\"%d\\n\", a.x);",
+      "options": [
+        "1",
+        "5",
+        "It does not compile",
+        "an address"
+      ],
+      "answer": 0,
+      "explanation": "b = a copies every field into b. Changing b.x afterwards changes only b: a.x is still 1. (In Java, b = a would make both names refer to the same object.)"
+    },
+    {
+      "type": "choice",
+      "prompt": "p is a pointer to a struct Point. Which expression is the same as p->x?",
+      "options": [
+        "(*p).x",
+        "*p.x",
+        "p.x",
+        "&p.x"
+      ],
+      "answer": 0,
+      "explanation": "p->x follows the pointer, then takes the field. The brackets in (*p).x matter: *p.x would mean *(p.x), the field of a pointer, which doesn't exist."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "typedef struct { char name[10]; } Person;\n\nvoid set_name(Person p) {\n    strcpy(p.name, \"Bob\");\n}\n\nint main(void) {\n    Person s = {\"Ada\"};\n    set_name(s);\n    printf(\"%s\\n\", s.name);\n}",
+      "options": [
+        "Ada",
+        "Bob",
+        "It does not compile",
+        "nothing"
+      ],
+      "answer": 0,
+      "explanation": "The struct is passed by value: set_name gets a copy, arrays inside included, and changes only the copy. To change the caller's struct, pass &s and use s->name."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why can't you write if (a == b) when a and b are struct Point?",
+      "options": [
+        "C doesn't define == for structs: compare the fields, a.x == b.x && a.y == b.y",
+        "structs are always different objects",
+        "it compares their addresses",
+        "you can: it compares every field"
+      ],
+      "answer": 0,
+      "explanation": "Assignment copies structs, but there is no built-in comparison, partly because of padding bytes between fields. Write a small function such as same_point(a, b)."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "enum Element { AIR, EARTH, FIRE = 5, WATER };\nprintf(\"%d %d %d %d\\n\", AIR, EARTH, FIRE, WATER);",
+      "options": [
+        "0 1 5 6",
+        "1 2 5 6",
+        "0 1 2 3",
+        "0 1 5 5"
+      ],
+      "answer": 0,
+      "explanation": "enum constants count from 0 and go up by one, unless you give a value: FIRE is 5, so WATER is 6."
+    },
+    {
+      "type": "choice",
+      "prompt": "On a typical 64-bit machine, why might sizeof(struct S) be 16 here, not 9?",
+      "code": "struct S {\n    char c;\n    double d;\n};",
+      "options": [
+        "the compiler adds padding so the double starts at an address that is a multiple of 8",
+        "chars take 8 bytes inside structs",
+        "sizeof counts the field names",
+        "structs always take 16 bytes"
+      ],
+      "answer": 0,
+      "explanation": "Processors read aligned values faster, so the compiler leaves 7 unused bytes after c. Putting larger fields first often makes structs smaller."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why do functions usually take const struct Big *b rather than struct Big b for large structs?",
+      "options": [
+        "passing by value copies the whole struct on every call; a pointer copies only an address, and const promises not to change it",
+        "structs can't be passed by value",
+        "pointers make the struct smaller",
+        "const makes the function faster to compile"
+      ],
+      "answer": 0,
+      "explanation": "A struct with a 1000-element array would be copied on every call. A const pointer is cheap and still documents that the function only reads."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "typedef struct { int x, y; } Point; creates a new type that must be written struct Point.",
+      "answer": false,
+      "explanation": "With typedef the name is just Point: Point p = {1, 2};. Without typedef, a struct named with struct Point { … } must be written struct Point every time."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz: structs",
+      "description": "Structs, typedef, o operador seta, a cópia de structs e enums.",
+      "questions": [
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "1",
+            "5",
+            "Não compila",
+            "um endereço"
+          ],
+          "explanation": "b = a copia cada campo para b. Mudar b.x depois muda só b: a.x continua 1. (No Java, b = a faria os dois nomes se referirem ao mesmo objeto.)"
+        },
+        {
+          "prompt": "p é um ponteiro para struct Point. Qual expressão é igual a p->x?",
+          "options": [
+            "(*p).x",
+            "*p.x",
+            "p.x",
+            "&p.x"
+          ],
+          "explanation": "p->x segue o ponteiro e depois pega o campo. Os parênteses em (*p).x importam: *p.x significaria *(p.x), o campo de um ponteiro, que não existe."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "Ada",
+            "Bob",
+            "Não compila",
+            "nada"
+          ],
+          "explanation": "A struct é passada por valor: set_name recebe uma cópia, inclusive os arrays de dentro, e muda só a cópia. Para mudar a struct de quem chamou, passe &s e use s->name."
+        },
+        {
+          "prompt": "Por que não dá para escrever if (a == b) quando a e b são struct Point?",
+          "options": [
+            "o C não define == para structs: compare os campos, a.x == b.x && a.y == b.y",
+            "structs são sempre objetos diferentes",
+            "compara os endereços delas",
+            "dá: compara todos os campos"
+          ],
+          "explanation": "A atribuição copia structs, mas não existe comparação embutida, em parte por causa dos bytes de preenchimento entre os campos. Escreva uma função pequena como same_point(a, b)."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "0 1 5 6",
+            "1 2 5 6",
+            "0 1 2 3",
+            "0 1 5 5"
+          ],
+          "explanation": "As constantes de um enum contam a partir de 0 e sobem de um em um, a não ser que você dê um valor: FIRE é 5, então WATER é 6."
+        },
+        {
+          "prompt": "Numa máquina típica de 64 bits, por que sizeof(struct S) pode ser 16 aqui, e não 9?",
+          "options": [
+            "o compilador acrescenta preenchimento para o double começar num endereço múltiplo de 8",
+            "chars ocupam 8 bytes dentro de structs",
+            "o sizeof conta os nomes dos campos",
+            "structs sempre ocupam 16 bytes"
+          ],
+          "explanation": "Os processadores leem valores alinhados mais rápido, então o compilador deixa 7 bytes sem uso depois de c. Pôr os campos maiores primeiro costuma deixar as structs menores."
+        },
+        {
+          "prompt": "Por que as funções costumam receber const struct Big *b em vez de struct Big b para structs grandes?",
+          "options": [
+            "passar por valor copia a struct inteira a cada chamada; um ponteiro copia só um endereço, e const promete não mudá-la",
+            "structs não podem ser passadas por valor",
+            "ponteiros deixam a struct menor",
+            "const faz a função compilar mais rápido"
+          ],
+          "explanation": "Uma struct com um array de 1000 elementos seria copiada a cada chamada. Um ponteiro const é barato e ainda documenta que a função só lê."
+        },
+        {
+          "prompt": "typedef struct { int x, y; } Point; cria um tipo novo que precisa ser escrito struct Point.",
+          "explanation": "Com typedef o nome é só Point: Point p = {1, 2};. Sem typedef, uma struct nomeada com struct Point { … } precisa ser escrita struct Point toda vez."
+        }
+      ]
+    }
+  }
+}

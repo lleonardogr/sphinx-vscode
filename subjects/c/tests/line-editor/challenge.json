@@ -1,0 +1,86 @@
+{
+  "title": "Line Editor",
+  "topic": "Tests",
+  "skills": [
+    "CStrings",
+    "CPointers",
+    "CMemory",
+    "CStructs",
+    "CLinked"
+  ],
+  "unit": "CLinked",
+  "requires": [
+    "CStructs",
+    "CMemory"
+  ],
+  "difficulty": "Hard",
+  "order": 1,
+  "hints": [
+    "Keep the lines in a doubly linked list of nodes, each with a malloc'd copy of its text, and a pointer to the current line (NULL when the buffer is empty).",
+    "append links a node after the current line and insert before it; both make the new line current. delete unlinks the current line, frees its text and node, and moves to the next line (or the previous one, if it was the last).",
+    "replace: count the matches with strstr first, malloc a string big enough for the result, build it piece by piece, then free the old text."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Editor de linhas",
+      "hints": [
+        "Guarde as linhas numa lista duplamente ligada de nós, cada um com uma cópia do texto feita com malloc, e um ponteiro para a linha atual (NULL quando o buffer está vazio).",
+        "append liga um nó depois da linha atual e insert antes; os dois tornam a linha nova a atual. delete desliga a linha atual, libera o texto e o nó, e vai para a próxima linha (ou a anterior, se era a última).",
+        "replace: conte as ocorrências com strstr primeiro, dê malloc numa string grande o bastante para o resultado, monte-a pedaço por pedaço e depois libere o texto antigo."
+      ],
+      "mustContain": [
+        "Guarde as linhas numa lista duplamente ligada."
+      ],
+      "mustNotContain": [
+        "Guarde as linhas em nós ligados, não num array 2D."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "->\\s*prev|->\\s*up|->\\s*back|->\\s*previous",
+      "message": "Keep the lines in a doubly linked list."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\w+\\s*\\[\\s*\\d+\\s*\\]\\s*\\[",
+      "message": "Keep the lines in linked nodes, not a 2D array."
+    }
+  ],
+  "tests": [
+    {
+      "input": "append Dear team,\nappend the release is on Friday.\nappend Thanks!\nup\ninsert \nprint\nreplace Friday Monday\ndown\nreplace Friday Monday\nprint\n",
+      "output": "  1  Dear team,\n  2>\n  3  the release is on Friday.\n  4  Thanks!\nReplaced 0\nReplaced 1\n  1  Dear team,\n  2\n  3> the release is on Monday.\n  4  Thanks!\n"
+    },
+    {
+      "input": "print\ndelete\nup\nappend only\ndelete\nprint\n",
+      "output": "(empty)\nError: empty buffer\nError: empty buffer\n(empty)\n"
+    },
+    {
+      "input": "append a\nappend b\nappend c\nup\nup\nup\ndown\ndown\ndown\ndelete\nprint\ndelete\ndelete\nprint\n",
+      "output": "Error: at top\nError: at bottom\n  1  a\n  2> b\n(empty)\n",
+      "hidden": true
+    },
+    {
+      "input": "insert 3\ninsert 2\ninsert 1\nprint\ndown\ndown\nappend 4\nprint\n",
+      "output": "  1> 1\n  2  2\n  3  3\n  1  1\n  2  2\n  3  3\n  4> 4\n",
+      "hidden": true
+    },
+    {
+      "input": "append aaa\nreplace a bb\nprint\nreplace bb c\nreplace x y\nprint\n",
+      "output": "Replaced 3\n  1> bbbbbb\nReplaced 3\nReplaced 0\n  1> ccc\n",
+      "hidden": true
+    },
+    {
+      "input": "append the cat sat on the mat\nreplace the a\nreplace at og\nprint\n",
+      "output": "Replaced 2\nReplaced 3\n  1> a cog sog on a mog\n",
+      "hidden": true
+    },
+    {
+      "input": "append one\nappend two\nup\ndelete\nprint\ninsert zero\nappend half\nprint\n",
+      "output": "  1> two\n  1  zero\n  2> half\n  3  two\n",
+      "hidden": true
+    }
+  ]
+}

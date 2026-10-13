@@ -1,0 +1,83 @@
+{
+  "title": "Printer Queue",
+  "topic": "CLinked",
+  "requires": [
+    "CStructs",
+    "CMemory"
+  ],
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "A queue as a linked list with head and tail pointers: add links a new job after tail; the printer works on head.",
+    "print N takes pages from the job at the head; when a job reaches 0 pages, print done, remove it from the front and go on with the next one while pages are left.",
+    "cancel walks the list keeping the previous node: to unlink a job, make the previous node (or head) point to the job after it. Fix tail if you removed the last job."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Fila de impressão",
+      "hints": [
+        "Uma fila como lista ligada com ponteiros head e tail: add liga um trabalho novo depois do tail; a impressora trabalha no head.",
+        "print N tira páginas do trabalho no head; quando um trabalho chega a 0 páginas, imprima done, remova-o da frente e siga para o próximo enquanto sobrarem páginas.",
+        "cancel percorre a lista guardando o nó anterior: para desligar um trabalho, faça o anterior (ou o head) apontar para o trabalho seguinte. Corrija o tail se removeu o último."
+      ],
+      "mustContain": [
+        "Ligue os nós com ponteiros (node->next)."
+      ],
+      "mustNotContain": [
+        "Guarde os dados em nós ligados, não num array.",
+        "Guarde os trabalhos em nós ligados, não num array 2D."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "->\\s*next|->\\s*prev|->\\s*left|->\\s*right",
+      "message": "Link the nodes with pointers (node->next)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(int|long|double|float|short)\\s+\\w+\\s*\\[",
+      "message": "Keep the data in linked nodes, not in an array."
+    },
+    {
+      "pattern": "\\w+\\s*\\[\\s*\\d+\\s*\\]\\s*\\[",
+      "message": "Keep the jobs in linked nodes, not a 2D array."
+    }
+  ],
+  "tests": [
+    {
+      "input": "add report 3\nadd photo 5\nprint 4\ncancel photo\nprint 1\n",
+      "output": "added report\nadded photo\ndone report\ncancelled photo\nidle\nQueue: empty\n"
+    },
+    {
+      "input": "print 10\nadd a 2\nadd b 2\nprint 3\n",
+      "output": "idle\nadded a\nadded b\ndone a\nQueue: b(1)\n"
+    },
+    {
+      "input": "add x 1\ncancel y\ncancel x\ncancel x\n",
+      "output": "added x\nnot found y\ncancelled x\nnot found x\nQueue: empty\n",
+      "hidden": true
+    },
+    {
+      "input": "add a 1\nadd b 1\nadd c 1\ncancel b\nadd d 4\nprint 2\n",
+      "output": "added a\nadded b\nadded c\ncancelled b\nadded d\ndone a\ndone c\nQueue: d(4)\n",
+      "hidden": true
+    },
+    {
+      "input": "add first 10\nadd second 10\nprint 25\nprint 1\nadd third 3\n",
+      "output": "added first\nadded second\ndone first\ndone second\nidle\nadded third\nQueue: third(3)\n",
+      "hidden": true
+    },
+    {
+      "input": "add only 5\n",
+      "output": "added only\nQueue: only(5)\n",
+      "hidden": true
+    },
+    {
+      "input": "add a 2\nadd b 3\nadd c 4\ncancel c\nadd e 1\nprint 5\nprint 1\n",
+      "output": "added a\nadded b\nadded c\ncancelled c\nadded e\ndone a\ndone b\ndone e\nQueue: empty\n",
+      "hidden": true
+    }
+  ]
+}

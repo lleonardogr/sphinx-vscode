@@ -1,0 +1,188 @@
+{
+  "title": "Strings in C Quiz",
+  "topic": "CStrings",
+  "requires": [
+    "CArrays",
+    "Strings"
+  ],
+  "description": "The terminator, string functions, fgets and comparing strings.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "How many chars does char word[] = \"cat\"; take?",
+      "options": [
+        "4",
+        "3",
+        "1",
+        "8"
+      ],
+      "answer": 0,
+      "explanation": "Three letters plus the terminator '\\0' that the string literal adds: sizeof word is 4, while strlen(word) is 3."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why does this print \"different\", even though both arrays hold \"yes\"?",
+      "code": "char a[] = \"yes\", b[] = \"yes\";\nif (a == b) {\n    printf(\"same\\n\");\n} else {\n    printf(\"different\\n\");\n}",
+      "options": [
+        "== compares the addresses of the two arrays, not their characters; strcmp(a, b) == 0 compares the text",
+        "strings must be compared with = instead",
+        "the arrays have different sizes",
+        "C compares only the first character"
+      ],
+      "answer": 0,
+      "explanation": "An array's name used in an expression is the address of its first element. Two arrays live at two addresses, so a == b is false whatever they contain."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "char s[] = \"Hello\";\ns[3] = '\\0';\nprintf(\"%s\\n\", s);",
+      "options": [
+        "Hel",
+        "Hello",
+        "He",
+        "H"
+      ],
+      "answer": 0,
+      "explanation": "Writing '\\0' at index 3 ends the string there: printf stops at the first terminator and prints the first three letters. The rest is still in the array, just not part of the string."
+    },
+    {
+      "type": "choice",
+      "prompt": "The user types \"Ada\" and Enter. What does strlen(line) return right after this fgets?",
+      "code": "char line[10];\nfgets(line, sizeof line, stdin);",
+      "options": [
+        "4",
+        "3",
+        "10",
+        "5"
+      ],
+      "answer": 0,
+      "explanation": "fgets keeps the newline it read: line holds \"Ada\\n\", 4 characters. That is why programs remove it, for example with line[strcspn(line, \"\\n\")] = '\\0'."
+    },
+    {
+      "type": "choice",
+      "prompt": "What is wrong with this?",
+      "code": "char name[5];\nstrcpy(name, \"Grace\");",
+      "options": [
+        "\"Grace\" needs 6 chars with its '\\0', so strcpy writes past the end of name",
+        "nothing: strcpy grows name",
+        "strcpy copies only 5 characters",
+        "string literals can't be copied"
+      ],
+      "answer": 0,
+      "explanation": "strcpy copies until the terminator and never checks the destination's size. Writing past the end is undefined behavior, the classic buffer overflow. snprintf(name, sizeof name, \"%s\", \"Grace\") would cut it to fit."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does strcmp(\"apple\", \"banana\") return?",
+      "options": [
+        "a negative number",
+        "0",
+        "a positive number",
+        "-1 or 1 only, always"
+      ],
+      "answer": 0,
+      "explanation": "strcmp compares character by character: 'a' comes before 'b', so the result is negative. 0 means equal, positive means the first string comes after. Only the sign is guaranteed, not the value."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "char buf[6];\nsnprintf(buf, sizeof buf, \"%s world\", \"Hello\");\nprintf(\"%zu\\n\", strlen(buf));",
+      "options": [
+        "5",
+        "6",
+        "4",
+        "It is undefined"
+      ],
+      "answer": 0,
+      "explanation": "snprintf writes at most sizeof buf − 1 characters plus '\\0': \"Hello\" fits, \" world\" is cut. strlen(buf) is 5. (snprintf returns 11, the length it wanted to write, which is how you detect the cut.)"
+    },
+    {
+      "type": "truefalse",
+      "prompt": "scanf(\"%s\", word) reads a whole line, spaces included.",
+      "answer": false,
+      "explanation": "%s stops at the first space, tab or newline: \"New York\" gives \"New\". Read a whole line with fgets. Also give %s a width, such as %31s for char word[32], or it can write past the end."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz: strings em C",
+      "description": "O terminador, as funções de string, o fgets e a comparação de strings.",
+      "questions": [
+        {
+          "prompt": "Quantos chars ocupa char word[] = \"cat\";?",
+          "options": [
+            "4",
+            "3",
+            "1",
+            "8"
+          ],
+          "explanation": "Três letras mais o terminador '\\0' que o literal acrescenta: sizeof word é 4, enquanto strlen(word) é 3."
+        },
+        {
+          "prompt": "Por que isto imprime \"different\", mesmo com os dois arrays guardando \"yes\"?",
+          "options": [
+            "== compara os endereços dos dois arrays, não os caracteres; strcmp(a, b) == 0 compara o texto",
+            "strings devem ser comparadas com =",
+            "os arrays têm tamanhos diferentes",
+            "o C compara só o primeiro caractere"
+          ],
+          "explanation": "O nome de um array usado numa expressão é o endereço do primeiro elemento. Dois arrays ficam em dois endereços, então a == b é falso seja qual for o conteúdo."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "Hel",
+            "Hello",
+            "He",
+            "H"
+          ],
+          "explanation": "Escrever '\\0' no índice 3 termina a string ali: o printf para no primeiro terminador e imprime as três primeiras letras. O resto continua no array, só não faz parte da string."
+        },
+        {
+          "prompt": "O usuário digita \"Ada\" e Enter. O que strlen(line) devolve logo depois deste fgets?",
+          "options": [
+            "4",
+            "3",
+            "10",
+            "5"
+          ],
+          "explanation": "O fgets mantém a quebra de linha que leu: line guarda \"Ada\\n\", 4 caracteres. Por isso os programas a removem, por exemplo com line[strcspn(line, \"\\n\")] = '\\0'."
+        },
+        {
+          "prompt": "O que há de errado aqui?",
+          "options": [
+            "\"Grace\" precisa de 6 chars com o '\\0', então o strcpy escreve depois do fim de name",
+            "nada: o strcpy aumenta name",
+            "o strcpy copia só 5 caracteres",
+            "literais de string não podem ser copiados"
+          ],
+          "explanation": "O strcpy copia até o terminador e nunca confere o tamanho do destino. Escrever depois do fim é comportamento indefinido, o clássico estouro de buffer. snprintf(name, sizeof name, \"%s\", \"Grace\") cortaria para caber."
+        },
+        {
+          "prompt": "O que strcmp(\"apple\", \"banana\") devolve?",
+          "options": [
+            "um número negativo",
+            "0",
+            "um número positivo",
+            "só -1 ou 1, sempre"
+          ],
+          "explanation": "O strcmp compara caractere por caractere: 'a' vem antes de 'b', então o resultado é negativo. 0 quer dizer iguais, positivo quer dizer que a primeira vem depois. Só o sinal é garantido, não o valor."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "5",
+            "6",
+            "4",
+            "É indefinido"
+          ],
+          "explanation": "O snprintf escreve no máximo sizeof buf − 1 caracteres mais o '\\0': \"Hello\" cabe, \" world\" é cortado. strlen(buf) é 5. (O snprintf devolve 11, o tamanho que queria escrever, que é como se detecta o corte.)"
+        },
+        {
+          "prompt": "scanf(\"%s\", word) lê uma linha inteira, com os espaços.",
+          "explanation": "O %s para no primeiro espaço, tab ou quebra de linha: \"New York\" dá \"New\". Leia uma linha inteira com fgets. E dê uma largura ao %s, como %31s para char word[32], senão ele pode escrever depois do fim."
+        }
+      ]
+    }
+  }
+}

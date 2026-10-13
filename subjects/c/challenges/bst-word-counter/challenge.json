@@ -1,0 +1,88 @@
+{
+  "title": "BST Word Counter",
+  "topic": "CLinked",
+  "requires": [
+    "CStructs",
+    "CMemory"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Split the input into words: letters only, made lowercase; any other character ends the current word.",
+    "insert(node, word): a NULL node becomes a new node with count 1; otherwise strcmp decides between the left subtree, the right subtree, or count++ when equal. Return the node so the caller can link a new child.",
+    "In-order walk (left, node, right) prints alphabetically. The height of an empty tree is 0, otherwise 1 + the larger height of the two subtrees. Free the tree at the end, children first."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Contador de palavras com ABB",
+      "hints": [
+        "Divida a entrada em palavras: só letras, em minúsculas; qualquer outro caractere termina a palavra atual.",
+        "insert(node, word): um nó NULL vira um nó novo com count 1; senão o strcmp decide entre a subárvore esquerda, a direita, ou count++ quando são iguais. Devolva o nó para quem chamou poder ligar um filho novo.",
+        "O percurso em ordem (esquerda, nó, direita) imprime em ordem alfabética. A altura de uma árvore vazia é 0, senão 1 + a maior altura das duas subárvores. Libere a árvore no fim, os filhos primeiro."
+      ],
+      "mustContain": [
+        "Monte uma árvore binária de busca: cada nó tem filhos left e right."
+      ],
+      "mustNotContain": [
+        "Deixe a árvore manter as palavras em ordem: sem qsort.",
+        "Guarde as palavras em nós da árvore, não num array 2D."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "->\\s*left",
+      "message": "Build a binary search tree: each node has left and right children."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\bqsort\\b|\\bbsearch\\b",
+      "message": "Let the tree keep the words in order: no qsort."
+    },
+    {
+      "pattern": "\\w+\\s*\\[\\s*\\d+\\s*\\]\\s*\\[",
+      "message": "Keep the words in tree nodes, not a 2D array."
+    }
+  ],
+  "tests": [
+    {
+      "input": "the cat and the hat\n",
+      "output": "and 1\ncat 1\nhat 1\nthe 2\nTotal: 5\nDistinct: 4\nHeight: 3\n"
+    },
+    {
+      "input": "It was the best of times, it was the worst of times, it was the age of wisdom,\nit was the age of foolishness, it was the epoch of belief, it was the epoch of\nincredulity, it was the season of Light, it was the season of Darkness.\n",
+      "output": "age 2\nbelief 1\nbest 1\ndarkness 1\nepoch 2\nfoolishness 1\nincredulity 1\nit 8\nlight 1\nof 8\nseason 2\nthe 8\ntimes 2\nwas 8\nwisdom 1\nworst 1\nTotal: 48\nDistinct: 16\nHeight: 5\n"
+    },
+    {
+      "input": "a\n",
+      "output": "a 1\nTotal: 1\nDistinct: 1\nHeight: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "b a c\n",
+      "output": "a 1\nb 1\nc 1\nTotal: 3\nDistinct: 3\nHeight: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "a b c d e\n",
+      "output": "a 1\nb 1\nc 1\nd 1\ne 1\nTotal: 5\nDistinct: 5\nHeight: 5\n",
+      "hidden": true
+    },
+    {
+      "input": "e d c b a\n",
+      "output": "a 1\nb 1\nc 1\nd 1\ne 1\nTotal: 5\nDistinct: 5\nHeight: 5\n",
+      "hidden": true
+    },
+    {
+      "input": "Don't stop, don't STOP! 42 times... stop.\n",
+      "output": "don 2\nstop 3\nt 2\ntimes 1\nTotal: 8\nDistinct: 4\nHeight: 3\n",
+      "hidden": true
+    },
+    {
+      "input": "m f t b h p w a c g i n q u x\n",
+      "output": "a 1\nb 1\nc 1\nf 1\ng 1\nh 1\ni 1\nm 1\nn 1\np 1\nq 1\nt 1\nu 1\nw 1\nx 1\nTotal: 15\nDistinct: 15\nHeight: 4\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "title": "RGB565 Colors",
+  "topic": "CBits",
+  "requires": [
+    "CPointers",
+    "Logic"
+  ],
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "Packing: keep the top 5 bits of red (r >> 3), the top 6 of green (g >> 2) and the top 5 of blue (b >> 3), then shift red to bit 11 and green to bit 5 and combine with |.",
+    "Unpacking: (value >> 11) & 0x1F is the red field, (value >> 5) & 0x3F the green one, value & 0x1F the blue one.",
+    "Widen a 5-bit field to 8 bits with (r5 << 3) | (r5 >> 2), and a 6-bit field with (g6 << 2) | (g6 >> 4)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Cores RGB565",
+      "hints": [
+        "Empacotar: fique com os 5 bits de cima do vermelho (r >> 3), os 6 de cima do verde (g >> 2) e os 5 de cima do azul (b >> 3), depois desloque o vermelho para o bit 11 e o verde para o bit 5 e junte com |.",
+        "Desempacotar: (value >> 11) & 0x1F é o campo vermelho, (value >> 5) & 0x3F o verde, value & 0x1F o azul.",
+        "Alargue um campo de 5 bits para 8 com (r5 << 3) | (r5 >> 2), e um de 6 bits com (g6 << 2) | (g6 >> 4)."
+      ],
+      "mustContain": [
+        "Use deslocamentos (<<) para posicionar os campos.",
+        "Use máscaras (&) para tirar os campos."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "<<",
+      "message": "Use shifts (<<) to place the fields."
+    },
+    {
+      "pattern": "&",
+      "message": "Use masks (&) to take the fields out."
+    }
+  ],
+  "tests": [
+    {
+      "input": "pack 255 128 0\nunpack 0xFC00\n",
+      "output": "0xFC00\n255 130 0\n"
+    },
+    {
+      "input": "pack 255 255 255\nunpack 0xFFFF\npack 0 0 0\n",
+      "output": "0xFFFF\n255 255 255\n0x0000\n"
+    },
+    {
+      "input": "unpack 0x0000\n",
+      "output": "0 0 0\n",
+      "hidden": true
+    },
+    {
+      "input": "pack 18 52 86\nunpack 0x11AA\n",
+      "output": "0x11AA\n16 52 82\n",
+      "hidden": true
+    },
+    {
+      "input": "pack 7 3 7\npack 8 4 8\n",
+      "output": "0x0000\n0x0821\n",
+      "hidden": true
+    },
+    {
+      "input": "unpack 0xF800\nunpack 0x07E0\nunpack 0x001F\n",
+      "output": "255 0 0\n0 255 0\n0 0 255\n",
+      "hidden": true
+    },
+    {
+      "input": "pack 100 149 237\nunpack 0x64BD\n",
+      "output": "0x64BD\n99 150 239\n",
+      "hidden": true
+    }
+  ]
+}

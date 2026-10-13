@@ -1,0 +1,52 @@
+{
+  "title": "Bits and Bytes in C",
+  "topic": "CBits",
+  "order": 1,
+  "requires": [
+    "CPointers",
+    "Logic"
+  ],
+  "objectives": [
+    "Read, set, clear and flip bits with &, |, ^, ~ and shifts, on unsigned fixed-width types such as uint32_t.",
+    "Pack several small fields into one integer and unpack them again with masks and shifts.",
+    "Look at the bytes and bits of any value, such as a float, by copying it into an integer with memcpy."
+  ],
+  "readings": [
+    {
+      "title": "Bitwise Operations",
+      "source": "Beej's Guide to C Programming, chapter 24",
+      "url": "https://beej.us/guide/bgc/html/split/bitwise-operations.html",
+      "type": "article",
+      "minutes": 4,
+      "lang": "en",
+      "lookFor": "AND, OR, XOR and NOT, then shifts, and the warning about shifting signed values. Short: the operators are the ones you used in CS Fundamentals, now in C."
+    },
+    {
+      "title": "Fixed Width Integer Types",
+      "source": "Beej's Guide to C Programming, chapter 37",
+      "url": "https://beej.us/guide/bgc/html/split/fixed-width-integer-types.html",
+      "type": "article",
+      "minutes": 5,
+      "lang": "en",
+      "lookFor": "Optional: uint8_t, uint32_t and friends, their limits, and the PRIu32-style format specifiers. Sphinx's compilers also print uint32_t with %u, which the challenges use."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Bits e bytes em C",
+      "objectives": [
+        "Ler, ligar, desligar e inverter bits com &, |, ^, ~ e deslocamentos, em tipos sem sinal de largura fixa como uint32_t.",
+        "Empacotar vários campos pequenos num inteiro e desempacotá-los de novo com máscaras e deslocamentos.",
+        "Olhar os bytes e bits de qualquer valor, como um float, copiando-o para um inteiro com memcpy."
+      ],
+      "readings": [
+        {
+          "lookFor": "AND, OR, XOR e NOT, depois os deslocamentos, e o aviso sobre deslocar valores com sinal. Curto: os operadores são os mesmos que você usou em Fundamentos da Computação, agora em C."
+        },
+        {
+          "lookFor": "Opcional: uint8_t, uint32_t e parentes, os limites deles, e os especificadores de formato no estilo PRIu32. Os compiladores do Sphinx também imprimem uint32_t com %u, que os desafios usam."
+        }
+      ]
+    }
+  }
+}

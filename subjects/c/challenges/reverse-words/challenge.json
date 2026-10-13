@@ -1,0 +1,92 @@
+{
+  "title": "Reverse Words",
+  "topic": "CPointers",
+  "requires": [
+    "CStrings"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Write reverse(char *begin, char *end), which swaps *begin and the character before end, moving the two pointers towards each other until they meet.",
+    "Reverse the whole line: the words come out in reverse order, but each word is spelled backwards.",
+    "Then walk the line with a pointer and reverse each word again: from where a word starts to the next space or '\\0'."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Inverter palavras",
+      "hints": [
+        "Escreva reverse(char *begin, char *end), que troca *begin com o caractere antes de end, movendo os dois ponteiros um em direção ao outro até se encontrarem.",
+        "Inverta a linha inteira: as palavras saem em ordem inversa, mas cada palavra fica escrita de trás para frente.",
+        "Depois percorra a linha com um ponteiro e inverta cada palavra de novo: de onde uma palavra começa até o próximo espaço ou '\\0'."
+      ],
+      "mustContain": [
+        "Percorra a string com ponteiros para char."
+      ],
+      "mustNotContain": [
+        "Inverta no lugar: declare só um array de char.",
+        "Inverta no lugar, sem memória extra."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bchar\\s*\\*\\s*\\w+",
+      "message": "Walk the string with char pointers."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\bchar\\s+\\w+\\s*\\[[\\s\\S]*\\bchar\\s+\\w+\\s*\\[",
+      "message": "Reverse in place: declare only one char array."
+    },
+    {
+      "pattern": "\\b(malloc|calloc|strdup)\\b",
+      "message": "Reverse in place, with no extra memory."
+    }
+  ],
+  "tests": [
+    {
+      "input": "the quick brown fox\n",
+      "output": "fox brown quick the\n"
+    },
+    {
+      "input": "C is fun\nhello\n",
+      "output": "fun is C\nhello\n"
+    },
+    {
+      "input": "x  \n",
+      "output": "  x\n",
+      "hidden": true
+    },
+    {
+      "input": "a\n",
+      "output": "a\n",
+      "hidden": true
+    },
+    {
+      "input": "one two\n",
+      "output": "two one\n",
+      "hidden": true
+    },
+    {
+      "input": "  leading and trailing  \n",
+      "output": "  trailing and leading\n",
+      "hidden": true
+    },
+    {
+      "input": "a  b   c\n",
+      "output": "c   b  a\n",
+      "hidden": true
+    },
+    {
+      "input": "palindromes like racecar stay\n",
+      "output": "stay racecar like palindromes\n",
+      "hidden": true
+    },
+    {
+      "input": "no newline at the end",
+      "output": "end the at newline no\n",
+      "hidden": true
+    }
+  ]
+}

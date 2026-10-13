@@ -13,7 +13,7 @@
 
 > *Like the sphinx of the legend, Sphinx asks you questions, and you only pass if you answer them right.*
 
-HackerRank / LeetCode-style coding challenges right inside VS Code, in **English or Portuguese**, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. Two subjects ship with it: **Java Programming**, from the basic syntax to data structures, object-oriented programming and the Stream API, and **CS Fundamentals**, the theory new students need about how computers work, starting with number systems. A third, **C Programming**, is being written: its first unit ships now.
+HackerRank / LeetCode-style coding challenges right inside VS Code, in **English or Portuguese**, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. Two subjects ship with it: **Java Programming**, from the basic syntax to data structures, object-oriented programming and the Stream API, and **CS Fundamentals**, the theory new students need about how computers work, starting with number systems. A third, **C Programming**, takes students who know Java down to pointers, memory and linked lists.
 
 📘 **Guides:** [Creating your own challenges](docs/creating-challenges.md) · [Tests](docs/creating-challenges.md#tests-mixed-challenges) · [Quizzes](docs/quizzes.md) · [Exams](docs/exams.md) · [AI hints](docs/ai-hints.md) · [Content guide](docs/content-guide.md)
 
@@ -67,13 +67,19 @@ Each item shows the Java it needs, with your progress: for example **Needs: Java
 
 ## C Programming
 
-The third subject, for students who already know Java, is being written unit by unit: 9 units, from *From Java to C* to pointers, dynamic memory, structs and linked lists. C challenges are compiled as C17 with warnings and, where the compiler supports them, memory checks that explain a memory error with its line. On Windows, Sphinx offers to download a portable C compiler (no installation or admin rights needed).
+The third subject, for students who already know Java: 9 units, from *From Java to C* to pointers, dynamic memory, structs and linked lists, with 9 quick guides, 9 quizzes, 41 challenges and 2 tests. C challenges are compiled as C17 with warnings and, where the compiler supports them, memory checks that explain a memory error with its line. On Windows, Sphinx offers to download a portable C compiler (no installation or admin rights needed).
 
 | Unit | Lessons | Challenges (plus the unit's quiz) |
 |------|---------|-----------------------------------|
 | 1 · From Java to C | From Java to C (quick guide: CS50, freeCodeCamp) | Receipt Line (`printf` widths) · Character Codes (`getchar`, a checksum) · Odometer (16-bit unsigned wrap-around) · Day of the Year (`switch` fall-through) · Command-Line Calculator (`scanf`'s return value) |
-
-Coming next: Functions, Arrays, Strings, Pointers, Dynamic Memory, Structs, Bits and Bytes in C, and Linked Data Structures.
+| 2 · Functions | Functions in C (quick guide: Beej's Guide, freeCodeCamp) | Dice Roller (`static` state) · Luhn Check · Month Calendar (helper functions) · Change Making (recursion) · Expression Evaluator (mutual recursion, prototypes) |
+| 3 · Arrays | Arrays in C (quick guide: Beej's Guide, CS50) | Histogram · Sieve of Eratosthenes (a 10-million array) · Ring Buffer · Game of Life (2D) · Big Factorial (1000! digit by digit) |
+| 4 · Strings | Strings in C (quick guide: Beej's Guide, CS50) | Word Stats (`fgets`) · Vigenère Cipher · Label Printer (safe truncation) · CSV Fields (quoted fields) · Word Wrap · Test: Inventory Report |
+| 5 · Pointers | Pointers (quick guide: Beej's Guide, CS50) | Sort Three (`int *` parameters) · Stats Through Pointers (output parameters) · Reverse Words (two pointers, in place) · Find Every Match (a pointer-returning search) · Multi-Key Sort (`qsort` and comparison functions) |
+| 6 · Dynamic Memory | Dynamic Memory (quick guide: Beej's Guide, CS50) | Unknown Count (`realloc`, doubling) · Longest Line (a growing buffer) · Pascal's Triangle (rows of different lengths) · Matrix Multiply (sized from the input) |
+| 7 · Structs | Structs (quick guide: Beej's Guide, freeCodeCamp) | Fractions · Student Records (an array of structs and `qsort`) · Bank Ledger (`enum`) · Point in Polygon |
+| 8 · Bits and Bytes in C | Bits and Bytes in C (quick guide: Beej's Guide) | Count the Bits · RGB565 Colors (packing fields) · Float Anatomy (IEEE 754 with `memcpy`) · CRC-32 |
+| 9 · Linked Data Structures | Linked Data Structures (quick guide: CS50, Beej's Guide) | RPN Calculator (a linked stack) · Printer Queue (a linked queue) · Undo and Redo (doubly linked) · BST Word Counter (a binary search tree) · Test: Line Editor |
 
 ## Screenshots
 
@@ -100,7 +106,7 @@ Coming next: Functions, Arrays, Strings, Pointers, Dynamic Memory, Structs, Bits
 - **Exams**: timed, graded sets of questions with a countdown, limited submissions, partial credit and a results file to hand in. An exam can be **open** (hints, AI and the internet allowed) or **closed** (hints and AI off, copying and pasting blocked, time outside VS Code recorded or limited). Teachers re-grade the results files with **Verify Exam Results**. See [Exams](docs/exams.md).
 - **Import**: one button in the sidebar imports the challenges, tests and exams a teacher shared, as a `.zip` or a folder. They're copied into the extension's library, solutions can be stripped for students, and **Remove Imported…** takes them out again. See [Sharing challenges with students](docs/creating-challenges.md#sharing-challenges-with-students).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
-- **Subjects**: Java Programming, CS Fundamentals and C Programming (in progress), each with its own learning path. **Switch Subject…** (📚) changes the one in the sidebar, and its name is shown in the sidebar header.
+- **Subjects**: Java Programming, CS Fundamentals and C Programming, each with its own learning path. **Switch Subject…** (📚) changes the one in the sidebar, and its name is shown in the sidebar header.
 - **Lessons**: short pages to read before a unit's quiz and challenges, with a reading time, a ✓ once read, and a button to the next item.
 - **Bonus goals**: a challenge can offer up to 3 optional, harder goals (solve it without loops, fast enough for a huge input…), checked when it passes. Earned goals become stars in the panel, the sidebar and the unit's guide.
 - **Prerequisites**: an item can list the units it builds on, shown with the student's progress in each one. They're advice, unless a teacher turns on **prerequisite locks**: then the item opens once half (or all) of each unit it needs is solved.
@@ -237,11 +243,13 @@ Done:
 - [x] **Create New Lesson**: a quick guide or a reading guide, ready to fill in
 - [x] Teachers' own subjects and units, and units added to the built-in subjects, shared in packs
 - [x] Optional prerequisite locks, turned on by the teacher for a subject or a class
+- [x] Bonus goals: optional harder goals on challenges, shown as stars
+- [x] C challenges with memory checks, a portable compiler for Windows, and the C Programming subject: 9 units with quick guides, quizzes and challenges, plus 2 tests
 
 Content:
 
 - [ ] An algorithms and data structures unit
-- [ ] C Programming: the remaining 8 units (unit 1 is out), then tests and exams
+- [ ] C Programming exams, and "what does this print?" questions in C
 - [ ] New subjects: SQL and graph theory
 
 For teachers:

@@ -1,0 +1,69 @@
+{
+  "title": "Count the Bits",
+  "topic": "CBits",
+  "requires": [
+    "CPointers",
+    "Logic"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "(x >> bit) & 1 is bit number bit of x. Look at the 32 bits one by one.",
+    "Count the ones as you go, and remember the position of the last one you saw: walking from bit 0 up, that is the highest.",
+    "Parity is even when the count of ones is even. For 0 there is no set bit at all: print none."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Contar os bits",
+      "hints": [
+        "(x >> bit) & 1 é o bit número bit de x. Olhe os 32 bits um por um.",
+        "Conte os uns pelo caminho e lembre a posição do último que viu: andando do bit 0 para cima, ele é o mais alto.",
+        "A paridade é par quando a quantidade de uns é par. Para 0 não existe bit ligado: imprima none."
+      ],
+      "mustNotContain": [
+        "Conte os bits você mesmo, com deslocamentos e máscaras."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "__builtin|popcount|stdc_|bitcount|ffs\\s*\\(",
+      "message": "Count the bits yourself, with shifts and masks."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\n12\n7\n0\n",
+      "output": "12: ones=2 parity=even highest=3\n7: ones=3 parity=odd highest=2\n0: ones=0 parity=even highest=none\n"
+    },
+    {
+      "input": "2\n1\n4294967295\n",
+      "output": "1: ones=1 parity=odd highest=0\n4294967295: ones=32 parity=even highest=31\n"
+    },
+    {
+      "input": "1\n2147483648\n",
+      "output": "2147483648: ones=1 parity=odd highest=31\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n255\n256\n65535\n65536\n",
+      "output": "255: ones=8 parity=even highest=7\n256: ones=1 parity=odd highest=8\n65535: ones=16 parity=even highest=15\n65536: ones=1 parity=odd highest=16\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n2863311530\n1431655765\n3735928559\n",
+      "output": "2863311530: ones=16 parity=even highest=31\n1431655765: ones=16 parity=even highest=30\n3735928559: ones=24 parity=even highest=31\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n3\n2147483647\n",
+      "output": "3: ones=2 parity=even highest=1\n2147483647: ones=31 parity=odd highest=30\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n1000000000\n",
+      "output": "1000000000: ones=13 parity=odd highest=29\n",
+      "hidden": true
+    }
+  ]
+}

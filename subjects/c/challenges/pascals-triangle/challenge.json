@@ -1,0 +1,77 @@
+{
+  "title": "Pascal's Triangle",
+  "topic": "CMemory",
+  "requires": [
+    "CPointers"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Allocate an array of n row pointers (long long **), then each row r on its own with r + 1 elements.",
+    "Each row starts and ends with 1; every other number is the sum of the two above it: rows[r][k] = rows[r-1][k-1] + rows[r-1][k].",
+    "Answer each query from the stored rows. At the end free every row, then the array of row pointers."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Triângulo de Pascal",
+      "hints": [
+        "Aloque um array de n ponteiros para linhas (long long **) e depois cada linha r separadamente, com r + 1 elementos.",
+        "Cada linha começa e termina com 1; cada outro número é a soma dos dois de cima: rows[r][k] = rows[r-1][k-1] + rows[r-1][k].",
+        "Responda cada consulta com as linhas guardadas. No fim libere cada linha e depois o array de ponteiros."
+      ],
+      "mustContain": [
+        "Aloque cada linha com malloc (ou calloc)."
+      ],
+      "mustNotContain": [
+        "Sem array 2D fixo: aloque linhas de tamanhos diferentes."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(malloc|calloc)\\s*\\(",
+      "message": "Allocate each row with malloc (or calloc)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\w+\\s*\\[\\s*\\d+\\s*\\]\\s*\\[",
+      "message": "No fixed 2D array: allocate rows of different lengths."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5 3\n4 2\n0 0\n3 1\n",
+      "output": "Stored: 15\nC(4,2) = 6\nC(0,0) = 1\nC(3,1) = 3\n"
+    },
+    {
+      "input": "10 2\n9 4\n6 6\n",
+      "output": "Stored: 55\nC(9,4) = 126\nC(6,6) = 1\n"
+    },
+    {
+      "input": "1 1\n0 0\n",
+      "output": "Stored: 1\nC(0,0) = 1\n",
+      "hidden": true
+    },
+    {
+      "input": "67 3\n66 33\n66 0\n50 25\n",
+      "output": "Stored: 2278\nC(66,33) = 7219428434016265740\nC(66,0) = 1\nC(50,25) = 126410606437752\n",
+      "hidden": true
+    },
+    {
+      "input": "30 4\n29 14\n20 10\n10 3\n29 29\n",
+      "output": "Stored: 465\nC(29,14) = 77558760\nC(20,10) = 184756\nC(10,3) = 120\nC(29,29) = 1\n",
+      "hidden": true
+    },
+    {
+      "input": "2 3\n1 0\n1 1\n0 0\n",
+      "output": "Stored: 3\nC(1,0) = 1\nC(1,1) = 1\nC(0,0) = 1\n",
+      "hidden": true
+    },
+    {
+      "input": "60 2\n59 30\n59 1\n",
+      "output": "Stored: 1830\nC(59,30) = 59132290782430712\nC(59,1) = 59\n",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "title": "Bank Ledger",
+  "topic": "CStructs",
+  "requires": [
+    "CPointers",
+    "OOP"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "An enum names the three kinds of transaction, and a struct holds an account: id, owner and balance in cents (a long, not a double).",
+    "Write Account *find(int id) that returns a pointer into the array of accounts, or NULL. Through that pointer, a->balance -= amount changes the account itself.",
+    "Read amounts as two integers with \"%ld.%d\" and turn them into cents. Check the accounts first, then the funds; a transfer to the same account is \"no such account\"."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Livro-caixa do banco",
+      "hints": [
+        "Um enum dá nome aos três tipos de transação, e uma struct guarda uma conta: id, titular e saldo em centavos (um long, não um double).",
+        "Escreva Account *find(int id) que devolve um ponteiro para dentro do array de contas, ou NULL. Por esse ponteiro, a->balance -= amount muda a própria conta.",
+        "Leia os valores como dois inteiros com \"%ld.%d\" e transforme em centavos. Confira primeiro as contas, depois o saldo; uma transferência para a mesma conta é \"no such account\"."
+      ],
+      "mustContain": [
+        "Defina uma struct para os dados.",
+        "Dê nome aos tipos de transação com um enum."
+      ],
+      "mustNotContain": [
+        "Guarde dinheiro em centavos inteiros."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bstruct\\s+\\w+\\s*\\{|typedef\\s+struct",
+      "message": "Define a struct for the data."
+    },
+    {
+      "pattern": "\\benum\\b",
+      "message": "Name the kinds of transaction with an enum."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(double|float)\\b",
+      "message": "Keep money in integer cents."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\n101 Ada 100.00\n102 Alan 25.50\n103 Grace 0.00\n5\ndeposit 103 10.25\nwithdraw 102 30.00\ntransfer 101 102 40.00\ntransfer 101 999 1.00\nwithdraw 102 65.50\n",
+      "output": "#1 ok\n#2 rejected: insufficient funds\n#3 ok\n#4 rejected: no such account\n#5 ok\n101 Ada 60.00\n102 Alan 0.00\n103 Grace 10.25\n"
+    },
+    {
+      "input": "1\n7 Solo 5.00\n2\nwithdraw 7 5.00\ndeposit 7 0.01\n",
+      "output": "#1 ok\n#2 ok\n7 Solo 0.01\n"
+    },
+    {
+      "input": "2\n1 A 10.00\n2 B 10.00\n3\ntransfer 1 1 5.00\ntransfer 2 1 10.01\ntransfer 2 1 10.00\n",
+      "output": "#1 rejected: no such account\n#2 rejected: insufficient funds\n#3 ok\n1 A 20.00\n2 B 0.00\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n1 A 0.00\n2 B 999999.99\n4\nwithdraw 1 0.01\ndeposit 3 1.00\ntransfer 2 1 999999.99\nwithdraw 1 999999.99\n",
+      "output": "#1 rejected: insufficient funds\n#2 rejected: no such account\n#3 ok\n#4 ok\n1 A 0.00\n2 B 0.00\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n10 X 1.05\n20 Y 2.10\n30 Z 3.15\n3\ntransfer 30 10 3.15\ntransfer 10 20 4.20\nwithdraw 20 6.30\n",
+      "output": "#1 ok\n#2 ok\n#3 ok\n10 X 0.00\n20 Y 0.00\n30 Z 0.00\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n5 Five 12.34\n1\ndeposit 6 1.00\n",
+      "output": "#1 rejected: no such account\n5 Five 12.34\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n1 Long_Owner_Name_Here 50.00\n2 Short 0.00\n6\ndeposit 2 0.99\ndeposit 2 0.01\nwithdraw 2 1.00\nwithdraw 2 0.01\ntransfer 1 2 25.00\ntransfer 2 1 25.00\n",
+      "output": "#1 ok\n#2 ok\n#3 ok\n#4 rejected: insufficient funds\n#5 ok\n#6 ok\n1 Long_Owner_Name_Here 50.00\n2 Short 0.00\n",
+      "hidden": true
+    }
+  ]
+}

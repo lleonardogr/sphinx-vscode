@@ -1,0 +1,104 @@
+{
+  "title": "Change Making",
+  "topic": "CFunctions",
+  "requires": [
+    "CBasics",
+    "Methods"
+  ],
+  "difficulty": "Medium",
+  "order": 4,
+  "hints": [
+    "Think about the largest coin: every way of making the amount either uses at least one of it, or none at all.",
+    "With ways(amount, k), the ways using only coins k onwards: ways(amount − coin k, k) uses coin k once more; ways(amount, k + 1) skips it for good.",
+    "Base cases: an amount of 0 has exactly 1 way (no coins); a negative amount, or no coins left, has 0."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Formas de dar troco",
+      "hints": [
+        "Pense na maior moeda: toda forma de fazer o valor ou usa pelo menos uma dela, ou nenhuma.",
+        "Com ways(amount, k), as formas usando só as moedas de k em diante: ways(amount − moeda k, k) usa a moeda k mais uma vez; ways(amount, k + 1) a deixa de lado de vez.",
+        "Casos base: o valor 0 tem exatamente 1 forma (nenhuma moeda); um valor negativo, ou sem moedas sobrando, tem 0."
+      ],
+      "mustNotContain": [
+        "Resolva com recursão: sem laços."
+      ],
+      "bonus": [
+        {
+          "title": "Valores grandes",
+          "description": "Valores até 10.000 centavos (100 dólares), cada um em menos de um segundo. A recursão simples calcula os mesmos valores menores de novo e de novo: guarde cada resposta na primeira vez.",
+          "hint": "Um array estático de duas dimensões long long memo[10001][5] começa cheio de zeros. Guarde a resposta mais 1, para 0 poder significar \"ainda não calculado\"."
+        }
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "\\b(for|while)\\b",
+      "message": "Solve it with recursion: no loops."
+    }
+  ],
+  "tests": [
+    {
+      "input": "11\n",
+      "output": "4\n"
+    },
+    {
+      "input": "100\n",
+      "output": "292\n"
+    },
+    {
+      "input": "0\n",
+      "output": "1\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n",
+      "output": "1\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n",
+      "output": "2\n",
+      "hidden": true
+    },
+    {
+      "input": "25\n",
+      "output": "13\n",
+      "hidden": true
+    },
+    {
+      "input": "99\n",
+      "output": "252\n",
+      "hidden": true
+    },
+    {
+      "input": "300\n",
+      "output": "9590\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "memo",
+      "title": "Large amounts",
+      "description": "Amounts up to 10,000 cents (100 dollars), each in under a second. The plain recursion computes the same smaller amounts again and again: remember each answer the first time.",
+      "hint": "A static two-dimensional array long long memo[10001][5] starts filled with zeros. Store the answer plus 1, so 0 can mean \"not computed yet\".",
+      "tests": [
+        {
+          "input": "10000\n",
+          "output": "6794128501\n"
+        },
+        {
+          "input": "7777\n",
+          "output": "2496200148\n"
+        },
+        {
+          "input": "9999\n",
+          "output": "6780614400\n"
+        }
+      ],
+      "timeLimitMs": 1000
+    }
+  ]
+}

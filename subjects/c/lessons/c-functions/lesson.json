@@ -1,0 +1,52 @@
+{
+  "title": "Functions in C",
+  "topic": "CFunctions",
+  "order": 1,
+  "requires": [
+    "CBasics",
+    "Methods"
+  ],
+  "objectives": [
+    "Declare functions with prototypes, and explain why an argument changed inside a function stays the same outside (pass by value).",
+    "Keep state between calls with a static variable, and split a problem into small functions.",
+    "Write recursive functions, including functions that call each other."
+  ],
+  "readings": [
+    {
+      "title": "Functions",
+      "source": "Beej's Guide to C Programming, chapter 4",
+      "url": "https://beej.us/guide/bgc/html/split/functions.html",
+      "type": "article",
+      "minutes": 8,
+      "lang": "en",
+      "lookFor": "Passing by value, function prototypes, and why int f(void) is not the same as int f() in older C."
+    },
+    {
+      "title": "Static variables",
+      "source": "freeCodeCamp, The C Beginner's Handbook",
+      "url": "https://www.freecodecamp.org/news/the-c-beginners-handbook/#heading-static-variables",
+      "type": "article",
+      "minutes": 3,
+      "lang": "en",
+      "lookFor": "Optional: a static local variable keeps its value from one call to the next. The \"Global variables\" section right after shows the other way to share state, and why it is riskier."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Funções em C",
+      "objectives": [
+        "Declarar funções com protótipos, e explicar por que um argumento alterado dentro da função continua igual fora (passagem por valor).",
+        "Guardar estado entre chamadas com uma variável static, e dividir um problema em funções pequenas.",
+        "Escrever funções recursivas, inclusive funções que chamam umas às outras."
+      ],
+      "readings": [
+        {
+          "lookFor": "Passagem por valor, protótipos de funções, e por que int f(void) não é o mesmo que int f() no C mais antigo."
+        },
+        {
+          "lookFor": "Opcional: uma variável local static mantém o valor de uma chamada para a outra. A seção \"Global variables\", logo depois, mostra o outro jeito de compartilhar estado, e por que é mais arriscado."
+        }
+      ]
+    }
+  }
+}

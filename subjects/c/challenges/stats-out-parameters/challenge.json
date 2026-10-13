@@ -1,0 +1,68 @@
+{
+  "title": "Stats Through Pointers",
+  "topic": "CPointers",
+  "requires": [
+    "CStrings"
+  ],
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "A C function returns one value. To give back three, the caller passes the addresses of three variables, and the function writes through them: *min = …",
+    "Start *min and *max at values[0], then walk the array; add the values in a long long and divide as a double at the end.",
+    "In main: stats(values, n, &low, &high, &mean); then count the values greater than mean."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Estatísticas por ponteiros",
+      "hints": [
+        "Uma função em C devolve um valor. Para devolver três, quem chama passa os endereços de três variáveis, e a função escreve por elas: *min = …",
+        "Comece *min e *max em values[0] e percorra o array; some os valores num long long e divida como double no fim.",
+        "No main: stats(values, n, &low, &high, &mean); depois conte os valores maiores que mean."
+      ],
+      "mustContain": [
+        "Escreva void stats(const int *values, int n, int *min, int *max, double *mean)."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bvoid\\s+stats\\s*\\(\\s*const\\s+int\\s*\\*\\s*\\w+\\s*,\\s*int\\s+\\w+\\s*,\\s*int\\s*\\*\\s*\\w+\\s*,\\s*int\\s*\\*\\s*\\w+\\s*,\\s*double\\s*\\*\\s*\\w+\\s*\\)",
+      "message": "Write void stats(const int *values, int n, int *min, int *max, double *mean)."
+    }
+  ],
+  "tests": [
+    {
+      "input": "5\n4 8 15 16 23\n",
+      "output": "Min: 4\nMax: 23\nMean: 13.20\nAbove mean: 3\n"
+    },
+    {
+      "input": "1\n-7\n",
+      "output": "Min: -7\nMax: -7\nMean: -7.00\nAbove mean: 0\n"
+    },
+    {
+      "input": "3\n1 2 3\n",
+      "output": "Min: 1\nMax: 3\nMean: 2.00\nAbove mean: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n5 5 5 5\n",
+      "output": "Min: 5\nMax: 5\nMean: 5.00\nAbove mean: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n-1000000 1000000 0 0 1 -1\n",
+      "output": "Min: -1000000\nMax: 1000000\nMean: 0.00\nAbove mean: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n2147483647 2147483647\n",
+      "output": "Min: 2147483647\nMax: 2147483647\nMean: 2147483647.00\nAbove mean: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "7\n10 9 8 7 6 5 100\n",
+      "output": "Min: 5\nMax: 100\nMean: 20.71\nAbove mean: 1\n",
+      "hidden": true
+    }
+  ]
+}

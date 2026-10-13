@@ -1,0 +1,52 @@
+{
+  "title": "Strings in C",
+  "topic": "CStrings",
+  "order": 1,
+  "requires": [
+    "CArrays",
+    "Strings"
+  ],
+  "objectives": [
+    "Store text in char arrays ended by '\\0', with room for the terminator, and read whole lines safely with fgets.",
+    "Use strlen, strcmp, strcpy, strchr and snprintf, and explain why == does not compare strings.",
+    "Walk through a string character by character to split, transform or wrap it."
+  ],
+  "readings": [
+    {
+      "title": "Strings",
+      "source": "Beej's Guide to C Programming, chapter 7",
+      "url": "https://beej.us/guide/bgc/html/split/strings.html",
+      "type": "article",
+      "minutes": 8,
+      "lang": "en",
+      "lookFor": "String literals, string variables, getting the length, the terminator '\\0', and why copying a string needs strcpy. \"String Variables as Arrays\" is the key section."
+    },
+    {
+      "title": "Lecture 2: Strings",
+      "source": "CS50x (Harvard), lecture notes",
+      "url": "https://cs50.harvard.edu/x/2026/notes/2/#strings",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "Optional: pictures of a string in memory, ending in \\0, and \"String Length\". CS50's string type is its own name for char *; in Sphinx write char arrays."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Strings em C",
+      "objectives": [
+        "Guardar texto em arrays de char terminados por '\\0', com espaço para o terminador, e ler linhas inteiras com segurança com fgets.",
+        "Usar strlen, strcmp, strcpy, strchr e snprintf, e explicar por que == não compara strings.",
+        "Percorrer uma string caractere por caractere para dividir, transformar ou quebrar o texto."
+      ],
+      "readings": [
+        {
+          "lookFor": "Literais de string, variáveis de string, o tamanho, o terminador '\\0', e por que copiar uma string exige strcpy. \"String Variables as Arrays\" é a seção principal."
+        },
+        {
+          "lookFor": "Opcional: figuras de uma string na memória, terminando em \\0, e \"String Length\". O tipo string do CS50 é um nome próprio para char *; no Sphinx escreva arrays de char."
+        }
+      ]
+    }
+  }
+}

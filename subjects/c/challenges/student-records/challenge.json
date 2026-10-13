@@ -1,0 +1,69 @@
+{
+  "title": "Student Records",
+  "topic": "CStructs",
+  "requires": [
+    "CPointers",
+    "OOP"
+  ],
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "typedef struct { char name[21]; int scores[3]; double average; } Student; and an array of n Students, from malloc or a fixed array of 100.",
+    "qsort sorts the structs themselves: the comparison function gets two const void * that point to Students. Higher average first, then strcmp on the names.",
+    "Print each with printf(\"%2d. %-20s %6.2f %c\\n\", rank, name, average, letter); the letter comes from the average: 90 for A, 80 for B, 70 for C, 60 for D."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Fichas de alunos",
+      "hints": [
+        "typedef struct { char name[21]; int scores[3]; double average; } Student; e um array de n Students, do malloc ou um array fixo de 100.",
+        "O qsort ordena as próprias structs: a função de comparação recebe dois const void * que apontam para Students. Maior média primeiro, depois strcmp nos nomes.",
+        "Imprima cada um com printf(\"%2d. %-20s %6.2f %c\\n\", posição, nome, média, letra); a letra vem da média: 90 para A, 80 para B, 70 para C, 60 para D."
+      ],
+      "mustContain": [
+        "Defina uma struct para os dados."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bstruct\\s+\\w+\\s*\\{|typedef\\s+struct",
+      "message": "Define a struct for the data."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\nAda 95 88 92\nAlan 70 85 80\nGrace 88 92 95\nLinus 59 61 60\nBarbara 80 80 80\nKen 100 100 69\n",
+      "output": " 1. Ada                   91.67 A\n 2. Grace                 91.67 A\n 3. Ken                   89.67 B\n 4. Barbara               80.00 B\n 5. Alan                  78.33 C\n 6. Linus                 60.00 D\n"
+    },
+    {
+      "input": "1\nSolo 50 60 70\n",
+      "output": " 1. Solo                  60.00 D\n"
+    },
+    {
+      "input": "3\nZed 90 90 90\nAmy 90 90 90\nBob 89 90 91\n",
+      "output": " 1. Amy                   90.00 A\n 2. Bob                   90.00 A\n 3. Zed                   90.00 A\n",
+      "hidden": true
+    },
+    {
+      "input": "4\nA 60 60 60\nB 59 60 60\nC 100 0 0\nD 70 70 69\n",
+      "output": " 1. D                     69.67 D\n 2. A                     60.00 D\n 3. B                     59.67 F\n 4. C                     33.33 F\n",
+      "hidden": true
+    },
+    {
+      "input": "2\nMaximiliano_Bartholo 100 100 100\nX 0 0 0\n",
+      "output": " 1. Maximiliano_Bartholo 100.00 A\n 2. X                      0.00 F\n",
+      "hidden": true
+    },
+    {
+      "input": "5\nE 80 80 80\nD 80 80 80\nC 80 80 80\nB 80 80 80\nA 80 80 80\n",
+      "output": " 1. A                     80.00 B\n 2. B                     80.00 B\n 3. C                     80.00 B\n 4. D                     80.00 B\n 5. E                     80.00 B\n",
+      "hidden": true
+    },
+    {
+      "input": "3\nr1 89 90 90\nr2 90 90 89\nr3 70 69 70\n",
+      "output": " 1. r1                    89.67 B\n 2. r2                    89.67 B\n 3. r3                    69.67 D\n",
+      "hidden": true
+    }
+  ]
+}
