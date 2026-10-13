@@ -16,6 +16,13 @@
       ],
       "mustContain": [
         "Use um laço (for ou while)."
+      ],
+      "bonus": [
+        {
+          "title": "Proteção contra estouro",
+          "description": "Aceite `n` até 25. A partir de 21!, o resultado não cabe num `long` e vira lixo em silêncio: imprima `Too big for a long` em vez disso.",
+          "hint": "Antes de multiplicar por i, confira se factorial > Long.MAX_VALUE / i. Math.multiplyExact, que lança exceção no estouro, também serve."
+        }
       ]
     }
   },
@@ -53,6 +60,28 @@
       "input": "20\n",
       "output": "2432902008176640000\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "overflow-guard",
+      "title": "Overflow guard",
+      "description": "Accept `n` up to 25. From 21! on, the result doesn't fit in a `long` and silently wraps into nonsense: print `Too big for a long` instead.",
+      "hint": "Before multiplying by i, check whether factorial > Long.MAX_VALUE / i. Math.multiplyExact, which throws on overflow, works too.",
+      "tests": [
+        {
+          "input": "21\n",
+          "output": "Too big for a long\n"
+        },
+        {
+          "input": "25\n",
+          "output": "Too big for a long\n"
+        },
+        {
+          "input": "20\n",
+          "output": "2432902008176640000\n"
+        }
+      ]
     }
   ]
 }

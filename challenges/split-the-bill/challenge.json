@@ -15,6 +15,16 @@
         "Trabalhe em centavos para evitar problemas de arredondamento: long cents = Math.round(total * 100);",
         "Some a gorjeta: cents * (100 + tip) / 100 é o total com gorjeta, ainda em centavos.",
         "Para arredondar uma divisão para cima: (a + b - 1) / b. Imprima centavos como reais com \"%d.%02d\".formatted(c / 100, c % 100)."
+      ],
+      "bonus": [
+        {
+          "title": "Dinheiro em centavos",
+          "description": "Faça sem nenhum ponto flutuante: sem `double`, `float` nem `BigDecimal`. Leia a conta como dois números inteiros, a parte antes e depois do ponto, e guarde tudo em centavos.",
+          "hint": "split(\"\\\\.\") corta \"100.05\" em \"100\" e \"05\"; a conta em centavos é 100 × 100 + 5. Arredondar para cima uma divisão de inteiros: (a + b − 1) / b.",
+          "mustNotContain": [
+            "Sem ponto flutuante: guarde o dinheiro em centavos inteiros."
+          ]
+        }
       ]
     }
   },
@@ -46,6 +56,20 @@
       "input": "80.00\n1\n12\n",
       "output": "Each person pays: 89.60\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "cents",
+      "title": "Money in cents",
+      "description": "Do it without any floating point: no `double`, `float` or `BigDecimal`. Read the bill as two whole numbers, the part before and after the dot, and keep everything in cents.",
+      "hint": "split(\"\\\\.\") cuts \"100.05\" into \"100\" and \"05\"; the bill in cents is 100 × 100 + 5. Rounding up a division of whole numbers: (a + b − 1) / b.",
+      "mustNotContain": [
+        {
+          "pattern": "\\b(double|float|Double|Float|BigDecimal)\\b",
+          "message": "No floating point: keep the money in whole cents."
+        }
+      ]
     }
   ]
 }

@@ -22,6 +22,16 @@
       ],
       "mustNotContain": [
         "Resolva com recursão: sem laços for ou while."
+      ],
+      "bonus": [
+        {
+          "title": "Leve o produto junto",
+          "description": "Passe o produto calculado até agora como segundo parâmetro, para a chamada recursiva ser a última coisa que o método faz: `factorial(n - 1, acc * n)`. Isso é **recursão de cauda**.",
+          "hint": "Mantenha long factorial(int n) e faça-o devolver factorial(n, 1); a versão de dois parâmetros devolve acc no caso base.",
+          "mustContain": [
+            "Leve o produto num segundo argumento: factorial(n - 1, acc * n)."
+          ]
+        }
       ]
     }
   },
@@ -31,7 +41,7 @@
       "message": "Keep the method long factorial(int n)."
     },
     {
-      "pattern": "factorial\\s*\\(\\s*\\w+\\s*-\\s*1\\s*\\)",
+      "pattern": "factorial\\s*\\(\\s*\\w+\\s*-\\s*1\\s*[,)]",
       "message": "Call factorial(n - 1) inside factorial."
     }
   ],
@@ -69,6 +79,20 @@
       "input": "13\n",
       "output": "13! = 6227020800\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "accumulator",
+      "title": "Carry the product",
+      "description": "Pass the product computed so far as a second parameter, so the recursive call is the very last thing the method does: `factorial(n - 1, acc * n)`. This is **tail recursion**.",
+      "hint": "Keep long factorial(int n) and make it return factorial(n, 1); the two-parameter version returns acc at the base case.",
+      "mustContain": [
+        {
+          "pattern": "factorial\\s*\\(\\s*\\w+\\s*-\\s*1\\s*,",
+          "message": "Carry the product in a second argument: factorial(n - 1, acc * n)."
+        }
+      ]
     }
   ]
 }

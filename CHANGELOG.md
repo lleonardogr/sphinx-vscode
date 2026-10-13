@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Bonus goals on 11 more Java challenges**: Split the Bill in whole cents, Even or Odd without `%`, Triangle Classifier with huge sides, a Factorial overflow guard, Reverse a String in a char array, Palindrome for whole sentences, Title Case with messy spacing, a recursive Binary Search, Most Common Words with a `PriorityQueue`, a tail-recursive factorial and Recursive Palindrome with indexes. 20 Java challenges now have one.
+
 ## [1.8.0] - 2026-10-13
 
 ### Added

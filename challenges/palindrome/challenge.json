@@ -18,6 +18,13 @@
       ],
       "mustNotContain": [
         "Resolva com um laço ou montando a palavra invertida você mesmo: o reverse() pronto não é permitido."
+      ],
+      "bonus": [
+        {
+          "title": "Frases inteiras",
+          "description": "Aceite frases inteiras: compare só letras e dígitos, ignorando maiúsculas, espaços e pontuação, para `Never odd or even` ser um palíndromo.",
+          "hint": "Ande com dois índices a partir das pontas e pule qualquer caractere que não seja letra ou dígito: Character.isLetterOrDigit(c)."
+        }
       ]
     }
   },
@@ -60,6 +67,32 @@
       "input": "abca\n",
       "output": "Not a palindrome\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "sentences",
+      "title": "Whole sentences",
+      "description": "Accept whole sentences: compare only letters and digits, ignoring case, spaces and punctuation, so `Never odd or even` is a palindrome.",
+      "hint": "Walk two indexes from the ends and skip any character that isn't a letter or digit: Character.isLetterOrDigit(c).",
+      "tests": [
+        {
+          "input": "Never odd or even\n",
+          "output": "Palindrome\n"
+        },
+        {
+          "input": "A man, a plan, a canal: Panama!\n",
+          "output": "Palindrome\n"
+        },
+        {
+          "input": "Hello, world\n",
+          "output": "Not a palindrome\n"
+        },
+        {
+          "input": "No lemon, no melon.\n",
+          "output": "Palindrome\n"
+        }
+      ]
     }
   ]
 }

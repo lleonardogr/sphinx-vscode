@@ -16,6 +16,16 @@
       ],
       "mustContain": [
         "Use um if / else."
+      ],
+      "bonus": [
+        {
+          "title": "Sem %",
+          "description": "Decida sem `%` nem divisão. O bit mais baixo de um número diz tudo: ele é 1 para os ímpares, inclusive os negativos.",
+          "hint": "n & 1 mantém só o bit mais baixo de n.",
+          "mustNotContain": [
+            "Sem % nem divisão: olhe o bit mais baixo."
+          ]
+        }
       ]
     }
   },
@@ -53,6 +63,38 @@
       "input": "2147483647\n",
       "output": "Odd\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "no-modulo",
+      "title": "Without %",
+      "description": "Decide without `%` or division. The lowest bit of a number says it all: it is 1 for odd numbers, negative ones included.",
+      "hint": "n & 1 keeps only the lowest bit of n.",
+      "mustNotContain": [
+        {
+          "pattern": "%|floorMod|/\\s*2\\b",
+          "message": "No % or division: look at the lowest bit."
+        }
+      ],
+      "tests": [
+        {
+          "input": "-7\n",
+          "output": "Odd\n"
+        },
+        {
+          "input": "-8\n",
+          "output": "Even\n"
+        },
+        {
+          "input": "2147483647\n",
+          "output": "Odd\n"
+        },
+        {
+          "input": "-2147483648\n",
+          "output": "Even\n"
+        }
+      ]
     }
   ]
 }

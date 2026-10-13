@@ -15,6 +15,13 @@
         "Divida a frase em palavras com split(\" \").",
         "Para cada palavra: substring(0, 1).toUpperCase() + substring(1).toLowerCase().",
         "Junte as palavras de volta com um espaço, por exemplo com String.join(\" \", words)."
+      ],
+      "bonus": [
+        {
+          "title": "Espaços bagunçados",
+          "description": "Texto de verdade tem espaços duplos e espaços no começo. Mantenha cada espaço exatamente onde está: `  hello   WORLD` vira `  Hello   World`.",
+          "hint": "split(\" \") dá palavras vazias entre espaços duplos. Percorra os caracteres: uma letra logo depois de um espaço (ou no começo) é o começo de uma palavra."
+        }
       ]
     }
   },
@@ -46,6 +53,32 @@
       "input": "o rato roeu a roupa do rei\n",
       "output": "O Rato Roeu A Roupa Do Rei\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "messy-spacing",
+      "title": "Messy spacing",
+      "description": "Real text has double spaces and spaces at the start. Keep every space exactly where it is: `  hello   WORLD` becomes `  Hello   World`.",
+      "hint": "split(\" \") gives empty words between double spaces. Walk the characters instead: a letter right after a space (or at the start) is the start of a word.",
+      "tests": [
+        {
+          "input": "  hello   WORLD\n",
+          "output": "  Hello   World\n"
+        },
+        {
+          "input": "one  two\n",
+          "output": "One  Two\n"
+        },
+        {
+          "input": "   lots    of     space\n",
+          "output": "   Lots    Of     Space\n"
+        },
+        {
+          "input": "tRAILING spaces   \n",
+          "output": "Trailing Spaces\n"
+        }
+      ]
     }
   ]
 }
