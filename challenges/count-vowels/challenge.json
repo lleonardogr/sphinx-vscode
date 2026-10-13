@@ -18,6 +18,16 @@
       ],
       "mustContain": [
         "Use um laço (for ou while)."
+      ],
+      "bonus": [
+        {
+          "title": "Sem if",
+          "description": "Conte as vogais sem nenhum `if`.",
+          "hint": "Um `switch` pode listar todas as vogais num só `case`.",
+          "mustNotContain": [
+            "Sem if: tente um switch."
+          ]
+        }
       ]
     }
   },
@@ -50,6 +60,20 @@
       "input": "xyz 123\n",
       "output": "0\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "no-if",
+      "title": "Without if",
+      "description": "Count the vowels without any `if`.",
+      "hint": "A `switch` can list all the vowels in one `case`.",
+      "mustNotContain": [
+        {
+          "pattern": "\\bif\\b",
+          "message": "No if: try a switch."
+        }
+      ]
     }
   ]
 }

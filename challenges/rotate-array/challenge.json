@@ -19,6 +19,17 @@
       "mustContain": [
         "Guarde os números em um array.",
         "Use % para dar a volta nos índices."
+      ],
+      "bonus": [
+        {
+          "title": "Só um array",
+          "description": "Rotacione usando só o array em que você leu os números: sem segundo array, cópia ou lista.",
+          "hint": "Inverta o array todo, depois inverta os k primeiros números e o resto. Ou imprima cada posição a partir de onde está o número dela.",
+          "mustNotContain": [
+            "Use só um array de int.",
+            "Sem cópias nem listas: sem Arrays.copyOf, clone, List ou Collections."
+          ]
+        }
       ]
     }
   },
@@ -60,6 +71,24 @@
       "input": "6 1\n-1 -2 -3 -4 -5 -6\n",
       "output": "-6 -1 -2 -3 -4 -5\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "one-array",
+      "title": "One array only",
+      "description": "Rotate using only the array you read the numbers into: no second array, copy or list.",
+      "hint": "Reverse the whole array, then reverse the first k numbers and the rest. Or print each position from where its number is.",
+      "mustNotContain": [
+        {
+          "pattern": "new\\s+int\\s*\\[[\\s\\S]*new\\s+int\\s*\\[",
+          "message": "Use only one int array."
+        },
+        {
+          "pattern": "copyOf|\\.clone\\s*\\(|\\bList\\b|\\bArrayList\\b|\\bCollections\\b",
+          "message": "No copies or lists: no Arrays.copyOf, clone, List or Collections."
+        }
+      ]
     }
   ]
 }

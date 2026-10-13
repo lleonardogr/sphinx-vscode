@@ -23,6 +23,19 @@
       "mustNotContain": [
         "Resolva com recursão: sem laços for ou while.",
         "Trabalhe com o número, não com o texto dele."
+      ],
+      "bonus": [
+        {
+          "title": "O atalho do % 9",
+          "description": "Calcule `digitalRoot` em um passo, sem chamar `digitSum` nem a si mesmo.",
+          "hint": "Anote as raízes digitais de 1 a 20 e compare com os restos da divisão por 9. Cuidado com os múltiplos de 9 e com o 0.",
+          "mustContain": [
+            "Use % 9."
+          ],
+          "mustNotContain": [
+            "digitalRoot não deve chamar digitSum nem a si mesmo."
+          ]
+        }
       ]
     }
   },
@@ -74,6 +87,26 @@
       "input": "38\n",
       "output": "Digit sum: 11\nDigital root: 2\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "shortcut",
+      "title": "The % 9 shortcut",
+      "description": "Compute `digitalRoot` in one step, without calling `digitSum` or itself.",
+      "hint": "Write down the digital roots of 1 to 20 and compare them with the remainders by 9. Watch out for multiples of 9, and for 0.",
+      "mustContain": [
+        {
+          "pattern": "%\\s*9\\b",
+          "message": "Use % 9."
+        }
+      ],
+      "mustNotContain": [
+        {
+          "pattern": "digitalRoot\\s*\\([^)]*\\)\\s*\\{[^}]*\\b(digitalRoot|digitSum)\\s*\\(",
+          "message": "digitalRoot should not call digitSum or itself."
+        }
+      ]
     }
   ]
 }

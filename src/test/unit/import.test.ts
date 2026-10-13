@@ -8,6 +8,9 @@ import { checkImportables, extractZip, findImportables, findSolutions } from '..
 import { loadQuizzes } from '../../quizzes';
 import { CONTENT_ROOTS, ROOT, tempDir } from './helpers';
 
+/** The reference solutions of the FizzBuzz fixture (its main ones and its bonus ones). */
+const FIZZBUZZ_SOLUTIONS = fs.readdirSync(path.join(ROOT, 'challenges', 'fizzbuzz')).filter((f) => /^Solution.*\.java$/.test(f)).sort();
+
 /** A teacher's folder: one challenge (with its solution), one quiz, one lesson and one exam. */
 function teacherFolder(): string {
   const dir = tempDir();
@@ -33,7 +36,7 @@ describe('import', () => {
     assert.deepEqual(errors, []);
     assert.equal(ok.length, 4);
     assert.equal(ok.find((i) => i.kind === 'lesson')?.title, 'Bits and Bytes');
-    assert.deepEqual(findSolutions(path.join(dir, 'my-fizzbuzz')).map((f) => path.basename(f)).sort(), ['Solution.classic.java', 'Solution.java']);
+    assert.deepEqual(findSolutions(path.join(dir, 'my-fizzbuzz')).map((f) => path.basename(f)).sort(), FIZZBUZZ_SOLUTIONS);
   });
 
   it('rejects a broken challenge with a clear error', () => {
