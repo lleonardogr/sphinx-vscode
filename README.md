@@ -77,8 +77,9 @@ The third subject, for students who already know Java, is being written unit by 
 | 4 · Strings | Strings in C (quick guide: Beej's Guide, CS50) | Word Stats (`fgets`) · Vigenère Cipher · Label Printer (safe truncation) · CSV Fields (quoted fields) · Word Wrap · Test: Inventory Report |
 | 5 · Pointers | Pointers (quick guide: Beej's Guide, CS50) | Sort Three (`int *` parameters) · Stats Through Pointers (output parameters) · Reverse Words (two pointers, in place) · Find Every Match (a pointer-returning search) · Multi-Key Sort (`qsort` and comparison functions) |
 | 6 · Dynamic Memory | Dynamic Memory (quick guide: Beej's Guide, CS50) | Unknown Count (`realloc`, doubling) · Longest Line (a growing buffer) · Pascal's Triangle (rows of different lengths) · Matrix Multiply (sized from the input) |
+| 7 · Structs | Structs (quick guide: Beej's Guide, freeCodeCamp) | Fractions · Student Records (an array of structs and `qsort`) · Bank Ledger (`enum`) · Point in Polygon |
 
-Coming next: Structs, Bits and Bytes in C, and Linked Data Structures.
+Coming next: Bits and Bytes in C, and Linked Data Structures.
 
 ## Screenshots
 

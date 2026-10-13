@@ -1,0 +1,52 @@
+{
+  "title": "Structs",
+  "topic": "CStructs",
+  "order": 1,
+  "requires": [
+    "CPointers",
+    "OOP"
+  ],
+  "objectives": [
+    "Group related values in a struct, give it a name with typedef, and use arrays of structs.",
+    "Pass structs to functions by value or through a pointer with ->, and explain what copying a struct copies.",
+    "Name a fixed set of choices with an enum and switch on it."
+  ],
+  "readings": [
+    {
+      "title": "Structs",
+      "source": "Beej's Guide to C Programming, chapter 8",
+      "url": "https://beej.us/guide/bgc/html/split/structs.html",
+      "type": "article",
+      "minutes": 8,
+      "lang": "en",
+      "lookFor": "Declaring a struct, initializers, passing a struct to a function (and why a pointer is usual), the arrow operator, copying, and why == can't compare structs."
+    },
+    {
+      "title": "Structures and enumerated types",
+      "source": "freeCodeCamp, The C Beginner's Handbook",
+      "url": "https://www.freecodecamp.org/news/the-c-beginners-handbook/#heading-structures",
+      "type": "article",
+      "minutes": 5,
+      "lang": "en",
+      "lookFor": "Optional: structs with typedef, then \"Enumerated types\" just before it, for the enum used in Bank Ledger."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Structs",
+      "objectives": [
+        "Agrupar valores relacionados numa struct, dar um nome a ela com typedef, e usar arrays de structs.",
+        "Passar structs para funções por valor ou por um ponteiro com ->, e explicar o que copiar uma struct copia.",
+        "Dar nome a um conjunto fixo de opções com um enum e fazer switch nele."
+      ],
+      "readings": [
+        {
+          "lookFor": "Declarar uma struct, inicializadores, passar uma struct para uma função (e por que um ponteiro é o comum), o operador seta, a cópia, e por que == não compara structs."
+        },
+        {
+          "lookFor": "Opcional: structs com typedef, e \"Enumerated types\" logo antes, para o enum usado em Bank Ledger."
+        }
+      ]
+    }
+  }
+}
