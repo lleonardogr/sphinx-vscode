@@ -1,0 +1,52 @@
+{
+  "title": "From Java to C",
+  "topic": "CBasics",
+  "order": 1,
+  "requires": [
+    "Conditionals",
+    "Loops"
+  ],
+  "objectives": [
+    "Read input with scanf (each variable with its &) and print with printf, using widths and precision such as %7.2f.",
+    "Choose between char, int, unsigned and double, and predict integer division, char arithmetic and unsigned wrap-around.",
+    "Write if, loops and switch the C way, with break and deliberate fall-through."
+  ],
+  "readings": [
+    {
+      "title": "Lecture 1: C",
+      "source": "CS50x (Harvard), lecture notes",
+      "url": "https://cs50.harvard.edu/x/2026/notes/1/",
+      "type": "article",
+      "minutes": 25,
+      "lang": "en",
+      "lookFor": "From \"Hello, World\" to \"Types\", \"Format Codes\" and \"Loops and meow.c\". CS50 uses its own library: get_int and string come from cs50.h, which you don't have here. Read input with scanf instead, as in the example above."
+    },
+    {
+      "title": "Input and output",
+      "source": "freeCodeCamp, The C Beginner's Handbook",
+      "url": "https://www.freecodecamp.org/news/the-c-beginners-handbook/#heading-input-and-output",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "Optional: the printf format specifiers and scanf with &. \"Unsigned integers\" and \"The problem with overflow\", earlier in the same handbook, explain the wrap-around."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Do Java para o C",
+      "objectives": [
+        "Ler a entrada com scanf (cada variável com seu &) e imprimir com printf, usando largura e precisão como %7.2f.",
+        "Escolher entre char, int, unsigned e double, e prever a divisão inteira, a aritmética com char e a volta dos unsigned.",
+        "Escrever if, laços e switch do jeito do C, com break e com queda proposital (fall-through)."
+      ],
+      "readings": [
+        {
+          "lookFor": "De \"Hello, World\" até \"Types\", \"Format Codes\" e \"Loops and meow.c\". O CS50 usa uma biblioteca própria: get_int e string vêm de cs50.h, que você não tem aqui. Leia a entrada com scanf, como no exemplo acima."
+        },
+        {
+          "lookFor": "Opcional: os especificadores de formato do printf e o scanf com &. \"Unsigned integers\" e \"The problem with overflow\", antes no mesmo livro, explicam a volta dos unsigned."
+        }
+      ]
+    }
+  }
+}

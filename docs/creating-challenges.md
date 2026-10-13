@@ -279,6 +279,8 @@ With a compiler that can't add memory checks, such as MinGW gcc or a clang for M
 
 **Rules** (`mustContain`, `mustNotContain`) work on C code too, for example to forbid `strlen` in a challenge about counting characters.
 
+**More reference solutions.** Every `Solution*.c` is checked against every test, so a second solution written differently, such as `Solution.alt.c`, catches mistakes in the expected outputs. Reference solutions must compile **without warnings**: the validator reports any, since students would see them. Mark a deliberate `switch` fall-through with a `// fall through` comment, which GCC accepts.
+
 **Not yet for C:** "what does this code print?" quiz questions (they run Java), and the two Java starter styles (C has one starter).
 
 ## Subjects, lessons and prerequisites
@@ -332,8 +334,9 @@ my-challenges/
 }
 ```
 
-- `id`: when it matches an existing subject (`java`, `cs`), the units are added after that subject's own units; otherwise it is a new subject.
-- `kind`: `programming` or `theory`. `order`: its position in **Switch Subject…** (built-in subjects use 1 and 2).
+- `id`: when it matches an existing subject (`java`, `cs`, `c`), the units are added after that subject's own units; otherwise it is a new subject.
+- `kind`: `programming` or `theory`. `order`: its position in **Switch Subject…** (built-in subjects use 1 to 3).
+- `language`: `java` (the default) or `c`. **Create New Challenge** writes C templates (`Starter.c` and `Solution.c`) for the units of a C subject.
 - Each unit has a `key`, unique across all subjects (content refers to it in `topic`), a `title`, and optionally a [codicon](https://microsoft.github.io/vscode-codicons/dist/codicon.html) name in `icon`.
 
 **Sharing a subject:** **Export a Pack** lists your subjects (and the units you added to built-in ones) under **Your subjects**. Each one travels whole, with everything in its folder. Students import the pack as usual, and the subject appears in their **Switch Subject…**. **Validate Challenges in a Folder…** on your content folder checks your subjects too.

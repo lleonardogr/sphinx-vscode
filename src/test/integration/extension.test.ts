@@ -11,6 +11,7 @@ import { extractZip, findImportables, findSolutions } from '../../importCore';
 import { validateChallenges } from '../../validator';
 import { findSubject } from '../../subjects';
 import { findCCompiler } from '../../cRunner';
+import { writeChallengeTemplate } from '../../authoring';
 import { dialogs, test, waitFor } from './harness';
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
@@ -52,9 +53,9 @@ test('Java 25+ is available to the extension', async () => {
 
 test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
-  assert.equal(api.challenges().length, 134);
-  assert.equal(api.quizzes().length, 19);
-  assert.equal(api.lessons().length, 19);
+  assert.equal(api.challenges().length, 139);
+  assert.equal(api.quizzes().length, 20);
+  assert.equal(api.lessons().length, 20);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam', 'exam-1', 'exam-2', 'final-exam', 'sample-exam']);
   assert.deepEqual(api.exams().filter((e) => e.subject === 'cs').map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam']);
 });
@@ -148,6 +149,31 @@ test('the sidebar groups by learning path, difficulty and progress', async () =>
     assert.ok(labels().some((l) => /Solved/.test(l)), labels().join(', '));
   } finally {
     api.tree.mode = 'path';
+  }
+});
+
+test('C Programming: a programming subject whose challenges are in C, unit by unit', async () => {
+  const label = (n: unknown) => String(api.tree.getTreeItem(n as never).label);
+  await vscode.commands.executeCommand('sphinx.switchSubject', 'c');
+  try {
+    assert.equal(api.tree.subject, 'c');
+    const groups = api.tree.getChildren().filter((n) => (n as { kind: string }).kind === 'group');
+    assert.deepEqual(groups.map(label), ['1 · From Java to C']);
+    // A quick guide, five challenges and the quiz.
+    assert.deepEqual(api.tree.getChildren(groups[0]).map(label), [
+      'From Java to C',
+      'Receipt Line',
+      'Character Codes',
+      'Odometer',
+      'Day of the Year',
+      'Command-Line Calculator',
+      'From Java to C Quiz',
+    ]);
+    for (const c of api.challenges().filter((x) => x.topic === 'CBasics')) {
+      assert.equal(c.language, 'c', c.id);
+    }
+  } finally {
+    await vscode.commands.executeCommand('sphinx.switchSubject', 'java');
   }
 });
 
@@ -650,6 +676,27 @@ test('a C challenge opens main.c from its starter, passes with a correct solutio
     }
   } finally {
     await config.update('extraChallengePaths', before, vscode.ConfigurationTarget.Global);
+    fs.rmSync(folder, { recursive: true, force: true });
+  }
+});
+
+test('a new challenge in a C unit gets C templates that validate, and one in a Java unit gets Java ones', async () => {
+  assert.equal(findSubject('c')?.language, 'c');
+  const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-template-'));
+  try {
+    writeChallengeTemplate(path.join(folder, 'add-c'), 'Add in C', 'CBasics', 'Easy', 1);
+    writeChallengeTemplate(path.join(folder, 'add-java'), 'Add in Java', 'Basics', 'Easy', 1);
+    assert.deepEqual(fs.readdirSync(path.join(folder, 'add-c')).sort(), ['Solution.c', 'Starter.c', 'challenge.json', 'description.md']);
+    assert.ok(fs.existsSync(path.join(folder, 'add-java', 'Starter.java')));
+    assert.match(read(path.join(folder, 'add-c', 'description.md')), /scanf/);
+    if (await findCCompiler()) {
+      const report = await validateChallenges([folder], { generate: true });
+      for (const c of report.challenges) {
+        assert.deepEqual(c.problems, [], c.id);
+      }
+      assert.equal(JSON.parse(read(path.join(folder, 'add-c', 'challenge.json'))).tests[0].output, '7\n');
+    }
+  } finally {
     fs.rmSync(folder, { recursive: true, force: true });
   }
 });

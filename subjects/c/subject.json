@@ -1,0 +1,34 @@
+{
+  "id": "c",
+  "title": "C Programming",
+  "kind": "programming",
+  "language": "c",
+  "order": 3,
+  "units": [
+    { "key": "CBasics", "title": "From Java to C", "icon": "arrow-swap" },
+    { "key": "CFunctions", "title": "Functions", "icon": "symbol-method" },
+    { "key": "CArrays", "title": "Arrays", "icon": "symbol-array" },
+    { "key": "CStrings", "title": "Strings", "icon": "symbol-string" },
+    { "key": "CPointers", "title": "Pointers", "icon": "references" },
+    { "key": "CMemory", "title": "Dynamic Memory", "icon": "server-process" },
+    { "key": "CStructs", "title": "Structs", "icon": "symbol-structure" },
+    { "key": "CBits", "title": "Bits and Bytes in C", "icon": "symbol-numeric" },
+    { "key": "CLinked", "title": "Linked Data Structures", "icon": "type-hierarchy" }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Programação em C",
+      "units": {
+        "CBasics": "Do Java para o C",
+        "CFunctions": "Funções",
+        "CArrays": "Arrays",
+        "CStrings": "Strings",
+        "CPointers": "Ponteiros",
+        "CMemory": "Memória dinâmica",
+        "CStructs": "Structs",
+        "CBits": "Bits e bytes em C",
+        "CLinked": "Estruturas encadeadas"
+      }
+    }
+  }
+}

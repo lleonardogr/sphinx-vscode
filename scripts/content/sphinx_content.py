@@ -73,15 +73,9 @@ def bonus_goal(id, *, title, title_pt, desc, desc_pt, solution, hint=None, hint_
     return {'goal': goal, 'pt': pt, 'solution': solution, 'solution_classic': solution_classic}
 
 
-def challenge(folder, *, title, title_pt, topic, difficulty, order, hints, hints_pt, tests, desc, desc_pt,
-              starter, starter_classic, solution, solution_classic, must=(), mustnot=(), comments=(),
-              requires=None, skills=None, unit=None, ai_hints=True, bonus=()):
-    """Writes a challenge folder.
-
-    tests: (input, hidden) pairs; outputs are filled in later with `generate`.
-    must / mustnot: (pattern, English message, Portuguese message) rules.
-    comments: (English, Portuguese) pairs replaced in the starters to make Starter.pt-br.java.
-    """
+def _write_meta(folder, *, title, title_pt, topic, difficulty, order, hints, hints_pt, tests, must, mustnot,
+                requires, skills, unit, ai_hints, bonus, time_limit=None):
+    """Writes challenge.json for challenge() and c_challenge(), and returns the folder."""
     d = os.path.join(REPO, folder)
     os.makedirs(d, exist_ok=True)
     assert len(hints) == len(hints_pt), f'{folder}: hints and hints_pt must have the same length'
@@ -105,11 +99,28 @@ def challenge(folder, *, title, title_pt, topic, difficulty, order, hints, hints
         meta['mustNotContain'] = [{'pattern': p, 'message': en} for p, en, _ in mustnot]
     if not ai_hints:
         meta['aiHints'] = False
+    if time_limit:
+        meta['timeLimitMs'] = time_limit
     meta['tests'] = [{'input': i, 'output': '', **({'hidden': True} if h else {})} for i, h in tests]
     if bonus:
         meta['bonus'] = [b['goal'] for b in bonus]
         t['bonus'] = [b['pt'] for b in bonus]
     _write_json(f'{d}/challenge.json', meta)
+    return d
+
+
+def challenge(folder, *, title, title_pt, topic, difficulty, order, hints, hints_pt, tests, desc, desc_pt,
+              starter, starter_classic, solution, solution_classic, must=(), mustnot=(), comments=(),
+              requires=None, skills=None, unit=None, ai_hints=True, bonus=()):
+    """Writes a challenge folder.
+
+    tests: (input, hidden) pairs; outputs are filled in later with `generate`.
+    must / mustnot: (pattern, English message, Portuguese message) rules.
+    comments: (English, Portuguese) pairs replaced in the starters to make Starter.pt-br.java.
+    """
+    d = _write_meta(folder, title=title, title_pt=title_pt, topic=topic, difficulty=difficulty, order=order, hints=hints,
+                    hints_pt=hints_pt, tests=tests, must=must, mustnot=mustnot, requires=requires, skills=skills,
+                    unit=unit, ai_hints=ai_hints, bonus=bonus)
     for b in bonus:
         _write_text(f"{d}/Solution.bonus.{b['goal']['id']}.java", b['solution'])
         if b['solution_classic']:
@@ -127,6 +138,31 @@ def challenge(folder, *, title, title_pt, topic, difficulty, order, hints, hints
             translated = translated.replace(en, pt)
         if translated != text:
             _write_text(f'{d}/{name}', translated)
+    return d
+
+
+def c_challenge(folder, *, title, title_pt, topic, difficulty, order, hints, hints_pt, tests, desc, desc_pt,
+                starter, solution, solution_alt, must=(), mustnot=(), comments=(), requires=None, skills=None,
+                unit=None, ai_hints=True, bonus=(), time_limit=None):
+    """Writes a C challenge folder: Starter.c (and Starter.pt-br.c), Solution.c and a second solution written
+    differently, Solution.alt.c. The other arguments are as for challenge(); bonus goals' solutions go to
+    Solution.bonus.<id>.c."""
+    d = _write_meta(folder, title=title, title_pt=title_pt, topic=topic, difficulty=difficulty, order=order, hints=hints,
+                    hints_pt=hints_pt, tests=tests, must=must, mustnot=mustnot, requires=requires, skills=skills,
+                    unit=unit, ai_hints=ai_hints, bonus=bonus, time_limit=time_limit)
+    for b in bonus:
+        _write_text(f"{d}/Solution.bonus.{b['goal']['id']}.c", b['solution'])
+    _write_text(f'{d}/description.md', desc)
+    _write_text(f'{d}/description.pt-br.md', desc_pt)
+    _write_text(f'{d}/Starter.c', starter)
+    _write_text(f'{d}/Solution.c', solution)
+    _write_text(f'{d}/Solution.alt.c', solution_alt)
+    translated = starter
+    for en, pt in comments:
+        assert en in starter, f'{folder}: comment not found in the starter: {en}'
+        translated = translated.replace(en, pt)
+    if translated != starter:
+        _write_text(f'{d}/Starter.pt-br.c', translated)
     return d
 
 

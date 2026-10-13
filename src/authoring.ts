@@ -183,10 +183,44 @@ public class Main {
   };
 }
 
-/** Writes a complete, valid example challenge into `dir`. */
+/** The same example challenge in C, for the units of a subject whose "language" is "c". */
+function cTemplates(title: string, topic: string | undefined, difficulty: string, order: number): Record<string, string> {
+  const files = templates(title, topic, difficulty, order);
+  return {
+    'challenge.json': files['challenge.json'],
+    'description.md': files['description.md'].replace(
+      "- \`IO.readln()\` reads a whole line, and \`Integer.parseInt(text)\` turns text into an \`int\`.",
+      '- \`scanf("%d %d", &a, &b)\` reads two integers: each variable needs its \`&\`.',
+    ),
+    'Starter.c': `#include <stdio.h>
+
+int main(void) {
+    int a, b;
+    scanf("%d %d", &a, &b);
+
+    // TODO: print the sum
+
+    return 0;
+}
+`,
+    'Solution.c': `// Reference solution. Never shipped to students.
+#include <stdio.h>
+
+int main(void) {
+    int a, b;
+    scanf("%d %d", &a, &b);
+    printf("%d\\n", a + b);
+    return 0;
+}
+`,
+  };
+}
+
+/** Writes a complete, valid example challenge into `dir`, in C for a C subject's units and in Java otherwise. */
 export function writeChallengeTemplate(dir: string, title: string, topic: string | undefined, difficulty: string, order: number): void {
   fs.mkdirSync(dir, { recursive: true });
-  for (const [file, content] of Object.entries(templates(title, topic, difficulty, order))) {
+  const c = findUnit(topic)?.subject.language === 'c';
+  for (const [file, content] of Object.entries((c ? cTemplates : templates)(title, topic, difficulty, order))) {
     fs.writeFileSync(path.join(dir, file), content);
   }
 }

@@ -24,6 +24,13 @@
         "theory"
       ]
     },
+    "language": {
+      "enum": [
+        "java",
+        "c"
+      ],
+      "description": "The language of the subject's challenges (default java). Create New Challenge writes C templates for a C subject's units."
+    },
     "order": {
       "type": "number",
       "description": "Position in the subject switcher."
