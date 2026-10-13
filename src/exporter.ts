@@ -78,7 +78,7 @@ export async function exportPack(deps: ExportDeps, from?: TeacherNode): Promise<
 
   const audience = await vscode.window.showQuickPick(
     [
-      { label: tr('For students', 'Para alunos'), detail: tr('Reference solutions (Solution*.java) are left out.', 'As soluções (Solution*.java) ficam de fora.'), keep: false },
+      { label: tr('For students', 'Para alunos'), detail: tr('Reference solutions (Solution*.java, Solution*.c) are left out.', 'As soluções (Solution*.java, Solution*.c) ficam de fora.'), keep: false },
       { label: tr('For teachers', 'Para professores'), detail: tr('Keeps the reference solutions, to validate or edit the content.', 'Mantém as soluções, para validar ou editar o conteúdo.'), keep: true },
     ],
     { title: tr('Export a pack (2/3): who is it for?', 'Exportar um pacote (2/3): para quem é?'), ignoreFocusOut: true },

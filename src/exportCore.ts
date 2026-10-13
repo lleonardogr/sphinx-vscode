@@ -11,7 +11,7 @@ export interface PackItem {
   dir: string;
 }
 
-const isSolution = (name: string) => /^Solution.*\.java$/.test(name);
+const isSolution = (name: string) => /^Solution.*\.(java|c)$/.test(name);
 const skip = (name: string) => name.startsWith('.') || name === '__MACOSX' || name === 'node_modules';
 const inside = (child: string, parent: string) => path.resolve(child).startsWith(path.resolve(parent) + path.sep);
 
@@ -31,7 +31,7 @@ export function examDependencies(exam: ExamDefinition, builtInDir: string): Pack
 }
 
 /**
- * Zips the items under one top folder, `packName/<item folder>/…`. Reference solutions (Solution*.java)
+ * Zips the items under one top folder, `packName/<item folder>/…`. Reference solutions (Solution*.java, Solution*.c)
  * are left out unless `keepSolutions`. Items with the same folder name are kept once, and an item inside another
  * one (a challenge in a subject folder) travels with it.
  */

@@ -153,14 +153,14 @@ export function checkImportables(items: Importable[], known: Challenge[], knownQ
   return { ok, errors };
 }
 
-/** Reference solutions inside the folder (any depth), e.g. Solution.java or Solution.classic.java. */
+/** Reference solutions inside the folder (any depth), e.g. Solution.java, Solution.classic.java or Solution.c. */
 export function findSolutions(dir: string): string[] {
   const out: string[] = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       out.push(...findSolutions(p));
-    } else if (/^Solution.*\.java$/.test(entry.name)) {
+    } else if (/^Solution.*\.(java|c)$/.test(entry.name)) {
       out.push(p);
     }
   }

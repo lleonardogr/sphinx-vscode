@@ -114,8 +114,8 @@ export async function importContent(deps: ImportDeps): Promise<void> {
         ],
         {
           title: tr(
-            `This import contains ${solutions.length} reference solution file${solutions.length > 1 ? 's' : ''} (Solution*.java)`,
-            `Esta importação tem ${solutions.length} arquivo${solutions.length > 1 ? 's' : ''} de solução (Solution*.java)`,
+            `This import contains ${solutions.length} reference solution file${solutions.length > 1 ? 's' : ''} (Solution*.java, Solution*.c)`,
+            `Esta importação tem ${solutions.length} arquivo${solutions.length > 1 ? 's' : ''} de solução (Solution*.java, Solution*.c)`,
           ),
           ignoreFocusOut: true,
         },
