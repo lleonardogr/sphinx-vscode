@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-10-13
+
 ### Added
 
 - **C Programming**, a new subject for students who know Java, starting with **unit 1, From Java to C**: a quick guide (CS50 and freeCodeCamp), a quiz, and five challenges: Receipt Line (`printf` widths and precision), Character Codes (`getchar` and a checksum), Odometer (16-bit unsigned wrap-around), Day of the Year (deliberate `switch` fall-through) and Command-Line Calculator (`scanf`'s return value), with bonus goals for money in cents, fall-through only and overflow checks. Units 2 to 9 are listed below.
@@ -344,7 +346,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.6.1...v1.7.0
 [1.6.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.5.0...v1.6.0
