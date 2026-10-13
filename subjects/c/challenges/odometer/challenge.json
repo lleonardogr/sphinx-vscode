@@ -1,0 +1,83 @@
+{
+  "title": "Odometer",
+  "topic": "CBasics",
+  "requires": [
+    "Conditionals",
+    "Loops"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "An unsigned short has 16 bits: 0 to 65535. Adding past 65535 starts again from 0, by itself.",
+    "To spot a rollover, remember the reading before the trip: after the trip, a smaller reading means it wrapped.",
+    "The distance is 65536 for every rollover, plus the final reading, minus the starting one. Compute it in a long."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Hodômetro",
+      "hints": [
+        "Um unsigned short tem 16 bits: de 0 a 65535. Somar além de 65535 recomeça do 0, sozinho.",
+        "Para notar uma volta, guarde a leitura de antes da viagem: depois da viagem, uma leitura menor quer dizer que deu a volta.",
+        "A distância é 65536 para cada volta, mais a leitura final, menos a inicial. Calcule num long."
+      ],
+      "mustContain": [
+        "Guarde a leitura num tipo sem sinal de 16 bits: unsigned short ou uint16_t."
+      ],
+      "mustNotContain": [
+        "Deixe o contador de 16 bits dar a volta sozinho: sem % 65536 nem máscaras."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "unsigned\\s+short|uint16_t",
+      "message": "Keep the reading in a 16-bit unsigned type: unsigned short or uint16_t."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "%\\s*65536|65535\\s*\\+\\s*1|&\\s*0x[fF]{4}\\b",
+      "message": "Let the 16-bit counter wrap by itself: no % 65536 or masks."
+    }
+  ],
+  "tests": [
+    {
+      "input": "65530 2\n3\n10\n",
+      "output": "Reading: 65533\nReading: 00007\nRollovers: 1\nDistance: 13\n"
+    },
+    {
+      "input": "0 3\n100\n200\n300\n",
+      "output": "Reading: 00100\nReading: 00300\nReading: 00600\nRollovers: 0\nDistance: 600\n"
+    },
+    {
+      "input": "65535 1\n1\n",
+      "output": "Reading: 00000\nRollovers: 1\nDistance: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "0 1\n65535\n",
+      "output": "Reading: 65535\nRollovers: 0\nDistance: 65535\n",
+      "hidden": true
+    },
+    {
+      "input": "12345 4\n65535\n65535\n0\n1\n",
+      "output": "Reading: 12344\nReading: 12343\nReading: 12343\nReading: 12344\nRollovers: 2\nDistance: 131071\n",
+      "hidden": true
+    },
+    {
+      "input": "500 0\n",
+      "output": "Rollovers: 0\nDistance: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "65535 3\n65535\n65535\n65535\n",
+      "output": "Reading: 65534\nReading: 65533\nReading: 65532\nRollovers: 3\nDistance: 196605\n",
+      "hidden": true
+    },
+    {
+      "input": "40000 3\n30000\n30000\n30000\n",
+      "output": "Reading: 04464\nReading: 34464\nReading: 64464\nRollovers: 1\nDistance: 90000\n",
+      "hidden": true
+    }
+  ]
+}

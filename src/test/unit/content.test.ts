@@ -1,4 +1,5 @@
 import { strict as assert } from 'assert';
+import * as fs from 'fs';
 import * as path from 'path';
 import { describe, it } from 'node:test';
 import { loadChallenge, loadChallenges } from '../../challenges';
@@ -22,6 +23,15 @@ describe('built-in content', () => {
     assert.deepEqual(errors, []);
     assert.deepEqual(quizLoad.errors, []);
     assert.deepEqual(examLoad.errors, []);
+  });
+
+  it('gives every challenge, quiz and lesson its own folder name, which is its id', () => {
+    // Items with the same id hide each other, so two subjects can't reuse a folder name.
+    const ids = [...challenges.map((c) => c.dir), ...quizLoad.quizzes.map((q) => q.dir), ...lessonLoad.lessons.map((l) => l.dir)].map((d) => path.basename(d));
+    const folders = CONTENT_ROOTS.filter((r) => fs.existsSync(r)).flatMap((r) => fs.readdirSync(r, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name));
+    const repeated = folders.filter((f, i) => folders.indexOf(f) !== i);
+    assert.deepEqual(repeated, []);
+    assert.equal(new Set(ids).size, ids.length);
   });
 
   it('has the 100 challenges of the Java learning path', () => {

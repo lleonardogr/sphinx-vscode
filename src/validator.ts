@@ -139,6 +139,10 @@ async function validateOne(c: Challenge, javacVersion: number | undefined, opts:
       problems.push(`${solutionFile} ${describe(outcome)}`);
       continue;
     }
+    // Students see compiler warnings with their results, so a reference solution must have none.
+    if (outcome.warnings?.length) {
+      problems.push(`${solutionFile} compiles with warnings:\n${outcome.warnings.map((w) => `  - line ${w.line}: ${w.message}`).join('\n')}`);
+    }
     if (opts.generate && solutionFile === generator) {
       const metaPath = path.join(c.dir, 'challenge.json');
       const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));

@@ -1,0 +1,83 @@
+{
+  "title": "Character Codes",
+  "topic": "CBasics",
+  "requires": [
+    "Conditionals",
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "getchar() returns the next character of the input as an int, or EOF when there is none. Stop at the newline too.",
+    "The same number prints three ways: %c as a character, %d in decimal, %02X in hexadecimal with 2 digits.",
+    "Loop with while ((c = getchar()) != EOF && c != '\\n'), print each line, and add c to a sum kept below 256 with % 256."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Códigos dos caracteres",
+      "hints": [
+        "getchar() devolve o próximo caractere da entrada como int, ou EOF quando não há mais. Pare também no fim da linha.",
+        "O mesmo número se imprime de três jeitos: %c como caractere, %d em decimal, %02X em hexadecimal com 2 dígitos.",
+        "Faça o laço com while ((c = getchar()) != EOF && c != '\\n'), imprima cada linha e some c num total mantido abaixo de 256 com % 256."
+      ],
+      "mustContain": [
+        "Leia os caracteres um a um com getchar()."
+      ],
+      "mustNotContain": [
+        "Use só getchar()."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "getchar\\s*\\(",
+      "message": "Read the characters one at a time with getchar()."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(scanf|fgets|gets|getline)\\b",
+      "message": "Use getchar() only."
+    }
+  ],
+  "tests": [
+    {
+      "input": "Hi!\n",
+      "output": "'H'  72 0x48\n'i' 105 0x69\n'!'  33 0x21\nChecksum: 0xD2\n"
+    },
+    {
+      "input": "C 17\n",
+      "output": "'C'  67 0x43\n' '  32 0x20\n'1'  49 0x31\n'7'  55 0x37\nChecksum: 0xCB\n"
+    },
+    {
+      "input": "\n",
+      "output": "Checksum: 0x00\n",
+      "hidden": true
+    },
+    {
+      "input": "~\n",
+      "output": "'~' 126 0x7E\nChecksum: 0x7E\n",
+      "hidden": true
+    },
+    {
+      "input": "AAAA\n",
+      "output": "'A'  65 0x41\n'A'  65 0x41\n'A'  65 0x41\n'A'  65 0x41\nChecksum: 0x04\n",
+      "hidden": true
+    },
+    {
+      "input": "The quick brown fox\n",
+      "output": "'T'  84 0x54\n'h' 104 0x68\n'e' 101 0x65\n' '  32 0x20\n'q' 113 0x71\n'u' 117 0x75\n'i' 105 0x69\n'c'  99 0x63\n'k' 107 0x6B\n' '  32 0x20\n'b'  98 0x62\n'r' 114 0x72\n'o' 111 0x6F\n'w' 119 0x77\n'n' 110 0x6E\n' '  32 0x20\n'f' 102 0x66\n'o' 111 0x6F\n'x' 120 0x78\nChecksum: 0x13\n",
+      "hidden": true
+    },
+    {
+      "input": "zzzzzzzzzz\n",
+      "output": "'z' 122 0x7A\n'z' 122 0x7A\n'z' 122 0x7A\n'z' 122 0x7A\n'z' 122 0x7A\n'z' 122 0x7A\n'z' 122 0x7A\n'z' 122 0x7A\n'z' 122 0x7A\n'z' 122 0x7A\nChecksum: 0xC4\n",
+      "hidden": true
+    },
+    {
+      "input": "0aZ",
+      "output": "'0'  48 0x30\n'a'  97 0x61\n'Z'  90 0x5A\nChecksum: 0xEB\n",
+      "hidden": true
+    }
+  ]
+}

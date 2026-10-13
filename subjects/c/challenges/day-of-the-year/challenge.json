@@ -1,0 +1,122 @@
+{
+  "title": "Day of the Year",
+  "topic": "CBasics",
+  "requires": [
+    "Conditionals",
+    "Loops"
+  ],
+  "difficulty": "Medium",
+  "order": 4,
+  "hints": [
+    "First check the date: the month from 1 to 12, and the day from 1 to the number of days in that month. February has 29 days in a leap year.",
+    "The day of the year is the day, plus the days of all the months before. A switch whose cases have no break runs every case after the one it jumps to.",
+    "Start the cases at 12 and go down: case 12 adds November's 30 days, case 11 adds October's 31, and so on to case 2, which adds January's 31. No break anywhere, and a // fall through comment after each case."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Dia do ano",
+      "hints": [
+        "Primeiro confira a data: o mês de 1 a 12, e o dia de 1 até o número de dias daquele mês. Fevereiro tem 29 dias no ano bissexto.",
+        "O dia do ano é o dia mais os dias de todos os meses anteriores. Um switch cujos cases não têm break roda todos os cases depois daquele para onde pulou.",
+        "Comece os cases no 12 e vá descendo: o case 12 soma os 30 dias de novembro, o case 11 soma os 31 de outubro, e assim até o case 2, que soma os 31 de janeiro. Nenhum break."
+      ],
+      "mustContain": [
+        "Use um switch."
+      ],
+      "mustNotContain": [
+        "Arrays vêm numa unidade mais adiante: use um switch aqui."
+      ],
+      "bonus": [
+        {
+          "title": "Só com fall-through",
+          "description": "Some os meses sem nenhum laço: um só `switch` cujos cases caem um no outro faz toda a soma.",
+          "hint": "Pule para o mês e deixe cada case somar o mês anterior a ele, do case 12 até o case 2.",
+          "mustNotContain": [
+            "Sem laços: deixe o switch cair de um case no outro."
+          ]
+        }
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bswitch\\b",
+      "message": "Use a switch."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\[",
+      "message": "Arrays come in a later unit: use a switch here."
+    }
+  ],
+  "tests": [
+    {
+      "input": "1 3 2024\n",
+      "output": "Day 61 of 2024\n"
+    },
+    {
+      "input": "31 12 2023\n",
+      "output": "Day 365 of 2023\n"
+    },
+    {
+      "input": "29 2 2023\n",
+      "output": "Invalid date\n",
+      "hidden": true
+    },
+    {
+      "input": "29 2 2024\n",
+      "output": "Day 60 of 2024\n",
+      "hidden": true
+    },
+    {
+      "input": "31 12 2024\n",
+      "output": "Day 366 of 2024\n",
+      "hidden": true
+    },
+    {
+      "input": "1 1 2000\n",
+      "output": "Day 1 of 2000\n",
+      "hidden": true
+    },
+    {
+      "input": "29 2 1900\n",
+      "output": "Invalid date\n",
+      "hidden": true
+    },
+    {
+      "input": "31 4 2024\n",
+      "output": "Invalid date\n",
+      "hidden": true
+    },
+    {
+      "input": "15 13 2024\n",
+      "output": "Invalid date\n",
+      "hidden": true
+    },
+    {
+      "input": "0 5 2024\n",
+      "output": "Invalid date\n",
+      "hidden": true
+    },
+    {
+      "input": "1 3 2000\n",
+      "output": "Day 61 of 2000\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "no-loops",
+      "title": "Fall-through only",
+      "description": "Add up the months without any loop: one `switch` whose cases fall through does all the adding.",
+      "hint": "Jump to the month and let each case add the month before it, from case 12 down to case 2.",
+      "mustNotContain": [
+        {
+          "pattern": "\\b(for|while)\\b",
+          "message": "No loops: let the switch fall through."
+        }
+      ]
+    }
+  ]
+}

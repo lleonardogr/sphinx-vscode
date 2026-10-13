@@ -20,6 +20,8 @@ export interface SubjectDef {
   id: string;
   titles: Partial<Record<Lang, string>> & { en: string };
   kind: 'programming' | 'theory';
+  /** The language its challenges are written in ("language" in subject.json): new challenges get its templates. */
+  language: 'java' | 'c';
   /** Position in the subject switcher. */
   order: number;
   units: UnitDef[];
@@ -184,6 +186,7 @@ function parseSubject(dir: string, own = false): SubjectDef {
     id,
     titles: titlesFor(meta.title, (t) => t.title),
     kind: meta.kind === 'theory' ? 'theory' : 'programming',
+    language: meta.language === 'c' ? 'c' : 'java',
     order: typeof meta.order === 'number' ? meta.order : 100,
     units,
     dir,

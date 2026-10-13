@@ -1,0 +1,189 @@
+{
+  "title": "From Java to C Quiz",
+  "topic": "CBasics",
+  "requires": [
+    "Conditionals",
+    "Loops"
+  ],
+  "description": "What C does differently from Java: input and output, types and switch.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "printf(\"%d\\n\", 7 / 2);",
+      "options": [
+        "3",
+        "3.5",
+        "3.500000",
+        "4"
+      ],
+      "answer": 0,
+      "explanation": "Both operands are int, so it is integer division: the fraction is dropped. `7 / 2.0` would be a double, printed with %f."
+    },
+    {
+      "type": "choice",
+      "prompt": "This line compiles (perhaps with a warning). What is wrong with it?",
+      "code": "int x;\nscanf(\"%d\", x);",
+      "options": [
+        "scanf gets the value of x, not where x is, so it cannot store the number in x",
+        "Nothing: scanf finds x by its name",
+        "%d is for doubles, not ints",
+        "scanf can only read into global variables"
+      ],
+      "answer": 0,
+      "explanation": "C passes arguments by value. scanf needs the address, &x, to write into x. Without it, scanf treats whatever value x has as an address: undefined behavior, often a crash."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "unsigned char c = 255;\nc = c + 1;\nprintf(\"%d\\n\", c);",
+      "options": [
+        "0",
+        "256",
+        "255",
+        "-1"
+      ],
+      "answer": 0,
+      "explanation": "An unsigned char holds 0 to 255. Unsigned arithmetic wraps around: 255 + 1 becomes 0. (Signed overflow is different: it is undefined behavior.)"
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print when n is 2?",
+      "code": "switch (n) {\n    case 1: printf(\"A\");\n    case 2: printf(\"B\");\n    case 3: printf(\"C\"); break;\n    default: printf(\"D\");\n}",
+      "options": [
+        "BC",
+        "B",
+        "BCD",
+        "ABC"
+      ],
+      "answer": 0,
+      "explanation": "Execution jumps to case 2 and prints B. With no break it falls through into case 3 (C), and the break there stops it before default."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "char c = 'A' + 2;\nprintf(\"%c\\n\", c);",
+      "options": [
+        "C",
+        "67",
+        "A2",
+        "B"
+      ],
+      "answer": 0,
+      "explanation": "A char is a number: 'A' is 65, so c is 67, and %c prints the character with that code, C. With %d it would print 67."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why does this always print \"five\", whatever x was?",
+      "code": "if (x = 5) {\n    printf(\"five\\n\");\n}",
+      "options": [
+        "x = 5 assigns 5 to x, and the value of the assignment, 5, is not zero, so it counts as true",
+        "C compares with = as well as with ==",
+        "if ignores its condition when it is an assignment",
+        "it is a compile error, so the program never runs"
+      ],
+      "answer": 0,
+      "explanation": "In C any non-zero number is true and an assignment has a value. Java rejects this because an int is not a boolean; C accepts it, and compilers only warn (-Wall). Write x == 5."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which call prints a double named total with exactly two decimals?",
+      "options": [
+        "printf(\"%.2f\", total)",
+        "printf(\"%2f\", total)",
+        "printf(\"%d.2\", total)",
+        "printf(\"%.2d\", total)"
+      ],
+      "answer": 0,
+      "explanation": "The precision goes after a dot: %.2f. %2f is a minimum width of 2 with the default 6 decimals, and %d expects an int, not a double."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "sizeof(char) is 1 on every C compiler.",
+      "answer": true,
+      "explanation": "The C standard defines sizeof in units of char, so sizeof(char) is always 1. The sizes of int and long depend on the platform: int is usually 4 bytes, long is 4 bytes on Windows and 8 on Linux and macOS."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz: do Java para o C",
+      "description": "O que o C faz diferente do Java: entrada e saída, tipos e switch.",
+      "questions": [
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "3",
+            "3.5",
+            "3.500000",
+            "4"
+          ],
+          "explanation": "Os dois operandos são int, então é divisão inteira: a parte fracionária some. `7 / 2.0` seria um double, impresso com %f."
+        },
+        {
+          "prompt": "Esta linha compila (talvez com um aviso). O que há de errado nela?",
+          "options": [
+            "o scanf recebe o valor de x, não onde x está, então não consegue guardar o número em x",
+            "Nada: o scanf acha x pelo nome",
+            "%d é para double, não para int",
+            "o scanf só lê para variáveis globais"
+          ],
+          "explanation": "O C passa argumentos por valor. O scanf precisa do endereço, &x, para escrever em x. Sem ele, o scanf usa o valor que x tiver como endereço: comportamento indefinido, muitas vezes um travamento."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "0",
+            "256",
+            "255",
+            "-1"
+          ],
+          "explanation": "Um unsigned char guarda de 0 a 255. A aritmética unsigned dá a volta: 255 + 1 vira 0. (O estouro com sinal é diferente: é comportamento indefinido.)"
+        },
+        {
+          "prompt": "O que isto imprime quando n é 2?",
+          "options": [
+            "BC",
+            "B",
+            "BCD",
+            "ABC"
+          ],
+          "explanation": "A execução pula para o case 2 e imprime B. Sem break, ela cai no case 3 (C), e o break dali para antes do default."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "C",
+            "67",
+            "A2",
+            "B"
+          ],
+          "explanation": "Um char é um número: 'A' é 65, então c é 67, e %c imprime o caractere com esse código, C. Com %d imprimiria 67."
+        },
+        {
+          "prompt": "Por que isto sempre imprime \"five\", seja qual for o x?",
+          "options": [
+            "x = 5 atribui 5 a x, e o valor da atribuição, 5, não é zero, então conta como verdadeiro",
+            "o C compara com = além de com ==",
+            "o if ignora a condição quando ela é uma atribuição",
+            "é erro de compilação, então o programa nunca roda"
+          ],
+          "explanation": "No C qualquer número diferente de zero é verdadeiro, e uma atribuição tem valor. O Java recusa isso porque int não é boolean; o C aceita, e os compiladores só avisam (-Wall). Escreva x == 5."
+        },
+        {
+          "prompt": "Qual chamada imprime um double chamado total com exatamente duas casas decimais?",
+          "options": [
+            "printf(\"%.2f\", total)",
+            "printf(\"%2f\", total)",
+            "printf(\"%d.2\", total)",
+            "printf(\"%.2d\", total)"
+          ],
+          "explanation": "A precisão vem depois de um ponto: %.2f. %2f é uma largura mínima de 2 com as 6 casas padrão, e %d espera um int, não um double."
+        },
+        {
+          "prompt": "sizeof(char) é 1 em qualquer compilador C.",
+          "explanation": "O padrão do C mede o sizeof em unidades de char, então sizeof(char) é sempre 1. Os tamanhos de int e long dependem da plataforma: int costuma ter 4 bytes, long tem 4 bytes no Windows e 8 no Linux e no macOS."
+        }
+      ]
+    }
+  }
+}

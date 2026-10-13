@@ -1,0 +1,93 @@
+{
+  "title": "Receipt Line",
+  "topic": "CBasics",
+  "requires": [
+    "Conditionals",
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Read n first, then repeat n times: read a quantity and a price, and print one line.",
+    "printf pads to a width: %3d takes at least 3 characters, %7.2f at least 7 with 2 decimals. Count the characters of the example lines.",
+    "The item line is printf(\"%3d x %7.2f = %8.2f\\n\", qty, price, qty * price). Add each line to a total, and print TOTAL with %18.2f after the dashes."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Linha do recibo",
+      "hints": [
+        "Leia n primeiro e repita n vezes: leia uma quantidade e um preço, e imprima uma linha.",
+        "O printf completa até uma largura: %3d ocupa pelo menos 3 caracteres, %7.2f pelo menos 7 com 2 casas. Conte os caracteres das linhas do exemplo.",
+        "A linha do item é printf(\"%3d x %7.2f = %8.2f\\n\", qty, price, qty * price). Some cada linha num total e imprima TOTAL com %18.2f depois dos traços."
+      ],
+      "mustContain": [
+        "Alinhe as colunas com larguras de campo no printf, como %3d e %7.2f."
+      ],
+      "bonus": [
+        {
+          "title": "Dinheiro em centavos",
+          "description": "Caixas registradoras de verdade evitam ponto flutuante, em que 0.10 não é exato. Faça sem `double` nem `float`: leia cada preço como dois inteiros e guarde o dinheiro em centavos.",
+          "hint": "scanf(\"%d.%d\", &reais, &cents) lê 12.99 como 12 e 99. Imprima os centavos com %02ld depois do ponto, para 5 aparecer como 05.",
+          "mustNotContain": [
+            "Sem double nem float: guarde o dinheiro em centavos, como inteiros."
+          ]
+        }
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "%-?(\\d+|\\*)",
+      "message": "Line up the columns with printf field widths, like %3d and %7.2f."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\n2 3.50\n1 12.99\n10 0.25\n",
+      "output": "  2 x    3.50 =     7.00\n  1 x   12.99 =    12.99\n 10 x    0.25 =     2.50\n------------------------\nTOTAL              22.49\n"
+    },
+    {
+      "input": "1\n1 999.99\n",
+      "output": "  1 x  999.99 =   999.99\n------------------------\nTOTAL             999.99\n"
+    },
+    {
+      "input": "1\n99 999.99\n",
+      "output": " 99 x  999.99 = 98999.01\n------------------------\nTOTAL           98999.01\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n5 0.01\n3 0.10\n",
+      "output": "  5 x    0.01 =     0.05\n  3 x    0.10 =     0.30\n------------------------\nTOTAL               0.35\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n1 1.00\n2 2.00\n3 3.00\n4 4.00\n",
+      "output": "  1 x    1.00 =     1.00\n  2 x    2.00 =     4.00\n  3 x    3.00 =     9.00\n  4 x    4.00 =    16.00\n------------------------\nTOTAL              30.00\n",
+      "hidden": true
+    },
+    {
+      "input": "0\n",
+      "output": "------------------------\nTOTAL               0.00\n",
+      "hidden": true
+    },
+    {
+      "input": "20\n80 999.99\n81 999.99\n82 999.99\n83 999.99\n84 999.99\n85 999.99\n86 999.99\n87 999.99\n88 999.99\n89 999.99\n90 999.99\n91 999.99\n92 999.99\n93 999.99\n94 999.99\n95 999.99\n96 999.99\n97 999.99\n98 999.99\n99 999.99\n",
+      "output": " 80 x  999.99 = 79999.20\n 81 x  999.99 = 80999.19\n 82 x  999.99 = 81999.18\n 83 x  999.99 = 82999.17\n 84 x  999.99 = 83999.16\n 85 x  999.99 = 84999.15\n 86 x  999.99 = 85999.14\n 87 x  999.99 = 86999.13\n 88 x  999.99 = 87999.12\n 89 x  999.99 = 88999.11\n 90 x  999.99 = 89999.10\n 91 x  999.99 = 90999.09\n 92 x  999.99 = 91999.08\n 93 x  999.99 = 92999.07\n 94 x  999.99 = 93999.06\n 95 x  999.99 = 94999.05\n 96 x  999.99 = 95999.04\n 97 x  999.99 = 96999.03\n 98 x  999.99 = 97999.02\n 99 x  999.99 = 98999.01\n------------------------\nTOTAL         1789982.10\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "cents",
+      "title": "Money in cents",
+      "description": "Real cash registers avoid floating point, where 0.10 is not exact. Do it without `double` or `float`: read each price as two integers and keep the money in cents.",
+      "hint": "scanf(\"%d.%d\", &reais, &cents) reads 12.99 as 12 and 99. Print cents with %02ld after the dot, so 5 shows as 05.",
+      "mustNotContain": [
+        {
+          "pattern": "\\b(double|float)\\b",
+          "message": "No double or float: keep the money in cents, as integers."
+        }
+      ]
+    }
+  ]
+}

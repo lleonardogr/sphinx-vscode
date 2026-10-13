@@ -1,0 +1,134 @@
+{
+  "title": "Command-Line Calculator",
+  "topic": "CBasics",
+  "requires": [
+    "Conditionals",
+    "Loops"
+  ],
+  "difficulty": "Hard",
+  "order": 5,
+  "hints": [
+    "scanf returns how many values it filled in, or EOF when the input is over. Keep going while it isn't EOF.",
+    "When scanf returns less than 3, the bad characters are still waiting in the input, and the next scanf would trip on them again. Read and throw away characters with getchar() up to the newline.",
+    "while ((read = scanf(\"%lld %c %lld\", &a, &op, &b)) != EOF) { if (read != 3) { error, skip the line, continue; } … } and check b == 0 before / and %."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Calculadora de linha de comando",
+      "hints": [
+        "O scanf devolve quantos valores preencheu, ou EOF quando a entrada acabou. Continue enquanto não for EOF.",
+        "Quando o scanf devolve menos de 3, os caracteres ruins continuam esperando na entrada, e o próximo scanf tropeçaria neles de novo. Leia e descarte caracteres com getchar() até a quebra de linha.",
+        "while ((read = scanf(\"%lld %c %lld\", &a, &op, &b)) != EOF) { if (read != 3) { erro, pule a linha, continue; } … } e confira b == 0 antes de / e %."
+      ],
+      "mustContain": [
+        "Confira o que o scanf devolve: ele diz quantos valores leu, ou EOF."
+      ],
+      "mustNotContain": [
+        "Use o scanf e o valor que ele devolve aqui: ler linhas inteiras como texto vem com as strings."
+      ],
+      "bonus": [
+        {
+          "title": "Números enormes",
+          "description": "Aceite qualquer `long long`, até cerca de 9,2 × 10¹⁸, e imprima `Error: overflow` quando um resultado não couber, em vez de calculá-lo. O estouro com sinal é comportamento indefinido no C, então confira **antes** de calcular.",
+          "hint": "LLONG_MAX e LLONG_MIN estão em <limits.h>. a + b estoura quando b > 0 e a > LLONG_MAX - b. Para *, compare a com LLONG_MAX / b. E LLONG_MIN / -1 também não cabe.",
+          "mustNotContain": [
+            "Confira os limites você mesmo, com LLONG_MAX e LLONG_MIN."
+          ]
+        }
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "=\\s*scanf\\s*\\(|scanf\\s*\\([^;]*\\)\\s*[=!<>]=?",
+      "message": "Check what scanf returns: it tells you how many values it read, or EOF."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(fgets|sscanf|strto\\w*|atoi|atol|getline)\\b",
+      "message": "Use scanf and its return value here: reading whole lines as text comes with strings."
+    }
+  ],
+  "tests": [
+    {
+      "input": "7 * 6\n10 / 3\n",
+      "output": "= 42\n= 3\nLines: 2, errors: 0\n"
+    },
+    {
+      "input": "5 + x\n8 / 0\n2 ^ 3\n1 - 9\n",
+      "output": "Error: not a number\nError: division by zero\nError: unknown operator\n= -8\nLines: 4, errors: 3\n"
+    },
+    {
+      "input": "",
+      "output": "Lines: 0, errors: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "hello\n4 % 3\n",
+      "output": "Error: not a number\n= 1\nLines: 2, errors: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "-7 / 2\n-7 % 2\n7 % -2\n",
+      "output": "= -3\n= -1\n= 1\nLines: 3, errors: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "1000000000 * 1000000000\n-1000000000 - 1000000000\n",
+      "output": "= 1000000000000000000\n= -2000000000\nLines: 2, errors: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "abc def\n  12   +   30  \n0 % 0\n",
+      "output": "Error: not a number\n= 42\nError: division by zero\nLines: 3, errors: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "5 / 0\n5 % 0\n0 / 5\n",
+      "output": "Error: division by zero\nError: division by zero\n= 0\nLines: 3, errors: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "3 + 4",
+      "output": "= 7\nLines: 1, errors: 0\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "overflow",
+      "title": "Huge numbers",
+      "description": "Accept any `long long`, up to about 9.2 × 10¹⁸, and print `Error: overflow` when a result would not fit, instead of computing it. Signed overflow is undefined behavior in C, so check **before** you compute.",
+      "hint": "LLONG_MAX and LLONG_MIN are in <limits.h>. a + b overflows when b > 0 and a > LLONG_MAX - b. For *, compare a with LLONG_MAX / b. And LLONG_MIN / -1 doesn't fit either.",
+      "mustNotContain": [
+        {
+          "pattern": "__builtin|ckd_",
+          "message": "Check the limits yourself, with LLONG_MAX and LLONG_MIN."
+        }
+      ],
+      "tests": [
+        {
+          "input": "9000000000000000000 + 9000000000000000000\n-9000000000000000000 + 9000000000000000000\n",
+          "output": "Error: overflow\n= 0\nLines: 2, errors: 1\n"
+        },
+        {
+          "input": "-9223372036854775807 - 2\n9223372036854775807 - -1\n9223372036854775807 - 1\n",
+          "output": "Error: overflow\nError: overflow\n= 9223372036854775806\nLines: 3, errors: 2\n"
+        },
+        {
+          "input": "3037000500 * 3037000500\n3037000499 * 3037000499\n-3037000500 * 3037000500\n-4611686018427387904 * 2\n",
+          "output": "Error: overflow\n= 9223372030926249001\nError: overflow\n= -9223372036854775808\nLines: 4, errors: 2\n"
+        },
+        {
+          "input": "-9223372036854775808 / -1\n-9223372036854775808 % -1\n-9223372036854775808 / 1\n",
+          "output": "Error: overflow\nError: overflow\n= -9223372036854775808\nLines: 3, errors: 2\n"
+        },
+        {
+          "input": "9223372036854775807 * -1\n-9223372036854775808 * -1\n0 * -9223372036854775808\n",
+          "output": "= -9223372036854775807\nError: overflow\n= 0\nLines: 3, errors: 1\n"
+        }
+      ]
+    }
+  ]
+}
