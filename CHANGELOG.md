@@ -4,9 +4,15 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.8.1] - 2026-10-13
+
 ### Added
 
 - **Bonus goals on 11 more Java challenges**: Split the Bill in whole cents, Even or Odd without `%`, Triangle Classifier with huge sides, a Factorial overflow guard, Reverse a String in a char array, Palindrome for whole sentences, Title Case with messy spacing, a recursive Binary Search, Most Common Words with a `PriorityQueue`, a tail-recursive factorial and Recursive Palindrome with indexes. 20 Java challenges now have one.
+
+### Changed
+
+- Releases publish to the VS Code Marketplace by signing in with Microsoft Entra ID (a managed identity trusted by GitHub), instead of a personal access token that would stop working on December 1, 2026.
 
 ## [1.8.0] - 2026-10-13
 
@@ -350,7 +356,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.8.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.8.1...HEAD
+[1.8.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.6.1...v1.7.0
 [1.6.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.6.0...v1.6.1
