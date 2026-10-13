@@ -26,7 +26,7 @@ int main(void) {
     scanf("%d", &t);
     while (t-- > 0 && scanf("%u", &value) == 1) {
         int ones = count_ones(value), top = highest_bit(value);
-        char where[8] = "none";
+        char where[12] = "none";
         if (top >= 0) {
             snprintf(where, sizeof where, "%d", top);
         }
