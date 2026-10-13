@@ -1,0 +1,184 @@
+{
+  "title": "Bits and Bytes in C Quiz",
+  "topic": "CBits",
+  "requires": [
+    "CPointers",
+    "Logic"
+  ],
+  "description": "Bitwise operators, masks and shifts, fixed-width types and the bits of other types.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "printf(\"%d %d %d\\n\", 5 & 3, 5 | 3, 5 ^ 3);",
+      "options": [
+        "1 7 6",
+        "1 7 2",
+        "0 8 6",
+        "3 5 15"
+      ],
+      "answer": 0,
+      "explanation": "5 is 101 and 3 is 011. AND keeps the bits set in both (001 = 1), OR the bits set in either (111 = 7), XOR the bits set in exactly one (110 = 6)."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which expression is 1 when bit n of x is set, and 0 otherwise?",
+      "options": [
+        "(x >> n) & 1",
+        "x & n",
+        "x >> n",
+        "x | (1 << n)"
+      ],
+      "answer": 0,
+      "explanation": "Shifting right by n brings bit n to position 0, and & 1 keeps only that bit. x & (1u << n) also tests it, but gives 2ⁿ instead of 1."
+    },
+    {
+      "type": "choice",
+      "prompt": "x is 12, binary 1100. What is x & (x - 1)?",
+      "options": [
+        "8",
+        "12",
+        "11",
+        "4"
+      ],
+      "answer": 0,
+      "explanation": "x − 1 is 1011: subtracting 1 flips the lowest set bit and every bit below it. ANDing clears exactly that lowest set bit: 1000 = 8. Repeating it until x is 0 counts the set bits."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why is 1 << 31 risky on a machine with 32-bit ints, while 1u << 31 is fine?",
+      "options": [
+        "1 is a signed int, and 2³¹ doesn't fit in it: signed overflow is undefined behavior. 1u is unsigned, where 2³¹ fits",
+        "<< only works on unsigned values",
+        "there is no difference",
+        "1 << 31 is a compile error"
+      ],
+      "answer": 0,
+      "explanation": "Shifts happen in the type of the left operand. A signed int holds up to 2³¹ − 1, so shifting a 1 into the sign bit is undefined. Unsigned types make bit work safe."
+    },
+    {
+      "type": "choice",
+      "prompt": "What is ~0u on a machine with 32-bit unsigned ints?",
+      "options": [
+        "4294967295",
+        "0",
+        "-1",
+        "1"
+      ],
+      "answer": 0,
+      "explanation": "~ flips every bit: 0 has 32 zero bits, so ~0u has 32 one bits, the largest unsigned int, 2³² − 1. (UINT32_MAX is the same value.)"
+    },
+    {
+      "type": "choice",
+      "prompt": "Which line turns bit 4 of flags off and leaves the others alone?",
+      "options": [
+        "flags &= ~(1u << 4);",
+        "flags |= 1u << 4;",
+        "flags ^= 1u << 4;",
+        "flags &= 1u << 4;"
+      ],
+      "answer": 0,
+      "explanation": "~(1u << 4) is all ones except bit 4, so AND keeps every bit but that one. |= turns it on, ^= flips it, and &= 1u << 4 would clear every other bit."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why copy a float into a uint32_t with memcpy to look at its bits, instead of writing uint32_t bits = f;?",
+      "options": [
+        "bits = f converts the value (1.5 becomes 1); memcpy copies the bytes as they are",
+        "memcpy is faster",
+        "floats can't be assigned to integers",
+        "there is no difference"
+      ],
+      "answer": 0,
+      "explanation": "Assignment converts numbers by value. memcpy copies raw bytes, so the integer gets the float's IEEE 754 bit pattern: sign, exponent and mantissa."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "On a little-endian computer, the uint32_t 0x11223344 is stored in memory as the bytes 44 33 22 11.",
+      "answer": true,
+      "explanation": "Little-endian stores the least significant byte first, at the lowest address. x86 and most ARM computers are little-endian; network protocols use big-endian, 11 22 33 44."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz: bits e bytes em C",
+      "description": "Operadores bit a bit, máscaras e deslocamentos, tipos de largura fixa e os bits de outros tipos.",
+      "questions": [
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "1 7 6",
+            "1 7 2",
+            "0 8 6",
+            "3 5 15"
+          ],
+          "explanation": "5 é 101 e 3 é 011. O AND mantém os bits ligados nos dois (001 = 1), o OR os ligados em algum (111 = 7), o XOR os ligados em exatamente um (110 = 6)."
+        },
+        {
+          "prompt": "Qual expressão é 1 quando o bit n de x está ligado, e 0 caso contrário?",
+          "options": [
+            "(x >> n) & 1",
+            "x & n",
+            "x >> n",
+            "x | (1 << n)"
+          ],
+          "explanation": "Deslocar n para a direita traz o bit n para a posição 0, e & 1 mantém só esse bit. x & (1u << n) também testa, mas dá 2ⁿ em vez de 1."
+        },
+        {
+          "prompt": "x é 12, binário 1100. Quanto é x & (x - 1)?",
+          "options": [
+            "8",
+            "12",
+            "11",
+            "4"
+          ],
+          "explanation": "x − 1 é 1011: subtrair 1 inverte o bit ligado mais baixo e todos os bits abaixo dele. O AND desliga exatamente esse bit ligado mais baixo: 1000 = 8. Repetir isso até x virar 0 conta os bits ligados."
+        },
+        {
+          "prompt": "Por que 1 << 31 é arriscado numa máquina com ints de 32 bits, enquanto 1u << 31 está certo?",
+          "options": [
+            "1 é um int com sinal, e 2³¹ não cabe nele: estouro com sinal é comportamento indefinido. 1u é sem sinal, onde 2³¹ cabe",
+            "<< só funciona com valores sem sinal",
+            "não há diferença",
+            "1 << 31 é erro de compilação"
+          ],
+          "explanation": "O deslocamento acontece no tipo do operando da esquerda. Um int com sinal guarda até 2³¹ − 1, então deslocar um 1 para o bit de sinal é indefinido. Tipos sem sinal deixam o trabalho com bits seguro."
+        },
+        {
+          "prompt": "Quanto é ~0u numa máquina com unsigned int de 32 bits?",
+          "options": [
+            "4294967295",
+            "0",
+            "-1",
+            "1"
+          ],
+          "explanation": "O ~ inverte todos os bits: 0 tem 32 bits zero, então ~0u tem 32 bits um, o maior unsigned int, 2³² − 1. (UINT32_MAX é o mesmo valor.)"
+        },
+        {
+          "prompt": "Qual linha desliga o bit 4 de flags e deixa os outros como estão?",
+          "options": [
+            "flags &= ~(1u << 4);",
+            "flags |= 1u << 4;",
+            "flags ^= 1u << 4;",
+            "flags &= 1u << 4;"
+          ],
+          "explanation": "~(1u << 4) é tudo um menos o bit 4, então o AND mantém todos os bits menos esse. |= o liga, ^= o inverte, e &= 1u << 4 desligaria todos os outros."
+        },
+        {
+          "prompt": "Por que copiar um float para um uint32_t com memcpy para ver os bits dele, em vez de escrever uint32_t bits = f;?",
+          "options": [
+            "bits = f converte o valor (1.5 vira 1); o memcpy copia os bytes como estão",
+            "o memcpy é mais rápido",
+            "floats não podem ser atribuídos a inteiros",
+            "não há diferença"
+          ],
+          "explanation": "A atribuição converte números pelo valor. O memcpy copia os bytes crus, então o inteiro recebe o padrão de bits IEEE 754 do float: sinal, expoente e mantissa."
+        },
+        {
+          "prompt": "Num computador little-endian, o uint32_t 0x11223344 fica na memória como os bytes 44 33 22 11.",
+          "explanation": "O little-endian guarda o byte menos significativo primeiro, no endereço mais baixo. Os computadores x86 e a maioria dos ARM são little-endian; os protocolos de rede usam big-endian, 11 22 33 44."
+        }
+      ]
+    }
+  }
+}

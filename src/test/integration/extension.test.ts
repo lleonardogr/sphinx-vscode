@@ -53,9 +53,9 @@ test('Java 25+ is available to the extension', async () => {
 
 test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
-  assert.equal(api.challenges().length, 168);
-  assert.equal(api.quizzes().length, 26);
-  assert.equal(api.lessons().length, 26);
+  assert.equal(api.challenges().length, 172);
+  assert.equal(api.quizzes().length, 27);
+  assert.equal(api.lessons().length, 27);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam', 'exam-1', 'exam-2', 'final-exam', 'sample-exam']);
   assert.deepEqual(api.exams().filter((e) => e.subject === 'cs').map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam']);
 });
@@ -166,6 +166,7 @@ test('C Programming: a programming subject whose challenges are in C, unit by un
       ['5 · Pointers', ['Pointers', 'Sort Three', 'Stats Through Pointers', 'Reverse Words', 'Find Every Match', 'Multi-Key Sort', 'Pointers Quiz']],
       ['6 · Dynamic Memory', ['Dynamic Memory', 'Unknown Count', 'Longest Line', "Pascal's Triangle", 'Matrix Multiply', 'Dynamic Memory Quiz']],
       ['7 · Structs', ['Structs', 'Fractions', 'Student Records', 'Bank Ledger', 'Point in Polygon', 'Structs Quiz']],
+      ['8 · Bits and Bytes in C', ['Bits and Bytes in C', 'Count the Bits', 'RGB565 Colors', 'Float Anatomy', 'CRC-32', 'Bits and Bytes in C Quiz']],
     ];
     const groups = api.tree.getChildren().filter((n) => (n as { kind: string }).kind === 'group');
     assert.deepEqual(groups.map(label), units.map(([name]) => name));

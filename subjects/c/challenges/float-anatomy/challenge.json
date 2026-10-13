@@ -1,0 +1,88 @@
+{
+  "title": "Float Anatomy",
+  "topic": "CBits",
+  "requires": [
+    "CPointers",
+    "Logic"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Copy the float into a uint32_t with memcpy(&bits, &f, sizeof bits): the integer then holds the float's 32 bits unchanged.",
+    "The sign is bit 31, the exponent is the 8 bits from 23 to 30, (bits >> 23) & 0xFF, and the mantissa is the low 23 bits, bits & 0x7FFFFF.",
+    "Exponent 255 means infinity (mantissa 0) or nan; exponent 0 means zero (mantissa 0) or subnormal; anything else is normal, with scale 2^(exponent − 127)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Anatomia de um float",
+      "hints": [
+        "Copie o float para um uint32_t com memcpy(&bits, &f, sizeof bits): o inteiro fica com os 32 bits do float sem mudança.",
+        "O sinal é o bit 31, o expoente são os 8 bits de 23 a 30, (bits >> 23) & 0xFF, e a mantissa são os 23 bits de baixo, bits & 0x7FFFFF.",
+        "Expoente 255 quer dizer infinito (mantissa 0) ou nan; expoente 0 quer dizer zero (mantissa 0) ou subnormal; qualquer outro é normal, com escala 2^(expoente − 127)."
+      ],
+      "mustContain": [
+        "Olhe os bits do float copiando-o com memcpy (ou por uma union)."
+      ],
+      "mustNotContain": [
+        "Decodifique os bits você mesmo, sem as ajudas de <math.h>."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bmemcpy\\b|\\bunion\\b",
+      "message": "Look at the float's bits by copying it with memcpy (or through a union)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(frexp\\w*|fpclassify|isnan|isinf|isnormal|signbit|ilogb\\w*|logb\\w*)\\b",
+      "message": "Decode the bits yourself, without <math.h> helpers."
+    }
+  ],
+  "tests": [
+    {
+      "input": "1\n-2.5\n",
+      "output": "Input: 1\nBits: 0x3F800000\nSign: 0\nExponent: 127\nMantissa: 0x000000\nKind: normal, scale 2^0\nInput: -2.5\nBits: 0xC0200000\nSign: 1\nExponent: 128\nMantissa: 0x200000\nKind: normal, scale 2^1\n"
+    },
+    {
+      "input": "0.1\n",
+      "output": "Input: 0.1\nBits: 0x3DCCCCCD\nSign: 0\nExponent: 123\nMantissa: 0x4CCCCD\nKind: normal, scale 2^-4\n"
+    },
+    {
+      "input": "0\n",
+      "output": "Input: 0\nBits: 0x00000000\nSign: 0\nExponent: 0\nMantissa: 0x000000\nKind: zero\n",
+      "hidden": true
+    },
+    {
+      "input": "-0\n",
+      "output": "Input: -0\nBits: 0x80000000\nSign: 1\nExponent: 0\nMantissa: 0x000000\nKind: zero\n",
+      "hidden": true
+    },
+    {
+      "input": "inf\n-inf\n",
+      "output": "Input: inf\nBits: 0x7F800000\nSign: 0\nExponent: 255\nMantissa: 0x000000\nKind: infinity\nInput: -inf\nBits: 0xFF800000\nSign: 1\nExponent: 255\nMantissa: 0x000000\nKind: infinity\n",
+      "hidden": true
+    },
+    {
+      "input": "1e-40\n",
+      "output": "Input: 1e-40\nBits: 0x000116C2\nSign: 0\nExponent: 0\nMantissa: 0x0116C2\nKind: subnormal\n",
+      "hidden": true
+    },
+    {
+      "input": "3.14159265\n",
+      "output": "Input: 3.14159265\nBits: 0x40490FDB\nSign: 0\nExponent: 128\nMantissa: 0x490FDB\nKind: normal, scale 2^1\n",
+      "hidden": true
+    },
+    {
+      "input": "340282346638528859811704183484516925440\n",
+      "output": "Input: 340282346638528859811704183484516925440\nBits: 0x7F7FFFFF\nSign: 0\nExponent: 254\nMantissa: 0x7FFFFF\nKind: normal, scale 2^127\n",
+      "hidden": true
+    },
+    {
+      "input": "1.17549435e-38\n",
+      "output": "Input: 1.17549435e-38\nBits: 0x00800000\nSign: 0\nExponent: 1\nMantissa: 0x000000\nKind: normal, scale 2^-126\n",
+      "hidden": true
+    }
+  ]
+}

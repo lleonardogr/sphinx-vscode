@@ -1,0 +1,103 @@
+{
+  "title": "CRC-32",
+  "topic": "CBits",
+  "requires": [
+    "CPointers",
+    "Logic"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Start each line with crc = 0xFFFFFFFF. For each byte: crc ^= byte, then 8 times: if the lowest bit is 1, crc = (crc >> 1) ^ 0xEDB88320, otherwise crc >>= 1.",
+    "At the end of the line, flip every bit: crc ^ 0xFFFFFFFF (or ~crc). Print it with %08x.",
+    "Read with getchar until '\\n' or EOF, so you can also count the bytes. Use uint32_t for the CRC: the shifts must not drag a sign bit in."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "CRC-32",
+      "hints": [
+        "Comece cada linha com crc = 0xFFFFFFFF. Para cada byte: crc ^= byte, depois 8 vezes: se o bit mais baixo for 1, crc = (crc >> 1) ^ 0xEDB88320, senão crc >>= 1.",
+        "No fim da linha, inverta todos os bits: crc ^ 0xFFFFFFFF (ou ~crc). Imprima com %08x.",
+        "Leia com getchar até '\\n' ou EOF, para também contar os bytes. Use uint32_t para o CRC: os deslocamentos não podem puxar um bit de sinal."
+      ],
+      "mustNotContain": [
+        "Calcule o CRC você mesmo, com deslocamentos e XOR."
+      ],
+      "bonus": [
+        {
+          "title": "Tabela de consulta",
+          "description": "Código de CRC de verdade trata um byte inteiro por passo. Monte uma tabela de 256 valores pré-calculados uma vez e depois atualize o CRC com uma consulta por byte: `crc = (crc >> 8) ^ table[(crc ^ byte) & 0xFF]`.",
+          "hint": "table[b] é o que o laço bit a bit dá quando começa com crc = b e roda os seus 8 passos.",
+          "mustContain": [
+            "Monte uma tabela de consulta com 256 posições.",
+            "Processe um byte inteiro por passo: crc >> 8."
+          ]
+        }
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "\\bcrc32\\s*\\(|zlib|__builtin|_mm_crc",
+      "message": "Compute the CRC yourself, with shifts and XOR."
+    }
+  ],
+  "tests": [
+    {
+      "input": "123456789\nhello\n",
+      "output": "cbf43926 length=9\n3610a686 length=5\n"
+    },
+    {
+      "input": "\nThe quick brown fox jumps over the lazy dog\n",
+      "output": "00000000 length=0\n414fa339 length=43\n"
+    },
+    {
+      "input": "a\n",
+      "output": "e8b7be43 length=1\n",
+      "hidden": true
+    },
+    {
+      "input": "Hello\nhello\n",
+      "output": "f7d18982 length=5\n3610a686 length=5\n",
+      "hidden": true
+    },
+    {
+      "input": "0000000000\n",
+      "output": "006278f6 length=10\n",
+      "hidden": true
+    },
+    {
+      "input": "~!@#$%^&*()_+{}|:<>?\n",
+      "output": "3c29f99d length=20\n",
+      "hidden": true
+    },
+    {
+      "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n",
+      "output": "3b41c9e6 length=1000\n",
+      "hidden": true
+    },
+    {
+      "input": "no newline",
+      "output": "6e1a8ef2 length=10\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "table",
+      "title": "Lookup table",
+      "description": "Real CRC code handles a whole byte per step. Build a table of 256 precomputed values once, then update the CRC with one lookup per byte: `crc = (crc >> 8) ^ table[(crc ^ byte) & 0xFF]`.",
+      "hint": "table[b] is what the bit-by-bit loop gives when it starts from crc = b and runs its 8 steps.",
+      "mustContain": [
+        {
+          "pattern": "\\[\\s*256\\s*\\]",
+          "message": "Build a lookup table with 256 entries."
+        },
+        {
+          "pattern": ">>\\s*8",
+          "message": "Process a whole byte per step: crc >> 8."
+        }
+      ]
+    }
+  ]
+}

@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Added
 
 - **C Programming**, a new subject for students who know Java, starting with **unit 1, From Java to C**: a quick guide (CS50 and freeCodeCamp), a quiz, and five challenges: Receipt Line (`printf` widths and precision), Character Codes (`getchar` and a checksum), Odometer (16-bit unsigned wrap-around), Day of the Year (deliberate `switch` fall-through) and Command-Line Calculator (`scanf`'s return value), with bonus goals for money in cents, fall-through only and overflow checks. The other 8 units follow.
+- **C Programming unit 8, Bits and Bytes in C**: a quick guide (Beej's Guide to C), a quiz, and Count the Bits, RGB565 Colors, Float Anatomy and CRC-32, with a bonus goal for a table-driven CRC.
 - **C Programming unit 7, Structs**: a quick guide (Beej's Guide to C, freeCodeCamp), a quiz, and Fractions, Student Records, Bank Ledger (with an `enum`) and Point in Polygon, with a bonus goal for points on an edge.
 - **C Programming unit 6, Dynamic Memory**: a quick guide (Beej's Guide to C, CS50), a quiz, and Unknown Count, Longest Line, Pascal's Triangle and Matrix Multiply, with a bonus goal for one block per matrix.
 - **C Programming unit 5, Pointers**: a quick guide (Beej's Guide to C, CS50), a quiz, and Sort Three, Stats Through Pointers, Reverse Words, Find Every Match and Multi-Key Sort (`qsort` with comparison functions).
