@@ -33,7 +33,7 @@ gh secret set AZURE_CLIENT_ID    # paste the Client ID
 gh secret set AZURE_TENANT_ID    # paste the Tenant ID
 ```
 
-**d. Find the ID the Marketplace knows it by.** Run **Actions → Marketplace identity → Run workflow**. Its second step prints an ID (a GUID). The identity's Client ID, Object ID and resource ID are *not* recognized by the Marketplace: only this one is. The last step fails until the next step is done.
+**d. Find the ID the Marketplace knows it by.** Run **Actions → Marketplace identity → Run workflow**. Its second step prints an ID (a GUID). On the very first run it may fail with *VSS011031: There is no profile for the authenticated user*: that first call registers the identity with Azure DevOps, so run the workflow again and the ID appears. The identity's Client ID, Object ID and resource ID are *not* recognized by the Marketplace: only this one is. The last step fails until the next step is done.
 
 **e. Add it to the publisher.** At <https://marketplace.visualstudio.com/manage>, open the `lleonardogr` publisher → **Members** → **+ Add**, paste the ID from step d, and choose the **Contributor** role.
 
