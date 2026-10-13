@@ -72,8 +72,9 @@ The third subject, for students who already know Java, is being written unit by 
 | Unit | Lessons | Challenges (plus the unit's quiz) |
 |------|---------|-----------------------------------|
 | 1 · From Java to C | From Java to C (quick guide: CS50, freeCodeCamp) | Receipt Line (`printf` widths) · Character Codes (`getchar`, a checksum) · Odometer (16-bit unsigned wrap-around) · Day of the Year (`switch` fall-through) · Command-Line Calculator (`scanf`'s return value) |
+| 2 · Functions | Functions in C (quick guide: Beej's Guide, freeCodeCamp) | Dice Roller (`static` state) · Luhn Check · Month Calendar (helper functions) · Change Making (recursion) · Expression Evaluator (mutual recursion, prototypes) |
 
-Coming next: Functions, Arrays, Strings, Pointers, Dynamic Memory, Structs, Bits and Bytes in C, and Linked Data Structures.
+Coming next: Arrays, Strings, Pointers, Dynamic Memory, Structs, Bits and Bytes in C, and Linked Data Structures.
 
 ## Screenshots
 

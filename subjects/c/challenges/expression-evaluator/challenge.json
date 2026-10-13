@@ -1,0 +1,108 @@
+{
+  "title": "Expression Evaluator",
+  "topic": "CFunctions",
+  "requires": [
+    "CBasics",
+    "Methods"
+  ],
+  "difficulty": "Hard",
+  "order": 5,
+  "hints": [
+    "Write one function per level of precedence: expr() adds and subtracts terms, term() multiplies and divides factors, factor() reads a number, a minus sign or a bracket.",
+    "factor() calls expr() for what is inside brackets, and expr() calls term(), which calls factor(): they call each other, so declare them with prototypes before defining them.",
+    "Keep the next character in a static variable look, read with getchar(). Record the first error in a static flag and keep parsing to the end of the line; print the result or the error there."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Avaliador de expressões",
+      "hints": [
+        "Escreva uma função por nível de precedência: expr() soma e subtrai termos, term() multiplica e divide fatores, factor() lê um número, um sinal de menos ou um parêntese.",
+        "factor() chama expr() para o que está dentro dos parênteses, e expr() chama term(), que chama factor(): elas chamam umas às outras, então declare-as com protótipos antes de defini-las.",
+        "Guarde o próximo caractere numa variável static look, lida com getchar(). Registre o primeiro erro num indicador static e continue até o fim da linha; imprima ali o resultado ou o erro."
+      ],
+      "mustNotContain": [
+        "Leia os caracteres com getchar() e interprete-os você mesmo."
+      ],
+      "bonus": [
+        {
+          "title": "Potências",
+          "description": "Acrescente `^` para potências, com precedência maior que `*` e `/` e agrupando pela direita, como na matemática: `2 ^ 3 ^ 2` é `2 ^ 9`, 512, e `2 * 3 ^ 2` é 18. Um sinal de menos antes de um número vale depois da potência: `-2 ^ 2` é −4. Os expoentes nunca são negativos.",
+          "hint": "Divida factor num nível de potência: leia um primário (um número ou parênteses) e, se vier ^, chame de novo o nível de potência para o expoente. É essa recursão que agrupa pela direita."
+        }
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "\\b(scanf|fgets|sscanf|strto\\w*|atoi|atol|getline|system|popen)\\b",
+      "message": "Read the characters with getchar() and parse them yourself."
+    }
+  ],
+  "tests": [
+    {
+      "input": "2 + 3 * 4\n(2 + 3) * 4\n",
+      "output": "14\n20\n"
+    },
+    {
+      "input": "-(7 - 10) / 2\n8 / (3 - 3)\n2 +\n",
+      "output": "1\nError: division by zero\nError: syntax\n"
+    },
+    {
+      "input": "42\n",
+      "output": "42\n",
+      "hidden": true
+    },
+    {
+      "input": "1 - 2 - 3\n100 / 10 / 5\n2 * 3 + 4 * 5\n",
+      "output": "-4\n2\n26\n",
+      "hidden": true
+    },
+    {
+      "input": "((((1))))\n(1 + 2\n1 + 2)\n3 4\n",
+      "output": "1\nError: syntax\nError: syntax\nError: syntax\n",
+      "hidden": true
+    },
+    {
+      "input": "-7 / 2\n--5\n-(-(3))*-2\n",
+      "output": "-3\n5\n-6\n",
+      "hidden": true
+    },
+    {
+      "input": "  12   *  ( 3+4 )  \n1000000000 * 1000000000\n",
+      "output": "84\n1000000000000000000\n",
+      "hidden": true
+    },
+    {
+      "input": "7 / 0 + 1\n(8 / 0\n",
+      "output": "Error: division by zero\nError: division by zero\n",
+      "hidden": true
+    },
+    {
+      "input": "a\n5 * (2 - 9) - -3\n",
+      "output": "Error: syntax\n-32\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "powers",
+      "title": "Powers",
+      "description": "Add `^` for powers, binding tighter than `*` and `/` and grouping from the right, as in mathematics: `2 ^ 3 ^ 2` is `2 ^ 9`, 512, and `2 * 3 ^ 2` is 18. A minus sign before a number applies after the power: `-2 ^ 2` is −4. Exponents are never negative.",
+      "hint": "Split factor into a power level: read a primary (a number or brackets), and if ^ follows, call the power level again for the exponent. That recursion is what groups from the right.",
+      "tests": [
+        {
+          "input": "2 ^ 10\n2 ^ 3 ^ 2\n2 * 3 ^ 2\n",
+          "output": "1024\n512\n18\n"
+        },
+        {
+          "input": "-2 ^ 2\n(-2) ^ 3\n(1 + 2) ^ 2 ^ 2\n",
+          "output": "-4\n-8\n81\n"
+        },
+        {
+          "input": "5 ^ 0\n10 ^ 18\n7 ^ 1 - 1\n",
+          "output": "1\n1000000000000000000\n6\n"
+        }
+      ]
+    }
+  ]
+}

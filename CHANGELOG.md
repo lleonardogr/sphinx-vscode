@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Added
 
 - **C Programming**, a new subject for students who know Java, starting with **unit 1, From Java to C**: a quick guide (CS50 and freeCodeCamp), a quiz, and five challenges: Receipt Line (`printf` widths and precision), Character Codes (`getchar` and a checksum), Odometer (16-bit unsigned wrap-around), Day of the Year (deliberate `switch` fall-through) and Command-Line Calculator (`scanf`'s return value), with bonus goals for money in cents, fall-through only and overflow checks. The other 8 units follow.
+- **C Programming unit 2, Functions**: a quick guide (Beej's Guide to C, freeCodeCamp), a quiz, and Dice Roller (a generator with `static` state), Luhn Check, Month Calendar, Change Making (recursion) and Expression Evaluator (a recursive descent parser), with bonus goals for a recursive Luhn sum, memoized change making and powers.
 - **Create New Challenge** writes `Starter.c` and `Solution.c` for the units of a C subject. A `subject.json` says its language with `"language": "c"`.
 - The validator rejects reference solutions that compile with warnings, since students see warnings with their results.
 

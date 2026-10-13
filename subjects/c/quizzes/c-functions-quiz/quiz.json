@@ -1,0 +1,189 @@
+{
+  "title": "Functions in C Quiz",
+  "topic": "CFunctions",
+  "requires": [
+    "CBasics",
+    "Methods"
+  ],
+  "description": "Prototypes, pass by value, static variables and recursion.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "void swap(int x, int y) {\n    int t = x; x = y; y = t;\n}\n\nint main(void) {\n    int a = 1, b = 2;\n    swap(a, b);\n    printf(\"%d %d\\n\", a, b);\n}",
+      "options": [
+        "1 2",
+        "2 1",
+        "0 0",
+        "It does not compile"
+      ],
+      "answer": 0,
+      "explanation": "swap gets copies of a and b and swaps the copies. main's a and b never change. Swapping the caller's variables needs their addresses, which comes with pointers."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "int counter(void) {\n    static int count = 0;\n    count++;\n    return count;\n}\n\nint main(void) {\n    printf(\"%d \", counter());\n    printf(\"%d \", counter());\n    printf(\"%d\\n\", counter());\n}",
+      "options": [
+        "1 2 3",
+        "1 1 1",
+        "0 1 2",
+        "3 3 3"
+      ],
+      "answer": 0,
+      "explanation": "A static local variable is created and set to 0 once, before the program starts, and keeps its value between calls. Without static, count would start at 0 on every call and print 1 1 1."
+    },
+    {
+      "type": "choice",
+      "prompt": "main calls area(3, 4), and area is defined below main with no prototype above. Why does a C17 compiler complain?",
+      "options": [
+        "C reads top to bottom: at the call it has not seen area yet, so it doesn't know its parameter or return types",
+        "functions must always be defined in a separate file",
+        "main must be the last function in the file",
+        "C has no functions with two parameters"
+      ],
+      "answer": 0,
+      "explanation": "Old C guessed that an undeclared function returns int; C99 and later reject the guess. A prototype such as int area(int w, int h); above main tells the compiler what to check."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "int twice_half(int n) {\n    return n * 2 / 2;\n}\n\nint main(void) {\n    printf(\"%d\\n\", twice_half(3.7));\n}",
+      "options": [
+        "3",
+        "3.7",
+        "4",
+        "3.700000"
+      ],
+      "answer": 0,
+      "explanation": "The parameter is an int, so the prototype makes C convert 3.7 to int when calling: the fraction is cut off, giving 3. The function never sees 3.7, and compilers usually warn about the lost fraction."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does sum(4) return?",
+      "code": "int sum(int n) {\n    if (n == 0) return 0;\n    return n + sum(n - 1);\n}",
+      "options": [
+        "10",
+        "4",
+        "0",
+        "It never stops"
+      ],
+      "answer": 0,
+      "explanation": "sum(4) = 4 + sum(3) = 4 + 3 + sum(2) = … = 4 + 3 + 2 + 1 + sum(0), and sum(0) is the base case, 0. Total 10."
+    },
+    {
+      "type": "choice",
+      "prompt": "What happens when this runs with a large n, such as 10 million?",
+      "code": "int count_down(int n) {\n    if (n == 0) return 0;\n    return 1 + count_down(n - 1);\n}",
+      "options": [
+        "it may crash: each call that has not returned yet takes stack space, and the stack is only a few megabytes",
+        "it prints n, because C turns recursion into a loop",
+        "the compiler rejects recursion deeper than 1000 calls",
+        "nothing special: recursion uses no memory"
+      ],
+      "answer": 0,
+      "explanation": "Every active call keeps its parameters and return address on the call stack. Millions of nested calls overflow it (a stack overflow), unless the compiler happens to optimize the call away. A loop needs no extra stack."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "int x = 5;\n{\n    int x = 10;\n    x = x + 5;\n}\nprintf(\"%d\\n\", x);",
+      "options": [
+        "5",
+        "10",
+        "15",
+        "It does not compile"
+      ],
+      "answer": 0,
+      "explanation": "The x declared inside the block hides the outer x only inside that block. After the closing brace, x is the outer one again, still 5."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "In C17, int f(); declares a function that takes no arguments, exactly like int f(void);.",
+      "answer": false,
+      "explanation": "In C17 an empty list means \"the parameters are not stated\", so f(1, 2) still compiles, unchecked. int f(void) says \"no parameters\", and f(1) becomes an error. (C23 finally makes () mean no parameters.)"
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz: funções em C",
+      "description": "Protótipos, passagem por valor, variáveis static e recursão.",
+      "questions": [
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "1 2",
+            "2 1",
+            "0 0",
+            "Não compila"
+          ],
+          "explanation": "swap recebe cópias de a e b e troca as cópias. O a e o b do main nunca mudam. Trocar as variáveis de quem chamou exige os endereços delas, o que vem com ponteiros."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "1 2 3",
+            "1 1 1",
+            "0 1 2",
+            "3 3 3"
+          ],
+          "explanation": "Uma variável local static é criada e posta em 0 uma vez, antes de o programa começar, e mantém o valor entre chamadas. Sem static, count começaria em 0 a cada chamada e imprimiria 1 1 1."
+        },
+        {
+          "prompt": "O main chama area(3, 4), e area está definida abaixo do main, sem protótipo acima. Por que um compilador C17 reclama?",
+          "options": [
+            "o C lê de cima para baixo: na chamada ele ainda não viu area, então não sabe os tipos dos parâmetros nem do retorno",
+            "as funções sempre precisam ficar num arquivo separado",
+            "o main precisa ser a última função do arquivo",
+            "o C não tem funções com dois parâmetros"
+          ],
+          "explanation": "O C antigo supunha que uma função não declarada devolvia int; o C99 em diante recusa essa suposição. Um protótipo como int area(int w, int h); acima do main diz ao compilador o que conferir."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "3",
+            "3.7",
+            "4",
+            "3.700000"
+          ],
+          "explanation": "O parâmetro é int, então o protótipo faz o C converter 3.7 para int na chamada: a parte fracionária é cortada, dando 3. A função nunca vê o 3.7, e os compiladores costumam avisar da parte perdida."
+        },
+        {
+          "prompt": "O que sum(4) devolve?",
+          "options": [
+            "10",
+            "4",
+            "0",
+            "Nunca para"
+          ],
+          "explanation": "sum(4) = 4 + sum(3) = 4 + 3 + sum(2) = … = 4 + 3 + 2 + 1 + sum(0), e sum(0) é o caso base, 0. Total 10."
+        },
+        {
+          "prompt": "O que acontece quando isto roda com um n grande, como 10 milhões?",
+          "options": [
+            "pode travar: cada chamada que ainda não voltou ocupa espaço na pilha, e a pilha tem só alguns megabytes",
+            "imprime n, porque o C transforma recursão em laço",
+            "o compilador recusa recursão com mais de 1000 chamadas",
+            "nada de especial: recursão não usa memória"
+          ],
+          "explanation": "Cada chamada ativa guarda os parâmetros e o endereço de retorno na pilha de chamadas. Milhões de chamadas aninhadas a estouram (stack overflow), a não ser que o compilador por acaso otimize a chamada. Um laço não precisa de pilha extra."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "5",
+            "10",
+            "15",
+            "Não compila"
+          ],
+          "explanation": "O x declarado dentro do bloco esconde o x de fora só dentro daquele bloco. Depois da chave que fecha, x é de novo o de fora, ainda 5."
+        },
+        {
+          "prompt": "No C17, int f(); declara uma função que não recebe argumentos, exatamente como int f(void);.",
+          "explanation": "No C17 uma lista vazia quer dizer \"parâmetros não informados\", então f(1, 2) ainda compila, sem conferência. int f(void) diz \"sem parâmetros\", e f(1) vira erro. (O C23 finalmente faz () significar sem parâmetros.)"
+        }
+      ]
+    }
+  }
+}

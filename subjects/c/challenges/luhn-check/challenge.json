@@ -1,0 +1,89 @@
+{
+  "title": "Luhn Check",
+  "topic": "CFunctions",
+  "requires": [
+    "CBasics",
+    "Methods"
+  ],
+  "difficulty": "Easy",
+  "order": 2,
+  "hints": [
+    "Take the digits from the right with % 10 and / 10. Count their positions: 0 for the last digit, 1 for the one before, and so on.",
+    "Double the digits at odd positions; if a doubled digit passes 9, subtract 9. Add everything up.",
+    "Write int luhn_sum(unsigned long long number), then int is_valid(…) that returns luhn_sum(number) % 10 == 0. main only reads and prints."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Verificação de Luhn",
+      "hints": [
+        "Pegue os dígitos pela direita com % 10 e / 10. Conte as posições: 0 para o último dígito, 1 para o anterior, e assim por diante.",
+        "Dobre os dígitos nas posições ímpares; se um dígito dobrado passar de 9, subtraia 9. Some tudo.",
+        "Escreva int luhn_sum(unsigned long long number) e depois int is_valid(…), que devolve luhn_sum(number) % 10 == 0. O main só lê e imprime."
+      ],
+      "bonus": [
+        {
+          "title": "Luhn recursivo",
+          "description": "Calcule a soma de Luhn com uma função recursiva: o único laço que sobra é o do `main` que lê os números.",
+          "hint": "Passe um indicador dizendo se o último dígito é dobrado, e inverta-o na chamada recursiva com n / 10.",
+          "mustNotContain": [
+            "Só um laço, o que lê os números: calcule a soma de forma recursiva."
+          ]
+        }
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "3\n4539578763621486\n4539578763621487\n79927398713\n",
+      "output": "4539578763621486 valid\n4539578763621487 invalid\n79927398713 valid\n"
+    },
+    {
+      "input": "2\n0\n18\n",
+      "output": "0 valid\n18 valid\n"
+    },
+    {
+      "input": "1\n5555555555554444\n",
+      "output": "5555555555554444 valid\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n1\n59\n",
+      "output": "1 invalid\n59 valid\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n4111111111111111\n4012888888881881\n378282246310005\n",
+      "output": "4111111111111111 valid\n4012888888881881 valid\n378282246310005 valid\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n9999999999999999995\n1234567890123452\n",
+      "output": "9999999999999999995 invalid\n1234567890123452 valid\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n30569309025904\n6011111111111117\n",
+      "output": "30569309025904 valid\n6011111111111117 valid\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n12345678903\n",
+      "output": "12345678903 valid\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "recursive",
+      "title": "Recursive Luhn",
+      "description": "Compute the Luhn sum with a recursive function: the only loop left is the one in `main` that reads the numbers.",
+      "hint": "Pass a flag saying whether the last digit is doubled, and flip it in the recursive call on n / 10.",
+      "mustNotContain": [
+        {
+          "pattern": "\\b(for|while)\\b[\\s\\S]*\\b(for|while)\\b",
+          "message": "Only one loop, the one that reads the numbers: compute the sum recursively."
+        }
+      ]
+    }
+  ]
+}

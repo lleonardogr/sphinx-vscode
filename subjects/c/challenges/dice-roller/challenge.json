@@ -1,0 +1,78 @@
+{
+  "title": "Dice Roller",
+  "topic": "CFunctions",
+  "requires": [
+    "CBasics",
+    "Methods"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "The generator's state must survive from one call to the next: a static variable does that.",
+    "Write next_random(), which updates the state and returns (state >> 16) & 0x7FFF, and roll_die(), which turns it into 1 to 6 with % 6 + 1.",
+    "Keep the state in a uint32_t: multiplying wraps around at 2³² by itself, the same on every computer. Count each face as you roll."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Rolador de dados",
+      "hints": [
+        "O estado do gerador precisa sobreviver de uma chamada para a outra: uma variável static faz isso.",
+        "Escreva next_random(), que atualiza o estado e devolve (state >> 16) & 0x7FFF, e roll_die(), que transforma isso em 1 a 6 com % 6 + 1.",
+        "Guarde o estado num uint32_t: a multiplicação dá a volta em 2³² sozinha, igual em todo computador. Conte cada face enquanto rola."
+      ],
+      "mustContain": [
+        "Guarde o estado do gerador numa variável static."
+      ],
+      "mustNotContain": [
+        "Escreva seu próprio gerador em vez de rand()."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bstatic\\b",
+      "message": "Keep the generator's state in a static variable."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(rand|srand|random)\\s*\\(",
+      "message": "Write your own generator instead of rand()."
+    }
+  ],
+  "tests": [
+    {
+      "input": "1 10\n",
+      "output": "3 5 4 2 2 6 1 4 1 1\n1: 3\n2: 2\n3: 1\n4: 2\n5: 1\n6: 1\n"
+    },
+    {
+      "input": "2026 6\n",
+      "output": "5 1 2 3 3 6\n1: 1\n2: 1\n3: 2\n4: 0\n5: 1\n6: 1\n"
+    },
+    {
+      "input": "0 1\n",
+      "output": "1\n1: 1\n2: 0\n3: 0\n4: 0\n5: 0\n6: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "42 0\n",
+      "output": "\n1: 0\n2: 0\n3: 0\n4: 0\n5: 0\n6: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "4294967295 20\n",
+      "output": "6 6 5 1 2 3 3 6 5 3 6 2 4 5 2 5 4 5 2 2\n1: 1\n2: 5\n3: 3\n4: 2\n5: 5\n6: 4\n",
+      "hidden": true
+    },
+    {
+      "input": "123456789 1000\n",
+      "output": "3 6 5 2 6 4 4 4 3 3 5 4 2 1 2 2 4 1 5 4 3 5 5 4 1 3 4 1 1 4 6 4 4 5 5 5 1 3 1 2 4 5 1 1 4 3 3 2 1 5 6 2 6 4 1 4 4 3 1 3 5 2 3 2 6 1 3 4 4 1 3 5 4 4 1 6 4 2 1 1 4 5 2 3 2 1 4 3 1 3 1 5 1 3 5 5 2 3 2 5 2 5 4 3 5 5 1 2 6 1 5 5 1 6 4 3 5 2 1 3 5 5 3 1 2 2 3 5 2 6 6 4 6 6 6 1 4 5 3 2 3 2 1 6 3 5 1 2 6 2 4 3 4 5 6 3 4 4 6 4 6 2 3 3 2 1 2 5 5 1 5 6 1 2 2 2 2 3 3 2 1 2 3 5 6 4 6 3 5 2 2 1 6 2 2 5 4 6 1 4 6 6 3 5 4 3 1 1 3 5 6 5 6 3 3 3 2 5 4 5 2 5 3 5 4 1 2 5 4 4 2 6 6 6 4 5 5 5 2 5 6 4 3 4 1 6 1 3 4 2 4 2 1 4 1 4 2 2 6 3 1 3 5 4 1 6 3 5 1 3 1 3 3 4 3 3 5 1 1 1 4 1 3 2 5 1 2 5 4 4 1 2 1 1 1 5 4 5 5 5 2 6 5 1 3 2 5 6 3 3 6 1 5 1 2 1 2 3 6 2 3 4 3 2 6 3 6 1 1 2 4 2 4 4 1 5 4 5 1 1 3 4 5 1 3 4 5 5 6 3 3 3 4 5 6 5 3 6 6 5 6 2 4 3 6 1 2 5 6 2 2 4 1 3 4 1 3 1 5 2 4 4 3 2 4 3 3 3 5 6 3 5 6 1 4 5 6 6 1 5 6 6 1 5 1 2 2 6 5 6 1 4 4 5 2 1 3 3 1 6 6 3 2 2 3 2 3 5 4 3 6 3 1 6 2 2 2 2 2 2 3 5 5 3 5 1 5 6 5 2 4 3 2 4 3 6 2 1 4 3 3 5 1 3 1 5 2 2 3 6 6 6 4 2 5 5 3 3 1 5 3 1 1 6 5 3 4 4 1 5 3 6 3 5 3 3 2 6 1 4 3 1 6 1 6 3 3 3 6 3 5 2 4 3 3 4 5 5 2 3 4 4 6 2 6 4 3 4 6 5 1 2 3 2 1 3 1 1 5 5 1 2 5 6 3 5 2 6 2 1 4 3 2 5 3 3 3 1 5 2 1 5 1 1 6 5 6 4 2 1 5 1 6 4 4 5 5 6 1 4 2 2 6 2 3 5 2 2 4 3 6 6 6 2 5 3 5 5 6 5 2 2 3 1 1 5 2 5 3 1 5 4 1 1 3 3 1 5 1 6 5 5 1 3 6 6 5 6 1 1 2 1 2 6 5 1 6 2 5 6 4 3 2 2 1 1 6 2 1 6 6 6 1 5 4 1 1 6 1 6 3 4 4 4 4 6 3 3 4 6 5 2 1 4 6 4 6 1 1 2 5 4 1 1 3 4 5 6 1 3 4 3 1 6 4 1 6 1 3 1 4 1 5 1 1 5 4 6 5 5 2 5 1 4 6 5 3 5 3 5 2 3 3 6 5 5 1 6 6 4 3 6 6 5 1 3 2 5 3 2 5 4 6 4 4 2 4 6 1 3 6 1 5 5 3 1 1 3 4 1 6 2 3 6 2 5 1 5 6 3 2 5 6 4 3 3 6 5 2 5 1 5 4 6 5 5 2 5 6 2 3 2 5 5 2 4 3 5 4 1 3 6 3 3 6 3 1 6 6 1 5 4 2 6 3 3 4 4 6 1 5 1 1 3 5 2 3 6 5 6 3 4 4 5 3 4 4 4 6 6 6 5 3 5 2 3 4 6 2 4 2 1 4 2 3 2 6 3 5 1 2 1 4 6 1 1 5 6 6 4 1 1 2 2 1 6 1 4 1 5 1 6 1 5 1 2 1 2 4 5 4 3 1 1 6 6 4 4 3 5 4 1 4 6 5 6 5 1 4 2 3 6 4 3 5 5 4 6 2 5 6 6 2 3 2 3 3 4 4 1 6 1 1 3 2 1 1 4 3 6 5 1 1 5 5 3 1 1 4 3 3 2 6 5 4 5 5 2 4 3 6 3 6 2 5 5 2 1 6 4 3 1 3 2 2 4 6 6 4 6 6 2 2 4 4 1 1 6 1 5 6 1 4 1 4 5 2 3 1 4\n1: 184\n2: 149\n3: 175\n4: 154\n5: 178\n6: 160\n",
+      "hidden": true
+    },
+    {
+      "input": "7 100\n",
+      "output": "5 3 3 1 6 6 1 3 6 6 6 2 3 3 6 5 2 3 5 3 1 6 4 1 2 3 2 4 3 3 6 5 5 3 1 2 2 1 5 5 4 3 1 2 5 1 3 1 3 6 2 2 4 6 6 1 1 6 1 5 4 1 4 5 3 6 1 5 3 2 5 2 3 5 3 6 5 3 1 6 2 6 2 4 3 3 4 3 5 4 1 6 6 6 6 4 6 2 5 3\n1: 16\n2: 14\n3: 23\n4: 10\n5: 16\n6: 21\n",
+      "hidden": true
+    }
+  ]
+}

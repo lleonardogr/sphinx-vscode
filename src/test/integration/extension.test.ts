@@ -53,9 +53,9 @@ test('Java 25+ is available to the extension', async () => {
 
 test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
-  assert.equal(api.challenges().length, 139);
-  assert.equal(api.quizzes().length, 20);
-  assert.equal(api.lessons().length, 20);
+  assert.equal(api.challenges().length, 144);
+  assert.equal(api.quizzes().length, 21);
+  assert.equal(api.lessons().length, 21);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam', 'exam-1', 'exam-2', 'final-exam', 'sample-exam']);
   assert.deepEqual(api.exams().filter((e) => e.subject === 'cs').map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam']);
 });
@@ -157,19 +157,17 @@ test('C Programming: a programming subject whose challenges are in C, unit by un
   await vscode.commands.executeCommand('sphinx.switchSubject', 'c');
   try {
     assert.equal(api.tree.subject, 'c');
+    // Each unit: its quick guide, its challenges and its quiz.
+    const units: [string, string[]][] = [
+      ['1 · From Java to C', ['From Java to C', 'Receipt Line', 'Character Codes', 'Odometer', 'Day of the Year', 'Command-Line Calculator', 'From Java to C Quiz']],
+      ['2 · Functions', ['Functions in C', 'Dice Roller', 'Luhn Check', 'Month Calendar', 'Change Making', 'Expression Evaluator', 'Functions in C Quiz']],
+    ];
     const groups = api.tree.getChildren().filter((n) => (n as { kind: string }).kind === 'group');
-    assert.deepEqual(groups.map(label), ['1 · From Java to C']);
-    // A quick guide, five challenges and the quiz.
-    assert.deepEqual(api.tree.getChildren(groups[0]).map(label), [
-      'From Java to C',
-      'Receipt Line',
-      'Character Codes',
-      'Odometer',
-      'Day of the Year',
-      'Command-Line Calculator',
-      'From Java to C Quiz',
-    ]);
-    for (const c of api.challenges().filter((x) => x.topic === 'CBasics')) {
+    assert.deepEqual(groups.map(label), units.map(([name]) => name));
+    for (const [i, [name, items]] of units.entries()) {
+      assert.deepEqual(api.tree.getChildren(groups[i]).map(label), items, name);
+    }
+    for (const c of api.challenges().filter((x) => findSubject('c')!.units.some((u) => u.key === x.topic || u.key === x.unit))) {
       assert.equal(c.language, 'c', c.id);
     }
   } finally {
