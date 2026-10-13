@@ -1,0 +1,51 @@
+{
+  "title": "Dynamic Memory",
+  "topic": "CMemory",
+  "order": 1,
+  "requires": [
+    "CPointers"
+  ],
+  "objectives": [
+    "Allocate memory whose size is known only while the program runs, with malloc and calloc, check for NULL, and free it.",
+    "Grow a buffer with realloc, doubling its capacity, and explain why the old pointer must not be used afterwards.",
+    "Build arrays of rows with different lengths, or one block indexed by row and column."
+  ],
+  "readings": [
+    {
+      "title": "Manual Memory Allocation",
+      "source": "Beej's Guide to C Programming, chapter 12",
+      "url": "https://beej.us/guide/bgc/html/split/manual-memory-allocation.html",
+      "type": "article",
+      "minutes": 12,
+      "lang": "en",
+      "lookFor": "malloc and free, error checking, calloc, and realloc, including \"Reading in Lines of Arbitrary Length\", which is the Longest Line challenge almost line by line."
+    },
+    {
+      "title": "Lecture 4: Copying and malloc",
+      "source": "CS50x (Harvard), lecture notes",
+      "url": "https://cs50.harvard.edu/x/2026/notes/4/#copying-and-malloc",
+      "type": "article",
+      "minutes": 10,
+      "lang": "en",
+      "lookFor": "Optional: from \"Copying and malloc\" to \"Garbage Values\": why copying a pointer doesn't copy the string, and the stack and the heap in a picture."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Memória dinâmica",
+      "objectives": [
+        "Alocar memória cujo tamanho só se conhece durante a execução, com malloc e calloc, conferir NULL e liberá-la.",
+        "Aumentar um buffer com realloc, dobrando a capacidade, e explicar por que o ponteiro antigo não pode mais ser usado.",
+        "Montar arrays de linhas com tamanhos diferentes, ou um bloco só indexado por linha e coluna."
+      ],
+      "readings": [
+        {
+          "lookFor": "malloc e free, conferência de erros, calloc e realloc, inclusive \"Reading in Lines of Arbitrary Length\", que é o desafio Longest Line quase linha por linha."
+        },
+        {
+          "lookFor": "Opcional: de \"Copying and malloc\" até \"Garbage Values\": por que copiar um ponteiro não copia a string, e a pilha e o heap numa figura."
+        }
+      ]
+    }
+  }
+}

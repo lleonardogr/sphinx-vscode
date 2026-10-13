@@ -1,0 +1,184 @@
+{
+  "title": "Dynamic Memory Quiz",
+  "topic": "CMemory",
+  "requires": [
+    "CPointers"
+  ],
+  "description": "malloc, calloc, realloc and free, and the bugs they come with.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "Which call allocates room for n doubles?",
+      "options": [
+        "malloc(n * sizeof(double))",
+        "malloc(n)",
+        "malloc(sizeof(n))",
+        "malloc(double[n])"
+      ],
+      "answer": 0,
+      "explanation": "malloc counts in bytes, so multiply the number of elements by the size of one. Writing malloc(n * sizeof *p) keeps working even if p's type changes later."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why is this function fine, unlike returning the address of a local variable?",
+      "code": "int *make_zeros(int n) {\n    int *p = calloc(n, sizeof *p);\n    return p;\n}",
+      "options": [
+        "the block comes from the heap and lasts until free, not until the function returns",
+        "malloc copies the array into main",
+        "local variables also last forever",
+        "it isn't fine: the block is freed when the function returns"
+      ],
+      "answer": 0,
+      "explanation": "Locals live on the stack and vanish when their function returns. malloc'd memory lives on the heap until someone calls free, so returning a pointer to it is the normal way to hand out new memory."
+    },
+    {
+      "type": "choice",
+      "prompt": "What is wrong here?",
+      "code": "int *p = malloc(sizeof *p);\n*p = 42;\nfree(p);\nprintf(\"%d\\n\", *p);",
+      "options": [
+        "p is used after free: the memory may already belong to something else",
+        "nothing: free only marks p as free later",
+        "free must be given the size too",
+        "printf can't print *p"
+      ],
+      "answer": 0,
+      "explanation": "free gives the block back right away, but p still holds its address: a \"dangling pointer\". Reading or writing through it is undefined behavior. Set p = NULL after freeing if it might be used again."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why is p = realloc(p, bigger); risky?",
+      "options": [
+        "if realloc fails it returns NULL, and the only pointer to the old block is lost: a leak",
+        "realloc always moves the block, so p is wrong",
+        "realloc frees the block on success",
+        "nothing: realloc never fails"
+      ],
+      "answer": 0,
+      "explanation": "On failure realloc returns NULL and leaves the old block alone. Assigning straight to p overwrites the only copy of its address. Use a second variable, check it, then assign."
+    },
+    {
+      "type": "choice",
+      "prompt": "What is the difference between malloc(n * sizeof(int)) and calloc(n, sizeof(int))?",
+      "options": [
+        "calloc sets every byte to zero; malloc leaves whatever was there",
+        "malloc sets the bytes to zero; calloc doesn't",
+        "calloc allocates on the stack",
+        "none"
+      ],
+      "answer": 0,
+      "explanation": "malloc's memory starts with garbage. calloc clears it, which makes it the natural choice for counters, and it also checks that n × size doesn't overflow."
+    },
+    {
+      "type": "choice",
+      "prompt": "A program calls malloc in a loop and never calls free. What happens?",
+      "options": [
+        "a memory leak: it uses more and more memory until it ends, or until memory runs out",
+        "the memory is freed at the end of each loop",
+        "it doesn't compile",
+        "the program crashes immediately"
+      ],
+      "answer": 0,
+      "explanation": "Nothing frees heap memory automatically while the program runs; the system takes it all back only when the program exits. A long-running program that leaks, like a server, eventually runs out of memory."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why do growing buffers usually double their capacity instead of adding one slot at a time?",
+      "options": [
+        "each realloc may copy the whole block; doubling makes the total copying proportional to n instead of n²",
+        "malloc only accepts powers of two",
+        "doubling uses less memory",
+        "realloc can't add just one element"
+      ],
+      "answer": 0,
+      "explanation": "Growing by one means up to n copies of a growing block, about n²/2 element copies. Doubling copies 1 + 2 + 4 + … < 2n elements in total, at the cost of up to half the block unused."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "free(NULL) is a bug that crashes the program.",
+      "answer": false,
+      "explanation": "The C standard says free(NULL) does nothing. That is why setting a pointer to NULL after freeing it is safe: freeing it again by mistake is then harmless."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz: memória dinâmica",
+      "description": "malloc, calloc, realloc e free, e os erros que vêm com eles.",
+      "questions": [
+        {
+          "prompt": "Qual chamada aloca espaço para n doubles?",
+          "options": [
+            "malloc(n * sizeof(double))",
+            "malloc(n)",
+            "malloc(sizeof(n))",
+            "malloc(double[n])"
+          ],
+          "explanation": "O malloc conta em bytes, então multiplique o número de elementos pelo tamanho de um. Escrever malloc(n * sizeof *p) continua certo mesmo se o tipo de p mudar depois."
+        },
+        {
+          "prompt": "Por que esta função está certa, ao contrário de devolver o endereço de uma variável local?",
+          "options": [
+            "o bloco vem do heap e dura até o free, não até a função retornar",
+            "o malloc copia o array para o main",
+            "variáveis locais também duram para sempre",
+            "não está certa: o bloco é liberado quando a função retorna"
+          ],
+          "explanation": "Variáveis locais ficam na pilha e somem quando a função retorna. A memória do malloc fica no heap até alguém chamar free, então devolver um ponteiro para ela é o jeito normal de entregar memória nova."
+        },
+        {
+          "prompt": "O que há de errado aqui?",
+          "options": [
+            "p é usado depois do free: a memória pode já pertencer a outra coisa",
+            "nada: o free só marca p como livre mais tarde",
+            "o free também precisa receber o tamanho",
+            "o printf não consegue imprimir *p"
+          ],
+          "explanation": "O free devolve o bloco na hora, mas p ainda guarda o endereço dele: um \"ponteiro pendurado\". Ler ou escrever por ele é comportamento indefinido. Faça p = NULL depois de liberar se ele puder ser usado de novo."
+        },
+        {
+          "prompt": "Por que p = realloc(p, maior); é arriscado?",
+          "options": [
+            "se o realloc falhar ele devolve NULL, e o único ponteiro para o bloco antigo se perde: um vazamento",
+            "o realloc sempre move o bloco, então p fica errado",
+            "o realloc libera o bloco quando dá certo",
+            "nada: o realloc nunca falha"
+          ],
+          "explanation": "Quando falha, o realloc devolve NULL e deixa o bloco antigo como está. Atribuir direto a p sobrescreve a única cópia do endereço dele. Use uma segunda variável, confira e depois atribua."
+        },
+        {
+          "prompt": "Qual é a diferença entre malloc(n * sizeof(int)) e calloc(n, sizeof(int))?",
+          "options": [
+            "o calloc põe todos os bytes em zero; o malloc deixa o que já estava lá",
+            "o malloc põe os bytes em zero; o calloc não",
+            "o calloc aloca na pilha",
+            "nenhuma"
+          ],
+          "explanation": "A memória do malloc começa com lixo. O calloc a limpa, o que o torna a escolha natural para contadores, e ele também confere se n × tamanho não estoura."
+        },
+        {
+          "prompt": "Um programa chama malloc num laço e nunca chama free. O que acontece?",
+          "options": [
+            "um vazamento de memória: ele usa cada vez mais memória até terminar, ou até a memória acabar",
+            "a memória é liberada no fim de cada volta do laço",
+            "não compila",
+            "o programa trava na hora"
+          ],
+          "explanation": "Nada libera a memória do heap sozinho enquanto o programa roda; o sistema pega tudo de volta só quando o programa termina. Um programa que roda por muito tempo e vaza, como um servidor, acaba ficando sem memória."
+        },
+        {
+          "prompt": "Por que buffers que crescem costumam dobrar a capacidade em vez de somar uma posição por vez?",
+          "options": [
+            "cada realloc pode copiar o bloco inteiro; dobrar deixa o total de cópias proporcional a n em vez de n²",
+            "o malloc só aceita potências de dois",
+            "dobrar usa menos memória",
+            "o realloc não consegue acrescentar só um elemento"
+          ],
+          "explanation": "Crescer de um em um significa até n cópias de um bloco crescente, cerca de n²/2 cópias de elementos. Dobrar copia 1 + 2 + 4 + … < 2n elementos no total, ao custo de até metade do bloco sem uso."
+        },
+        {
+          "prompt": "free(NULL) é um erro que trava o programa.",
+          "explanation": "O padrão do C diz que free(NULL) não faz nada. Por isso pôr um ponteiro em NULL depois de liberá-lo é seguro: liberá-lo de novo por engano fica inofensivo."
+        }
+      ]
+    }
+  }
+}
