@@ -198,7 +198,8 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     const done = ids.length + group.lessons.length > 0 && solved === ids.length && lessonsRead && group.quizzes.every((q) => this.perfect(q));
     const item = new vscode.TreeItem(groupLabel(group), vscode.TreeItemCollapsibleState.Expanded);
     item.id = `group:${group.kind}:${group.key}`;
-    item.description = ids.length ? `${solved}/${ids.length}` : undefined;
+    const stars = this.progress.bonusCount([...group.challenges, ...group.tests]);
+    item.description = ids.length ? `${solved}/${ids.length}${stars.total ? ` · ★ ${stars.earned}/${stars.total}` : ''}` : undefined;
     item.iconPath = new vscode.ThemeIcon(
       done ? 'pass-filled' : (unitIcon(group.key) ?? (group.kind === 'custom' ? 'star-empty' : 'folder')),
       done ? new vscode.ThemeColor('testing.iconPassed') : undefined,
@@ -230,6 +231,10 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
     if (c.requires.length) {
       item.description += ` · ${tr('needs', 'precisa de')} ${c.requires.map(unitName).join(', ')}`;
     }
+    const earned = new Set(this.progress.bonusEarned(c.id));
+    if (c.bonus.length) {
+      item.description += ` · ★ ${c.bonus.filter((b) => earned.has(b.id)).length}/${c.bonus.length}`;
+    }
     item.contextValue = 'challenge';
     item.command = { command: 'sphinx.open', title: tr('Open Challenge', 'Abrir desafio'), arguments: [c.id] };
     if (p?.status === 'solved') {
@@ -245,6 +250,7 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
         (c.skills.length ? `${tr('Mixes', 'Combina')}: ${c.skills.map(unitName).join(', ')}\n\n` : '') +
         (p?.status === 'solved' ? tr('✅ Solved', '✅ Resolvido') : p ? `${tr('Attempts', 'Tentativas')}: ${p.attempts}` : tr('Not started', 'Não iniciado')) +
         this.requirementsText(c.requires) +
+        (c.bonus.length ? `\n\n⭐ ${tr('Bonus goals', 'Objetivos bônus')}:\n${c.bonus.map((b) => `- ${earned.has(b.id) ? '★' : '☆'} ${b.title}`).join('\n')}` : '') +
         locked,
     );
     return item;

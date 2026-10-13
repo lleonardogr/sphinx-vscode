@@ -139,6 +139,36 @@
                 "type": "string"
               },
               "description": "The rule messages, in the same order as mustNotContain."
+            },
+            "bonus": {
+              "type": "array",
+              "description": "The bonus goals' texts, in the same order: title, description, hint and rule messages.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "hint": {
+                    "type": "string"
+                  },
+                  "mustContain": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "mustNotContain": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -177,6 +207,68 @@
         "$ref": "#/definitions/test"
       },
       "description": "Test cases. Visible tests appear as examples and run on Run; hidden tests only run on Submit."
+    },
+    "language": {
+      "enum": [
+        "java",
+        "c"
+      ],
+      "description": "The programming language. By default C when the folder has Starter.c or Solution.c, Java otherwise."
+    },
+    "bonus": {
+      "type": "array",
+      "maxItems": 3,
+      "description": "Optional, harder goals checked on Submit once the tests pass: a different approach, more efficiency, a constraint or more robustness. Each needs a reference solution, Solution.bonus.<id>.java (or .c), that earns it.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "description": "Lowercase with dashes, such as \"no-loops\". Names the reference solution file."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short, such as \"Without loops\"."
+          },
+          "description": {
+            "type": "string",
+            "description": "What to achieve, in one sentence."
+          },
+          "hint": {
+            "type": "string"
+          },
+          "mustContain": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/rule"
+            }
+          },
+          "mustNotContain": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/rule"
+            }
+          },
+          "tests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/test"
+            },
+            "description": "Extra tests (never shown to students), such as a huge input."
+          },
+          "timeLimitMs": {
+            "type": "number",
+            "description": "A time limit for these tests, for efficiency goals. Leave generous room: the right approach should take well under it, the naive one far longer."
+          }
+        },
+        "additionalProperties": false
+      }
     }
   },
   "definitions": {

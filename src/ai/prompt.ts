@@ -15,6 +15,8 @@ export interface HintContext {
   responseLanguage: string;
   /** The exercise's programming language (Java by default). */
   language?: 'java' | 'c';
+  /** Optional bonus goals, and which the student has earned (from the last Submit, when there was one). */
+  bonus?: { title: string; description: string; achieved: boolean; reason?: string }[];
 }
 
 const MAX_FIELD = 800;
@@ -74,6 +76,7 @@ Rules:
 - Escalate with each request. Hint 1 is a gentle nudge or a guiding question. Hint 2 says more specifically what to look at or change. Hint 3 and later may point to the exact line and the idea that is missing, still without writing the answer.
 - If the code already looks correct, say so and suggest edge cases to test.
 ${styles}
+- If every test passes and there are bonus goals not earned yet, the student is likely after one: hint toward it the same way (a different approach, more efficiency or a constraint), never with its solution.
 - Be encouraging and concise: at most 120 words. Use Markdown, with \`inline code\` for identifiers.
 - Respond in this language: ${ctx.responseLanguage}.
 
@@ -102,6 +105,7 @@ ${clip(ctx.code, 8000)}
 <last_result>
 ${summarizeOutcome(ctx.outcome)}
 </last_result>
+${ctx.bonus?.length ? `\n<bonus_goals>\n${ctx.bonus.map((b) => `- ${b.achieved ? '[earned]' : '[not earned]'} ${b.title}: ${b.description}${!b.achieved && b.reason ? ` (last try: ${b.reason})` : ''}`).join('\n')}\n</bonus_goals>\n` : ''}
 
 This is hint request number ${ctx.hintNumber} for this exercise.`;
 

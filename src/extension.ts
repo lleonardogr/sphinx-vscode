@@ -22,6 +22,7 @@ import { JavaSetup } from './javaSetup';
 import { clearJavaCache } from './runner';
 import { clearCCompilerCache } from './cRunner';
 import { CSetup } from './cSetup';
+import { BonusResult, evaluateBonuses } from './bonus';
 import { formatVerification, verifyResults } from './examVerify';
 import { ExamDefinition, ExamQuestion, PREVIEW_SUFFIX, examChallengeId, loadExams, parseExamChallengeId, previewOf } from './exams';
 import { ChallengeNode, ChallengeTreeProvider, GroupMode } from './treeView';
@@ -104,6 +105,8 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   const running = new Set<string>();
   /** Last (redacted) Run/Submit result per challenge, used as context for AI hints. */
   const lastOutcome = new Map<string, RunOutcome>();
+  /** The last bonus check of each challenge, for AI hints. */
+  const lastBonus = new Map<string, BonusResult[]>();
   const ai = new AiHints(context);
 
   const examManager = new ExamManager(context, (examId) => examCodeDir(examId), (exam, q) => gradeExamQuestion(exam, q), store);
@@ -568,7 +571,16 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       read: lessonProgress.isRead(lesson.id),
       next: next && { title: pathItemTitle(next), kind: next.kind },
       requirements: requirementsOf(lesson.requires),
+      bonus: unitChallenges(lesson.topic)
+        .filter((c) => c.bonus.length)
+        .map((c) => ({ challenge: c.title, goals: c.bonus.map((b) => ({ title: b.title, earned: progress.bonusEarned(c.id).includes(b.id) })) })),
     });
+  }
+
+  /** The challenges and tests of a unit, in path order. */
+  function unitChallenges(unit: string): Challenge[] {
+    const group = buildPath(challenges, quizzes, lessons, subjectOf({ topic: unit })).find((g) => g.key === unit);
+    return group ? [...group.challenges, ...group.tests] : [];
   }
 
   async function onLessonMessage(type: 'done' | 'next', lesson: LessonDefinition): Promise<void> {
@@ -650,7 +662,10 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       panel.post({ type: 'result', mode, outcome: redact(outcome) });
 
       if (outcome.kind === 'toolMissing') {
-        await showToolMissing(outcome.message);
+        // For C, the panel shows how to get a compiler (and cSetup offers the portable one on Windows).
+        if (outcome.tool !== 'c') {
+          await showToolMissing(outcome.message);
+        }
         return;
       }
 
@@ -669,16 +684,33 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       await progress.recordAttempt(c.id, solvedNow);
       updateStatus();
 
+      // Bonus goals: checked once the challenge's own tests pass; they never change whether it is solved.
+      let newStars: string[] = [];
+      if (solvedNow && c.bonus.length) {
+        panel.post({ type: 'bonusRunning' });
+        const results = await vscode.window.withProgress({ location: vscode.ProgressLocation.Window, title: tr('Checking bonus goals…', 'Verificando os objetivos bônus…') }, () =>
+          evaluateBonuses(c, file, runnerOptions()),
+        );
+        const fresh = await progress.recordBonus(c.id, results.filter((r) => r.achieved).map((r) => r.id));
+        newStars = c.bonus.filter((b) => fresh.includes(b.id)).map((b) => b.title);
+        panel.post({ type: 'bonus', results, earned: progress.bonusEarned(c.id) });
+        lastBonus.set(c.id, results);
+      }
+
       const next = solvedNow ? nextItem(c) : undefined;
       if (solvedNow) {
         panel.post({ type: 'solved', next: next && { title: itemTitle(next), quiz: next.kind === 'quiz' } });
       }
+      if (!firstSolve && newStars.length) {
+        vscode.window.showInformationMessage(tr(`⭐ Bonus goal earned on "${c.title}": ${newStars.join(', ')}!`, `⭐ Objetivo bônus conquistado em "${c.title}": ${newStars.join(', ')}!`));
+      }
       if (firstSolve) {
         const solved = progress.solvedCount(challenges.map((x) => x.id));
+        const stars = newStars.length ? tr(` ⭐ Bonus: ${newStars.join(', ')}.`, ` ⭐ Bônus: ${newStars.join(', ')}.`) : '';
         // Not awaited: the notification can stay open indefinitely and must not block further runs.
         vscode.window
           .showInformationMessage(
-            tr(`🎉 "${c.title}" solved! (${solved}/${challenges.length})`, `🎉 "${c.title}" resolvido! (${solved}/${challenges.length})`),
+            tr(`🎉 "${c.title}" solved! (${solved}/${challenges.length})`, `🎉 "${c.title}" resolvido! (${solved}/${challenges.length})`) + stars,
             ...(next ? [tr(`Next: ${itemTitle(next)}`, `Próximo: ${itemTitle(next)}`)] : []),
           )
           .then((choice) => (choice && next ? openPathItem(next) : undefined));
@@ -885,6 +917,13 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     });
   }
 
+  /** The challenge's bonus goals for the AI tutor: earned ones, and why the last try missed the others. */
+  function bonusContext(c: Challenge): { title: string; description: string; achieved: boolean; reason?: string }[] {
+    const earned = new Set(progress.bonusEarned(c.id));
+    const last = lastBonus.get(c.id) ?? [];
+    return c.bonus.map((b) => ({ title: b.title, description: b.description, achieved: earned.has(b.id), reason: last.find((r) => r.id === b.id)?.reason }));
+  }
+
   async function askAiHint(c: Challenge): Promise<void> {
     if (!c.aiHints) {
       vscode.window.showInformationMessage(
@@ -903,7 +942,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       onText: (text) => panel.post({ type: 'aiText', text }),
       onDone: () => panel.post({ type: 'aiDone' }),
       onError: (message) => panel.post({ type: 'aiError', message }),
-    });
+    }, bonusContext(c));
   }
 
   function handlePanelAction(action: PanelAction, c: Challenge): void {

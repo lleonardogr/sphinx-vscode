@@ -294,6 +294,13 @@
     } else if (msg.type === 'result') {
       setBusy(false);
       results.innerHTML = renderOutcome(msg.mode, msg.outcome);
+    } else if (msg.type === 'bonusRunning') {
+      // Right after the main result banner, so the "Next" button still goes on the result.
+      results.querySelector('.banner')?.insertAdjacentHTML('afterend', `<div id="bonus-results">${banner('info', `<span class="spinner"></span>${tr('Checking bonus goals…', 'Verificando os objetivos bônus…')}`, '')}</div>`);
+    } else if (msg.type === 'bonus') {
+      const box = document.getElementById('bonus-results');
+      if (box) box.innerHTML = renderBonus(msg);
+      else results.insertAdjacentHTML('beforeend', renderBonus(msg));
     } else if (msg.type === 'examScore') {
       results.insertAdjacentHTML(
         'afterbegin',

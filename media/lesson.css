@@ -17,3 +17,12 @@ main.lesson { max-width: 820px; }
 .reading-icon { margin-right: 4px; }
 .reading-meta { color: var(--vscode-descriptionForeground); font-size: 0.9em; margin: 2px 0 6px; }
 .reading-look { margin: 6px 0 10px; }
+
+/* The unit's bonus goals, after the reading guide. */
+.bonus-goals ul {
+  padding-left: 18px;
+}
+
+.bonus-goals li {
+  margin: 4px 0;
+}
