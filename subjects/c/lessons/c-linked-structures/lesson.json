@@ -1,0 +1,52 @@
+{
+  "title": "Linked Data Structures",
+  "topic": "CLinked",
+  "order": 1,
+  "requires": [
+    "CStructs",
+    "CMemory"
+  ],
+  "objectives": [
+    "Build a linked list from nodes allocated with malloc, each pointing to the next, and insert, remove and free nodes safely.",
+    "Use linked lists as stacks and queues, and doubly linked lists to move both ways.",
+    "Store and find values in a binary search tree, and print them in order with a recursive walk."
+  ],
+  "readings": [
+    {
+      "title": "Lecture 5: Data Structures",
+      "source": "CS50x (Harvard), lecture notes",
+      "url": "https://cs50.harvard.edu/x/2026/notes/5/#data-structures",
+      "type": "article",
+      "minutes": 25,
+      "lang": "en",
+      "lookFor": "From \"Data Structures\" to \"Trees\": queues and stacks, why arrays are hard to grow, linked lists drawn as boxes and arrows, and binary search trees. Hash tables and tries come after, for later."
+    },
+    {
+      "title": "Self-Referential structs",
+      "source": "Beej's Guide to C Programming, chapter 20",
+      "url": "https://beej.us/guide/bgc/html/split/structs-ii-more-fun-with-structs.html#self-referential-structs",
+      "type": "article",
+      "minutes": 4,
+      "lang": "en",
+      "lookFor": "Optional: why a struct can contain a pointer to its own type (but not itself), with a small linked list built and walked."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Estruturas encadeadas",
+      "objectives": [
+        "Montar uma lista ligada com nós alocados com malloc, cada um apontando para o próximo, e inserir, remover e liberar nós com segurança.",
+        "Usar listas ligadas como pilhas e filas, e listas duplamente ligadas para andar nos dois sentidos.",
+        "Guardar e achar valores numa árvore binária de busca, e imprimi-los em ordem com um percurso recursivo."
+      ],
+      "readings": [
+        {
+          "lookFor": "De \"Data Structures\" até \"Trees\": filas e pilhas, por que arrays são difíceis de aumentar, listas ligadas desenhadas como caixas e setas, e árvores binárias de busca. Tabelas hash e tries vêm depois, para mais adiante."
+        },
+        {
+          "lookFor": "Opcional: por que uma struct pode conter um ponteiro para o próprio tipo (mas não a si mesma), com uma pequena lista ligada montada e percorrida."
+        }
+      ]
+    }
+  }
+}

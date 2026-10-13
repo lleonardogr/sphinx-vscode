@@ -1,0 +1,184 @@
+{
+  "title": "Linked Data Structures Quiz",
+  "topic": "CLinked",
+  "requires": [
+    "CStructs",
+    "CMemory"
+  ],
+  "description": "Linked lists, stacks and queues, doubly linked lists and binary search trees.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "Nodes are pushed at the front of a list in the order 1, 2, 3. Walking from head, what is printed?",
+      "options": [
+        "3 2 1",
+        "1 2 3",
+        "1 3 2",
+        "3 1 2"
+      ],
+      "answer": 0,
+      "explanation": "Each push puts the new node before the old head, so the last one pushed comes first. That is exactly a stack: last in, first out."
+    },
+    {
+      "type": "choice",
+      "prompt": "What is wrong with this loop that frees a list?",
+      "code": "for (Node *p = head; p != NULL; p = p->next) {\n    free(p);\n}",
+      "options": [
+        "after free(p), p->next reads freed memory",
+        "nothing",
+        "free can't be called in a loop",
+        "it frees only the first node"
+      ],
+      "answer": 0,
+      "explanation": "The update p = p->next runs after free(p), so it reads a node that is gone: undefined behavior. Save the next pointer first: Node *next = p->next; free(p); p = next;"
+    },
+    {
+      "type": "choice",
+      "prompt": "Why is reading the 1000th element slower in a linked list than in an array?",
+      "options": [
+        "a list must follow 999 next pointers from the head; an array computes the address directly",
+        "linked lists store their values compressed",
+        "arrays are always sorted",
+        "it isn't slower"
+      ],
+      "answer": 0,
+      "explanation": "An array's element i is at start + i × size, one step. A list has no such formula, so reaching position i takes i steps. In return, lists insert and remove anywhere without moving the other elements."
+    },
+    {
+      "type": "choice",
+      "prompt": "A queue adds at the back and removes at the front. Why do linked queues keep a tail pointer as well as head?",
+      "options": [
+        "without tail, adding at the back means walking the whole list every time",
+        "tail is needed to free the queue",
+        "C requires two pointers per list",
+        "it makes removal at the front possible"
+      ],
+      "answer": 0,
+      "explanation": "With a pointer to the last node, enqueue is O(1): tail->next = n; tail = n;. Without it, each enqueue walks from the head, which makes filling a queue of n items O(n²)."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which order does an in-order walk (left subtree, node, right subtree) of a binary search tree print?",
+      "options": [
+        "increasing order",
+        "the order of insertion",
+        "decreasing order",
+        "level by level"
+      ],
+      "answer": 0,
+      "explanation": "In a BST everything in the left subtree is smaller than the node and everything in the right is larger, so left, node, right visits the values from smallest to largest."
+    },
+    {
+      "type": "choice",
+      "prompt": "Values 1, 2, 3, 4, 5 are inserted in that order into an empty binary search tree. What is its height?",
+      "options": [
+        "5",
+        "3",
+        "1",
+        "2"
+      ],
+      "answer": 0,
+      "explanation": "Each new value is larger than all before, so it always goes right: the tree becomes a chain, as tall as a list, and searching it takes 5 steps. Balanced trees (AVL, red-black) rotate nodes to avoid this."
+    },
+    {
+      "type": "choice",
+      "prompt": "In a doubly linked list, which pointers change when node b is removed from a ⇄ b ⇄ c?",
+      "options": [
+        "a->next and c->prev",
+        "only a->next",
+        "b->next and b->prev",
+        "none: freeing b is enough"
+      ],
+      "answer": 0,
+      "explanation": "a must now point forward to c, and c back to a: a->next = c; c->prev = a;. Then b can be freed. Changing b's own pointers does nothing for the list."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "A struct can contain a field of its own type, such as struct Node child; inside struct Node.",
+      "answer": false,
+      "explanation": "That struct would have to contain itself, forever: its size would be infinite, so C forbids it. A pointer, struct Node *next, has a fixed size, so it is allowed: that is how nodes link."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz: estruturas encadeadas",
+      "description": "Listas ligadas, pilhas e filas, listas duplamente ligadas e árvores binárias de busca.",
+      "questions": [
+        {
+          "prompt": "Nós são empilhados na frente de uma lista na ordem 1, 2, 3. Andando a partir de head, o que é impresso?",
+          "options": [
+            "3 2 1",
+            "1 2 3",
+            "1 3 2",
+            "3 1 2"
+          ],
+          "explanation": "Cada push põe o nó novo antes do head antigo, então o último empilhado vem primeiro. Isso é exatamente uma pilha: o último a entrar é o primeiro a sair."
+        },
+        {
+          "prompt": "O que há de errado neste laço que libera uma lista?",
+          "options": [
+            "depois de free(p), p->next lê memória liberada",
+            "nada",
+            "o free não pode ser chamado num laço",
+            "ele libera só o primeiro nó"
+          ],
+          "explanation": "A atualização p = p->next roda depois de free(p), então lê um nó que não existe mais: comportamento indefinido. Guarde o próximo ponteiro antes: Node *next = p->next; free(p); p = next;"
+        },
+        {
+          "prompt": "Por que ler o 1000º elemento é mais lento numa lista ligada do que num array?",
+          "options": [
+            "uma lista precisa seguir 999 ponteiros next a partir do head; um array calcula o endereço direto",
+            "listas ligadas guardam os valores comprimidos",
+            "arrays estão sempre ordenados",
+            "não é mais lento"
+          ],
+          "explanation": "O elemento i de um array fica em início + i × tamanho, um passo. Uma lista não tem essa fórmula, então chegar à posição i leva i passos. Em troca, listas inserem e removem em qualquer lugar sem mover os outros elementos."
+        },
+        {
+          "prompt": "Uma fila acrescenta no fim e remove no começo. Por que filas ligadas guardam um ponteiro tail além do head?",
+          "options": [
+            "sem tail, acrescentar no fim exige percorrer a lista inteira toda vez",
+            "tail é necessário para liberar a fila",
+            "o C exige dois ponteiros por lista",
+            "ele torna possível remover no começo"
+          ],
+          "explanation": "Com um ponteiro para o último nó, enfileirar é O(1): tail->next = n; tail = n;. Sem ele, cada enfileiramento anda a partir do head, o que torna encher uma fila de n itens O(n²)."
+        },
+        {
+          "prompt": "Em que ordem um percurso em ordem (subárvore esquerda, nó, subárvore direita) de uma árvore binária de busca imprime?",
+          "options": [
+            "ordem crescente",
+            "a ordem de inserção",
+            "ordem decrescente",
+            "nível por nível"
+          ],
+          "explanation": "Numa ABB tudo na subárvore esquerda é menor que o nó e tudo na direita é maior, então esquerda, nó, direita visita os valores do menor para o maior."
+        },
+        {
+          "prompt": "Os valores 1, 2, 3, 4, 5 são inseridos nessa ordem numa árvore binária de busca vazia. Qual é a altura dela?",
+          "options": [
+            "5",
+            "3",
+            "1",
+            "2"
+          ],
+          "explanation": "Cada valor novo é maior que todos os anteriores, então sempre vai para a direita: a árvore vira uma corrente, alta como uma lista, e buscar nela leva 5 passos. Árvores balanceadas (AVL, rubro-negra) giram nós para evitar isso."
+        },
+        {
+          "prompt": "Numa lista duplamente ligada, quais ponteiros mudam quando o nó b é removido de a ⇄ b ⇄ c?",
+          "options": [
+            "a->next e c->prev",
+            "só a->next",
+            "b->next e b->prev",
+            "nenhum: liberar b basta"
+          ],
+          "explanation": "a precisa agora apontar para a frente para c, e c para trás para a: a->next = c; c->prev = a;. Depois b pode ser liberado. Mudar os ponteiros do próprio b não faz nada pela lista."
+        },
+        {
+          "prompt": "Uma struct pode conter um campo do próprio tipo, como struct Node child; dentro de struct Node.",
+          "explanation": "Essa struct teria que conter a si mesma, para sempre: o tamanho seria infinito, então o C proíbe. Um ponteiro, struct Node *next, tem tamanho fixo, então é permitido: é assim que os nós se ligam."
+        }
+      ]
+    }
+  }
+}

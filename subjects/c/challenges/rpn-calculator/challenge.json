@@ -1,0 +1,83 @@
+{
+  "title": "RPN Calculator",
+  "topic": "CLinked",
+  "requires": [
+    "CStructs",
+    "CMemory"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "A stack as a linked list: push makes a new node point to the old top; pop takes the top node off, keeps its value and frees it.",
+    "A number is pushed. An operator pops b, then a, and pushes a op b. Popping from a stack with fewer than two values is an underflow.",
+    "At the end of the line exactly one value must be left. Free whatever is still on the stack before the next line."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Calculadora RPN",
+      "hints": [
+        "Uma pilha como lista ligada: push faz um nó novo apontar para o topo antigo; pop tira o nó do topo, guarda o valor dele e o libera.",
+        "Um número é empilhado. Um operador desempilha b, depois a, e empilha a op b. Desempilhar de uma pilha com menos de dois valores é um esvaziamento (underflow).",
+        "No fim da linha precisa sobrar exatamente um valor. Libere o que ainda estiver na pilha antes da próxima linha."
+      ],
+      "mustContain": [
+        "Ligue os nós com ponteiros (node->next)."
+      ],
+      "mustNotContain": [
+        "Guarde os dados em nós ligados, não num array."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "->\\s*next|->\\s*prev|->\\s*left|->\\s*right",
+      "message": "Link the nodes with pointers (node->next)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(int|long|double|float|short)\\s+\\w+\\s*\\[",
+      "message": "Keep the data in linked nodes, not in an array."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3 4 +\n5 1 2 + 4 * + 3 -\n",
+      "output": "7\n14\n"
+    },
+    {
+      "input": "1 +\n4 0 /\n1 2 3\n",
+      "output": "Error: stack underflow\nError: division by zero\nError: leftover values\n"
+    },
+    {
+      "input": "42\n",
+      "output": "42\n",
+      "hidden": true
+    },
+    {
+      "input": "-5 3 -\n10 -3 /\n",
+      "output": "-8\n-3\n",
+      "hidden": true
+    },
+    {
+      "input": "2 3 4 * +\n2 3 + 4 *\n",
+      "output": "14\n20\n",
+      "hidden": true
+    },
+    {
+      "input": "\n7 7 7 * *\n",
+      "output": "Error: empty\n343\n",
+      "hidden": true
+    },
+    {
+      "input": "1000000000 1000000000 *\n-7 2 /\n",
+      "output": "1000000000000000000\n-3\n",
+      "hidden": true
+    },
+    {
+      "input": "1 2 + +\n9 3 / 3 /\n",
+      "output": "Error: stack underflow\n1\n",
+      "hidden": true
+    }
+  ]
+}
