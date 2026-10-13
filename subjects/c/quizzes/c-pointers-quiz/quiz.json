@@ -1,0 +1,199 @@
+{
+  "title": "Pointers Quiz",
+  "topic": "CPointers",
+  "requires": [
+    "CStrings"
+  ],
+  "description": "Addresses, dereferencing, pointer parameters, pointer arithmetic and function pointers.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "int x = 5;\nint *p = &x;\n*p = 7;\nprintf(\"%d\\n\", x);",
+      "options": [
+        "7",
+        "5",
+        "the address of x",
+        "It does not compile"
+      ],
+      "answer": 0,
+      "explanation": "p holds the address of x, so *p = 7 writes 7 into x itself."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "void swap(int *x, int *y) {\n    int t = *x; *x = *y; *y = t;\n}\n\nint main(void) {\n    int a = 1, b = 2;\n    swap(&a, &b);\n    printf(\"%d %d\\n\", a, b);\n}",
+      "options": [
+        "2 1",
+        "1 2",
+        "0 0",
+        "It crashes"
+      ],
+      "answer": 0,
+      "explanation": "swap receives the addresses of a and b and swaps the values they point to, so main's variables change. Compare with the swap(int x, int y) from the Functions quiz, which only swapped copies."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "int a[] = {10, 20, 30, 40};\nint *p = a;\nprintf(\"%d\\n\", *(p + 2));",
+      "options": [
+        "30",
+        "11",
+        "20",
+        "an address"
+      ],
+      "answer": 0,
+      "explanation": "p points at a[0]. p + 2 points two elements further (not two bytes): a[2], which is 30. In general *(a + i) is a[i]."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why is this function a bug, even if it seems to work?",
+      "code": "int *sum(int a, int b) {\n    int total = a + b;\n    return &total;\n}",
+      "options": [
+        "total is a local variable: it stops existing when the function returns, so the caller gets an address that points to nothing valid",
+        "functions can't return pointers in C",
+        "total should be declared as a pointer",
+        "it returns a copy of total, which is slow"
+      ],
+      "answer": 0,
+      "explanation": "A local variable lives only while its function runs. Returning its address leaves a \"dangling\" pointer: the memory is reused by the next call. Return the value itself, or memory that outlives the function (static, or malloc in the next unit)."
+    },
+    {
+      "type": "choice",
+      "prompt": "In int *p, q; what is q?",
+      "options": [
+        "an int",
+        "a pointer to int",
+        "an array",
+        "a compile error"
+      ],
+      "answer": 0,
+      "explanation": "The * belongs to p alone. Writing int *p, *q; makes both pointers. That is one reason many C programmers write the * next to the name: int *p."
+    },
+    {
+      "type": "choice",
+      "prompt": "A parameter is declared const int *values. What can the function do?",
+      "options": [
+        "read values[i], but not change it",
+        "change values[i], but not read it",
+        "nothing: const pointers can't be used",
+        "make values point elsewhere, never read it"
+      ],
+      "answer": 0,
+      "explanation": "const int * is a pointer to ints the function promises not to change: values[0] = 1 is a compile error. It documents that the array is only read, and lets callers pass constant data."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "int a[5];\nint *first = &a[0], *last = &a[3];\nprintf(\"%td\\n\", last - first);",
+      "options": [
+        "3",
+        "2",
+        "12",
+        "4"
+      ],
+      "answer": 0,
+      "explanation": "Subtracting two pointers into the same array gives the number of elements between them, not bytes: &a[3] − &a[0] is 3."
+    },
+    {
+      "type": "choice",
+      "prompt": "qsort(values, n, sizeof values[0], compare); What does qsort do with compare?",
+      "options": [
+        "it calls it many times, with the addresses of two elements, to learn which one goes first",
+        "it calls it once, to get the sorted array",
+        "it copies compare into the array",
+        "nothing: compare is the name of the result"
+      ],
+      "answer": 0,
+      "explanation": "compare is passed as a function pointer. qsort knows nothing about your data, so it asks your function: negative means the first goes first, positive the second, 0 equal."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz: ponteiros",
+      "description": "Endereços, desreferência, parâmetros ponteiro, aritmética de ponteiros e ponteiros para função.",
+      "questions": [
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "7",
+            "5",
+            "o endereço de x",
+            "Não compila"
+          ],
+          "explanation": "p guarda o endereço de x, então *p = 7 escreve 7 no próprio x."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "2 1",
+            "1 2",
+            "0 0",
+            "Trava"
+          ],
+          "explanation": "swap recebe os endereços de a e b e troca os valores para onde eles apontam, então as variáveis do main mudam. Compare com o swap(int x, int y) do quiz de funções, que só trocava cópias."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "30",
+            "11",
+            "20",
+            "um endereço"
+          ],
+          "explanation": "p aponta para a[0]. p + 2 aponta dois elementos adiante (não dois bytes): a[2], que é 30. Em geral *(a + i) é a[i]."
+        },
+        {
+          "prompt": "Por que esta função é um erro, mesmo que pareça funcionar?",
+          "options": [
+            "total é uma variável local: ela deixa de existir quando a função retorna, então quem chamou recebe um endereço que não aponta para nada válido",
+            "funções não podem devolver ponteiros no C",
+            "total devia ser declarado como ponteiro",
+            "ela devolve uma cópia de total, o que é lento"
+          ],
+          "explanation": "Uma variável local só existe enquanto a função roda. Devolver o endereço dela deixa um ponteiro \"pendurado\": a memória é reaproveitada pela próxima chamada. Devolva o próprio valor, ou memória que dure mais que a função (static, ou malloc na próxima unidade)."
+        },
+        {
+          "prompt": "Em int *p, q; o que é q?",
+          "options": [
+            "um int",
+            "um ponteiro para int",
+            "um array",
+            "um erro de compilação"
+          ],
+          "explanation": "O * pertence só a p. Escrever int *p, *q; faz os dois serem ponteiros. É um dos motivos de muitos programadores C escreverem o * junto do nome: int *p."
+        },
+        {
+          "prompt": "Um parâmetro é declarado const int *values. O que a função pode fazer?",
+          "options": [
+            "ler values[i], mas não mudá-lo",
+            "mudar values[i], mas não lê-lo",
+            "nada: ponteiros const não podem ser usados",
+            "fazer values apontar para outro lugar, nunca lê-lo"
+          ],
+          "explanation": "const int * é um ponteiro para ints que a função promete não mudar: values[0] = 1 é erro de compilação. Isso documenta que o array só é lido, e deixa quem chama passar dados constantes."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "3",
+            "2",
+            "12",
+            "4"
+          ],
+          "explanation": "Subtrair dois ponteiros para o mesmo array dá o número de elementos entre eles, não de bytes: &a[3] − &a[0] é 3."
+        },
+        {
+          "prompt": "qsort(values, n, sizeof values[0], compare); O que o qsort faz com compare?",
+          "options": [
+            "chama ela muitas vezes, com os endereços de dois elementos, para saber qual vem primeiro",
+            "chama ela uma vez, para obter o array ordenado",
+            "copia compare para dentro do array",
+            "nada: compare é o nome do resultado"
+          ],
+          "explanation": "compare é passada como ponteiro para função. O qsort não sabe nada dos seus dados, então pergunta à sua função: negativo quer dizer que o primeiro vem antes, positivo o segundo, 0 iguais."
+        }
+      ]
+    }
+  }
+}

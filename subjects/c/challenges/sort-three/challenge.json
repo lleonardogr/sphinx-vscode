@@ -1,0 +1,82 @@
+{
+  "title": "Sort Three",
+  "topic": "CPointers",
+  "requires": [
+    "CStrings"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "sort3 receives the addresses of the three variables: *a is the first variable itself, so assigning to *a changes it in main.",
+    "Write a swap(int *x, int *y) first: three lines with a temporary variable.",
+    "Three compare-and-swaps sort three values: a and b, then b and c, then a and b again."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Ordenar três",
+      "hints": [
+        "sort3 recebe os endereços das três variáveis: *a é a própria primeira variável, então atribuir a *a a muda no main.",
+        "Escreva primeiro um swap(int *x, int *y): três linhas com uma variável temporária.",
+        "Três comparações com troca ordenam três valores: a e b, depois b e c, depois a e b de novo."
+      ],
+      "mustContain": [
+        "Escreva void sort3(int *a, int *b, int *c).",
+        "Chame sort3 com os endereços das suas variáveis: sort3(&x, &y, &z)."
+      ],
+      "mustNotContain": [
+        "Sem arrays aqui: três variáveis e ponteiros para elas."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bvoid\\s+sort3\\s*\\(\\s*int\\s*\\*\\s*\\w+\\s*,\\s*int\\s*\\*\\s*\\w+\\s*,\\s*int\\s*\\*\\s*\\w+\\s*\\)",
+      "message": "Write void sort3(int *a, int *b, int *c)."
+    },
+    {
+      "pattern": "sort3\\s*\\(\\s*&",
+      "message": "Call sort3 with the addresses of your variables: sort3(&x, &y, &z)."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\[",
+      "message": "No arrays here: three variables and pointers to them."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\n3 1 2\n5 5 1\n-1 0 -2\n",
+      "output": "1 2 3\n1 5 5\n-2 -1 0\n"
+    },
+    {
+      "input": "1\n1 2 3\n",
+      "output": "1 2 3\n"
+    },
+    {
+      "input": "1\n3 2 1\n",
+      "output": "1 2 3\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n7 7 7\n0 -5 0\n",
+      "output": "7 7 7\n-5 0 0\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n1000000000 -1000000000 0\n2 1 3\n",
+      "output": "-1000000000 0 1000000000\n1 2 3\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n1 3 2\n2 3 1\n3 1 2\n",
+      "output": "1 2 3\n1 2 3\n1 2 3\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n-1000000000 -1000000000 1000000000\n",
+      "output": "-1000000000 -1000000000 1000000000\n",
+      "hidden": true
+    }
+  ]
+}

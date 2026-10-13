@@ -1,0 +1,73 @@
+{
+  "title": "Multi-Key Sort",
+  "topic": "CPointers",
+  "requires": [
+    "CStrings"
+  ],
+  "difficulty": "Hard",
+  "order": 5,
+  "hints": [
+    "Sort an array of positions (0 to n − 1) with qsort, and look the people up in the parallel arrays inside the comparison function.",
+    "qsort passes your function two const void * pointers to elements: *(const int *) x gives the position. Compare by the first key; only if it is equal, by the next; and if all are equal, by position.",
+    "A key with - in front reverses its result. compare_ints can return (a > b) − (a < b), which is −1, 0 or 1 without overflow."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Ordenação por várias chaves",
+      "hints": [
+        "Ordene um array de posições (0 a n − 1) com qsort e procure as pessoas nos arrays paralelos dentro da função de comparação.",
+        "O qsort passa para a sua função dois ponteiros const void * para elementos: *(const int *) x dá a posição. Compare pela primeira chave; só se for igual, pela próxima; e se todas forem iguais, pela posição.",
+        "Uma chave com - na frente inverte o resultado. compare_ints pode devolver (a > b) − (a < b), que é −1, 0 ou 1 sem estouro."
+      ],
+      "mustContain": [
+        "Ordene com qsort e a sua própria função de comparação."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bqsort\\s*\\(",
+      "message": "Sort with qsort and your own comparison function."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\nAda 36 92\nAlan 41 88\nGrace 85 92\nLinus 54 75\nBarbara 79 88\nDennis 70 92\n-score name\n",
+      "output": "Ada 36 92\nDennis 70 92\nGrace 85 92\nAlan 41 88\nBarbara 79 88\nLinus 54 75\n"
+    },
+    {
+      "input": "6\nAda 36 92\nAlan 41 88\nGrace 85 92\nLinus 54 75\nBarbara 79 88\nDennis 70 92\nage\n",
+      "output": "Ada 36 92\nAlan 41 88\nLinus 54 75\nDennis 70 92\nBarbara 79 88\nGrace 85 92\n"
+    },
+    {
+      "input": "6\nAda 36 92\nAlan 41 88\nGrace 85 92\nLinus 54 75\nBarbara 79 88\nDennis 70 92\nname\n",
+      "output": "Ada 36 92\nAlan 41 88\nBarbara 79 88\nDennis 70 92\nGrace 85 92\nLinus 54 75\n",
+      "hidden": true
+    },
+    {
+      "input": "6\nAda 36 92\nAlan 41 88\nGrace 85 92\nLinus 54 75\nBarbara 79 88\nDennis 70 92\n-score -age\n",
+      "output": "Grace 85 92\nDennis 70 92\nAda 36 92\nBarbara 79 88\nAlan 41 88\nLinus 54 75\n",
+      "hidden": true
+    },
+    {
+      "input": "6\nAda 36 92\nAlan 41 88\nGrace 85 92\nLinus 54 75\nBarbara 79 88\nDennis 70 92\nscore age name\n",
+      "output": "Linus 54 75\nAlan 41 88\nBarbara 79 88\nAda 36 92\nDennis 70 92\nGrace 85 92\n",
+      "hidden": true
+    },
+    {
+      "input": "1\nSolo 20 50\n-name\n",
+      "output": "Solo 20 50\n",
+      "hidden": true
+    },
+    {
+      "input": "4\nSam 30 70\nSam 30 70\nSam 25 70\nSam 30 60\nname -age\n",
+      "output": "Sam 30 70\nSam 30 70\nSam 30 60\nSam 25 70\n",
+      "hidden": true
+    },
+    {
+      "input": "5\nE 1 1\nD 2 2\nC 3 3\nB 4 4\nA 5 5\n-age\n",
+      "output": "A 5 5\nB 4 4\nC 3 3\nD 2 2\nE 1 1\n",
+      "hidden": true
+    }
+  ]
+}

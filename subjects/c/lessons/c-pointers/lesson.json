@@ -1,0 +1,51 @@
+{
+  "title": "Pointers",
+  "topic": "CPointers",
+  "order": 1,
+  "requires": [
+    "CStrings"
+  ],
+  "objectives": [
+    "Take an address with &, follow it with *, and use pointer parameters to change the caller's variables or return several results.",
+    "Walk an array or a string with a pointer, and explain why a[i] is *(a + i).",
+    "Pass a function to another function through a function pointer, as qsort does."
+  ],
+  "readings": [
+    {
+      "title": "Pointers: Cower In Fear!",
+      "source": "Beej's Guide to C Programming, chapter 5",
+      "url": "https://beej.us/guide/bgc/html/split/pointers.html",
+      "type": "article",
+      "minutes": 12,
+      "lang": "en",
+      "lookFor": "Memory and variables, dereferencing, passing pointers as arguments (the swap you couldn't write in Functions), and the NULL pointer. Pointer arithmetic is in chapter 11 of the same guide."
+    },
+    {
+      "title": "Lecture 4: Pointers",
+      "source": "CS50x (Harvard), lecture notes",
+      "url": "https://cs50.harvard.edu/x/2026/notes/4/#pointers",
+      "type": "article",
+      "minutes": 15,
+      "lang": "en",
+      "lookFor": "Optional: from \"Pointers\" to \"Pointer Arithmetic\", then \"Swapping\". The pictures of addresses and arrows make the idea concrete; skip \"Copying and malloc\" until the next unit."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Ponteiros",
+      "objectives": [
+        "Pegar um endereço com &, segui-lo com *, e usar parâmetros ponteiro para mudar as variáveis de quem chamou ou devolver vários resultados.",
+        "Percorrer um array ou uma string com um ponteiro, e explicar por que a[i] é *(a + i).",
+        "Passar uma função para outra função por um ponteiro para função, como o qsort faz."
+      ],
+      "readings": [
+        {
+          "lookFor": "Memória e variáveis, desreferência, passar ponteiros como argumentos (o swap que você não conseguia escrever em Funções), e o ponteiro NULL. A aritmética de ponteiros está no capítulo 11 do mesmo guia."
+        },
+        {
+          "lookFor": "Opcional: de \"Pointers\" até \"Pointer Arithmetic\", e depois \"Swapping\". As figuras de endereços e setas deixam a ideia concreta; deixe \"Copying and malloc\" para a próxima unidade."
+        }
+      ]
+    }
+  }
+}

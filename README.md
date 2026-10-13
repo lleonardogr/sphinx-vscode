@@ -75,8 +75,9 @@ The third subject, for students who already know Java, is being written unit by 
 | 2 · Functions | Functions in C (quick guide: Beej's Guide, freeCodeCamp) | Dice Roller (`static` state) · Luhn Check · Month Calendar (helper functions) · Change Making (recursion) · Expression Evaluator (mutual recursion, prototypes) |
 | 3 · Arrays | Arrays in C (quick guide: Beej's Guide, CS50) | Histogram · Sieve of Eratosthenes (a 10-million array) · Ring Buffer · Game of Life (2D) · Big Factorial (1000! digit by digit) |
 | 4 · Strings | Strings in C (quick guide: Beej's Guide, CS50) | Word Stats (`fgets`) · Vigenère Cipher · Label Printer (safe truncation) · CSV Fields (quoted fields) · Word Wrap · Test: Inventory Report |
+| 5 · Pointers | Pointers (quick guide: Beej's Guide, CS50) | Sort Three (`int *` parameters) · Stats Through Pointers (output parameters) · Reverse Words (two pointers, in place) · Find Every Match (a pointer-returning search) · Multi-Key Sort (`qsort` and comparison functions) |
 
-Coming next: Pointers, Dynamic Memory, Structs, Bits and Bytes in C, and Linked Data Structures.
+Coming next: Dynamic Memory, Structs, Bits and Bytes in C, and Linked Data Structures.
 
 ## Screenshots
 

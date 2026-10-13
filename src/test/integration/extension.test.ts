@@ -53,9 +53,9 @@ test('Java 25+ is available to the extension', async () => {
 
 test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
-  assert.equal(api.challenges().length, 155);
-  assert.equal(api.quizzes().length, 23);
-  assert.equal(api.lessons().length, 23);
+  assert.equal(api.challenges().length, 160);
+  assert.equal(api.quizzes().length, 24);
+  assert.equal(api.lessons().length, 24);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam', 'exam-1', 'exam-2', 'final-exam', 'sample-exam']);
   assert.deepEqual(api.exams().filter((e) => e.subject === 'cs').map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam']);
 });
@@ -163,6 +163,7 @@ test('C Programming: a programming subject whose challenges are in C, unit by un
       ['2 · Functions', ['Functions in C', 'Dice Roller', 'Luhn Check', 'Month Calendar', 'Change Making', 'Expression Evaluator', 'Functions in C Quiz']],
       ['3 · Arrays', ['Arrays in C', 'Histogram', 'Sieve of Eratosthenes', 'Ring Buffer', 'Game of Life', 'Big Factorial', 'Arrays in C Quiz']],
       ['4 · Strings', ['Strings in C', 'Word Stats', 'Vigenère Cipher', 'Label Printer', 'CSV Fields', 'Word Wrap', 'Strings in C Quiz', 'Inventory Report']],
+      ['5 · Pointers', ['Pointers', 'Sort Three', 'Stats Through Pointers', 'Reverse Words', 'Find Every Match', 'Multi-Key Sort', 'Pointers Quiz']],
     ];
     const groups = api.tree.getChildren().filter((n) => (n as { kind: string }).kind === 'group');
     assert.deepEqual(groups.map(label), units.map(([name]) => name));
