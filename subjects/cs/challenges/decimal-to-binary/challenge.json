@@ -24,6 +24,19 @@
       ],
       "mustNotContain": [
         "Faça a conversão você mesmo: nada de métodos prontos que escrevem um número em outra base."
+      ],
+      "bonus": [
+        {
+          "title": "Com operadores de bits",
+          "description": "Converta sem `%` nem `/`: pegue o último bit com `& 1` e descarte-o com `>> 1`.",
+          "hint": "`n & 1` é o último bit, igual a `n % 2`. `n >> 1` é igual a `n / 2`.",
+          "mustContain": [
+            "Use os operadores de bits & e >>."
+          ],
+          "mustNotContain": [
+            "Sem % nem /."
+          ]
+        }
       ]
     }
   },
@@ -72,6 +85,26 @@
       "input": "1000000000\n",
       "output": "111011100110101100101000000000\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "bit-operators",
+      "title": "With bit operators",
+      "description": "Convert without `%` or `/`: take the last bit with `& 1` and drop it with `>> 1`.",
+      "hint": "`n & 1` is the last bit, the same as `n % 2`. `n >> 1` is the same as `n / 2`.",
+      "mustContain": [
+        {
+          "pattern": "&|>>",
+          "message": "Use the bit operators & and >>."
+        }
+      ],
+      "mustNotContain": [
+        {
+          "pattern": "%|(?<![/*])/(?![/*])",
+          "message": "No % or /."
+        }
+      ]
     }
   ]
 }

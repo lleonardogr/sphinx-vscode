@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import { Challenge, codeFileName, loadChallenges } from './challenges';
-import { RunOutcome, RunRequest, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
+import { RunOutcome, RunRequest, checkRules, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
 import { findExamDirs, loadExams } from './exams';
 import { findQuizDirs, isWholeProgram, loadQuiz, loadQuizzes, quizProgram } from './quizzes';
 import { READINGS_MARKER, READING_TYPES, findLessonDirs, loadLesson } from './lessons';
@@ -115,7 +115,7 @@ async function validateOne(c: Challenge, javacVersion: number | undefined, opts:
   // outputs and the others are then checked against them.
   const main = c.language === 'c' ? 'Solution.c' : 'Solution.java';
   const solutions = files
-    .filter((f) => (c.language === 'c' ? /^Solution.*\.c$/ : /^Solution.*\.java$/).test(f))
+    .filter((f) => (c.language === 'c' ? /^Solution.*\.c$/ : /^Solution.*\.java$/).test(f) && !f.startsWith('Solution.bonus.'))
     .sort((a, b) => Number(b === main) - Number(a === main));
   if (solutions.length === 0) {
     problems.push(`No ${main}: add a reference solution so the tests can be checked.`);
@@ -159,7 +159,92 @@ async function validateOne(c: Challenge, javacVersion: number | undefined, opts:
     }
   }
 
+  problems.push(...(await bonusProblems(c, files, opts, tools, codeName, runnable)));
   return { id: c.id, dir: c.dir, ok: problems.length === 0, tests: c.tests.length, solutions: solutions.length, problems, warnings: contentWarnings(c) };
+}
+
+/**
+ * Bonus goals: each needs a title, a description, something to check (rules or tests) and a reference
+ * solution, Solution.bonus.<id>.java (or .c), that solves the challenge and earns the goal. With
+ * `generate`, that solution fills in the goal's expected outputs.
+ */
+async function bonusProblems(
+  c: Challenge,
+  files: string[],
+  opts: ValidateOptions,
+  tools: Pick<RunRequest, 'javaHome' | 'cCompiler' | 'cPortableDirs'>,
+  codeName: string,
+  runnable: (f: string) => boolean,
+): Promise<string[]> {
+  const problems: string[] = [];
+  const meta = JSON.parse(fs.readFileSync(path.join(c.dir, 'challenge.json'), 'utf8'));
+  const raw: unknown[] = Array.isArray(meta.bonus) ? meta.bonus : [];
+  if (raw.length !== c.bonus.length) {
+    problems.push('every bonus goal needs an "id" and a "title"');
+  }
+  const ids = new Set<string>();
+  let changed = false;
+  for (const [i, goal] of c.bonus.entries()) {
+    const where = `bonus "${goal.id}"`;
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(goal.id) || ids.has(goal.id)) {
+      problems.push(`${where}: the id must be unique, in lowercase-with-dashes`);
+    }
+    ids.add(goal.id);
+    if (!goal.description) {
+      problems.push(`${where}: needs a "description"`);
+    }
+    if (!goal.mustContain.length && !goal.mustNotContain.length && !goal.tests.length) {
+      problems.push(`${where}: needs rules or tests, or there is nothing to check`);
+    }
+    const ext = c.language === 'c' ? 'c' : 'java';
+    const candidates = files.filter((f) => f === `Solution.bonus.${goal.id}.${ext}` || f === `Solution.bonus.${goal.id}.classic.${ext}`);
+    if (!candidates.length) {
+      problems.push(`${where}: no Solution.bonus.${goal.id}.${ext}, the reference solution that earns it`);
+      continue;
+    }
+    for (const file of candidates.filter(runnable)) {
+      const source = fs.readFileSync(path.join(c.dir, file), 'utf8');
+      // It solves the challenge: the main tests and rules.
+      const main = await runAs(source, { tests: c.tests, mustContain: c.mustContain, mustNotContain: c.mustNotContain, timeLimitMs: c.timeLimitMs, ...tools }, codeName);
+      if (main.kind !== 'tests' || main.results.some((r) => !r.passed)) {
+        problems.push(`${file} does not solve the challenge: ${main.kind === 'tests' ? `test ${main.results.find((r) => !r.passed)!.index + 1} fails` : describe(main)}`);
+        continue;
+      }
+      // And it earns the goal: its rules and its tests.
+      const broken = checkRules(source, goal.mustContain, goal.mustNotContain);
+      if (broken.length) {
+        problems.push(`${file} breaks its own bonus rules:\n${broken.map((m) => `  - ${m}`).join('\n')}`);
+        continue;
+      }
+      if (!goal.tests.length) {
+        continue;
+      }
+      const outcome = await runAs(source, { tests: goal.tests, timeLimitMs: goal.timeLimitMs ?? c.timeLimitMs, ...tools }, codeName);
+      if (outcome.kind !== 'tests') {
+        problems.push(`${file} ${describe(outcome)}`);
+        continue;
+      }
+      if (opts.generate && file === candidates.find(runnable)) {
+        outcome.results.forEach((r, j) => {
+          if (r.exitCode !== 0 || r.timedOut) {
+            problems.push(`${file}: bonus test ${j + 1} ${r.timedOut ? 'timed out' : 'crashed'}, so its output was not saved`);
+            return;
+          }
+          (meta.bonus[i] as { tests: { output: string }[] }).tests[j].output = normalizeOutput(r.actual) + '\n';
+          goal.tests[j].output = normalizeOutput(r.actual) + '\n';
+          changed = true;
+        });
+        continue;
+      }
+      for (const r of outcome.results.filter((x) => !x.passed)) {
+        problems.push(`${file}: bonus test ${r.index + 1} ${r.timedOut ? `took longer than ${goal.timeLimitMs ?? c.timeLimitMs} ms` : r.exitCode !== 0 ? 'crashed' : `expected ${JSON.stringify(r.expected)} but printed ${JSON.stringify(r.actual)}`}`);
+      }
+    }
+  }
+  if (changed) {
+    fs.writeFileSync(path.join(c.dir, 'challenge.json'), JSON.stringify(meta, null, 2) + '\n');
+  }
+  return problems;
 }
 
 /**
@@ -421,6 +506,15 @@ export function translationProblems(dir: string, lang: string): string[] {
     if (!fs.existsSync(path.join(dir, `description.${lang}.md`))) problems.push(`no description.${lang}.md`);
     if (!t.title) problems.push(`no ${lang} title`);
     if (count(meta.hints) && count(t.hints) !== count(meta.hints)) problems.push(`${count(t.hints)} of ${count(meta.hints)} hints translated`);
+    (Array.isArray(meta.bonus) ? meta.bonus : []).forEach((b: Record<string, unknown>, i: number) => {
+      const tb = t.bonus?.[i] ?? {};
+      for (const field of ['title', 'description', 'hint'] as const) {
+        if (b[field] && !tb[field]) problems.push(`bonus "${b.id}": no ${lang} ${field}`);
+      }
+      for (const rules of ['mustContain', 'mustNotContain'] as const) {
+        if (count(b[rules]) && count(tb[rules]) !== count(b[rules])) problems.push(`bonus "${b.id}": ${count(tb[rules])} of ${count(b[rules])} ${rules} messages translated`);
+      }
+    });
     for (const rules of ['mustContain', 'mustNotContain'] as const) {
       if (count(meta[rules]) && count(t[rules]) !== count(meta[rules])) problems.push(`${count(t[rules])} of ${count(meta[rules])} ${rules} messages translated`);
     }

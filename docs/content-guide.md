@@ -10,6 +10,7 @@ This guide is the standard for *what* goes into a unit and *how good* it has to 
 - [Reading guides](#reading-guides)
 - [Quick guides for programming subjects](#quick-guides-for-programming-subjects)
 - [Challenges](#challenges)
+- [Bonus goals](#bonus-goals)
 - [Quizzes](#quizzes)
 - [The rubric](#the-rubric)
 - [Workflow](#workflow)
@@ -207,6 +208,22 @@ Follow the structure in [Creating your own challenges](creating-challenges.md): 
 
 Two challenges in a subject must not practise the same skill in the same way. A mirror pair (encode and decode) is fine when both directions teach something; two loops that both just double a number are not.
 
+## Bonus goals
+
+A challenge can have up to **3 bonus goals**: optional, harder goals for students who want more, checked on Submit once the challenge passes. They earn stars and never change whether the challenge is solved. A good bonus needs a **different way of thinking**, not more typing; a challenge whose idea has no harder version (Hello, World!) gets none.
+
+| Kind | Checked by | Good example | Avoid |
+|------|------------|--------------|-------|
+| **Different approach** | rules | Binary Search with recursion (no loops); Word Frequency with streams | a rule that only renames things |
+| **Efficiency** | large extra tests and a time limit | Primes up to 10 million (a sieve); Pair Sum in O(n) | limits that slow PCs or Java's start-up can miss |
+| **Constraint** | rules | Reverse a String without `StringBuilder.reverse()`; Second Largest in one pass | forbidding what the unit just taught |
+| **Robustness** | extra tests | Day of the Year with leap years; a calculator that accepts negative numbers and spaces | edge cases the main tests should already cover |
+
+- **Efficiency goals must be fair on any machine.** Pick inputs where the right approach takes well under a second and the naive one takes many times the limit (a quadratic loop over a million items), and keep a generous limit (2–3 s): the validator checks the bonus solution passes it on the slowest CI runner.
+- **Each goal has its own reference solution**, `Solution.bonus.<id>.java` (or `.c`), written the way a student would earn it. It must solve the challenge too.
+- **Title, description and one hint**, in both languages. The hint points to the idea (*"a number's prime factors are at most its square root"*), never the code.
+- **Where they fit:** Medium and Hard challenges first, and the unit's quick guide lists them at the end automatically.
+
 ## Quizzes
 
 - **8 to 10 questions.**
@@ -230,6 +247,7 @@ Used for reviews and by AI assistants to check their own work. Score each criter
 | Guidance | Description, Things to know and hints lead to the idea without giving it away. |
 | Hook | A real use of the idea is clear from the start. |
 | Distinct | No other challenge practises the same skill the same way. |
+| Bonus | Where the idea has a harder version, a bonus goal asks for a different approach, not more of the same (optional). |
 
 **Verdict:** *Concept* 1 → **replace** (often with a quiz question). Any other 1 → **revise**. Otherwise **keep**.
 

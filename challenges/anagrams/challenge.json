@@ -18,6 +18,16 @@
       ],
       "mustNotContain": [
         "Resolva contando letras, sem ordenar arrays."
+      ],
+      "bonus": [
+        {
+          "title": "Conte todas as letras de uma vez",
+          "description": "Use um array `int[26]` de contagens de letras, para ler cada texto uma só vez.",
+          "hint": "`c - 'a'` transforma a letra no seu índice: 0 para a, 25 para z. Some 1 no primeiro texto e subtraia 1 no segundo.",
+          "mustContain": [
+            "Use um array new int[26] de contagens."
+          ]
+        }
       ]
     }
   },
@@ -60,6 +70,20 @@
       "input": "a\nA\n",
       "output": "Anagrams\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "letter-counts",
+      "title": "Count every letter at once",
+      "description": "Use one `int[26]` array of letter counts, so each text is read only once.",
+      "hint": "`c - 'a'` turns a letter into its index: 0 for a, 25 for z. Count up for the first text and down for the second.",
+      "mustContain": [
+        {
+          "pattern": "new\\s+int\\s*\\[\\s*26\\s*\\]",
+          "message": "Use one new int[26] array of counts."
+        }
+      ]
     }
   ]
 }

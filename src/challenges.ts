@@ -37,7 +37,24 @@ export interface Challenge {
   subject?: string;
   /** The programming language: Java (Main.java) or C (main.c). */
   language: CodeLanguage;
+  /** Optional, harder goals checked on Submit once the tests pass (see bonus.ts). */
+  bonus: BonusGoal[];
   dir: string;
+}
+
+/** An optional goal on a challenge: a different approach, more efficiency, a constraint or more robustness. */
+export interface BonusGoal {
+  id: string;
+  title: string;
+  description: string;
+  hint?: string;
+  /** Rules the code must follow to earn it, such as "no for or while" for a recursive solution. */
+  mustContain: Rule[];
+  mustNotContain: Rule[];
+  /** Extra tests it must pass (never shown to the student), such as a huge input. */
+  tests: TestCase[];
+  /** A time limit for those tests, for efficiency goals. */
+  timeLimitMs?: number;
 }
 
 /** The languages a challenge can be written in. */
@@ -72,13 +89,38 @@ function readOptional(dir: string, file: string): string {
   return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : '';
 }
 
-/** Translated texts for one language: { "translations": { "pt-br": { title, hints, mustContain, mustNotContain } } }. */
+/** Translated texts for one language: { "translations": { "pt-br": { title, hints, mustContain, mustNotContain, bonus } } }. */
 interface ChallengeTranslation {
   title?: string;
   hints?: string[];
   /** Rule messages, in the same order as the rules. */
   mustContain?: string[];
   mustNotContain?: string[];
+  /** Bonus goals' texts, in the same order as the goals. */
+  bonus?: { title?: string; description?: string; hint?: string; mustContain?: string[]; mustNotContain?: string[] }[];
+}
+
+const text = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
+
+function parseBonus(raw: unknown, translations: ChallengeTranslation['bonus']): BonusGoal[] {
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+  return raw
+    .filter((b) => b && typeof b === 'object' && text(b.id) && text(b.title))
+    .map((b, i) => {
+      const t = translations?.[i] ?? {};
+      return {
+        id: text(b.id)!,
+        title: text(t.title) ?? text(b.title)!,
+        description: text(t.description) ?? text(b.description) ?? '',
+        hint: text(t.hint) ?? text(b.hint),
+        mustContain: translateRules(b.mustContain, t.mustContain),
+        mustNotContain: translateRules(b.mustNotContain, t.mustNotContain),
+        tests: Array.isArray(b.tests) ? b.tests : [],
+        timeLimitMs: typeof b.timeLimitMs === 'number' ? b.timeLimitMs : undefined,
+      };
+    });
 }
 
 function translateRules(rules: Rule[] | undefined, messages: string[] | undefined): Rule[] {
@@ -121,6 +163,7 @@ export function loadChallenge(dir: string, lang: Lang = language()): Challenge {
     requires: Array.isArray(meta.requires) ? meta.requires.filter((r: unknown): r is string => typeof r === 'string' && r.trim() !== '').map((r: string) => r.trim()) : [],
     subject: typeof meta.subject === 'string' && meta.subject.trim() ? meta.subject.trim() : undefined,
     language,
+    bonus: parseBonus(meta.bonus, t.bonus),
     dir,
   };
 }

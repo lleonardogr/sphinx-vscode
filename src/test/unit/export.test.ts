@@ -12,6 +12,9 @@ import { CONTENT_ROOTS, ROOT, tempDir } from './helpers';
 const builtIn = loadChallenges(CONTENT_ROOTS).challenges;
 const builtInQuizzes = loadQuizzes(CONTENT_ROOTS).quizzes;
 
+/** The reference solutions of the FizzBuzz fixture (its main ones and its bonus ones). */
+const FIZZBUZZ_SOLUTIONS = fs.readdirSync(path.join(ROOT, 'challenges', 'fizzbuzz')).filter((f) => /^Solution.*\.java$/.test(f)).sort();
+
 /** Writes the pack to disk, extracts it and returns what the importer finds. */
 function roundTrip(zip: Uint8Array) {
   const file = path.join(tempDir(), 'pack.zip');
@@ -52,7 +55,7 @@ describe('export a pack', () => {
     fs.cpSync(path.join(ROOT, 'challenges', 'fizzbuzz'), path.join(subject, 'challenges', 'atom-fizz'), { recursive: true });
     // The teacher also ticked the lesson on its own: it travels with the subject, once.
     const pack = buildPack([{ kind: 'subject', dir: subject }, { kind: 'lesson', dir: path.join(subject, 'lessons', 'inside-an-atom') }], 'chem', false);
-    assert.equal(pack.solutionsRemoved, 2);
+    assert.equal(pack.solutionsRemoved, FIZZBUZZ_SOLUTIONS.length);
     const { dest, found } = roundTrip(pack.zip);
     // The importer sees one subject, not the items inside it.
     assert.deepEqual(found.map((f) => `${f.kind}:${f.name}`), ['subject:chemistry']);
@@ -81,7 +84,7 @@ describe('export a pack', () => {
     const pack = buildPack([{ kind: 'challenge', dir: path.join(ROOT, 'challenges', 'fizzbuzz') }], 'p', true);
     assert.equal(pack.solutionsRemoved, 0);
     const { dest } = roundTrip(pack.zip);
-    assert.deepEqual(findSolutions(dest).map((f) => path.basename(f)).sort(), ['Solution.classic.java', 'Solution.java']);
+    assert.deepEqual(findSolutions(dest).map((f) => path.basename(f)).sort(), FIZZBUZZ_SOLUTIONS);
   });
 
   it('leaves out C reference solutions for students', () => {

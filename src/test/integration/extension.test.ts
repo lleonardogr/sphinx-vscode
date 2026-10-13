@@ -654,6 +654,49 @@ test('a C challenge opens main.c from its starter, passes with a correct solutio
   }
 });
 
+test('bonus goals are checked on Submit once the tests pass, and earned stars show in the sidebar', async () => {
+  const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-bonus-'));
+  const dir = path.join(folder, 'sum-to-n-bonus');
+  fs.mkdirSync(dir);
+  fs.writeFileSync(
+    path.join(dir, 'challenge.json'),
+    JSON.stringify({
+      title: 'Sum to N (bonus)',
+      difficulty: 'Easy',
+      tests: [{ input: '3\n', output: '6\n' }, { input: '10\n', output: '55\n', hidden: true }],
+      bonus: [{ id: 'no-loops', title: 'Without loops', description: 'No for or while.', mustNotContain: [{ pattern: '\\b(for|while)\\b', message: 'No loops.' }] }],
+    }),
+  );
+  fs.writeFileSync(path.join(dir, 'description.md'), '# Sum to N\n\nRead N and print 1 + 2 + … + N.');
+  fs.writeFileSync(path.join(dir, 'Starter.java'), 'void main() {\n}\n');
+  const config = vscode.workspace.getConfiguration('sphinx');
+  const before = config.get<string[]>('extraChallengePaths', []);
+  await config.update('extraChallengePaths', [...before, folder], vscode.ConfigurationTarget.Global);
+  const label = (n: unknown) => String(api.tree.getTreeItem(n as never).label);
+  const item = () => {
+    const others = api.tree.getChildren().find((n) => label(n) === 'Others');
+    return api.tree.getTreeItem(api.tree.getChildren(others).find((n) => label(n) === 'Sum to N (bonus)') as never);
+  };
+  try {
+    await waitFor(() => api.challenges().some((c) => c.id === 'sum-to-n-bonus'), 'the challenge to load');
+    // A loop solves it, without the bonus.
+    await submit('sum-to-n-bonus', 'void main() {\n    int n = Integer.parseInt(IO.readln().trim());\n    int sum = 0;\n    for (int i = 1; i <= n; i++) sum += i;\n    IO.println(sum);\n}\n');
+    assert.ok(api.progress.isSolved('sum-to-n-bonus'));
+    assert.deepEqual(api.progress.bonusEarned('sum-to-n-bonus'), []);
+    assert.match(String(item().description), /★ 0\/1$/);
+    // The formula earns it; the star stays earned.
+    await submit('sum-to-n-bonus', 'void main() {\n    int n = Integer.parseInt(IO.readln().trim());\n    IO.println(n * (n + 1) / 2);\n}\n');
+    assert.deepEqual(api.progress.bonusEarned('sum-to-n-bonus'), ['no-loops']);
+    assert.match(String(item().description), /★ 1\/1$/);
+    assert.match((item().tooltip as vscode.MarkdownString).value, /⭐ Bonus goals:\n- ★ Without loops/);
+    const others = api.tree.getChildren().find((n) => label(n) === 'Others');
+    assert.match(String(api.tree.getTreeItem(others as never).description), /★ 1\/1/);
+  } finally {
+    await config.update('extraChallengePaths', before, vscode.ConfigurationTarget.Global);
+    fs.rmSync(folder, { recursive: true, force: true });
+  }
+});
+
 test('state saved under the old "sphynx." keys moves to "sphinx." keys, once', () => {
   const data = new Map<string, unknown>([
     ['sphynx.progress', { 'hello-world': { solved: true } }],

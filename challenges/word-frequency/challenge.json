@@ -18,6 +18,19 @@
       ],
       "mustContain": [
         "Conte as palavras com um Map (HashMap ou TreeMap)."
+      ],
+      "bonus": [
+        {
+          "title": "Com um stream",
+          "description": "Conte as palavras com um stream e `Collectors.groupingBy`, sem nenhum laço.",
+          "hint": "`groupingBy(w -> w, TreeMap::new, Collectors.counting())` agrupa, ordena e conta de uma vez.",
+          "mustContain": [
+            "Agrupe as palavras com Collectors.groupingBy."
+          ],
+          "mustNotContain": [
+            "Sem laços: deixe o stream contar."
+          ]
+        }
       ]
     }
   },
@@ -50,6 +63,26 @@
       "input": "z y x z y z\n",
       "output": "x: 1\ny: 2\nz: 3\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "streams",
+      "title": "With a stream",
+      "description": "Count the words with a stream and `Collectors.groupingBy`, without any loop.",
+      "hint": "`groupingBy(w -> w, TreeMap::new, Collectors.counting())` groups, sorts and counts in one go.",
+      "mustContain": [
+        {
+          "pattern": "groupingBy",
+          "message": "Group the words with Collectors.groupingBy."
+        }
+      ],
+      "mustNotContain": [
+        {
+          "pattern": "\\b(for|while)\\b",
+          "message": "No loops: let the stream do the counting."
+        }
+      ]
     }
   ]
 }

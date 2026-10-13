@@ -92,6 +92,8 @@ export interface LessonView {
   /** The next item in the learning path, for the button at the end. */
   next?: { title: string; kind: 'lesson' | 'challenge' | 'quiz' };
   requirements: Requirement[];
+  /** The unit's challenges with bonus goals, to list at the end. */
+  bonus?: { challenge: string; goals: { title: string; earned: boolean }[] }[];
 }
 
 /** The single lesson panel, reused as the student moves between lessons. */
@@ -163,7 +165,12 @@ export class LessonPanel {
     };
     // A reading guide: the "In short" text, the reading cards (where lesson.md has the marker), then the rest.
     const [before, after = ''] = lesson.body.split(READINGS_MARKER);
-    const body = (await markdown(before)) + readingsHtml(lesson.readings) + (after.trim() ? await markdown(after) : '');
+    const stars = view.bonus?.length
+      ? `<section class="bonus-goals"><h2>⭐ ${tr('Bonus goals in this unit', 'Objetivos bônus desta unidade')}</h2><p class="muted">${tr('Optional, harder goals for when a challenge passes.', 'Objetivos opcionais e mais difíceis, para quando um desafio passa.')}</p><ul>${view.bonus
+          .map((b) => `<li><strong>${escapeHtml(b.challenge)}</strong>: ${b.goals.map((g) => `${g.earned ? '★' : '☆'} ${escapeHtml(g.title)}`).join(' · ')}</li>`)
+          .join('')}</ul></section>`
+      : '';
+    const body = (await markdown(before)) + readingsHtml(lesson.readings) + (after.trim() ? await markdown(after) : '') + stars;
     const objectives = lesson.objectives.length
       ? `<section class="objectives"><h2>${tr('After this unit you can', 'Depois desta unidade você consegue')}</h2><ul>${lesson.objectives.map((o) => `<li>${escapeHtml(o)}</li>`).join('')}</ul></section>`
       : '';

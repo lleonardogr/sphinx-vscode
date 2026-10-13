@@ -21,6 +21,17 @@
       ],
       "mustNotContain": [
         "Resolva com laços sobre o array, sem ordenar nem usar streams."
+      ],
+      "bonus": [
+        {
+          "title": "Uma passada, sem array",
+          "description": "Use um só laço e nenhum array de `int` ou lista: atualize os dois marcadores ao ler cada número.",
+          "hint": "Converta cada número dentro do mesmo laço que o compara.",
+          "mustNotContain": [
+            "Use só um laço.",
+            "Não guarde os números: sem array de int nem lista."
+          ]
+        }
       ]
     }
   },
@@ -69,6 +80,24 @@
       "input": "4\n-2147483648 -2147483648 -2147483648 0\n",
       "output": "Second largest: -2147483648\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "one-pass",
+      "title": "One pass, no array",
+      "description": "Use a single loop and no `int` array or list: update the two trackers as you read each number.",
+      "hint": "Parse each number inside the same loop that compares it.",
+      "mustNotContain": [
+        {
+          "pattern": "\\b(for|while)\\b[\\s\\S]*\\b(for|while)\\b",
+          "message": "Use only one loop."
+        },
+        {
+          "pattern": "\\bnew\\s+int\\s*\\[|\\bList\\b|\\bArrayList\\b",
+          "message": "Don't store the numbers: no int array or list."
+        }
+      ]
     }
   ]
 }
