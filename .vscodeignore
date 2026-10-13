@@ -6,6 +6,11 @@ custom/**/Solution*.java
 tests/**/Solution*.java
 exams/**/Solution*.java
 subjects/**/Solution*.java
+challenges/**/Solution*.c
+custom/**/Solution*.c
+tests/**/Solution*.c
+exams/**/Solution*.c
+subjects/**/Solution*.c
 custom/README.md
 **/*.map
 **/tsconfig.json

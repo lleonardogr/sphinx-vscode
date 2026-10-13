@@ -84,6 +84,21 @@ describe('export a pack', () => {
     assert.deepEqual(findSolutions(dest).map((f) => path.basename(f)).sort(), ['Solution.classic.java', 'Solution.java']);
   });
 
+  it('leaves out C reference solutions for students', () => {
+    const dir = path.join(tempDir(), 'sum-c');
+    fs.mkdirSync(dir);
+    fs.writeFileSync(path.join(dir, 'challenge.json'), JSON.stringify({ title: 'Sum', tests: [{ input: '1 2\n', output: '3\n' }] }));
+    fs.writeFileSync(path.join(dir, 'description.md'), '# Sum');
+    fs.writeFileSync(path.join(dir, 'Starter.c'), 'int main(void) { return 0; }\n');
+    fs.writeFileSync(path.join(dir, 'Solution.c'), 'int main(void) { return 0; }\n');
+    fs.writeFileSync(path.join(dir, 'Solution.bonus.fast.c'), 'int main(void) { return 0; }\n');
+    const pack = buildPack([{ kind: 'challenge', dir }], 'p', false);
+    assert.equal(pack.solutionsRemoved, 2);
+    const { dest } = roundTrip(pack.zip);
+    assert.deepEqual(findSolutions(dest), []);
+    assert.ok(fs.existsSync(path.join(dest, 'p', 'sum-c', 'Starter.c')));
+  });
+
   it('finds the teacher\'s own challenges an exam uses, but not built-in or private ones', () => {
     // A teacher folder: an exam that uses a private question, a built-in challenge and the teacher's own challenge.
     const folder = tempDir();
