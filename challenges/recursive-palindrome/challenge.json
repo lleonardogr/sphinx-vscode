@@ -23,6 +23,16 @@
       "mustNotContain": [
         "Resolva com recursão: sem laços for ou while.",
         "Compare os caracteres de forma recursiva em vez de inverter o texto."
+      ],
+      "bonus": [
+        {
+          "title": "Índices, sem substrings",
+          "description": "Cada chamada de `substring` copia o texto, então a versão com substring o copia de novo em cada nível. Passe dois índices, `isPalindrome(text, left, right)`, e deixe o texto intacto.",
+          "hint": "Mantenha boolean isPalindrome(String text) e faça-o chamar isPalindrome(text, 0, text.length() - 1).",
+          "mustNotContain": [
+            "Sem substring: mova dois índices."
+          ]
+        }
       ]
     }
   },
@@ -79,6 +89,20 @@
       "input": "ab\n",
       "output": "\"ab\" is not a palindrome\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "indexes",
+      "title": "Indexes, no substrings",
+      "description": "Every `substring` call copies the text, so the substring version copies it again on every level. Pass two indexes instead, `isPalindrome(text, left, right)`, and keep the text untouched.",
+      "hint": "Keep boolean isPalindrome(String text) and make it call isPalindrome(text, 0, text.length() - 1).",
+      "mustNotContain": [
+        {
+          "pattern": "\\bsubstring\\b",
+          "message": "No substring: move two indexes instead."
+        }
+      ]
     }
   ]
 }

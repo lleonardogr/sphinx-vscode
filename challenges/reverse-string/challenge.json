@@ -19,6 +19,19 @@
       ],
       "mustNotContain": [
         "Monte o texto invertido com um laço: o reverse() pronto não é permitido."
+      ],
+      "bonus": [
+        {
+          "title": "No lugar, num array de char",
+          "description": "Montar uma String um caractere por vez com `+=` copia o texto inteiro a cada passo. Transforme o texto num `char[]` e inverta-o no lugar, trocando das duas pontas para o meio.",
+          "hint": "Dois índices, left a partir de 0 e right a partir do fim, trocam os caracteres e andam um em direção ao outro. new String(chars) transforma o array de volta em texto.",
+          "mustContain": [
+            "Trabalhe num array de char: text.toCharArray()."
+          ],
+          "mustNotContain": [
+            "Troque no lugar: sem StringBuilder e sem +=."
+          ]
+        }
       ]
     }
   },
@@ -57,6 +70,26 @@
       "input": "12345 !?\n",
       "output": "?! 54321\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "char-array",
+      "title": "In place, in a char array",
+      "description": "Building a String one character at a time with `+=` copies the whole text on every step. Turn the text into a `char[]` and reverse it in place, swapping from both ends towards the middle.",
+      "hint": "Two indexes, left from 0 and right from the end, swap their characters and move towards each other. new String(chars) turns the array back into text.",
+      "mustContain": [
+        {
+          "pattern": "toCharArray",
+          "message": "Work on a char array: text.toCharArray()."
+        }
+      ],
+      "mustNotContain": [
+        {
+          "pattern": "StringBuilder|StringBuffer|\\+=",
+          "message": "Swap in place: no StringBuilder and no +=."
+        }
+      ]
     }
   ]
 }

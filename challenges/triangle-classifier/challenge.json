@@ -18,6 +18,13 @@
       ],
       "mustContain": [
         "Use if / else para classificar o triângulo."
+      ],
+      "bonus": [
+        {
+          "title": "Lados enormes",
+          "description": "Lados de até 2.000.000.000. Dois deles somados não cabem mais num `int`: `b + c` estoura e fica negativo, e triângulos de verdade saem como `Not a triangle`.",
+          "hint": "Leia os lados como long, ou compare sem somar: a >= b + c é o mesmo que a - b >= c."
+        }
       ]
     }
   },
@@ -65,6 +72,32 @@
       "input": "-3 4 5\n",
       "output": "Not a triangle\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "huge-sides",
+      "title": "Huge sides",
+      "description": "Sides up to 2,000,000,000. Two of them added together no longer fit in an `int`: `b + c` overflows and turns negative, and real triangles come out as `Not a triangle`.",
+      "hint": "Read the sides as long, or compare without adding: a >= b + c is the same as a - b >= c.",
+      "tests": [
+        {
+          "input": "2000000000 2000000000 2000000000\n",
+          "output": "Equilateral\n"
+        },
+        {
+          "input": "2000000000 1999999999 1999999999\n",
+          "output": "Isosceles\n"
+        },
+        {
+          "input": "1000000000 1000000000 2000000000\n",
+          "output": "Not a triangle\n"
+        },
+        {
+          "input": "2000000000 1500000000 1600000000\n",
+          "output": "Scalene\n"
+        }
+      ]
     }
   ]
 }

@@ -22,6 +22,19 @@
       ],
       "mustNotContain": [
         "Escreva a busca você mesmo, sem métodos de busca prontos."
+      ],
+      "bonus": [
+        {
+          "title": "Busca recursiva",
+          "description": "Escreva a busca como um método que chama a si mesmo na metade onde o valor pode estar, com as mesmas contagens de passos. Os únicos laços que sobram são os que leem a entrada.",
+          "hint": "search(numbers, value, low, high): um intervalo vazio (low > high) quer dizer não achado; senão olhe o mid e chame search de novo numa metade. Conte os passos num campo.",
+          "mustContain": [
+            "Escreva a busca como um método que chama a si mesmo."
+          ],
+          "mustNotContain": [
+            "Sem laço while: a recursão faz as divisões ao meio."
+          ]
+        }
       ]
     }
   },
@@ -64,6 +77,26 @@
       "input": "8\n3 6 9 12 15 18 21 24\n2\n24\n4\n",
       "output": "24 found at index 7, steps: 4\n4 not found, steps: 3\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "recursive",
+      "title": "Recursive search",
+      "description": "Write the search as a method that calls itself on the half where the value can be, with the same step counts. The only loops left are the ones that read the input.",
+      "hint": "search(numbers, value, low, high): an empty range (low > high) means not found; otherwise look at mid and call search again on one half. Count the steps in a field.",
+      "mustContain": [
+        {
+          "pattern": "\\b(?!(?:if|for|while|switch|catch|return|synchronized)\\b)(\\w+)\\s*\\([^()]*\\)\\s*\\{(?:(?!\\n\\})[\\s\\S])*?\\b\\1\\s*\\(",
+          "message": "Write the search as a method that calls itself."
+        }
+      ],
+      "mustNotContain": [
+        {
+          "pattern": "\\bwhile\\b",
+          "message": "No while loop: the recursion does the halving."
+        }
+      ]
     }
   ]
 }

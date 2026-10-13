@@ -18,6 +18,19 @@
       ],
       "mustContain": [
         "Conte as palavras com um Map."
+      ],
+      "bonus": [
+        {
+          "title": "Top k com um heap",
+          "description": "Ordenar todas as palavras só para ficar com `k` delas dá mais trabalho que o necessário. Guarde as `k` melhores numa `PriorityQueue` cuja cabeça é a mais fraca delas, e tire-a sempre que a fila passar de `k`.",
+          "hint": "O comparador põe a menor contagem primeiro e, para contagens iguais, a palavra que vem por último na ordem alfabética. No fim, tire tudo com poll e imprima ao contrário.",
+          "mustContain": [
+            "Guarde as k palavras do topo numa PriorityQueue."
+          ],
+          "mustNotContain": [
+            "Deixe o heap ordenar: sem ordenação."
+          ]
+        }
       ]
     }
   },
@@ -55,6 +68,26 @@
       "input": "2\nzeta alpha zeta alpha beta beta\n",
       "output": "alpha: 2\nbeta: 2\n",
       "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "priority-queue",
+      "title": "Top k with a heap",
+      "description": "Sorting every word just to keep `k` of them does more work than needed. Keep the best `k` in a `PriorityQueue` whose head is the weakest of them, and push it out whenever the queue grows past `k`.",
+      "hint": "The comparator puts the lowest count first, and for equal counts the word that comes last alphabetically. At the end, poll everything and print it in reverse.",
+      "mustContain": [
+        {
+          "pattern": "\\bPriorityQueue\\b",
+          "message": "Keep the top k words in a PriorityQueue."
+        }
+      ],
+      "mustNotContain": [
+        {
+          "pattern": "\\.sort\\s*\\(|\\bsorted\\s*\\(|\\bTreeMap\\b|\\bTreeSet\\b|Collections\\s*\\.\\s*sort",
+          "message": "Let the heap do the ordering: no sorting."
+        }
+      ]
     }
   ]
 }
