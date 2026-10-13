@@ -37,7 +37,7 @@ int main(void) {
     for (int k = 0; k < n; k++) {
         int i = pos[k];
         char shown[21];
-        snprintf(shown, sizeof shown, "%s", name[i]);
+        snprintf(shown, sizeof shown, "%.20s", name[i]);
         printf("%-8s %-20s %5d %7ld.%02ld\n", code[i], shown, qty[i], cents[i] / 100, cents[i] % 100);
         total += cents[i];
     }
