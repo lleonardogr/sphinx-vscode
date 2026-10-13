@@ -1,0 +1,52 @@
+{
+  "title": "Arrays in C",
+  "topic": "CArrays",
+  "order": 1,
+  "requires": [
+    "CFunctions",
+    "Arrays"
+  ],
+  "objectives": [
+    "Declare and fill fixed-size arrays, including 2D arrays, and pass them to functions together with their length.",
+    "Explain why C never checks an index, and what an out-of-bounds access does.",
+    "Choose where a large array lives: a local array on the stack, or a static or global one."
+  ],
+  "readings": [
+    {
+      "title": "Arrays",
+      "source": "Beej's Guide to C Programming, chapter 6",
+      "url": "https://beej.us/guide/bgc/html/split/arrays.html",
+      "type": "article",
+      "minutes": 10,
+      "lang": "en",
+      "lookFor": "Getting the length with sizeof, initializers, \"Out of Bounds!\", multidimensional arrays, and passing arrays to functions. The pointer parts of 6.6 make full sense after the Pointers unit."
+    },
+    {
+      "title": "Lecture 2: Arrays",
+      "source": "CS50x (Harvard), lecture notes",
+      "url": "https://cs50.harvard.edu/x/2026/notes/2/#arrays",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "Optional: how an array sits in memory, one element after another, with pictures. Skip \"Reading Levels\" and \"Debugging\" at the top."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Arrays em C",
+      "objectives": [
+        "Declarar e preencher arrays de tamanho fixo, inclusive 2D, e passá-los para funções junto com o tamanho.",
+        "Explicar por que o C nunca confere um índice, e o que faz um acesso fora dos limites.",
+        "Escolher onde um array grande fica: um array local na pilha, ou um static ou global."
+      ],
+      "readings": [
+        {
+          "lookFor": "O tamanho com sizeof, inicializadores, \"Out of Bounds!\", arrays multidimensionais e a passagem de arrays para funções. As partes com ponteiros da seção 6.6 fazem sentido completo depois da unidade de ponteiros."
+        },
+        {
+          "lookFor": "Opcional: como um array fica na memória, um elemento depois do outro, com figuras. Pule \"Reading Levels\" e \"Debugging\" no começo."
+        }
+      ]
+    }
+  }
+}

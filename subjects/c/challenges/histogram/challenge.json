@@ -1,0 +1,69 @@
+{
+  "title": "Histogram",
+  "topic": "CArrays",
+  "requires": [
+    "CFunctions",
+    "Arrays"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Keep one counter per range in an int array of 10 elements, all starting at 0: score / 10 is the index.",
+    "100 / 10 is 10, one past the end of the array: put it in the last range instead.",
+    "Print each range with printf(\"%3d-%-3d|\", low, high) and then one * per score, using an inner loop."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Histograma",
+      "hints": [
+        "Guarde um contador por faixa num array de int de 10 elementos, todos começando em 0: nota / 10 é o índice.",
+        "100 / 10 é 10, um depois do fim do array: coloque-o na última faixa.",
+        "Imprima cada faixa com printf(\"%3d-%-3d|\", menor, maior) e depois um * por nota, com um laço interno."
+      ],
+      "mustContain": [
+        "Guarde as contagens num array de int."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bint\\s+\\w+\\s*\\[",
+      "message": "Keep the counts in an int array."
+    }
+  ],
+  "tests": [
+    {
+      "input": "8\n72 85 91 100 67 78 74 55\n",
+      "output": "  0-9  |\n 10-19 |\n 20-29 |\n 30-39 |\n 40-49 |\n 50-59 |*\n 60-69 |*\n 70-79 |***\n 80-89 |*\n 90-100|**\nMost common: 70-79\n"
+    },
+    {
+      "input": "3\n0 9 10\n",
+      "output": "  0-9  |**\n 10-19 |*\n 20-29 |\n 30-39 |\n 40-49 |\n 50-59 |\n 60-69 |\n 70-79 |\n 80-89 |\n 90-100|\nMost common: 0-9\n"
+    },
+    {
+      "input": "0\n",
+      "output": "  0-9  |\n 10-19 |\n 20-29 |\n 30-39 |\n 40-49 |\n 50-59 |\n 60-69 |\n 70-79 |\n 80-89 |\n 90-100|\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n100 100 100 100 100\n",
+      "output": "  0-9  |\n 10-19 |\n 20-29 |\n 30-39 |\n 40-49 |\n 50-59 |\n 60-69 |\n 70-79 |\n 80-89 |\n 90-100|*****\nMost common: 90-100\n",
+      "hidden": true
+    },
+    {
+      "input": "10\n5 15 25 35 45 55 65 75 85 95\n",
+      "output": "  0-9  |*\n 10-19 |*\n 20-29 |*\n 30-39 |*\n 40-49 |*\n 50-59 |*\n 60-69 |*\n 70-79 |*\n 80-89 |*\n 90-100|*\nMost common: 0-9\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n50 59 60 69 50 61\n",
+      "output": "  0-9  |\n 10-19 |\n 20-29 |\n 30-39 |\n 40-49 |\n 50-59 |***\n 60-69 |***\n 70-79 |\n 80-89 |\n 90-100|\nMost common: 50-59\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n99 90 89 80\n",
+      "output": "  0-9  |\n 10-19 |\n 20-29 |\n 30-39 |\n 40-49 |\n 50-59 |\n 60-69 |\n 70-79 |\n 80-89 |**\n 90-100|**\nMost common: 80-89\n",
+      "hidden": true
+    }
+  ]
+}

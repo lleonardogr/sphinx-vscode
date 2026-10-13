@@ -1,0 +1,188 @@
+{
+  "title": "Arrays in C Quiz",
+  "topic": "CArrays",
+  "requires": [
+    "CFunctions",
+    "Arrays"
+  ],
+  "description": "Array sizes, initializers, indexes out of bounds, 2D arrays and arrays in functions.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "int a[5] = {1, 2};\nfor (int i = 0; i < 5; i++) {\n    printf(\"%d \", a[i]);\n}",
+      "options": [
+        "1 2 0 0 0",
+        "1 2 then three unpredictable values",
+        "1 2 2 2 2",
+        "It does not compile"
+      ],
+      "answer": 0,
+      "explanation": "When an initializer lists fewer values than the array holds, the remaining elements are set to 0. That is why int counts[10] = {0}; is the usual way to start a zeroed array."
+    },
+    {
+      "type": "choice",
+      "prompt": "With 4-byte ints, what does this print?",
+      "code": "int scores[10];\nprintf(\"%zu\\n\", sizeof scores / sizeof scores[0]);",
+      "options": [
+        "10",
+        "40",
+        "4",
+        "9"
+      ],
+      "answer": 0,
+      "explanation": "sizeof scores is the whole array, 40 bytes, and sizeof scores[0] is one element, 4 bytes: 40 / 4 = 10 elements. This only works where the array itself is in scope, not inside a function that received it."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why does a function that receives an int array parameter need the length passed as well?",
+      "options": [
+        "the parameter is really a pointer to the first element, so sizeof inside the function gives the pointer's size, not the array's",
+        "arrays are copied into the function, and the copy loses its length",
+        "C forbids sizeof inside functions",
+        "it doesn't: arr.length works inside the function"
+      ],
+      "answer": 0,
+      "explanation": "An array passed to a function \"decays\" to a pointer to its first element: int values[] in a parameter list means int *values. The length is lost, so it travels as a separate argument."
+    },
+    {
+      "type": "choice",
+      "prompt": "What does this print?",
+      "code": "void first_to_ten(int nums[]) {\n    nums[0] = 10;\n}\n\nint main(void) {\n    int a[3] = {1, 2, 3};\n    first_to_ten(a);\n    printf(\"%d %d %d\\n\", a[0], a[1], a[2]);\n}",
+      "options": [
+        "10 2 3",
+        "1 2 3",
+        "10 0 0",
+        "It does not compile"
+      ],
+      "answer": 0,
+      "explanation": "The function receives the array itself (its address), not a copy, so setting nums[0] changes main's array. An int parameter would have been a copy."
+    },
+    {
+      "type": "choice",
+      "prompt": "What happens when this runs?",
+      "code": "int a[3] = {1, 2, 3};\na[3] = 4;",
+      "options": [
+        "undefined behavior: a[3] is past the end, so it may overwrite another variable, crash, or seem to work",
+        "it throws an ArrayIndexOutOfBoundsException",
+        "the array grows to 4 elements",
+        "the compiler always refuses it"
+      ],
+      "answer": 0,
+      "explanation": "C does not check indexes at run time. Writing past the end touches whatever memory comes next. Memory checkers such as AddressSanitizer, which Sphinx uses, stop the program and report the line."
+    },
+    {
+      "type": "choice",
+      "prompt": "In int m[3][4], which element sits right after m[0][3] in memory?",
+      "options": [
+        "m[1][0]",
+        "m[0][4]",
+        "m[1][3]",
+        "none: rows are stored apart"
+      ],
+      "answer": 0,
+      "explanation": "A 2D array is stored row by row (row-major order): all of row 0, then all of row 1. After the last element of row 0 comes the first of row 1."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why might this program crash as soon as main starts?",
+      "code": "int main(void) {\n    int big[10000000];\n    big[0] = 1;\n    return big[0];\n}",
+      "options": [
+        "the 40 MB array is local, so it goes on the stack, which is usually 1 to 8 MB",
+        "arrays can't have more than 65535 elements",
+        "int arrays must be initialized",
+        "main can't declare arrays"
+      ],
+      "answer": 0,
+      "explanation": "Local variables live on the stack, and the stack is small. A big array that is static or global goes in the program's data area instead, which has room for it."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "In C, b = a; copies every element of array a into array b when both are int[5].",
+      "answer": false,
+      "explanation": "Arrays can't be assigned in C: b = a; is a compile error. Copy the elements in a loop, or with memcpy(b, a, sizeof a)."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz: arrays em C",
+      "description": "Tamanho dos arrays, inicializadores, índices fora dos limites, arrays 2D e arrays em funções.",
+      "questions": [
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "1 2 0 0 0",
+            "1 2 e depois três valores imprevisíveis",
+            "1 2 2 2 2",
+            "Não compila"
+          ],
+          "explanation": "Quando um inicializador lista menos valores do que o array comporta, os elementos restantes ficam em 0. Por isso int counts[10] = {0}; é o jeito comum de começar um array zerado."
+        },
+        {
+          "prompt": "Com ints de 4 bytes, o que isto imprime?",
+          "options": [
+            "10",
+            "40",
+            "4",
+            "9"
+          ],
+          "explanation": "sizeof scores é o array inteiro, 40 bytes, e sizeof scores[0] é um elemento, 4 bytes: 40 / 4 = 10 elementos. Isso só funciona onde o próprio array está declarado, não dentro de uma função que o recebeu."
+        },
+        {
+          "prompt": "Por que uma função que recebe um array de int como parâmetro também precisa receber o tamanho?",
+          "options": [
+            "o parâmetro na verdade é um ponteiro para o primeiro elemento, então sizeof dentro da função dá o tamanho do ponteiro, não do array",
+            "os arrays são copiados para a função, e a cópia perde o tamanho",
+            "o C proíbe sizeof dentro de funções",
+            "não precisa: arr.length funciona dentro da função"
+          ],
+          "explanation": "Um array passado para uma função \"decai\" para um ponteiro para o primeiro elemento: int values[] numa lista de parâmetros quer dizer int *values. O tamanho se perde, então ele vai como um argumento separado."
+        },
+        {
+          "prompt": "O que isto imprime?",
+          "options": [
+            "10 2 3",
+            "1 2 3",
+            "10 0 0",
+            "Não compila"
+          ],
+          "explanation": "A função recebe o próprio array (o endereço dele), não uma cópia, então mudar nums[0] muda o array do main. Um parâmetro int teria sido uma cópia."
+        },
+        {
+          "prompt": "O que acontece quando isto roda?",
+          "options": [
+            "comportamento indefinido: a[3] passa do fim, então pode sobrescrever outra variável, travar, ou parecer funcionar",
+            "lança uma ArrayIndexOutOfBoundsException",
+            "o array cresce para 4 elementos",
+            "o compilador sempre recusa"
+          ],
+          "explanation": "O C não confere índices durante a execução. Escrever depois do fim mexe na memória que vier em seguida. Verificadores de memória como o AddressSanitizer, que o Sphinx usa, param o programa e informam a linha."
+        },
+        {
+          "prompt": "Em int m[3][4], qual elemento fica logo depois de m[0][3] na memória?",
+          "options": [
+            "m[1][0]",
+            "m[0][4]",
+            "m[1][3]",
+            "nenhum: as linhas ficam separadas"
+          ],
+          "explanation": "Um array 2D é guardado linha por linha (ordem por linhas): toda a linha 0, depois toda a linha 1. Depois do último elemento da linha 0 vem o primeiro da linha 1."
+        },
+        {
+          "prompt": "Por que este programa pode travar assim que o main começa?",
+          "options": [
+            "o array de 40 MB é local, então vai para a pilha, que costuma ter de 1 a 8 MB",
+            "arrays não podem ter mais de 65535 elementos",
+            "arrays de int precisam ser inicializados",
+            "o main não pode declarar arrays"
+          ],
+          "explanation": "Variáveis locais ficam na pilha, e a pilha é pequena. Um array grande static ou global vai para a área de dados do programa, que tem espaço para ele."
+        },
+        {
+          "prompt": "No C, b = a; copia cada elemento do array a para o array b quando os dois são int[5].",
+          "explanation": "Arrays não podem ser atribuídos no C: b = a; é erro de compilação. Copie os elementos num laço, ou com memcpy(b, a, sizeof a)."
+        }
+      ]
+    }
+  }
+}
