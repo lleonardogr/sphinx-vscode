@@ -1,0 +1,76 @@
+{
+  "title": "Inventory Report",
+  "topic": "Tests",
+  "skills": [
+    "CBasics",
+    "CFunctions",
+    "CArrays",
+    "CStrings"
+  ],
+  "unit": "CStrings",
+  "requires": [
+    "CArrays",
+    "Strings"
+  ],
+  "difficulty": "Hard",
+  "order": 1,
+  "hints": [
+    "Read each line with fgets and split it at the commas: sscanf(line, \"%8[^,],%30[^,],%d,%lf\", …) reads text up to a comma with %[^,].",
+    "Keep the items in parallel arrays (codes, names, quantities, prices) and sort an array of positions, so the lines stay in input order for the low-stock list.",
+    "Sort by hand, for example selection sort: the next item is the one with the highest value, and the smaller code when values tie. Print with %-8s %-20.20s %5d %10.2f."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Relatório de estoque",
+      "hints": [
+        "Leia cada linha com fgets e divida nas vírgulas: sscanf(line, \"%8[^,],%30[^,],%d,%lf\", …) lê texto até uma vírgula com %[^,].",
+        "Guarde os itens em arrays paralelos (códigos, nomes, quantidades, preços) e ordene um array de posições, para as linhas continuarem na ordem da entrada para a lista de estoque baixo.",
+        "Ordene à mão, por exemplo com ordenação por seleção: o próximo item é o de maior valor, e o de menor código quando os valores empatam. Imprima com %-8s %-20.20s %5d %10.2f."
+      ],
+      "mustNotContain": [
+        "Ordene à mão: o qsort recebe um ponteiro para função, que vem na unidade de ponteiros."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "\\bqsort\\b",
+      "message": "Sort by hand: qsort takes a function pointer, which comes in the Pointers unit."
+    }
+  ],
+  "tests": [
+    {
+      "input": "4\nP100,Blue pen,40,1.50\nN200,Notebook A5 squared,12,6.90\nS300,Stapler,3,15.00\nE400,Eraser,4,0.80\n",
+      "output": "CODE     NAME                   QTY      VALUE\nN200     Notebook A5 squared     12      82.80\nP100     Blue pen                40      60.00\nS300     Stapler                  3      45.00\nE400     Eraser                   4       3.20\nTotal value: 191.00\nLow stock: S300, E400\n"
+    },
+    {
+      "input": "1\nX1,Only item,0,9.99\n",
+      "output": "CODE     NAME                   QTY      VALUE\nX1       Only item                0       0.00\nTotal value: 0.00\nLow stock: X1\n"
+    },
+    {
+      "input": "3\nB,Same value,2,5.00\nA,Same value too,10,1.00\nC,Cheaper,1,9.99\n",
+      "output": "CODE     NAME                   QTY      VALUE\nA        Same value too          10      10.00\nB        Same value               2      10.00\nC        Cheaper                  1       9.99\nTotal value: 29.99\nLow stock: B, C\n",
+      "hidden": true
+    },
+    {
+      "input": "2\nLONGNAME,A name longer than 20 letters,7,123.45\nS,Short,100,999.99\n",
+      "output": "CODE     NAME                   QTY      VALUE\nS        Short                  100   99999.00\nLONGNAME A name longer than 2     7     864.15\nTotal value: 100863.15\nLow stock: none\n",
+      "hidden": true
+    },
+    {
+      "input": "5\nA1,a,1,0.01\nA2,b,2,0.01\nA3,c,3,0.01\nA4,d,4,0.01\nA5,e,5,0.01\n",
+      "output": "CODE     NAME                   QTY      VALUE\nA5       e                        5       0.05\nA4       d                        4       0.04\nA3       c                        3       0.03\nA2       b                        2       0.02\nA1       a                        1       0.01\nTotal value: 0.15\nLow stock: A1, A2, A3, A4\n",
+      "hidden": true
+    },
+    {
+      "input": "3\nZ9,Zeta,50,2.00\nY8,Ypsilon,25,4.00\nX7,Xi,100,1.00\n",
+      "output": "CODE     NAME                   QTY      VALUE\nX7       Xi                     100     100.00\nY8       Ypsilon                 25     100.00\nZ9       Zeta                    50     100.00\nTotal value: 300.00\nLow stock: none\n",
+      "hidden": true
+    },
+    {
+      "input": "6\nK1,Keyboard,8,49.90\nM2,Mouse,15,19.90\nC3,Cable USB-C 2m,30,7.50\nH4,Headset,2,89.00\nW5,Webcam,0,59.00\nD6,Dock,1,129.99\n",
+      "output": "CODE     NAME                   QTY      VALUE\nK1       Keyboard                 8     399.20\nM2       Mouse                   15     298.50\nC3       Cable USB-C 2m          30     225.00\nH4       Headset                  2     178.00\nD6       Dock                     1     129.99\nW5       Webcam                   0       0.00\nTotal value: 1230.69\nLow stock: H4, W5, D6\n",
+      "hidden": true
+    }
+  ]
+}

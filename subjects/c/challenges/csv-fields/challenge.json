@@ -1,0 +1,108 @@
+{
+  "title": "CSV Fields",
+  "topic": "CStrings",
+  "requires": [
+    "CArrays",
+    "Strings"
+  ],
+  "difficulty": "Medium",
+  "order": 4,
+  "hints": [
+    "Splitting at every comma breaks on \"Lovelace, Ada\": walk the line one character at a time, remembering whether you are inside quotes.",
+    "Outside quotes, a comma ends the field and a quote at the very start of a field opens a quoted part. Inside quotes, a comma is just a character, \"\" is one quote, and a single \" closes the quotes.",
+    "Copy the characters of the current field into a char array with an index, and end it with '\\0' when the field ends. The end of the line ends the last field, so a line always has at least one."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Campos de CSV",
+      "hints": [
+        "Dividir em toda vírgula quebra em \"Lovelace, Ada\": percorra a linha um caractere por vez, lembrando se está dentro de aspas.",
+        "Fora das aspas, uma vírgula termina o campo e uma aspa logo no começo de um campo abre uma parte entre aspas. Dentro das aspas, a vírgula é só um caractere, \"\" é uma aspa, e uma \" sozinha fecha as aspas.",
+        "Copie os caracteres do campo atual para um array de char com um índice, e termine-o com '\\0' quando o campo acabar. O fim da linha termina o último campo, então uma linha sempre tem pelo menos um."
+      ],
+      "mustNotContain": [
+        "O strtok pula campos vazios e não sabe nada de aspas: percorra os caracteres você mesmo."
+      ],
+      "bonus": [
+        {
+          "title": "Aspas quebradas",
+          "description": "Arquivos do mundo real nem sempre estão bem formados. Quando uma linha termina com um campo entre aspas ainda aberto, imprima `Error: unclosed quote` para essa linha em vez dos campos.",
+          "hint": "Você já sabe se está dentro de aspas: se ainda estiver quando chegar ao '\\0', a aspa nunca foi fechada."
+        }
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "\\bstrtok\\b",
+      "message": "strtok skips empty fields and knows nothing about quotes: walk the characters yourself."
+    }
+  ],
+  "tests": [
+    {
+      "input": "name,age,city\nAda,36,London\n",
+      "output": "3 | [name] [age] [city]\n3 | [Ada] [36] [London]\n"
+    },
+    {
+      "input": "\"Lovelace, Ada\",1815,\"said \"\"hi\"\"\"\na,,b\n",
+      "output": "3 | [Lovelace, Ada] [1815] [said \"hi\"]\n3 | [a] [] [b]\n"
+    },
+    {
+      "input": "\n",
+      "output": "1 | []\n",
+      "hidden": true
+    },
+    {
+      "input": ",\n",
+      "output": "2 | [] []\n",
+      "hidden": true
+    },
+    {
+      "input": "\"\",x,\"\"\n",
+      "output": "3 | [] [x] []\n",
+      "hidden": true
+    },
+    {
+      "input": "single\n\"quoted only\"\n",
+      "output": "1 | [single]\n1 | [quoted only]\n",
+      "hidden": true
+    },
+    {
+      "input": "  spaces  , kept ,\n",
+      "output": "3 | [  spaces  ] [ kept ] []\n",
+      "hidden": true
+    },
+    {
+      "input": "\"a,b,c\",\"d\"\"e\",f\n1,2,3,4,5,6,7,8,9,10\n",
+      "output": "3 | [a,b,c] [d\"e] [f]\n10 | [1] [2] [3] [4] [5] [6] [7] [8] [9] [10]\n",
+      "hidden": true
+    },
+    {
+      "input": "last line without newline,\"ok\"",
+      "output": "2 | [last line without newline] [ok]\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "unclosed",
+      "title": "Broken quotes",
+      "description": "Files from the real world are not always well formed. When a line ends while a quoted field is still open, print `Error: unclosed quote` for that line instead of its fields.",
+      "hint": "You already know whether you are inside quotes: if you still are when you reach '\\0', the quote was never closed.",
+      "tests": [
+        {
+          "input": "\"open,field\nfine,\"line\"\n",
+          "output": "Error: unclosed quote\n2 | [fine] [line]\n"
+        },
+        {
+          "input": "a,\"b\"\"\n\"\"\"\n\"x\"\"y\"\n",
+          "output": "Error: unclosed quote\nError: unclosed quote\n1 | [x\"y]\n"
+        },
+        {
+          "input": "ok\n\"\n",
+          "output": "1 | [ok]\nError: unclosed quote\n"
+        }
+      ]
+    }
+  ]
+}

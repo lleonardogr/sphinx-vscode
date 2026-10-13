@@ -1,0 +1,60 @@
+{
+  "title": "Label Printer",
+  "topic": "CStrings",
+  "requires": [
+    "CArrays",
+    "Strings"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Read the width, then each name with fgets into a buffer big enough for 100 characters, and remove the newline.",
+    "printf(\"%-*s\", width, name) pads a name with spaces on the right to width characters; the * takes the width from the argument list.",
+    "A name longer than the width becomes its first width − 3 characters and \"...\": printf(\"%.*s...\", width - 3, name), or snprintf into a buffer of width + 1."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Impressora de etiquetas",
+      "hints": [
+        "Leia a largura e depois cada nome com fgets num buffer grande o bastante para 100 caracteres, e remova a quebra de linha.",
+        "printf(\"%-*s\", width, name) completa o nome com espaços à direita até width caracteres; o * pega a largura da lista de argumentos.",
+        "Um nome maior que a largura vira os primeiros width − 3 caracteres e \"...\": printf(\"%.*s...\", width - 3, name), ou snprintf num buffer de width + 1."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "10\nAda Lovelace\nGrace\nAlan Turing\n",
+      "output": "+----------+\n|Ada Lov...|\n|Grace     |\n|Alan Tu...|\n+----------+\n"
+    },
+    {
+      "input": "5\nBob\nAlice\nCharlie\n",
+      "output": "+-----+\n|Bob  |\n|Alice|\n|Ch...|\n+-----+\n"
+    },
+    {
+      "input": "40\nMaria Eduarda dos Santos Albuquerque de Oliveira Cavalcanti Pereira Lima Rodrigues Fernandes da Costa\n",
+      "output": "+----------------------------------------+\n|Maria Eduarda dos Santos Albuquerque ...|\n+----------------------------------------+\n",
+      "hidden": true
+    },
+    {
+      "input": "8\nMaria Eduarda dos Santos Albuquerque de Oliveira Cavalcanti Pereira Lima Rodrigues Fernandes da Costa\nKen\n",
+      "output": "+--------+\n|Maria...|\n|Ken     |\n+--------+\n",
+      "hidden": true
+    },
+    {
+      "input": "12\nexactly12chr\nexactly13chrs\n",
+      "output": "+------------+\n|exactly12chr|\n|exactly13...|\n+------------+\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n",
+      "output": "+------+\n+------+\n",
+      "hidden": true
+    },
+    {
+      "input": "20\nLinus Torvalds\nDennis Ritchie\nKen Thompson",
+      "output": "+--------------------+\n|Linus Torvalds      |\n|Dennis Ritchie      |\n|Ken Thompson        |\n+--------------------+\n",
+      "hidden": true
+    }
+  ]
+}

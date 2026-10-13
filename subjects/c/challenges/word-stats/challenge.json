@@ -1,0 +1,88 @@
+{
+  "title": "Word Stats",
+  "topic": "CStrings",
+  "requires": [
+    "CArrays",
+    "Strings"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Read the line with fgets into a char array of 256, then cut the newline: line[strcspn(line, \"\\n\")] = '\\0'.",
+    "Walk the string with an index until '\\0': skip spaces, then everything up to the next space or the end is one word. Count it and measure it.",
+    "Remember where the longest word starts and how long it is. printf(\"%.*s\", length, &line[start]) prints just that part."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Estatísticas de palavras",
+      "hints": [
+        "Leia a linha com fgets num array de char de 256 e corte a quebra de linha: line[strcspn(line, \"\\n\")] = '\\0'.",
+        "Percorra a string com um índice até o '\\0': pule os espaços, e tudo até o próximo espaço ou o fim é uma palavra. Conte e meça.",
+        "Lembre onde começa a palavra mais longa e o tamanho dela. printf(\"%.*s\", tamanho, &line[inicio]) imprime só essa parte."
+      ],
+      "mustContain": [
+        "Leia a linha inteira com fgets."
+      ],
+      "mustNotContain": [
+        "Use fgets: scanf(\"%s\") para no primeiro espaço, e gets é inseguro."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\bfgets\\s*\\(",
+      "message": "Read the whole line with fgets."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(scanf|gets)\\s*\\(",
+      "message": "Use fgets: scanf(\"%s\") stops at the first space, and gets is unsafe."
+    }
+  ],
+  "tests": [
+    {
+      "input": "the quick brown fox\n",
+      "output": "Characters: 19\nWords: 4\nLongest: quick\n"
+    },
+    {
+      "input": "  C   is fun  \n",
+      "output": "Characters: 14\nWords: 3\nLongest: fun\n"
+    },
+    {
+      "input": "\n",
+      "output": "Characters: 0\nWords: 0\nLongest: -\n",
+      "hidden": true
+    },
+    {
+      "input": "a\n",
+      "output": "Characters: 1\nWords: 1\nLongest: a\n",
+      "hidden": true
+    },
+    {
+      "input": "     \n",
+      "output": "Characters: 5\nWords: 0\nLongest: -\n",
+      "hidden": true
+    },
+    {
+      "input": "tie tie tie\n",
+      "output": "Characters: 11\nWords: 3\nLongest: tie\n",
+      "hidden": true
+    },
+    {
+      "input": "one supercalifragilistic word\n",
+      "output": "Characters: 29\nWords: 3\nLongest: supercalifragilistic\n",
+      "hidden": true
+    },
+    {
+      "input": "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x \n",
+      "output": "Characters: 200\nWords: 100\nLongest: x\n",
+      "hidden": true
+    },
+    {
+      "input": "end-of-input-without-newline",
+      "output": "Characters: 28\nWords: 1\nLongest: end-of-input-without-newline\n",
+      "hidden": true
+    }
+  ]
+}
