@@ -6,13 +6,19 @@ on:
 
 permissions:
   contents: write
+  id-token: write   # lets azure/login sign in as the Marketplace identity, without a stored token
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    # The managed identity's federated credential trusts jobs in this environment.
+    environment: marketplace-publish
     env:
       # Optional: when these repository secrets exist, the release is also published to the
-      # VS Code Marketplace (VSCE_PAT) and to Open VSX (OVSX_PAT). See docs/publishing.md.
+      # VS Code Marketplace (AZURE_CLIENT_ID and AZURE_TENANT_ID with Microsoft Entra ID, or the
+      # older VSCE_PAT) and to Open VSX (OVSX_PAT). See docs/publishing.md.
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       VSCE_PAT: ${{ secrets.VSCE_PAT }}
       OVSX_PAT: ${{ secrets.OVSX_PAT }}
     steps:
@@ -57,8 +63,20 @@ jobs:
               --generate-notes
           fi
 
-      - name: Publish to the VS Code Marketplace
-        if: env.VSCE_PAT != ''
+      - name: Sign in to Microsoft Entra ID
+        if: env.AZURE_CLIENT_ID != ''
+        uses: azure/login@v2
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
+
+      - name: Publish to the VS Code Marketplace (Microsoft Entra ID)
+        if: env.AZURE_CLIENT_ID != ''
+        run: npx vsce publish --packagePath *.vsix --skip-duplicate --azure-credential
+
+      - name: Publish to the VS Code Marketplace (personal access token)
+        if: env.AZURE_CLIENT_ID == '' && env.VSCE_PAT != ''
         run: npx vsce publish --packagePath *.vsix --skip-duplicate
 
       - name: Publish to Open VSX
