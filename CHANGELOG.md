@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Fixed
+
+- **Bonus goals in the challenge panel.** The panel now lists a challenge's bonus goals before you submit, with ☆ or ★, their description and an optional hint. After a Submit, the results show which goals were earned and why the others weren't, and the stars update. Before, the list was missing and the results banner failed to appear.
+
 ## [1.9.0] - 2026-10-14
 
 ### Added

@@ -58,6 +58,8 @@ export interface SphinxApi {
   lessonProgress: LessonProgress;
   lessons(): LessonDefinition[];
   teacherTree: TeacherTreeProvider;
+  /** The challenge panel's current HTML (for the integration tests). */
+  panelHtml: () => string | undefined;
   /** Re-grades results files (the class dashboard's "Verify all"). */
   verifyFiles(files: string[]): Promise<{ file: string; matches: boolean; recomputed?: number; error?: string }[]>;
   view(): 'student' | 'teacher';
@@ -1518,7 +1520,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   context.subscriptions.push(javaSetup);
   void javaSetup.checkQuietly();
   updateContextKey();
-  return { progress, lessonProgress, lessons: () => lessons, teacherTree, verifyFiles, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath, moveCodeBesideDescription, lastOutcome: (id) => lastOutcome.get(id) };
+  return { progress, lessonProgress, lessons: () => lessons, teacherTree, panelHtml: () => panel.html(), verifyFiles, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath, moveCodeBesideDescription, lastOutcome: (id) => lastOutcome.get(id) };
 }
 
 export function deactivate(): void {}

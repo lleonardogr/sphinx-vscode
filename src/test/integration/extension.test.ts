@@ -782,6 +782,9 @@ test('bonus goals are checked on Submit once the tests pass, and earned stars sh
   };
   try {
     await waitFor(() => api.challenges().some((c) => c.id === 'sum-to-n-bonus'), 'the challenge to load');
+    // The panel lists the bonus goals before any submit.
+    await vscode.commands.executeCommand('sphinx.open', 'sum-to-n-bonus');
+    assert.match(api.panelHtml() ?? '', /<li data-bonus="no-loops"><span class="star">☆<\/span> <strong>Without loops<\/strong>: No for or while\./);
     // A loop solves it, without the bonus.
     await submit('sum-to-n-bonus', 'void main() {\n    int n = Integer.parseInt(IO.readln().trim());\n    int sum = 0;\n    for (int i = 1; i <= n; i++) sum += i;\n    IO.println(sum);\n}\n');
     assert.ok(api.progress.isSolved('sum-to-n-bonus'));
@@ -794,6 +797,10 @@ test('bonus goals are checked on Submit once the tests pass, and earned stars sh
     assert.match((item().tooltip as vscode.MarkdownString).value, /⭐ Bonus goals:\n- ★ Without loops/);
     const others = api.tree.getChildren().find((n) => label(n) === 'Others');
     assert.match(String(api.tree.getTreeItem(others as never).description), /★ 1\/1/);
+    // Opened again later, the panel shows the star as earned.
+    await vscode.commands.executeCommand('sphinx.refresh');
+    await vscode.commands.executeCommand('sphinx.open', 'sum-to-n-bonus');
+    assert.match(api.panelHtml() ?? '', /<li data-bonus="no-loops" class="earned"><span class="star">★<\/span>/);
   } finally {
     await config.update('extraChallengePaths', before, vscode.ConfigurationTarget.Global);
     fs.rmSync(folder, { recursive: true, force: true });
