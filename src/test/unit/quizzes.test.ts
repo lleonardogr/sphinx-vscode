@@ -6,8 +6,8 @@ const choice: QuizQuestion = { type: 'choice', prompt: 'p', options: ['a', 'b', 
 const many: QuizQuestion = { type: 'choice', prompt: 'p', options: ['a', 'b', 'c'], answer: [0, 2], multiple: true, explanation: '', points: 2 };
 const tf: QuizQuestion = { type: 'truefalse', prompt: 'p', answer: false, explanation: '', points: 1 };
 const short: QuizQuestion = { type: 'short', prompt: 'p', answer: ['continue', 'the continue keyword'], caseSensitive: false, explanation: '', points: 1 };
-const typed: QuizQuestion = { type: 'output', prompt: '', code: 'x', answer: '0 1 2\nDone', explanation: '', points: 1 };
-const picked: QuizQuestion = { type: 'output', prompt: '', code: 'x', answer: 'big', options: ['small', 'big'], explanation: '', points: 1 };
+const typed: QuizQuestion = { type: 'output', prompt: '', code: 'x', answer: '0 1 2\nDone', explanation: '', points: 1, language: 'java' };
+const picked: QuizQuestion = { type: 'output', prompt: '', code: 'x', answer: 'big', options: ['small', 'big'], explanation: '', points: 1, language: 'java' };
 
 describe('isCorrect', () => {
   it('grades single and multiple choice, ignoring the order of picks', () => {
@@ -83,5 +83,12 @@ describe('answers and snippets', () => {
     assert.equal(isWholeProgram('int f() { return 1; }\n\nvoid main() {}'), true);
     assert.equal(isWholeProgram('record P(int x) {}'), false);
     assert.equal(isWholeProgram('class A {}'), true);
+    // C snippets get the common headers, and a main around them unless they have one.
+    const wrapped = quizProgram('printf("%d\\n", 7 / 2);', 'c');
+    assert.match(wrapped, /^#include <stdio\.h>\n#include <stdlib\.h>\n#include <string\.h>\n#include <stdint\.h>\n/);
+    assert.match(wrapped, /int main\(void\) \{\n    printf\("%d\\n", 7 \/ 2\);\n    return 0;\n\}\n$/);
+    assert.equal(isWholeProgram('void swap(int *a, int *b) {}\nint main(void) { return 0; }', 'c'), true);
+    assert.equal(isWholeProgram('int x = 5;', 'c'), false);
+    assert.ok(!quizProgram('int main(void) { return 0; }', 'c').includes('int main(void) {\n    int main'));
   });
 });

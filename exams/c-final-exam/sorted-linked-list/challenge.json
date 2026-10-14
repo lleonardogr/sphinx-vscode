@@ -1,0 +1,78 @@
+{
+  "title": "Sorted Linked List",
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "A node holds a value and a pointer to the next node. Keep a pointer to the first one; NULL is the empty list.",
+    "add walks until the next node's value is bigger and links the new node there. A pointer to the link you may change (Node **) avoids a special case for the head.",
+    "remove unlinks the first node with the value: the link that pointed to it now points to its next. Free the node, and every node left at the end."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Lista ligada ordenada",
+      "hints": [
+        "Um nó guarda um valor e um ponteiro para o próximo nó. Guarde um ponteiro para o primeiro; NULL é a lista vazia.",
+        "add anda até o valor do próximo nó ser maior e liga o nó novo ali. Um ponteiro para a ligação que você pode mudar (Node **) evita um caso especial para o começo.",
+        "remove desliga o primeiro nó com o valor: a ligação que apontava para ele passa a apontar para o próximo dele. Libere o nó, e todos os nós que sobrarem no fim."
+      ],
+      "mustContain": [
+        "Ligue os nós com um ponteiro next."
+      ],
+      "mustNotContain": [
+        "Guarde os valores em nós ligados, em ordem ao inserir: sem arrays nem qsort."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "->\\s*next",
+      "message": "Link the nodes with a next pointer."
+    }
+  ],
+  "mustNotContain": [
+    {
+      "pattern": "\\b(qsort|int\\s+\\w+\\s*\\[)",
+      "message": "Keep the values in linked nodes, in order as you insert: no arrays or qsort."
+    }
+  ],
+  "tests": [
+    {
+      "input": "add 5\nadd 1\nadd 3\nprint\nremove 3\nprint\nsum\n",
+      "output": "1 3 5\n1 5\ncount=2 sum=6\n"
+    },
+    {
+      "input": "print\nremove 7\nadd 2\nadd 2\nprint\n",
+      "output": "(empty)\nnot found 7\n2 2\n"
+    },
+    {
+      "input": "add -5\nadd 10\nadd 0\nadd -10\nprint\n",
+      "output": "-10 -5 0 10\n",
+      "hidden": true
+    },
+    {
+      "input": "add 1\nremove 1\nprint\nsum\n",
+      "output": "(empty)\ncount=0 sum=0\n",
+      "hidden": true
+    },
+    {
+      "input": "add 4\nadd 4\nadd 4\nremove 4\nprint\nsum\n",
+      "output": "4 4\ncount=2 sum=8\n",
+      "hidden": true
+    },
+    {
+      "input": "add 9\nadd 8\nadd 7\nremove 9\nremove 7\nprint\n",
+      "output": "8\n",
+      "hidden": true
+    },
+    {
+      "input": "add -500\nadd 419\nadd 338\nadd 257\nadd 176\nadd 95\nadd 14\nadd -67\nadd -148\nadd -229\nadd -310\nadd -391\nadd -472\nadd 447\nadd 366\nadd 285\nadd 204\nadd 123\nadd 42\nadd -39\nadd -120\nadd -201\nadd -282\nadd -363\nadd -444\nadd 475\nadd 394\nadd 313\nadd 232\nadd 151\nadd 70\nadd -11\nadd -92\nadd -173\nadd -254\nadd -335\nadd -416\nadd -497\nadd 422\nadd 341\nadd 260\nadd 179\nadd 98\nadd 17\nadd -64\nadd -145\nadd -226\nadd -307\nadd -388\nadd -469\nadd 450\nadd 369\nadd 288\nadd 207\nadd 126\nadd 45\nadd -36\nadd -117\nadd -198\nadd -279\nadd -360\nadd -441\nadd 478\nadd 397\nadd 316\nadd 235\nadd 154\nadd 73\nadd -8\nadd -89\nadd -170\nadd -251\nadd -332\nadd -413\nadd -494\nadd 425\nadd 344\nadd 263\nadd 182\nadd 101\nadd 20\nadd -61\nadd -142\nadd -223\nadd -304\nadd -385\nadd -466\nadd 453\nadd 372\nadd 291\nadd 210\nadd 129\nadd 48\nadd -33\nadd -114\nadd -195\nadd -276\nadd -357\nadd -438\nadd 481\nadd 400\nadd 319\nadd 238\nadd 157\nadd 76\nadd -5\nadd -86\nadd -167\nadd -248\nadd -329\nadd -410\nadd -491\nadd 428\nadd 347\nadd 266\nadd 185\nadd 104\nadd 23\nadd -58\nadd -139\nadd -220\nadd -301\nadd -382\nadd -463\nadd 456\nadd 375\nadd 294\nadd 213\nadd 132\nadd 51\nadd -30\nadd -111\nadd -192\nadd -273\nadd -354\nadd -435\nadd 484\nadd 403\nadd 322\nadd 241\nadd 160\nadd 79\nadd -2\nadd -83\nadd -164\nadd -245\nadd -326\nadd -407\nadd -488\nadd 431\nadd 350\nadd 269\nadd 188\nadd 107\nadd 26\nadd -55\nadd -136\nadd -217\nadd -298\nadd -379\nadd -460\nadd 459\nadd 378\nadd 297\nadd 216\nadd 135\nadd 54\nadd -27\nadd -108\nadd -189\nadd -270\nadd -351\nadd -432\nadd 487\nadd 406\nadd 325\nadd 244\nadd 163\nadd 82\nadd 1\nadd -80\nadd -161\nadd -242\nadd -323\nadd -404\nadd -485\nadd 434\nadd 353\nadd 272\nadd 191\nadd 110\nadd 29\nadd -52\nadd -133\nadd -214\nadd -295\nadd -376\nadd -457\nadd 462\nadd 381\nadd 300\nadd 219\nadd 138\nadd 57\nadd -24\nadd -105\nadd -186\nadd -267\nadd -348\nadd -429\nadd 490\nadd 409\nadd 328\nadd 247\nadd 166\nadd 85\nadd 4\nadd -77\nadd -158\nadd -239\nadd -320\nadd -401\nadd -482\nadd 437\nadd 356\nadd 275\nadd 194\nadd 113\nadd 32\nadd -49\nadd -130\nadd -211\nadd -292\nadd -373\nadd -454\nadd 465\nadd 384\nadd 303\nadd 222\nadd 141\nadd 60\nadd -21\nadd -102\nadd -183\nadd -264\nadd -345\nadd -426\nadd 493\nadd 412\nadd 331\nadd 250\nadd 169\nadd 88\nadd 7\nadd -74\nadd -155\nadd -236\nadd -317\nadd -398\nadd -479\nadd 440\nadd 359\nadd 278\nadd 197\nadd 116\nadd 35\nadd -46\nadd -127\nadd -208\nadd -289\nadd -370\nadd -451\nadd 468\nadd 387\nadd 306\nadd 225\nadd 144\nadd 63\nadd -18\nadd -99\nadd -180\nadd -261\nadd -342\nadd -423\nadd 496\nadd 415\nadd 334\nadd 253\nadd 172\nadd 91\nadd 10\nadd -71\nadd -152\nadd -233\nadd -314\nadd -395\nadd -476\nadd 443\nadd 362\nadd 281\nsum\nremove -500\nremove 338\nremove 176\nremove 14\nremove -148\nremove -310\nremove -472\nremove 366\nremove 204\nremove 42\nremove -120\nremove -282\nremove -444\nremove 394\nremove 232\nremove 70\nremove -92\nremove -254\nremove -416\nremove 422\nremove 260\nremove 98\nremove -64\nremove -226\nremove -388\nremove 450\nremove 288\nremove 126\nremove -36\nremove -198\nremove -360\nremove 478\nremove 316\nremove 154\nremove -8\nremove -170\nremove -332\nremove -494\nremove 344\nremove 182\nremove 20\nremove -142\nremove -304\nremove -466\nremove 372\nremove 210\nremove 48\nremove -114\nremove -276\nremove -438\nremove 400\nremove 238\nremove 76\nremove -86\nremove -248\nremove -410\nremove 428\nremove 266\nremove 104\nremove -58\nremove -220\nremove -382\nremove 456\nremove 294\nremove 132\nremove -30\nremove -192\nremove -354\nremove 484\nremove 322\nremove 160\nremove -2\nremove -164\nremove -326\nremove -488\nremove 350\nremove 188\nremove 26\nremove -136\nremove -298\nremove -460\nremove 378\nremove 216\nremove 54\nremove -108\nremove -270\nremove -432\nremove 406\nremove 244\nremove 82\nremove -80\nremove -242\nremove -404\nremove 434\nremove 272\nremove 110\nremove -52\nremove -214\nremove -376\nremove 462\nremove 300\nremove 138\nremove -24\nremove -186\nremove -348\nremove 490\nremove 328\nremove 166\nremove 4\nremove -158\nremove -320\nremove -482\nremove 356\nremove 194\nremove 32\nremove -130\nremove -292\nremove -454\nremove 384\nremove 222\nremove 60\nremove -102\nremove -264\nremove -426\nremove 412\nremove 250\nremove 88\nremove -74\nremove -236\nremove -398\nremove 440\nremove 278\nremove 116\nremove -46\nremove -208\nremove -370\nremove 468\nremove 306\nremove 144\nremove -18\nremove -180\nremove -342\nremove 496\nremove 334\nremove 172\nremove 10\nremove -152\nremove -314\nremove -476\nremove 362\nsum\n",
+      "output": "count=300 sum=150\ncount=150 sum=500\n",
+      "hidden": true
+    },
+    {
+      "input": "add 2000000000\nadd 2000000000\nsum\n",
+      "output": "count=2 sum=4000000000\n",
+      "hidden": true
+    }
+  ]
+}

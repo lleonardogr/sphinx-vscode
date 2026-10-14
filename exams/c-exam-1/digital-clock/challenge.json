@@ -1,0 +1,64 @@
+{
+  "title": "Digital Clock",
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Hours are seconds / 3600, minutes are what is left divided by 60, and seconds are seconds % 60.",
+    "Hours 0 to 11 are AM and 12 to 23 are PM. On the clock, 0 and 12 both show as 12; other hours show as hours % 12.",
+    "printf(\"%02d\", n) pads with a zero to 2 digits: 7 becomes 07."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Relógio digital",
+      "hints": [
+        "As horas são segundos / 3600, os minutos são o que sobra dividido por 60, e os segundos são segundos % 60.",
+        "As horas de 0 a 11 são AM e de 12 a 23 são PM. No relógio, 0 e 12 aparecem como 12; as outras horas aparecem como horas % 12.",
+        "printf(\"%02d\", n) completa com zero até 2 dígitos: 7 vira 07."
+      ],
+      "mustNotContain": [
+        "Calcule a hora você mesmo, sem <time.h>."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "<time\\.h>|\\b(strftime|localtime|gmtime|mktime)\\b",
+      "message": "Compute the time yourself, without <time.h>."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\n45296\n3661\n0\n",
+      "output": "12:34:56 PM\n01:01:01 AM\n12:00:00 AM\n"
+    },
+    {
+      "input": "2\n43200\n86399\n",
+      "output": "12:00:00 PM\n11:59:59 PM\n"
+    },
+    {
+      "input": "1\n59\n",
+      "output": "12:00:59 AM\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n3599\n3600\n",
+      "output": "12:59:59 AM\n01:00:00 AM\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n43199\n46800\n82800\n",
+      "output": "11:59:59 AM\n01:00:00 PM\n11:00:00 PM\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n39600\n",
+      "output": "11:00:00 AM\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n1\n61\n3601\n50000\n",
+      "output": "12:00:01 AM\n12:01:01 AM\n01:00:01 AM\n01:53:20 PM\n",
+      "hidden": true
+    }
+  ]
+}

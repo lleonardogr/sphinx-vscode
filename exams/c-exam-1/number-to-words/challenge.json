@@ -1,0 +1,65 @@
+{
+  "title": "Number to Words",
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "Write a function for 1 to 999: the hundreds (\"one hundred\"), then what is left, below 100.",
+    "Below 20 every number has its own word. From 20 on, it is a tens word, plus a hyphen and the ones word when the ones digit isn't 0: \"forty-two\".",
+    "A number of thousands is the 1-to-999 words of n / 1000, then \" thousand\", then the words of n % 1000 if it isn't 0."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Número por extenso",
+      "hints": [
+        "Escreva uma função para 1 a 999: as centenas (\"one hundred\") e depois o que sobra, abaixo de 100.",
+        "Abaixo de 20 cada número tem a sua palavra. A partir de 20, é uma palavra de dezena, mais um hífen e a palavra da unidade quando a unidade não é 0: \"forty-two\".",
+        "Um número de milhares são as palavras de 1 a 999 de n / 1000, depois \" thousand\", depois as palavras de n % 1000 se não for 0."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "123405\n42\n",
+      "output": "one hundred twenty-three thousand four hundred five\nforty-two\n"
+    },
+    {
+      "input": "0\n1000\n",
+      "output": "zero\none thousand\n"
+    },
+    {
+      "input": "7\n13\n20\n",
+      "output": "seven\nthirteen\ntwenty\n",
+      "hidden": true
+    },
+    {
+      "input": "100\n101\n110\n",
+      "output": "one hundred\none hundred one\none hundred ten\n",
+      "hidden": true
+    },
+    {
+      "input": "999999\n",
+      "output": "nine hundred ninety-nine thousand nine hundred ninety-nine\n",
+      "hidden": true
+    },
+    {
+      "input": "100000\n100001\n",
+      "output": "one hundred thousand\none hundred thousand one\n",
+      "hidden": true
+    },
+    {
+      "input": "12000\n90019\n",
+      "output": "twelve thousand\nninety thousand nineteen\n",
+      "hidden": true
+    },
+    {
+      "input": "500500\n",
+      "output": "five hundred thousand five hundred\n",
+      "hidden": true
+    },
+    {
+      "input": "70\n80\n15\n",
+      "output": "seventy\neighty\nfifteen\n",
+      "hidden": true
+    }
+  ]
+}

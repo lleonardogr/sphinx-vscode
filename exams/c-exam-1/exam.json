@@ -1,0 +1,35 @@
+{
+  "title": "C Exam 1: Foundations",
+  "description": "Covers units 1 to 4: from Java to C, functions, arrays and strings. A quiz and three coding questions, from easy to hard.",
+  "subject": "c",
+  "durationMinutes": 90,
+  "mode": "closed",
+  "maxSubmissions": 3,
+  "restrictions": {
+    "level": "standard"
+  },
+  "questions": [
+    {
+      "id": "c-exam-1-quiz",
+      "points": 20
+    },
+    {
+      "id": "digital-clock",
+      "points": 20
+    },
+    {
+      "id": "number-to-words",
+      "points": 30
+    },
+    {
+      "id": "bracket-checker",
+      "points": 30
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Prova 1 de C: fundamentos",
+      "description": "Cobre as unidades 1 a 4: do Java para o C, funções, arrays e strings. Um quiz e três questões de programação, da mais fácil à mais difícil."
+    }
+  }
+}

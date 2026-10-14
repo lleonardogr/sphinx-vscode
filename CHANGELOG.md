@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 
+- **C exams**: **C Exam 1: Foundations** (units 1–4, 90 minutes: a quiz, Digital Clock, Number to Words and Bracket Checker) and the **C Final Exam** (the whole subject, focused on units 5–9, 120 minutes: a quiz, Text Buffer, Sorted Linked List and LRU Cache).
+- **"What does this print?" questions in C.** A quiz in a C unit runs its `output` questions as C (an exam's quiz sets `"language": "c"`), and the validator compiles and runs them to check the answers. 19 questions in the C unit quizzes became output questions, so their answers are now checked against what the code really prints.
 - **Subjects & Units** in the teacher view: every subject with its units. Teachers can delete their own subjects, and units they created (in their subjects or added to a built-in one), with the content inside them; folders go to the Trash. Built-in subjects and units can't be deleted, and neither can a subject's only unit.
 
 ## [1.8.1] - 2026-10-13

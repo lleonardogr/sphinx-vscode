@@ -281,7 +281,7 @@ With a compiler that can't add memory checks, such as MinGW gcc or a clang for M
 
 **More reference solutions.** Every `Solution*.c` is checked against every test, so a second solution written differently, such as `Solution.alt.c`, catches mistakes in the expected outputs. Reference solutions must compile **without warnings**: the validator reports any, since students would see them. Mark a deliberate `switch` fall-through with a `// fall through` comment, which GCC accepts.
 
-**Not yet for C:** "what does this code print?" quiz questions (they run Java), and the two Java starter styles (C has one starter).
+**Quizzes:** a quiz in a C unit runs its "what does this code print?" questions as C (see [Quizzes](quizzes.md)). The two Java starter styles don't apply: C has one starter.
 
 ## Subjects, lessons and prerequisites
 

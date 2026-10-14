@@ -56,7 +56,8 @@ test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().length, 177);
   assert.equal(api.quizzes().length, 28);
   assert.equal(api.lessons().length, 28);
-  assert.deepEqual(api.exams().map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam', 'exam-1', 'exam-2', 'final-exam', 'sample-exam']);
+  assert.deepEqual(api.exams().map((e) => e.id).sort(), ['c-exam-1', 'c-final-exam', 'cs-exam-1', 'cs-final-exam', 'exam-1', 'exam-2', 'final-exam', 'sample-exam']);
+  assert.deepEqual(api.exams().filter((e) => e.subject === 'c').map((e) => e.id).sort(), ['c-exam-1', 'c-final-exam']);
   assert.deepEqual(api.exams().filter((e) => e.subject === 'cs').map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam']);
 });
 
@@ -169,6 +170,15 @@ test('C Programming: a programming subject whose challenges are in C, unit by un
       ['8 · Bits and Bytes in C', ['Bits and Bytes in C', 'Count the Bits', 'RGB565 Colors', 'Float Anatomy', 'CRC-32', 'Bits and Bytes in C Quiz']],
       ['9 · Linked Data Structures', ['Linked Data Structures', 'RPN Calculator', 'Printer Queue', 'Undo and Redo', 'BST Word Counter', 'Linked Data Structures Quiz', 'Line Editor']],
     ];
+    // Only the C exams are listed under C, and the C quizzes' "what does this print?" snippets are C.
+    const examsRoot = api.tree.getChildren().find((n) => (n as { kind: string }).kind === 'examsRoot');
+    assert.deepEqual(api.tree.getChildren(examsRoot).map(label), ['C Exam 1: Foundations', 'C Final Exam']);
+    const examQuiz = api.exams().find((e) => e.id === 'c-exam-1')!.questions.find((q) => q.kind === 'quiz');
+    const cQuizzes = [api.quizzes().find((q) => q.id === 'from-java-to-c-quiz')!, examQuiz?.kind === 'quiz' ? examQuiz.quiz : undefined];
+    assert.ok(cQuizzes.every(Boolean), 'both quizzes load');
+    for (const q of cQuizzes.flatMap((quiz) => quiz!.questions)) {
+      assert.ok(q.type !== 'output' || q.language === 'c', JSON.stringify(q));
+    }
     const groups = api.tree.getChildren().filter((n) => (n as { kind: string }).kind === 'group');
     assert.deepEqual(groups.map(label), units.map(([name]) => name));
     for (const [i, [name, items]] of units.entries()) {
@@ -334,7 +344,7 @@ test('the teacher view lists the teacher\'s exams, own content and tools, edits 
   const [exams, content, subjects, tools] = t.getChildren();
   assert.deepEqual([exams, content, subjects, tools].map(label), ['My Exams', 'My Challenges, Quizzes & Lessons', 'Subjects & Units', 'Tools']);
   assert.deepEqual(t.getChildren(subjects).map(label), ['Java Programming', 'CS Fundamentals', 'C Programming']);
-  assert.deepEqual(t.getChildren(exams).map(label).sort(), ['CS Exam 1: Data Representation', 'CS Final Exam', 'Class Exam', 'Exam 1: Basics to Strings', 'Exam 2: Building Blocks', 'Final Exam', 'Sample Exam: Java Basics']);
+  assert.deepEqual(t.getChildren(exams).map(label).sort(), ['C Exam 1: Foundations', 'C Final Exam', 'CS Exam 1: Data Representation', 'CS Final Exam', 'Class Exam', 'Exam 1: Basics to Strings', 'Exam 2: Building Blocks', 'Final Exam', 'Sample Exam: Java Basics']);
   const exam = (title: string) => t.getChildren(exams).find((n) => label(n) === title)!;
   assert.match(String(t.getTreeItem(exam('Exam 1: Basics to Strings') as never).description), /^Built-in · 4 questions · 100 pts · \d+ min$/);
   assert.equal(t.getTreeItem(exam('Exam 1: Basics to Strings') as never).contextValue, 'teacherExam');

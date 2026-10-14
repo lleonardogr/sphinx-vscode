@@ -8,14 +8,14 @@
   "description": "Structs, typedef, the arrow operator, copying structs and enums.",
   "questions": [
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "struct Point { int x, y; };\nstruct Point a = {1, 2};\nstruct Point b = a;\nb.x = 5;\nprintf(\"%d\\n\", a.x);",
       "options": [
         "1",
         "5",
-        "It does not compile",
-        "an address"
+        "6",
+        "2"
       ],
       "answer": 0,
       "explanation": "b = a copies every field into b. Changing b.x afterwards changes only b: a.x is still 1. (In Java, b = a would make both names refer to the same object.)"
@@ -33,14 +33,14 @@
       "explanation": "p->x follows the pointer, then takes the field. The brackets in (*p).x matter: *p.x would mean *(p.x), the field of a pointer, which doesn't exist."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "typedef struct { char name[10]; } Person;\n\nvoid set_name(Person p) {\n    strcpy(p.name, \"Bob\");\n}\n\nint main(void) {\n    Person s = {\"Ada\"};\n    set_name(s);\n    printf(\"%s\\n\", s.name);\n}",
       "options": [
         "Ada",
         "Bob",
-        "It does not compile",
-        "nothing"
+        "Adb",
+        "Bo"
       ],
       "answer": 0,
       "explanation": "The struct is passed by value: set_name gets a copy, arrays inside included, and changes only the copy. To change the caller's struct, pass &s and use s->name."
@@ -58,7 +58,7 @@
       "explanation": "Assignment copies structs, but there is no built-in comparison, partly because of padding bytes between fields. Write a small function such as same_point(a, b)."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "enum Element { AIR, EARTH, FIRE = 5, WATER };\nprintf(\"%d %d %d %d\\n\", AIR, EARTH, FIRE, WATER);",
       "options": [
@@ -109,12 +109,6 @@
       "questions": [
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "1",
-            "5",
-            "Não compila",
-            "um endereço"
-          ],
           "explanation": "b = a copia cada campo para b. Mudar b.x depois muda só b: a.x continua 1. (No Java, b = a faria os dois nomes se referirem ao mesmo objeto.)"
         },
         {
@@ -129,12 +123,6 @@
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "Ada",
-            "Bob",
-            "Não compila",
-            "nada"
-          ],
           "explanation": "A struct é passada por valor: set_name recebe uma cópia, inclusive os arrays de dentro, e muda só a cópia. Para mudar a struct de quem chamou, passe &s e use s->name."
         },
         {
@@ -149,12 +137,6 @@
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "0 1 5 6",
-            "1 2 5 6",
-            "0 1 2 3",
-            "0 1 5 5"
-          ],
           "explanation": "As constantes de um enum contam a partir de 0 e sobem de um em um, a não ser que você dê um valor: FIRE é 5, então WATER é 6."
         },
         {

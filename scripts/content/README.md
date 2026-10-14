@@ -37,7 +37,7 @@ reading_guide('subjects/cs/lessons/algorithms-and-complexity', title='Algorithms
     md_pt='''## Em resumo\n\n…''', files={'growth.svg': '<svg …>', 'growth.pt-br.svg': '<svg …>'})
 ```
 
-For a **C** challenge, use `c_challenge`: the same arguments as `challenge`, with `starter`, `solution` and `solution_alt` (a second solution written differently) in C instead of the Java pairs, and `bonus_goal(solution=…)` in C. It writes `Starter.c` (and `Starter.pt-br.c` from `comments`), `Solution.c`, `Solution.alt.c` and `Solution.bonus.<id>.c`. "What does this print?" questions run Java, so C quizzes use `choice` with the snippet in `code`.
+For a **C** challenge, use `c_challenge`: the same arguments as `challenge`, with `starter`, `solution` and `solution_alt` (a second solution written differently) in C instead of the Java pairs, and `bonus_goal(solution=…)` in C. It writes `Starter.c` (and `Starter.pt-br.c` from `comments`), `Solution.c`, `Solution.alt.c` and `Solution.bonus.<id>.c`. "What does this print?" questions (`out`) in a C unit's quiz run as C; for an exam's quiz, which has no unit, pass `quiz(..., topic=None, language='c')`.
 
 For a programming subject such as Java, use `quick_guide` instead of `reading_guide`: the same arguments without `files`, 2 or 3 objectives, 1 or 2 readings, and a lesson.md with "In short", one code example and a "Watch out" line (see the [content guide](../../docs/content-guide.md#quick-guides-for-programming-subjects)).
 

@@ -21,7 +21,7 @@
       "explanation": "When an initializer lists fewer values than the array holds, the remaining elements are set to 0. That is why int counts[10] = {0}; is the usual way to start a zeroed array."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "With 4-byte ints, what does this print?",
       "code": "int scores[10];\nprintf(\"%zu\\n\", sizeof scores / sizeof scores[0]);",
       "options": [
@@ -46,14 +46,14 @@
       "explanation": "An array passed to a function \"decays\" to a pointer to its first element: int values[] in a parameter list means int *values. The length is lost, so it travels as a separate argument."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "void first_to_ten(int nums[]) {\n    nums[0] = 10;\n}\n\nint main(void) {\n    int a[3] = {1, 2, 3};\n    first_to_ten(a);\n    printf(\"%d %d %d\\n\", a[0], a[1], a[2]);\n}",
       "options": [
         "10 2 3",
         "1 2 3",
         "10 0 0",
-        "It does not compile"
+        "1 10 3"
       ],
       "answer": 0,
       "explanation": "The function receives the array itself (its address), not a copy, so setting nums[0] changes main's array. An int parameter would have been a copy."
@@ -120,12 +120,6 @@
         },
         {
           "prompt": "Com ints de 4 bytes, o que isto imprime?",
-          "options": [
-            "10",
-            "40",
-            "4",
-            "9"
-          ],
           "explanation": "sizeof scores é o array inteiro, 40 bytes, e sizeof scores[0] é um elemento, 4 bytes: 40 / 4 = 10 elementos. Isso só funciona onde o próprio array está declarado, não dentro de uma função que o recebeu."
         },
         {
@@ -140,12 +134,6 @@
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "10 2 3",
-            "1 2 3",
-            "10 0 0",
-            "Não compila"
-          ],
           "explanation": "A função recebe o próprio array (o endereço dele), não uma cópia, então mudar nums[0] muda o array do main. Um parâmetro int teria sido uma cópia."
         },
         {

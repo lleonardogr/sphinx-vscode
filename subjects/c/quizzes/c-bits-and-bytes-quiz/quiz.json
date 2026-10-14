@@ -8,7 +8,7 @@
   "description": "Bitwise operators, masks and shifts, fixed-width types and the bits of other types.",
   "questions": [
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "printf(\"%d %d %d\\n\", 5 & 3, 5 | 3, 5 ^ 3);",
       "options": [
@@ -106,12 +106,6 @@
       "questions": [
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "1 7 6",
-            "1 7 2",
-            "0 8 6",
-            "3 5 15"
-          ],
           "explanation": "5 é 101 e 3 é 011. O AND mantém os bits ligados nos dois (001 = 1), o OR os ligados em algum (111 = 7), o XOR os ligados em exatamente um (110 = 6)."
         },
         {

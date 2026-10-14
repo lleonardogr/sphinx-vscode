@@ -79,7 +79,9 @@ def _write_meta(folder, *, title, title_pt, topic, difficulty, order, hints, hin
     d = os.path.join(REPO, folder)
     os.makedirs(d, exist_ok=True)
     assert len(hints) == len(hints_pt), f'{folder}: hints and hints_pt must have the same length'
-    meta = {'title': title, 'topic': topic}
+    meta = {'title': title}
+    if topic:            # exam questions have no unit
+        meta['topic'] = topic
     if skills:
         meta['skills'] = skills
     if unit:
@@ -221,10 +223,16 @@ def short(prompt, answers, expl, prompt_pt, expl_pt, case_sensitive=False, answe
     return q, p
 
 
-def quiz(folder, *, title, title_pt, topic, desc, desc_pt, questions, requires=None):
+def quiz(folder, *, title, title_pt, topic, desc, desc_pt, questions, requires=None, language=None):
+    """topic None for an exam's quiz; language 'c' runs its "what does this print?" snippets as C (a quiz in a
+    C unit is C already)."""
     d = os.path.join(REPO, folder)
     os.makedirs(d, exist_ok=True)
-    data = {'title': title, 'topic': topic}
+    data = {'title': title}
+    if topic:
+        data['topic'] = topic
+    if language:
+        data['language'] = language
     if requires:
         data['requires'] = requires
     data.update({'description': desc, 'questions': [q for q, _ in questions],

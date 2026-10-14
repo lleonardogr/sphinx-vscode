@@ -1,0 +1,144 @@
+{
+  "title": "C Exam 1 Quiz",
+  "language": "c",
+  "description": "Eight questions. You can submit the quiz only once.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "int a = 17, b = 5;\nprintf(\"%d %d\\n\", a / b, a % b);",
+      "options": [
+        "3 2",
+        "3.4 2",
+        "2 3",
+        "3 0"
+      ],
+      "answer": 0,
+      "explanation": "Both are ints: 17 / 5 is 3 (the fraction is dropped) and 17 % 5 is the remainder, 2."
+    },
+    {
+      "type": "output",
+      "code": "char s[] = \"hello\";\ns[0] = s[0] - 32;\nprintf(\"%s %zu\\n\", s, strlen(s));",
+      "options": [
+        "Hello 5",
+        "hello 5",
+        "Hello 6",
+        "Hello 4"
+      ],
+      "answer": 0,
+      "explanation": "'h' is 104 and 'H' is 72: subtracting 32 turns a lowercase ASCII letter into uppercase. strlen counts the 5 letters, not the '\\0'."
+    },
+    {
+      "type": "choice",
+      "prompt": "A program reads a name with scanf(\"%s\", name) into char name[20]. Which input breaks it?",
+      "options": [
+        "Ada King, Countess of Lovelace",
+        "Ada",
+        "ada_lovelace",
+        "Lovelace1815"
+      ],
+      "answer": 0,
+      "explanation": "%s stops at the first space, so only \"Ada\" is read and the rest waits for the next scanf. (A word longer than 19 characters would also overflow the array without a width such as %19s.) fgets reads the whole line safely."
+    },
+    {
+      "type": "output",
+      "code": "int x = 1;\nswitch (x) {\n    case 1: printf(\"a\");\n    case 2: printf(\"b\"); break;\n    case 3: printf(\"c\");\n}\nprintf(\"\\n\");",
+      "options": [
+        "ab",
+        "a",
+        "abc",
+        "b"
+      ],
+      "answer": 0,
+      "explanation": "case 1 has no break, so it falls through into case 2, which prints b and breaks before case 3."
+    },
+    {
+      "type": "output",
+      "code": "int f(int n) {\n    return n <= 1 ? 1 : n * f(n - 2);\n}\n\nint main(void) {\n    printf(\"%d\\n\", f(7));\n}",
+      "options": [
+        "105",
+        "5040",
+        "28",
+        "15"
+      ],
+      "answer": 0,
+      "explanation": "f(7) = 7 × f(5) = 7 × 5 × f(3) = 7 × 5 × 3 × f(1) = 105: the product of the odd numbers up to 7."
+    },
+    {
+      "type": "choice",
+      "prompt": "Inside void show(int values[]), sizeof values is 8 on a 64-bit computer, whatever array was passed. Why?",
+      "options": [
+        "the parameter is really a pointer to the first element, and a pointer takes 8 bytes",
+        "C rounds every array up to 8 bytes",
+        "the array is copied into 8 bytes",
+        "sizeof doesn't work on arrays"
+      ],
+      "answer": 0,
+      "explanation": "An array parameter is adjusted to a pointer: int values[] means int *values. That is why functions take the length as another parameter."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "char word[5] = \"Hello\"; compiles in C, but word is then not a valid string.",
+      "answer": true,
+      "explanation": "C allows an initializer that exactly fills the array and drops the '\\0' (C++ doesn't). Without the terminator, printf(\"%s\", word) and strlen keep reading past the end. char word[6], or char word[] = \"Hello\", leaves room for it."
+    },
+    {
+      "type": "output",
+      "code": "unsigned char c = 250;\nc += 10;\nprintf(\"%d\\n\", c);",
+      "options": [
+        "4",
+        "260",
+        "-6",
+        "255"
+      ],
+      "answer": 0,
+      "explanation": "An unsigned char holds 0 to 255 and wraps around: 260 − 256 = 4."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz da prova 1 de C",
+      "description": "Oito questões. Você pode enviar o quiz só uma vez.",
+      "questions": [
+        {
+          "explanation": "Os dois são int: 17 / 5 é 3 (a fração some) e 17 % 5 é o resto, 2."
+        },
+        {
+          "explanation": "'h' é 104 e 'H' é 72: subtrair 32 transforma uma letra ASCII minúscula em maiúscula. O strlen conta as 5 letras, não o '\\0'."
+        },
+        {
+          "prompt": "Um programa lê um nome com scanf(\"%s\", name) em char name[20]. Qual entrada o quebra?",
+          "options": [
+            "Ada King, Countess of Lovelace",
+            "Ada",
+            "ada_lovelace",
+            "Lovelace1815"
+          ],
+          "explanation": "O %s para no primeiro espaço, então só \"Ada\" é lido e o resto espera o próximo scanf. (Uma palavra com mais de 19 caracteres também estouraria o array sem uma largura como %19s.) O fgets lê a linha inteira com segurança."
+        },
+        {
+          "explanation": "O case 1 não tem break, então cai no case 2, que imprime b e para antes do case 3."
+        },
+        {
+          "explanation": "f(7) = 7 × f(5) = 7 × 5 × f(3) = 7 × 5 × 3 × f(1) = 105: o produto dos ímpares até 7."
+        },
+        {
+          "prompt": "Dentro de void show(int values[]), sizeof values é 8 num computador de 64 bits, seja qual for o array passado. Por quê?",
+          "options": [
+            "o parâmetro na verdade é um ponteiro para o primeiro elemento, e um ponteiro ocupa 8 bytes",
+            "o C arredonda todo array para 8 bytes",
+            "o array é copiado em 8 bytes",
+            "o sizeof não funciona com arrays"
+          ],
+          "explanation": "Um parâmetro array vira ponteiro: int values[] quer dizer int *values. Por isso as funções recebem o tamanho como outro parâmetro."
+        },
+        {
+          "prompt": "char word[5] = \"Hello\"; compila no C, mas word não é uma string válida.",
+          "explanation": "O C permite um inicializador que enche exatamente o array e descarta o '\\0' (o C++ não). Sem o terminador, printf(\"%s\", word) e strlen continuam lendo depois do fim. char word[6], ou char word[] = \"Hello\", deixa espaço para ele."
+        },
+        {
+          "explanation": "Um unsigned char guarda de 0 a 255 e dá a volta: 260 − 256 = 4."
+        }
+      ]
+    }
+  }
+}

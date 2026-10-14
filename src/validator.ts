@@ -267,15 +267,16 @@ async function validateQuiz(dir: string, javacVersion: number | undefined, opts:
     if (q.type !== 'output') {
       continue;
     }
-    // Snippets are wrapped in a compact void main(), which needs JDK 25+; a full classic program doesn't.
-    const classic = isWholeProgram(q.code) && !/\bvoid\s+main\s*\(\s*\)/.test(q.code);
-    if (!classic && (javacVersion ?? 0) < 25) {
+    // Java snippets are wrapped in a compact void main(), which needs JDK 25+; a full classic program doesn't.
+    const classic = q.language === 'java' && isWholeProgram(q.code) && !/\bvoid\s+main\s*\(\s*\)/.test(q.code);
+    if (q.language === 'java' && !classic && (javacVersion ?? 0) < 25) {
       counters.skipped++;
       continue;
     }
     counters.checked++;
     ran++;
-    const outcome = await runAs(quizProgram(q.code), { tests: [{ input: '', output: q.answer }], javaHome: opts.javaHome });
+    const tools = { javaHome: opts.javaHome, cCompiler: opts.cCompiler, cPortableDirs: opts.cPortableDirs };
+    const outcome = await runAs(quizProgram(q.code, q.language), { tests: [{ input: '', output: q.answer }], ...tools }, q.language === 'c' ? 'main.c' : 'Main.java');
     if (outcome.kind !== 'tests') {
       problems.push(`question ${i + 1}: the code ${describe(outcome)}`);
       continue;
