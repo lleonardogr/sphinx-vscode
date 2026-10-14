@@ -108,6 +108,7 @@ Two closed **exams**, each with a quiz and three private coding questions: **C E
 - **Exams**: timed, graded sets of questions with a countdown, limited submissions, partial credit and a results file to hand in. An exam can be **open** (hints, AI and the internet allowed) or **closed** (hints and AI off, copying and pasting blocked, time outside VS Code recorded or limited). Teachers re-grade the results files with **Verify Exam Results**. See [Exams](docs/exams.md).
 - **Import**: one button in the sidebar imports the challenges, tests and exams a teacher shared, as a `.zip` or a folder. They're copied into the extension's library, solutions can be stripped for students, and **Remove Imported…** takes them out again. See [Sharing challenges with students](docs/creating-challenges.md#sharing-challenges-with-students).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
+- **Back up and restore**: **Back Up Progress…** (in the sidebar's `…` menu) saves your progress, your code and the packs you imported in one `.zip`. **Restore Progress from a Backup…** brings it back on another computer or after reinstalling, merged with what is already there: nothing is lost, and an exam already taken is never replaced.
 - **Subjects**: Java Programming, CS Fundamentals and C Programming, each with its own learning path. **Switch Subject…** (📚) changes the one in the sidebar, and its name is shown in the sidebar header.
 - **Lessons**: short pages to read before a unit's quiz and challenges, with a reading time, a ✓ once read, and a button to the next item.
 - **Bonus goals**: a challenge can offer up to 3 optional, harder goals (solve it without loops, fast enough for a huge input…), checked when it passes. Earned goals become stars in the panel, the sidebar and the unit's guide.
@@ -246,6 +247,8 @@ Done:
 - [x] Teachers' own subjects and units, and units added to the built-in subjects, shared in packs
 - [x] Optional prerequisite locks, turned on by the teacher for a subject or a class
 - [x] Bonus goals: optional harder goals on challenges, shown as stars
+- [x] Publishing to the Marketplace with Microsoft Entra ID, with no token to renew
+- [x] Backing up and restoring a student's progress
 - [x] C challenges with memory checks, a portable compiler for Windows, and the C Programming subject: 9 units with quick guides, quizzes and challenges, plus 2 tests and 2 exams
 
 Content:
@@ -260,13 +263,11 @@ For teachers:
 
 For students:
 
-- [ ] Back up and restore progress (to move to another computer or reinstall)
 - [ ] More interface languages, such as Spanish
 
 Platform:
 
 - [ ] More languages for challenges (Python, JavaScript, SQL, …), each with its own runner, as C has
-- [ ] Publish to the Marketplace with Microsoft Entra ID before personal access tokens are retired on December 1, 2026 ([#47](https://github.com/lleonardogr/sphinx-vscode/issues/47))
 - [ ] A verified publisher namespace on Open VSX
 
 ## Development

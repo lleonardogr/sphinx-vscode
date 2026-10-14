@@ -8,6 +8,8 @@
   "command.resetProgress": "Reset All Progress",
   "command.resetChallenge": "Reset Challenge (Code and Progress)",
   "command.resetQuiz": "Reset Quiz Score",
+  "command.backupProgress": "Back Up Progress…",
+  "command.restoreProgress": "Restore Progress from a Backup…",
   "command.resetAllChallenges": "Reset All Challenges…",
   "command.askAiHint": "Ask AI for a Hint",
   "command.setupAi": "Set Up AI Hints (Local Model or API Key)",
