@@ -1,0 +1,60 @@
+{
+  "title": "Bracket Checker",
+  "difficulty": "Hard",
+  "order": 3,
+  "hints": [
+    "Keep the open brackets in an array used as a stack: push on an opener, look at the top on a closer.",
+    "A closer with an empty stack is unexpected; a closer that doesn't match the top is the wrong one. Remember each opener's column next to it, for the end-of-line message.",
+    "Report only the first error of a line. If the line ends with openers left, report the last one opened (the top of the stack)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Verificador de parênteses",
+      "hints": [
+        "Guarde os parênteses abertos num array usado como pilha: empilhe num de abertura, olhe o topo num de fechamento.",
+        "Um de fechamento com a pilha vazia é inesperado; um de fechamento que não combina com o topo é o errado. Guarde a coluna de cada um de abertura junto dele, para a mensagem do fim da linha.",
+        "Informe só o primeiro erro da linha. Se a linha acabar com aberturas sobrando, informe a última aberta (o topo da pilha)."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "if (a[i] == b) { return; }\nint x = (1 + 2];\n",
+      "output": "OK\nError at column 15: expected ')' but found ']'\n"
+    },
+    {
+      "input": "f(g(h())\n}\n",
+      "output": "Error at end: '(' from column 2 is not closed\nError at column 1: unexpected '}'\n"
+    },
+    {
+      "input": "no brackets at all\n",
+      "output": "OK\n",
+      "hidden": true
+    },
+    {
+      "input": "((((((((((\n",
+      "output": "Error at end: '(' from column 10 is not closed\n",
+      "hidden": true
+    },
+    {
+      "input": "{[()()]}\n{[(])}\n",
+      "output": "OK\nError at column 4: expected ')' but found ']'\n",
+      "hidden": true
+    },
+    {
+      "input": ")(\n",
+      "output": "Error at column 1: unexpected ')'\n",
+      "hidden": true
+    },
+    {
+      "input": "a[b{c(d)e}f]g\n[{}\n",
+      "output": "OK\nError at end: '[' from column 1 is not closed\n",
+      "hidden": true
+    },
+    {
+      "input": "x = arr[(i + 1) * 2];\nprintf(\"%d)\", n);\n",
+      "output": "OK\nError at column 16: unexpected ')'\n",
+      "hidden": true
+    }
+  ]
+}

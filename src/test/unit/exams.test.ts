@@ -93,6 +93,8 @@ describe('exam subjects', () => {
     const quizzes = loadQuizzes(CONTENT_ROOTS).quizzes;
     const builtIn = loadExams([path.join(ROOT, 'exams')], challenges, quizzes).exams;
     assert.deepEqual(Object.fromEntries(builtIn.map((e) => [e.id, e.subject])), {
+      'c-exam-1': 'c',
+      'c-final-exam': 'c',
       'cs-exam-1': 'cs',
       'cs-final-exam': 'cs',
       'exam-1': 'java',

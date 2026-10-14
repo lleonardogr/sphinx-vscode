@@ -6,13 +6,17 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Lang, language, tr } from './i18n';
 import { normalizeOutput } from './runner';
+import { findUnit } from './subjects';
+
+/** The language of a quiz's code snippets. */
+export type SnippetLanguage = 'java' | 'c';
 
 export type QuizQuestion =
   | { type: 'choice'; prompt: string; code?: string; options: string[]; answer: number[]; multiple: boolean; explanation: string; points: number }
   | { type: 'truefalse'; prompt: string; code?: string; answer: boolean; explanation: string; points: number }
   | { type: 'short'; prompt: string; code?: string; answer: string[]; caseSensitive: boolean; explanation: string; points: number }
   /** "What does this code print?": typed, or picked from `options` when given. */
-  | { type: 'output'; prompt: string; code: string; answer: string; options?: string[]; explanation: string; points: number }
+  | { type: 'output'; prompt: string; code: string; answer: string; options?: string[]; explanation: string; points: number; language: SnippetLanguage }
   /** A number typed in `base` (2, 8, 10 or 16), compared by value; decimal answers can have a `tolerance`. */
   | { type: 'number'; prompt: string; code?: string; answer: string; value: number; base: NumberBase; tolerance: number; explanation: string; points: number };
 
@@ -87,7 +91,7 @@ function fail(i: number, message: string): never {
   throw new Error(`question ${i + 1}: ${message}`);
 }
 
-function parseQuestion(raw: Record<string, unknown>, i: number): QuizQuestion {
+function parseQuestion(raw: Record<string, unknown>, i: number, snippetLanguage: SnippetLanguage = 'java'): QuizQuestion {
   const prompt = typeof raw.prompt === 'string' ? raw.prompt : '';
   const code = typeof raw.code === 'string' && raw.code.trim() ? raw.code.replace(/\s+$/, '') : undefined;
   const explanation = typeof raw.explanation === 'string' ? raw.explanation : '';
@@ -123,7 +127,8 @@ function parseQuestion(raw: Record<string, unknown>, i: number): QuizQuestion {
         if (typeof raw.answer !== 'string') fail(i, 'an "output" question needs "answer": the exact output');
         answer = raw.answer;
       }
-      return { type: 'output', prompt: prompt || tr('What does this code print?', 'O que este código imprime?'), code, answer, options, explanation, points };
+      const lang = raw.language === 'c' || raw.language === 'java' ? raw.language : snippetLanguage;
+      return { type: 'output', prompt: prompt || tr('What does this code print?', 'O que este código imprime?'), code, answer, options, explanation, points, language: lang };
     }
     case 'number': {
       if (!prompt) fail(i, 'needs a "prompt"');
@@ -180,12 +185,15 @@ export function loadQuiz(dir: string, lang: Lang = language()): QuizDefinition {
     throw new Error('quiz.json needs a "title" and at least one entry in "questions"');
   }
   const t: QuizTranslation = (lang !== 'en' && meta.translations?.[lang]) || {};
+  // Snippets are in the quiz's "language", or else in the language of its unit's subject (C for C Programming).
+  const snippetLanguage: SnippetLanguage =
+    meta.language === 'c' || meta.language === 'java' ? meta.language : typeof meta.topic === 'string' && findUnit(meta.topic)?.subject.language === 'c' ? 'c' : 'java';
   return {
     id: meta.id ?? path.basename(dir),
     title: (typeof t.title === 'string' && t.title.trim()) || meta.title,
     description: (typeof t.description === 'string' && t.description.trim()) || (meta.description ?? ''),
     topic: typeof meta.topic === 'string' ? meta.topic : '',
-    questions: meta.questions.map((q: Record<string, unknown>, i: number) => parseQuestion(translateQuestion(q ?? {}, t.questions?.[i]), i)),
+    questions: meta.questions.map((q: Record<string, unknown>, i: number) => parseQuestion(translateQuestion(q ?? {}, t.questions?.[i]), i, snippetLanguage)),
     requires: Array.isArray(meta.requires) ? meta.requires.filter((r: unknown): r is string => typeof r === 'string' && r.trim() !== '') : [],
     subject: typeof meta.subject === 'string' && meta.subject.trim() ? meta.subject.trim() : undefined,
     dir,
@@ -307,13 +315,26 @@ export function parseAnswers(text: string | undefined): QuizAnswer[] {
 
 // ---------------------------------------------------------------- code snippets
 
-/** True when the snippet is already a whole program (otherwise it is wrapped in void main()). */
-export function isWholeProgram(code: string): boolean {
+/** True when the snippet is already a whole program (otherwise it is wrapped in main). */
+export function isWholeProgram(code: string, lang: SnippetLanguage = 'java'): boolean {
+  if (lang === 'c') {
+    return /\bmain\s*\(/.test(code);
+  }
   return /\bvoid\s+main\s*\(/.test(code) || /\bclass\s+\w+/.test(code);
 }
 
+/** The headers every C snippet gets, so short snippets can call printf, strcpy, malloc or use uint32_t. */
+const C_HEADERS = '#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdint.h>\n';
+
 /** Turns a snippet into a program the runner can compile, so its real output can be checked. */
-export function quizProgram(code: string): string {
+export function quizProgram(code: string, lang: SnippetLanguage = 'java'): string {
+  const body = code.endsWith('\n') ? code : `${code}\n`;
+  if (lang === 'c') {
+    if (isWholeProgram(code, 'c')) {
+      return C_HEADERS + body;
+    }
+    return `${C_HEADERS}\nint main(void) {\n${code.split('\n').map((l) => `    ${l}`).join('\n')}\n    return 0;\n}\n`;
+  }
   if (isWholeProgram(code)) {
     return code.endsWith('\n') ? code : `${code}\n`;
   }

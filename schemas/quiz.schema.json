@@ -27,6 +27,10 @@
       "type": "string",
       "description": "Shown above the questions (Markdown)."
     },
+    "language": {
+      "enum": ["java", "c"],
+      "description": "The language of the \"output\" questions' code. By default, the language of the quiz's unit's subject (C for C Programming units), otherwise Java. Set it for a quiz with no unit, such as an exam's."
+    },
     "topic": {
       "type": "string",
       "description": "The unit this quiz belongs to (Basics, Conditionals, Loops, Strings, Methods, Arrays, Collections, OOP, Exceptions, Recursion or Streams); it is listed at the end of that unit. Other values or none: the quiz goes to the Custom section.",
@@ -87,7 +91,11 @@
           },
           "code": {
             "type": "string",
-            "description": "Java code shown with the question. For \"output\" it is compiled and run by the validator; a snippet is wrapped in void main() { … }."
+            "description": "Code shown with the question. For \"output\" it is compiled and run by the validator: a Java snippet is wrapped in void main() { … }, a C snippet in int main(void) { … } with <stdio.h>, <stdlib.h>, <string.h> and <stdint.h> included."
+          },
+          "language": {
+            "enum": ["java", "c"],
+            "description": "For \"output\": the language of this question's code, when it differs from the quiz's."
           },
           "options": {
             "type": "array",

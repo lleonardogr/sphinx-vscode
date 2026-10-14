@@ -20,27 +20,27 @@
       "explanation": "p holds the address of x, so *p = 7 writes 7 into x itself."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "void swap(int *x, int *y) {\n    int t = *x; *x = *y; *y = t;\n}\n\nint main(void) {\n    int a = 1, b = 2;\n    swap(&a, &b);\n    printf(\"%d %d\\n\", a, b);\n}",
       "options": [
         "2 1",
         "1 2",
         "0 0",
-        "It crashes"
+        "1 1"
       ],
       "answer": 0,
       "explanation": "swap receives the addresses of a and b and swaps the values they point to, so main's variables change. Compare with the swap(int x, int y) from the Functions quiz, which only swapped copies."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "int a[] = {10, 20, 30, 40};\nint *p = a;\nprintf(\"%d\\n\", *(p + 2));",
       "options": [
         "30",
         "11",
         "20",
-        "an address"
+        "40"
       ],
       "answer": 0,
       "explanation": "p points at a[0]. p + 2 points two elements further (not two bytes): a[2], which is 30. In general *(a + i) is a[i]."
@@ -83,7 +83,7 @@
       "explanation": "const int * is a pointer to ints the function promises not to change: values[0] = 1 is a compile error. It documents that the array is only read, and lets callers pass constant data."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "int a[5];\nint *first = &a[0], *last = &a[3];\nprintf(\"%td\\n\", last - first);",
       "options": [
@@ -125,22 +125,10 @@
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "2 1",
-            "1 2",
-            "0 0",
-            "Trava"
-          ],
           "explanation": "swap recebe os endereços de a e b e troca os valores para onde eles apontam, então as variáveis do main mudam. Compare com o swap(int x, int y) do quiz de funções, que só trocava cópias."
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "30",
-            "11",
-            "20",
-            "um endereço"
-          ],
           "explanation": "p aponta para a[0]. p + 2 aponta dois elementos adiante (não dois bytes): a[2], que é 30. Em geral *(a + i) é a[i]."
         },
         {
@@ -175,12 +163,6 @@
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "3",
-            "2",
-            "12",
-            "4"
-          ],
           "explanation": "Subtrair dois ponteiros para o mesmo array dá o número de elementos entre eles, não de bytes: &a[3] − &a[0] é 3."
         },
         {

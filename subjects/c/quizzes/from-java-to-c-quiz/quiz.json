@@ -8,7 +8,7 @@
   "description": "What C does differently from Java: input and output, types and switch.",
   "questions": [
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "printf(\"%d\\n\", 7 / 2);",
       "options": [
@@ -34,7 +34,7 @@
       "explanation": "C passes arguments by value. scanf needs the address, &x, to write into x. Without it, scanf treats whatever value x has as an address: undefined behavior, often a crash."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "unsigned char c = 255;\nc = c + 1;\nprintf(\"%d\\n\", c);",
       "options": [
@@ -47,9 +47,9 @@
       "explanation": "An unsigned char holds 0 to 255. Unsigned arithmetic wraps around: 255 + 1 becomes 0. (Signed overflow is different: it is undefined behavior.)"
     },
     {
-      "type": "choice",
-      "prompt": "What does this print when n is 2?",
-      "code": "switch (n) {\n    case 1: printf(\"A\");\n    case 2: printf(\"B\");\n    case 3: printf(\"C\"); break;\n    default: printf(\"D\");\n}",
+      "type": "output",
+      "prompt": "What does this print?",
+      "code": "int n = 2;\nswitch (n) {\n    case 1: printf(\"A\");\n    case 2: printf(\"B\");\n    case 3: printf(\"C\"); break;\n    default: printf(\"D\");\n}",
       "options": [
         "BC",
         "B",
@@ -60,7 +60,7 @@
       "explanation": "Execution jumps to case 2 and prints B. With no break it falls through into case 3 (C), and the break there stops it before default."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "char c = 'A' + 2;\nprintf(\"%c\\n\", c);",
       "options": [
@@ -111,12 +111,6 @@
       "questions": [
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "3",
-            "3.5",
-            "3.500000",
-            "4"
-          ],
           "explanation": "Os dois operandos são int, então é divisão inteira: a parte fracionária some. `7 / 2.0` seria um double, impresso com %f."
         },
         {
@@ -131,32 +125,14 @@
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "0",
-            "256",
-            "255",
-            "-1"
-          ],
           "explanation": "Um unsigned char guarda de 0 a 255. A aritmética unsigned dá a volta: 255 + 1 vira 0. (O estouro com sinal é diferente: é comportamento indefinido.)"
         },
         {
-          "prompt": "O que isto imprime quando n é 2?",
-          "options": [
-            "BC",
-            "B",
-            "BCD",
-            "ABC"
-          ],
+          "prompt": "O que isto imprime?",
           "explanation": "A execução pula para o case 2 e imprime B. Sem break, ela cai no case 3 (C), e o break dali para antes do default."
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "C",
-            "67",
-            "A2",
-            "B"
-          ],
           "explanation": "Um char é um número: 'A' é 65, então c é 67, e %c imprime o caractere com esse código, C. Com %d imprimiria 67."
         },
         {

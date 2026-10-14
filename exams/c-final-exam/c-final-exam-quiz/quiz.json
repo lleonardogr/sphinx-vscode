@@ -1,0 +1,144 @@
+{
+  "title": "C Final Exam Quiz",
+  "language": "c",
+  "description": "Eight questions. You can submit the quiz only once.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "int a[] = {5, 10, 15, 20};\nint *p = a + 1;\nprintf(\"%d %d\\n\", *p, *(p + 2));",
+      "options": [
+        "10 20",
+        "5 15",
+        "10 15",
+        "15 20"
+      ],
+      "answer": 0,
+      "explanation": "p points at a[1], 10; p + 2 is two elements further, a[3], 20."
+    },
+    {
+      "type": "output",
+      "code": "struct P { int x; };\nstruct P a = {1};\nstruct P *q = &a;\nstruct P b = a;\nq->x = 7;\nprintf(\"%d %d\\n\", a.x, b.x);",
+      "options": [
+        "7 1",
+        "1 1",
+        "7 7",
+        "1 7"
+      ],
+      "answer": 0,
+      "explanation": "q points at a, so q->x = 7 changes a. b was a copy made before, so it keeps 1."
+    },
+    {
+      "type": "output",
+      "code": "unsigned x = 0xF0;\nprintf(\"%u %u\\n\", x >> 4, x & 0x3C);",
+      "options": [
+        "15 48",
+        "15 60",
+        "240 48",
+        "16 48"
+      ],
+      "answer": 0,
+      "explanation": "0xF0 is 1111 0000: shifting right by 4 gives 1111, 15. 0x3C is 0011 1100, and the bits set in both are 0011 0000, 48."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why do careful programs write bigger = realloc(p, size); if (bigger) p = bigger; instead of p = realloc(p, size);?",
+      "options": [
+        "when realloc fails it returns NULL and keeps the old block: assigning straight to p would lose the only pointer to it",
+        "realloc always moves the block",
+        "realloc frees p when it succeeds, so p must not be reused",
+        "it is just a matter of style"
+      ],
+      "answer": 0,
+      "explanation": "On failure realloc returns NULL and leaves the old block untouched. Keeping the result in a second variable lets the program still use, or free, the old block."
+    },
+    {
+      "type": "output",
+      "code": "struct Node { int value; struct Node *next; };\n\nint main(void) {\n    struct Node *head = NULL;\n    for (int i = 1; i <= 3; i++) {\n        struct Node *n = malloc(sizeof *n);\n        n->value = i;\n        n->next = head;\n        head = n;\n    }\n    for (struct Node *p = head; p != NULL; p = p->next) {\n        printf(\"%d \", p->value);\n    }\n    printf(\"\\n\");\n}",
+      "options": [
+        "3 2 1",
+        "1 2 3",
+        "3",
+        "1"
+      ],
+      "answer": 0,
+      "explanation": "Each new node goes in front of the old head, so the last one added, 3, comes first."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which of these leaks memory?",
+      "options": [
+        "char *s = malloc(100); s = malloc(200); free(s);",
+        "char *s = malloc(100); free(s); s = malloc(200); free(s);",
+        "char *s = malloc(100); char *t = s; free(t);",
+        "char *s = NULL; free(s);"
+      ],
+      "answer": 0,
+      "explanation": "The second malloc overwrites the only pointer to the first block of 100 bytes, which can never be freed. free(NULL) does nothing, and freeing through a copy of the pointer (t) is fine."
+    },
+    {
+      "type": "output",
+      "code": "const char *s = \"hello\";\nprintf(\"%c %s\\n\", *(s + 1), s + 3);",
+      "options": [
+        "e lo",
+        "h llo",
+        "e llo",
+        "l lo"
+      ],
+      "answer": 0,
+      "explanation": "*(s + 1) is the character at index 1, e. s + 3 is a pointer to \"lo\", and %s prints from there to the '\\0'."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "A struct with a char and an int can take more than 5 bytes.",
+      "answer": true,
+      "explanation": "The compiler usually adds padding so the int starts at an address that is a multiple of 4: sizeof is typically 8."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz da prova final de C",
+      "description": "Oito questões. Você pode enviar o quiz só uma vez.",
+      "questions": [
+        {
+          "explanation": "p aponta para a[1], 10; p + 2 fica dois elementos adiante, a[3], 20."
+        },
+        {
+          "explanation": "q aponta para a, então q->x = 7 muda a. b foi uma cópia feita antes, então continua 1."
+        },
+        {
+          "explanation": "0xF0 é 1111 0000: deslocar 4 para a direita dá 1111, 15. 0x3C é 0011 1100, e os bits ligados nos dois são 0011 0000, 48."
+        },
+        {
+          "prompt": "Por que programas cuidadosos escrevem bigger = realloc(p, size); if (bigger) p = bigger; em vez de p = realloc(p, size);?",
+          "options": [
+            "quando o realloc falha ele devolve NULL e mantém o bloco antigo: atribuir direto a p perderia o único ponteiro para ele",
+            "o realloc sempre move o bloco",
+            "o realloc libera p quando dá certo, então p não pode ser reusado",
+            "é só questão de estilo"
+          ],
+          "explanation": "Quando falha, o realloc devolve NULL e deixa o bloco antigo intacto. Guardar o resultado numa segunda variável deixa o programa ainda usar, ou liberar, o bloco antigo."
+        },
+        {
+          "explanation": "Cada nó novo entra na frente do head antigo, então o último acrescentado, 3, vem primeiro."
+        },
+        {
+          "prompt": "Qual destes vaza memória?",
+          "options": [
+            "char *s = malloc(100); s = malloc(200); free(s);",
+            "char *s = malloc(100); free(s); s = malloc(200); free(s);",
+            "char *s = malloc(100); char *t = s; free(t);",
+            "char *s = NULL; free(s);"
+          ],
+          "explanation": "O segundo malloc sobrescreve o único ponteiro para o primeiro bloco de 100 bytes, que nunca mais pode ser liberado. free(NULL) não faz nada, e liberar por uma cópia do ponteiro (t) está certo."
+        },
+        {
+          "explanation": "*(s + 1) é o caractere no índice 1, e. s + 3 é um ponteiro para \"lo\", e %s imprime dali até o '\\0'."
+        },
+        {
+          "prompt": "Uma struct com um char e um int pode ocupar mais de 5 bytes.",
+          "explanation": "O compilador costuma acrescentar preenchimento para o int começar num endereço múltiplo de 4: o sizeof costuma ser 8."
+        }
+      ]
+    }
+  }
+}

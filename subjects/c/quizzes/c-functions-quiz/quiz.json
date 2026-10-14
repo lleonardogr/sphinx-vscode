@@ -8,20 +8,20 @@
   "description": "Prototypes, pass by value, static variables and recursion.",
   "questions": [
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "void swap(int x, int y) {\n    int t = x; x = y; y = t;\n}\n\nint main(void) {\n    int a = 1, b = 2;\n    swap(a, b);\n    printf(\"%d %d\\n\", a, b);\n}",
       "options": [
         "1 2",
         "2 1",
         "0 0",
-        "It does not compile"
+        "2 2"
       ],
       "answer": 0,
       "explanation": "swap gets copies of a and b and swaps the copies. main's a and b never change. Swapping the caller's variables needs their addresses, which comes with pointers."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "int counter(void) {\n    static int count = 0;\n    count++;\n    return count;\n}\n\nint main(void) {\n    printf(\"%d \", counter());\n    printf(\"%d \", counter());\n    printf(\"%d\\n\", counter());\n}",
       "options": [
@@ -46,7 +46,7 @@
       "explanation": "Old C guessed that an undeclared function returns int; C99 and later reject the guess. A prototype such as int area(int w, int h); above main tells the compiler what to check."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "int twice_half(int n) {\n    return n * 2 / 2;\n}\n\nint main(void) {\n    printf(\"%d\\n\", twice_half(3.7));\n}",
       "options": [
@@ -85,14 +85,14 @@
       "explanation": "Every active call keeps its parameters and return address on the call stack. Millions of nested calls overflow it (a stack overflow), unless the compiler happens to optimize the call away. A loop needs no extra stack."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "int x = 5;\n{\n    int x = 10;\n    x = x + 5;\n}\nprintf(\"%d\\n\", x);",
       "options": [
         "5",
         "10",
         "15",
-        "It does not compile"
+        "0"
       ],
       "answer": 0,
       "explanation": "The x declared inside the block hides the outer x only inside that block. After the closing brace, x is the outer one again, still 5."
@@ -111,22 +111,10 @@
       "questions": [
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "1 2",
-            "2 1",
-            "0 0",
-            "Não compila"
-          ],
           "explanation": "swap recebe cópias de a e b e troca as cópias. O a e o b do main nunca mudam. Trocar as variáveis de quem chamou exige os endereços delas, o que vem com ponteiros."
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "1 2 3",
-            "1 1 1",
-            "0 1 2",
-            "3 3 3"
-          ],
           "explanation": "Uma variável local static é criada e posta em 0 uma vez, antes de o programa começar, e mantém o valor entre chamadas. Sem static, count começaria em 0 a cada chamada e imprimiria 1 1 1."
         },
         {
@@ -141,12 +129,6 @@
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "3",
-            "3.7",
-            "4",
-            "3.700000"
-          ],
           "explanation": "O parâmetro é int, então o protótipo faz o C converter 3.7 para int na chamada: a parte fracionária é cortada, dando 3. A função nunca vê o 3.7, e os compiladores costumam avisar da parte perdida."
         },
         {
@@ -171,12 +153,6 @@
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "5",
-            "10",
-            "15",
-            "Não compila"
-          ],
           "explanation": "O x declarado dentro do bloco esconde o x de fora só dentro daquele bloco. Depois da chave que fecha, x é de novo o de fora, ainda 5."
         },
         {

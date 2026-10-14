@@ -33,7 +33,7 @@
       "explanation": "An array's name used in an expression is the address of its first element. Two arrays live at two addresses, so a == b is false whatever they contain."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "char s[] = \"Hello\";\ns[3] = '\\0';\nprintf(\"%s\\n\", s);",
       "options": [
@@ -84,14 +84,14 @@
       "explanation": "strcmp compares character by character: 'a' comes before 'b', so the result is negative. 0 means equal, positive means the first string comes after. Only the sign is guaranteed, not the value."
     },
     {
-      "type": "choice",
+      "type": "output",
       "prompt": "What does this print?",
       "code": "char buf[6];\nsnprintf(buf, sizeof buf, \"%s world\", \"Hello\");\nprintf(\"%zu\\n\", strlen(buf));",
       "options": [
         "5",
         "6",
         "4",
-        "It is undefined"
+        "11"
       ],
       "answer": 0,
       "explanation": "snprintf writes at most sizeof buf − 1 characters plus '\\0': \"Hello\" fits, \" world\" is cut. strlen(buf) is 5. (snprintf returns 11, the length it wanted to write, which is how you detect the cut.)"
@@ -130,12 +130,6 @@
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "Hel",
-            "Hello",
-            "He",
-            "H"
-          ],
           "explanation": "Escrever '\\0' no índice 3 termina a string ali: o printf para no primeiro terminador e imprime as três primeiras letras. O resto continua no array, só não faz parte da string."
         },
         {
@@ -170,12 +164,6 @@
         },
         {
           "prompt": "O que isto imprime?",
-          "options": [
-            "5",
-            "6",
-            "4",
-            "É indefinido"
-          ],
           "explanation": "O snprintf escreve no máximo sizeof buf − 1 caracteres mais o '\\0': \"Hello\" cabe, \" world\" é cortado. strlen(buf) é 5. (O snprintf devolve 11, o tamanho que queria escrever, que é como se detecta o corte.)"
         },
         {

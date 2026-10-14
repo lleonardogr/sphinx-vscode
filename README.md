@@ -67,7 +67,7 @@ Each item shows the Java it needs, with your progress: for example **Needs: Java
 
 ## C Programming
 
-The third subject, for students who already know Java: 9 units, from *From Java to C* to pointers, dynamic memory, structs and linked lists, with 9 quick guides, 9 quizzes, 41 challenges and 2 tests. C challenges are compiled as C17 with warnings and, where the compiler supports them, memory checks that explain a memory error with its line. On Windows, Sphinx offers to download a portable C compiler (no installation or admin rights needed).
+The third subject, for students who already know Java: 9 units, from *From Java to C* to pointers, dynamic memory, structs and linked lists, with 9 quick guides, 9 quizzes, 41 challenges, 2 tests and 2 exams. C challenges are compiled as C17 with warnings and, where the compiler supports them, memory checks that explain a memory error with its line. On Windows, Sphinx offers to download a portable C compiler (no installation or admin rights needed).
 
 | Unit | Lessons | Challenges (plus the unit's quiz) |
 |------|---------|-----------------------------------|
@@ -80,6 +80,8 @@ The third subject, for students who already know Java: 9 units, from *From Java 
 | 7 · Structs | Structs (quick guide: Beej's Guide, freeCodeCamp) | Fractions · Student Records (an array of structs and `qsort`) · Bank Ledger (`enum`) · Point in Polygon |
 | 8 · Bits and Bytes in C | Bits and Bytes in C (quick guide: Beej's Guide) | Count the Bits · RGB565 Colors (packing fields) · Float Anatomy (IEEE 754 with `memcpy`) · CRC-32 |
 | 9 · Linked Data Structures | Linked Data Structures (quick guide: CS50, Beej's Guide) | RPN Calculator (a linked stack) · Printer Queue (a linked queue) · Undo and Redo (doubly linked) · BST Word Counter (a binary search tree) · Test: Line Editor |
+
+Two closed **exams**, each with a quiz and three private coding questions: **C Exam 1: Foundations** (units 1–4, 90 minutes: Digital Clock, Number to Words, Bracket Checker) and the **C Final Exam** (the whole subject, focused on units 5–9, 120 minutes: Text Buffer, Sorted Linked List, LRU Cache). The C quizzes' "what does this print?" questions run real C.
 
 ## Screenshots
 
@@ -244,12 +246,11 @@ Done:
 - [x] Teachers' own subjects and units, and units added to the built-in subjects, shared in packs
 - [x] Optional prerequisite locks, turned on by the teacher for a subject or a class
 - [x] Bonus goals: optional harder goals on challenges, shown as stars
-- [x] C challenges with memory checks, a portable compiler for Windows, and the C Programming subject: 9 units with quick guides, quizzes and challenges, plus 2 tests
+- [x] C challenges with memory checks, a portable compiler for Windows, and the C Programming subject: 9 units with quick guides, quizzes and challenges, plus 2 tests and 2 exams
 
 Content:
 
 - [ ] An algorithms and data structures unit
-- [ ] C Programming exams, and "what does this print?" questions in C
 - [ ] New subjects: SQL and graph theory
 
 For teachers:
@@ -264,7 +265,7 @@ For students:
 
 Platform:
 
-- [ ] Support more languages (Python, JavaScript, C, SQL, …) through a pluggable runner per language
+- [ ] More languages for challenges (Python, JavaScript, SQL, …), each with its own runner, as C has
 - [ ] Publish to the Marketplace with Microsoft Entra ID before personal access tokens are retired on December 1, 2026 ([#47](https://github.com/lleonardogr/sphinx-vscode/issues/47))
 - [ ] A verified publisher namespace on Open VSX
 

@@ -96,7 +96,9 @@ To share quizzes, put them next to your challenges and use [Import](creating-cha
 | `output` | reads `code` and types what it prints | The exact output. Leave it `""` and let the validator fill it in (see below). Add `options` to let the student pick instead of typing; `answer` is then the index of the right option. |
 | `number` | types a number | The number written in the question's `base`, as plain digits: `"1101"` with `"base": 2`, `"2F"` with `"base": 16`, `"2.125"` in decimal. |
 
-For `output` questions, the code can be a **snippet**, which is run inside `void main() { … }`, or a **whole program**, in modern or classic style. When the student types the output, spaces at the start and at the end are ignored, and spaces inside the lines must match.
+For `output` questions, the code can be a **snippet**, which is run inside `void main() { … }`, or a **whole program**, in modern or classic style.
+
+**C snippets.** A quiz in a unit of a C subject (such as C Programming) runs its `output` questions as C: a snippet goes inside `int main(void) { … }`, and every program gets `<stdio.h>`, `<stdlib.h>`, `<string.h>` and `<stdint.h>`. A quiz with no unit, such as an exam's, sets `"language": "c"` in `quiz.json`; a single question can set `"language"` too. When the student types the output, spaces at the start and at the end are ignored, and spaces inside the lines must match.
 
 ### Number questions
 
