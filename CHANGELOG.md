@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.9.1] - 2026-10-14
+
 ### Fixed
 
 - **Bonus goals in the challenge panel.** The panel now lists a challenge's bonus goals before you submit, with ☆ or ★, their description and an optional hint. After a Submit, the results show which goals were earned and why the others weren't, and the stars update. Before, the list was missing and the results banner failed to appear.
@@ -368,7 +370,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.0...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.1...HEAD
+[1.9.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.8.1...v1.9.0
 [1.8.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.7.0...v1.8.0
