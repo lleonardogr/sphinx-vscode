@@ -8,14 +8,15 @@ import { ExamManager } from './examSession';
 import { QuizDefinition } from './quizzes';
 import { LessonDefinition } from './lessons';
 import { readingCount } from './lessonPanel';
-import { difficultyName, plural, tr } from './i18n';
+import { difficultyName, language, plural, tr } from './i18n';
 import { TESTS_TOPIC } from './path';
+import { SubjectDef, UnitDef, allSubjects, subjectTitle } from './subjects';
 
 /** Where an item comes from: shipped with Sphinx, imported into its library, or a folder in sphinx.extraChallengePaths. */
 export type Origin = 'builtIn' | 'imported' | 'folder';
 
 export type TeacherNode =
-  | { kind: 'section'; id: 'exams' | 'content' | 'tools' }
+  | { kind: 'section'; id: 'exams' | 'content' | 'subjects' | 'tools' }
   | { kind: 'exam'; exam: ExamDefinition }
   | { kind: 'examQuestion'; exam: ExamDefinition; question: ExamQuestion }
   /** The teacher's preview attempt of an exam (`exam` is the preview copy). */
@@ -24,6 +25,9 @@ export type TeacherNode =
   | { kind: 'challenge'; challenge: Challenge }
   | { kind: 'quiz'; quiz: QuizDefinition }
   | { kind: 'lesson'; lesson: LessonDefinition }
+  /** A subject and its units: the teacher's own can be deleted, built-in ones can't. */
+  | { kind: 'subject'; subject: SubjectDef }
+  | { kind: 'unit'; subject: SubjectDef; unit: UnitDef; number: number }
   | { kind: 'tool'; id: string; label: string; icon: string; command: string }
   | { kind: 'hint'; label: string; command: string };
 
@@ -64,6 +68,8 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
     /** The preview copy of an exam, when the teacher has started one. */
     private readonly previewFor: (exam: ExamDefinition) => ExamDefinition | undefined,
     private readonly getLessons: () => LessonDefinition[] = () => [],
+    /** How many lessons, challenges, quizzes and tests belong to a unit. */
+    private readonly unitItems: (key: string) => number = () => 0,
   ) {
     examManager.onDidChange(() => this.refresh());
   }
@@ -86,6 +92,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
       return [
         { kind: 'section', id: 'exams' },
         { kind: 'section', id: 'content' },
+        { kind: 'section', id: 'subjects' },
         { kind: 'section', id: 'tools' },
       ];
     }
@@ -101,12 +108,14 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
       }
       case 'preview':
         return node.exam.questions.map((question) => ({ kind: 'previewQuestion', exam: node.exam, question }));
+      case 'subject':
+        return node.subject.units.map((unit, i): TeacherNode => ({ kind: 'unit', subject: node.subject, unit, number: i + 1 }));
       default:
         return [];
     }
   }
 
-  private section(id: 'exams' | 'content' | 'tools'): TeacherNode[] {
+  private section(id: 'exams' | 'content' | 'subjects' | 'tools'): TeacherNode[] {
     if (id === 'exams') {
       const exams = this.getExams().filter((e) => !e.preview).sort((a, b) => Number(this.origin(a.dir) === 'builtIn') - Number(this.origin(b.dir) === 'builtIn') || a.title.localeCompare(b.title));
       return exams.length ? exams.map((exam) => ({ kind: 'exam', exam })) : [{ kind: 'hint', label: tr('Import an exam, or copy the sample exam to start one', 'Importe uma prova, ou copie a prova de exemplo para começar'), command: 'sphinx.importContent' }];
@@ -119,6 +128,9 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         ...own.lessons.sort((a, b) => a.title.localeCompare(b.title)).map((lesson): TeacherNode => ({ kind: 'lesson', lesson })),
       ];
       return items.length ? items : [{ kind: 'hint', label: tr('Create a challenge or import a pack', 'Crie um desafio ou importe um pacote'), command: 'sphinx.createChallenge' }];
+    }
+    if (id === 'subjects') {
+      return allSubjects().map((subject): TeacherNode => ({ kind: 'subject', subject }));
     }
     const tool = (toolId: string, label: string, icon: string, command: string): TeacherNode => ({ kind: 'tool', id: toolId, label, icon, command });
     return [
@@ -141,6 +153,7 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         const labels = {
           exams: [tr('My Exams', 'Minhas provas'), 'checklist'],
           content: [tr('My Challenges, Quizzes & Lessons', 'Meus desafios, quizzes e lições'), 'library'],
+          subjects: [tr('Subjects & Units', 'Matérias e unidades'), 'list-tree'],
           tools: [tr('Tools', 'Ferramentas'), 'tools'],
         } as const;
         const [label, icon] = labels[node.id];
@@ -152,6 +165,49 @@ export class TeacherTreeProvider implements vscode.TreeDataProvider<TeacherNode>
         } else if (node.id === 'content') {
           const own = this.ownContent();
           item.description = String(own.challenges.length + own.quizzes.length + own.lessons.length);
+        }
+        if (node.id === 'subjects') {
+          // Collapsed: the built-in subjects make it long, and teachers open it only to manage their own.
+          item.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+          const own = allSubjects().filter((s) => s.own).length;
+          item.description = own ? tr(`${own} of your own`, `${own} suas`) : '';
+        }
+        return item;
+      }
+      case 'subject': {
+        const s = node.subject;
+        const item = new vscode.TreeItem(subjectTitle(s), vscode.TreeItemCollapsibleState.Collapsed);
+        item.id = `teacher:subject:${s.id}`;
+        item.iconPath = new vscode.ThemeIcon(s.own ? 'library' : 'lock');
+        const added = s.units.filter((u) => u.dir).length;
+        item.description = [
+          s.own ? tr('Your subject', 'Sua matéria') : tr('Built-in', 'Incluída'),
+          plural(s.units.length, ['unit', 'units'], ['unidade', 'unidades']),
+          ...(!s.own && added ? [tr(`${added} yours`, `${added} suas`)] : []),
+        ].join(' · ');
+        item.tooltip = s.own
+          ? new vscode.MarkdownString(`**${subjectTitle(s)}**\n\n\`${s.dir}\``)
+          : tr('Built-in subjects ship with Sphinx and can\'t be deleted. Units you added to it can.', 'As matérias incluídas vêm com o Sphinx e não podem ser excluídas. As unidades que você acrescentou a elas podem.');
+        item.contextValue = s.own ? 'teacherSubjectOwn' : 'teacherSubject';
+        if (s.own) {
+          item.command = { command: 'vscode.open', title: tr('Open', 'Abrir'), arguments: [vscode.Uri.file(path.join(s.dir, 'subject.json'))] };
+        }
+        return item;
+      }
+      case 'unit': {
+        const u = node.unit;
+        const title = u.titles[language()] ?? u.titles.en;
+        const item = new vscode.TreeItem(`${node.number} · ${title}`, vscode.TreeItemCollapsibleState.None);
+        item.id = `teacher:unit:${u.key}`;
+        item.iconPath = new vscode.ThemeIcon(u.icon);
+        const items = this.unitItems(u.key);
+        item.description = u.dir
+          ? `${tr('Your unit', 'Sua unidade')} · ${plural(items, ['item', 'items'], ['item', 'itens'])}`
+          : tr('Built-in', 'Incluída');
+        item.tooltip = new vscode.MarkdownString(`**${title}** · \`${u.key}\`${u.dir ? `\n\n\`${u.dir}\`` : ''}`);
+        item.contextValue = u.dir ? 'teacherUnitOwn' : 'teacherUnit';
+        if (u.dir) {
+          item.command = { command: 'vscode.open', title: tr('Open', 'Abrir'), arguments: [vscode.Uri.file(path.join(u.dir, 'subject.json'))] };
         }
         return item;
       }

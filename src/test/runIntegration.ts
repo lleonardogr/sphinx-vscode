@@ -27,6 +27,8 @@ async function main(): Promise<void> {
     await runTests({
       extensionDevelopmentPath: root,
       extensionTestsPath: path.join(__dirname, 'integration', 'index'),
+      // Deleted test content is removed for good instead of filling the Trash of the machine running the tests.
+      extensionTestsEnv: { SPHINX_DELETE_WITHOUT_TRASH: '1' },
       vscodeExecutablePath: process.env.SPHINX_TEST_VSCODE || undefined,
       version: process.env.SPHINX_TEST_VSCODE ? undefined : 'stable',
       launchArgs: [workspace, '--disable-extensions', `--user-data-dir=${userData}`, '--skip-welcome', '--skip-release-notes'],

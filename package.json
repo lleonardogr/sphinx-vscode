@@ -577,7 +577,7 @@
         },
         {
           "command": "sphinx.deleteItem",
-          "when": "view == sphinx.teacher && viewItem =~ /^teacher(ExamOwn|Item)$/",
+          "when": "view == sphinx.teacher && viewItem =~ /^teacher(ExamOwn|Item|SubjectOwn|UnitOwn)$/",
           "group": "teacher@9"
         }
       ],

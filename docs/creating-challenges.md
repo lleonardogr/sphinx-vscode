@@ -339,6 +339,8 @@ my-challenges/
 - `language`: `java` (the default) or `c`. **Create New Challenge** writes C templates (`Starter.c` and `Solution.c`) for the units of a C subject.
 - Each unit has a `key`, unique across all subjects (content refers to it in `topic`), a `title`, and optionally a [codicon](https://microsoft.github.io/vscode-codicons/dist/codicon.html) name in `icon`.
 
+**Deleting a subject or a unit:** the teacher view's **Subjects & Units** section lists every subject and its units. Right-click one of your own subjects, or a unit you created (in your subject or added to a built-in one), and choose **Delete**. A subject goes with everything in its folder; a unit goes with its lessons, challenges, quizzes and tests, and is removed from its `subject.json`. Folders go to the Trash (imported ones are removed from Sphinx's library). A subject's only unit can't be deleted on its own: delete the subject. Built-in subjects and units (Java Programming, CS Fundamentals, C Programming) can't be deleted.
+
 **Sharing a subject:** **Export a Pack** lists your subjects (and the units you added to built-in ones) under **Your subjects**. Each one travels whole, with everything in its folder. Students import the pack as usual, and the subject appears in their **Switch Subject…**. **Validate Challenges in a Folder…** on your content folder checks your subjects too.
 
 ### Lessons

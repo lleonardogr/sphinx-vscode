@@ -14,6 +14,8 @@ export interface UnitDef {
   icon: string;
   /** Older names still accepted as "topic" (e.g. "Variables" for "Basics"). */
   aliases: string[];
+  /** For a teacher's unit, the folder whose subject.json defines it; built-in units have none and can't be deleted. */
+  dir?: string;
 }
 
 export interface SubjectDef {
@@ -180,6 +182,7 @@ function parseSubject(dir: string, own = false): SubjectDef {
       titles: titlesFor(u.title, (t) => t.units?.[key]),
       icon: typeof u.icon === 'string' && u.icon ? u.icon : 'folder',
       aliases: Array.isArray(u.aliases) ? u.aliases.filter((a): a is string => typeof a === 'string') : [],
+      ...(own ? { dir } : {}),
     };
   });
   return {
@@ -231,4 +234,18 @@ export function loadSubjects(roots: string[]): { subjects: SubjectDef[]; errors:
     }
   }
   return { subjects, errors };
+}
+
+/** Removes the unit `key` from the subject.json in `dir` and returns how many units are left in that file. */
+export function removeUnitFromSubjectFile(dir: string, key: string): number {
+  const file = path.join(dir, 'subject.json');
+  const meta = JSON.parse(fs.readFileSync(file, 'utf8'));
+  meta.units = (Array.isArray(meta.units) ? meta.units : []).filter((u: { key?: string }) => u?.key !== key);
+  for (const t of Object.values(meta.translations ?? {}) as { units?: Record<string, string> }[]) {
+    if (t?.units) {
+      delete t.units[key];
+    }
+  }
+  fs.writeFileSync(file, JSON.stringify(meta, null, 2) + '\n');
+  return meta.units.length;
 }
