@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.9.2] - 2026-10-14
+
 ### Added
 
 - **Back up and restore progress.** **Back Up Progress…**, in the student view's `…` menu, saves the solved challenges, bonus stars, quiz scores, lessons read, exam sessions, the student's code and the packs they imported in one `.zip`. **Restore Progress from a Backup…** merges it with the computer's progress: solved stays solved, the best quiz score is kept, and an exam already on the computer is never replaced. When a code file differs, the student chooses which version stays. Settings and AI keys are not included.
@@ -374,7 +376,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.1...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.2...HEAD
+[1.9.2]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.8.1...v1.9.0
 [1.8.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.8.0...v1.8.1
