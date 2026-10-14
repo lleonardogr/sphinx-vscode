@@ -7,7 +7,7 @@ import { loadLesson, parseReadings, readingMinutes, resolveLessonImages } from '
 import { readingProblems, validateChallenges } from '../../validator';
 import { buildPath, nextInPath, pathItemId, requirementStatus, solvedToUnlock, subjectOf, unitKey, unitName, unmetRequirements } from '../../path';
 import { QuizQuestion, isCorrect, loadQuiz, parseNumberAnswer } from '../../quizzes';
-import { addTeacherSubjects, allSubjects, findSubject, findUnit, loadSubjects, setSubjects, stricterLock, subjectContentRoots } from '../../subjects';
+import { addTeacherSubjects, allSubjects, findSubject, findUnit, loadSubjects, removeUnitFromSubjectFile, setSubjects, stricterLock, subjectContentRoots } from '../../subjects';
 import { ROOT, tempDir } from './helpers';
 
 describe('subjects', () => {
@@ -258,6 +258,27 @@ describe("teachers' subjects and units", () => {
     write('clash/subject.json', { id: 'clash', title: 'Clash', units: [{ key: 'Loops', title: 'Loops again' }] });
     return dir;
   }
+
+  it("marks which units are the teacher's, and removes a unit from its subject.json", () => {
+    const folder = teacherFolder();
+    const { subjects } = addTeacherSubjects(allSubjects(), [folder]);
+    const java = subjects.find((s) => s.id === 'java')!;
+    // Built-in units have no folder, so they can't be deleted; the added one points to its subject.json.
+    assert.ok(java.units.slice(0, -1).every((u) => u.dir === undefined));
+    assert.equal(java.units.at(-1)!.dir, path.join(folder, 'java-files'));
+    assert.ok(subjects.find((s) => s.id === 'chemistry')!.units.every((u) => u.dir === path.join(folder, 'chemistry')));
+    assert.ok(findSubject('c')!.units.every((u) => u.dir === undefined));
+
+    const file = path.join(folder, 'chemistry', 'subject.json');
+    const meta = JSON.parse(fs.readFileSync(file, 'utf8'));
+    meta.translations = { 'pt-br': { title: 'Química', units: { Atoms: 'Átomos', Bonds: 'Ligações' } } };
+    fs.writeFileSync(file, JSON.stringify(meta));
+    assert.equal(removeUnitFromSubjectFile(path.join(folder, 'chemistry'), 'Bonds'), 1);
+    const after = JSON.parse(fs.readFileSync(file, 'utf8'));
+    assert.deepEqual(after.units.map((u: { key: string }) => u.key), ['Atoms']);
+    assert.deepEqual(after.translations['pt-br'].units, { Atoms: 'Átomos' });
+    assert.equal(removeUnitFromSubjectFile(path.join(folder, 'java-files'), 'Files'), 0);
+  });
 
   it('adds new subjects, appends units to built-in ones, and refuses unit keys already in use', () => {
     const folder = teacherFolder();

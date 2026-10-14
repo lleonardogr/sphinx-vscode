@@ -331,8 +331,9 @@ test('the teacher view lists the teacher\'s exams, own content and tools, edits 
   assert.equal(api.view(), 'teacher');
   const t = api.teacherTree;
   const label = (n: unknown) => String(t.getTreeItem(n as never).label);
-  const [exams, content, tools] = t.getChildren();
-  assert.deepEqual([exams, content, tools].map(label), ['My Exams', 'My Challenges, Quizzes & Lessons', 'Tools']);
+  const [exams, content, subjects, tools] = t.getChildren();
+  assert.deepEqual([exams, content, subjects, tools].map(label), ['My Exams', 'My Challenges, Quizzes & Lessons', 'Subjects & Units', 'Tools']);
+  assert.deepEqual(t.getChildren(subjects).map(label), ['Java Programming', 'CS Fundamentals', 'C Programming']);
   assert.deepEqual(t.getChildren(exams).map(label).sort(), ['CS Exam 1: Data Representation', 'CS Final Exam', 'Class Exam', 'Exam 1: Basics to Strings', 'Exam 2: Building Blocks', 'Final Exam', 'Sample Exam: Java Basics']);
   const exam = (title: string) => t.getChildren(exams).find((n) => label(n) === title)!;
   assert.match(String(t.getTreeItem(exam('Exam 1: Basics to Strings') as never).description), /^Built-in · 4 questions · 100 pts · \d+ min$/);
@@ -588,6 +589,46 @@ test("a teacher creates a subject, adds units to it and to Java, and fills a new
     const report = await validateChallenges([folder]);
     assert.deepEqual(report.loadErrors, []);
     assert.ok(report.challenges.every((c) => c.problems.length === 0), JSON.stringify(report.challenges.map((c) => [c.id, c.problems])));
+
+    // The teacher view lists every subject: built-in ones (and their units) can't be deleted, the teacher's can.
+    const t = api.teacherTree;
+    const item = (n: unknown) => t.getTreeItem(n as never);
+    const section = t.getChildren().find((n) => (n as { id?: string }).id === 'subjects')!;
+    const subjectNode = (id: string) => t.getChildren(section).find((n) => (n as { subject?: { id: string } }).subject?.id === id)!;
+    assert.equal(item(subjectNode('java')).contextValue, 'teacherSubject');
+    assert.equal(item(subjectNode('c')).contextValue, 'teacherSubject');
+    assert.equal(item(subjectNode('chemistry')).contextValue, 'teacherSubjectOwn');
+    const javaUnits = t.getChildren(subjectNode('java'));
+    assert.equal(item(javaUnits[0]).contextValue, 'teacherUnit');
+    assert.equal(item(javaUnits[11]).contextValue, 'teacherUnitOwn');
+    assert.match(String(item(javaUnits[11]).description), /1 item/);
+
+    // Deleting asks first; built-in subjects are refused even through the command.
+    const asked: string[] = [];
+    dialogs.answer = (msg, buttons) => {
+      asked.push(msg);
+      return buttons.find((b) => /^Delete (Unit|Subject)$/.test(b));
+    };
+    await vscode.commands.executeCommand('sphinx.deleteItem', subjectNode('java'));
+    assert.equal(findSubject('java')!.units.length, 12, 'a built-in subject was changed');
+    assert.ok(asked.some((m) => /built into Sphinx and can't be deleted/.test(m)), asked.join(' | '));
+
+    // The unit added to Java goes, with its lesson.
+    await vscode.commands.executeCommand('sphinx.deleteItem', t.getChildren(subjectNode('java'))[11]);
+    assert.equal(findSubject('java')!.units.length, 11);
+    assert.equal(api.lessons().find((l) => l.title === 'Reading and Writing Files'), undefined);
+    assert.ok(!fs.existsSync(path.join(folder, 'java', 'subject.json')), 'the emptied java/subject.json is removed');
+
+    // A unit of the teacher's own subject goes; its only remaining unit can't, so the subject goes instead.
+    await vscode.commands.executeCommand('sphinx.deleteItem', t.getChildren(subjectNode('chemistry'))[1]);
+    assert.deepEqual(findSubject('chemistry')!.units.map((u) => u.key), ['AtomsAndMolecules']);
+    await vscode.commands.executeCommand('sphinx.deleteItem', t.getChildren(subjectNode('chemistry'))[0]);
+    assert.deepEqual(findSubject('chemistry')!.units.map((u) => u.key), ['AtomsAndMolecules']);
+    assert.ok(asked.some((m) => /only unit of Chemistry/.test(m)), asked.join(' | '));
+    await vscode.commands.executeCommand('sphinx.switchSubject', 'chemistry');
+    await vscode.commands.executeCommand('sphinx.deleteItem', subjectNode('chemistry'));
+    assert.equal(findSubject('chemistry'), undefined);
+    assert.equal(api.tree.subject, 'java', 'the sidebar falls back to Java');
   } finally {
     dialogs.choose = undefined;
     dialogs.inputBox = 'Test Student';

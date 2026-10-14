@@ -14,10 +14,10 @@ import { importContent, libraryRoots, removeImported } from './importer';
 import { QuizController, QuizProgress } from './quizController';
 import { QuizDefinition, loadQuizzes } from './quizzes';
 import { PathItem, Requirement, TESTS_TOPIC, buildPath, nextInPath, pathItemTitle, requirementStatus, solvedToUnlock, subjectOf, unitKey, unmetRequirements } from './path';
-import { DEFAULT_SUBJECT, LockRule, addTeacherSubjects, stricterLock, allSubjects, findSubject, loadSubjects, setSubjects, subjectContentRoots, subjectTitle } from './subjects';
+import { DEFAULT_SUBJECT, LockRule, SubjectDef, UnitDef, addTeacherSubjects, stricterLock, allSubjects, findSubject, loadSubjects, removeUnitFromSubjectFile, setSubjects, subjectContentRoots, subjectTitle } from './subjects';
 import { LessonDefinition, loadLessons } from './lessons';
 import { LessonPanel, LessonProgress } from './lessonPanel';
-import { plural, setLanguage, tr } from './i18n';
+import { language, plural, setLanguage, tr } from './i18n';
 import { JavaSetup } from './javaSetup';
 import { clearJavaCache } from './runner';
 import { clearCCompilerCache } from './cRunner';
@@ -147,7 +147,22 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     }
     return inside(libraryDir()) ? 'imported' : 'folder';
   };
-  const teacherTree = new TeacherTreeProvider(() => challenges, () => quizzes, () => exams, origin, examManager, (exam) => exams.find((e) => e.id === exam.id + PREVIEW_SUFFIX), () => lessons);
+  /** The folders of the lessons, challenges, quizzes and tests that belong to a unit. */
+  const unitItemDirs = (key: string): string[] => [
+    ...challenges.filter((c) => (c.topic === TESTS_TOPIC ? c.unit : c.topic) === key).map((c) => c.dir),
+    ...quizzes.filter((q) => q.topic === key).map((q) => q.dir),
+    ...lessons.filter((l) => l.topic === key).map((l) => l.dir),
+  ];
+  const teacherTree = new TeacherTreeProvider(
+    () => challenges,
+    () => quizzes,
+    () => exams,
+    origin,
+    examManager,
+    (exam) => exams.find((e) => e.id === exam.id + PREVIEW_SUFFIX),
+    () => lessons,
+    (key) => unitItemDirs(key).length,
+  );
   /** Re-grades results files for the class dashboard's "Verify all". */
   async function verifyFiles(files: string[]): Promise<{ file: string; matches: boolean; recomputed?: number; error?: string }[]> {
     const out: { file: string; matches: boolean; recomputed?: number; error?: string }[] = [];
@@ -1070,6 +1085,12 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
    * from the library (a copy); items from the teacher's own folders go to the Trash. Built-in content can't be deleted.
    */
   async function deleteItem(node?: TeacherNode): Promise<void> {
+    if (node?.kind === 'subject') {
+      return deleteSubject(node.subject);
+    }
+    if (node?.kind === 'unit') {
+      return deleteUnit(node.subject, node.unit);
+    }
     const item =
       node?.kind === 'exam'
         ? { dir: node.exam.dir, title: node.exam.title }
@@ -1111,6 +1132,96 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       output.appendLine(`[teacher] deleted ${item.dir}`);
     } catch (e) {
       vscode.window.showErrorMessage(tr(`Could not delete "${item.title}": ${(e as Error).message}`, `Não foi possível excluir "${item.title}": ${(e as Error).message}`));
+    }
+    reload();
+  }
+
+  /** Removes a teacher's folder: from Sphinx's library when it was imported, otherwise to the Trash. */
+  async function removeFolder(dir: string): Promise<void> {
+    if (origin(dir) === 'imported') {
+      fs.rmSync(dir, { recursive: true, force: true });
+    } else {
+      // The integration tests set SPHINX_DELETE_WITHOUT_TRASH so they don't fill the Trash.
+      await vscode.workspace.fs.delete(vscode.Uri.file(dir), { recursive: true, useTrash: !process.env.SPHINX_DELETE_WITHOUT_TRASH });
+    }
+    output.appendLine(`[teacher] deleted ${dir}`);
+  }
+
+  /** Teachers: deletes one of their own subjects, with everything in its folder. Built-in subjects can't be deleted. */
+  async function deleteSubject(subject: SubjectDef): Promise<void> {
+    if (!subject.own || origin(subject.dir) === 'builtIn') {
+      vscode.window.showInformationMessage(tr(`${subjectTitle(subject)} is built into Sphinx and can't be deleted.`, `${subjectTitle(subject)} vem com o Sphinx e não pode ser excluída.`));
+      return;
+    }
+    const inside = (dir: string) => path.resolve(dir).startsWith(path.resolve(subject.dir) + path.sep);
+    const items = [...challenges.map((c) => c.dir), ...quizzes.map((q) => q.dir), ...lessons.map((l) => l.dir)].filter(inside).length;
+    const imported = origin(subject.dir) === 'imported';
+    const detail = [
+      tr(
+        `Its ${plural(subject.units.length, ['unit', 'units'], ['unidade', 'unidades'])} and ${plural(items, ['lesson, challenge, quiz or test', 'lessons, challenges, quizzes and tests'], ['lição, desafio, quiz ou teste', 'lições, desafios, quizzes e testes'])} are deleted with it.`,
+        `As ${plural(subject.units.length, ['unit', 'units'], ['unidade', 'unidades'])} e ${plural(items, ['lesson, challenge, quiz or test', 'lessons, challenges, quizzes and tests'], ['lição, desafio, quiz ou teste', 'lições, desafios, quizzes e testes'])} dela são excluídas junto.`,
+      ),
+      imported
+        ? tr("It's removed from Sphinx's library. The pack you imported it from isn't changed.", 'Ela é removida da biblioteca do Sphinx. O pacote de onde você a importou não muda.')
+        : tr(`Its folder is moved to the Trash:\n${subject.dir}`, `A pasta dela vai para a Lixeira:\n${subject.dir}`),
+      tr("Students' code and results files are kept.", 'O código e os arquivos de resultado dos alunos são mantidos.'),
+    ].join('\n\n');
+    const deleteLabel = tr('Delete Subject', 'Excluir matéria');
+    const answer = await vscode.window.showWarningMessage(tr(`Delete the subject "${subjectTitle(subject)}"?`, `Excluir a matéria "${subjectTitle(subject)}"?`), { modal: true, detail }, deleteLabel);
+    if (answer !== deleteLabel) {
+      return;
+    }
+    try {
+      await removeFolder(subject.dir);
+    } catch (e) {
+      vscode.window.showErrorMessage(tr(`Could not delete "${subjectTitle(subject)}": ${(e as Error).message}`, `Não foi possível excluir "${subjectTitle(subject)}": ${(e as Error).message}`));
+    }
+    reload();
+  }
+
+  /**
+   * Teachers: deletes a unit they created, in their own subject or added to a built-in one, with its lessons,
+   * challenges, quizzes and tests. Built-in units can't be deleted, and neither can a subject's only unit.
+   */
+  async function deleteUnit(subject: SubjectDef, unit: UnitDef): Promise<void> {
+    const name = unit.titles[language()] ?? unit.titles.en;
+    if (!unit.dir || origin(unit.dir) === 'builtIn') {
+      vscode.window.showInformationMessage(tr(`"${name}" is a built-in unit of ${subjectTitle(subject)} and can't be deleted.`, `"${name}" é uma unidade incluída de ${subjectTitle(subject)} e não pode ser excluída.`));
+      return;
+    }
+    if (subject.own && subject.units.length === 1) {
+      vscode.window.showInformationMessage(
+        tr(`"${name}" is the only unit of ${subjectTitle(subject)}. Delete the subject instead.`, `"${name}" é a única unidade de ${subjectTitle(subject)}. Exclua a matéria.`),
+      );
+      return;
+    }
+    const dirs = unitItemDirs(unit.key).filter((d) => origin(d) !== 'builtIn');
+    const detail = [
+      dirs.length
+        ? tr(
+            `Its ${plural(dirs.length, ['lesson, challenge, quiz or test', 'lessons, challenges, quizzes and tests'], ['lição, desafio, quiz ou teste', 'lições, desafios, quizzes e testes'])} go to the Trash (imported ones are removed from Sphinx's library):\n${dirs.join('\n')}`,
+            `As ${plural(dirs.length, ['lesson, challenge, quiz or test', 'lessons, challenges, quizzes and tests'], ['lição, desafio, quiz ou teste', 'lições, desafios, quizzes e testes'])} dela vão para a Lixeira (as importadas são removidas da biblioteca do Sphinx):\n${dirs.join('\n')}`,
+          )
+        : tr('It has no lessons, challenges, quizzes or tests.', 'Ela não tem lições, desafios, quizzes nem testes.'),
+      tr(`It's removed from ${path.join(unit.dir, 'subject.json')}.`, `Ela é removida de ${path.join(unit.dir, 'subject.json')}.`),
+    ].join('\n\n');
+    const deleteLabel = tr('Delete Unit', 'Excluir unidade');
+    const answer = await vscode.window.showWarningMessage(tr(`Delete the unit "${name}" from ${subjectTitle(subject)}?`, `Excluir a unidade "${name}" de ${subjectTitle(subject)}?`), { modal: true, detail }, deleteLabel);
+    if (answer !== deleteLabel) {
+      return;
+    }
+    try {
+      for (const dir of dirs) {
+        await removeFolder(dir);
+      }
+      const left = removeUnitFromSubjectFile(unit.dir, unit.key);
+      // A folder that only added units to a built-in subject stops being one when its last unit goes.
+      if (left === 0 && !subject.own) {
+        fs.rmSync(path.join(unit.dir, 'subject.json'), { force: true });
+      }
+      output.appendLine(`[teacher] deleted unit ${unit.key} from ${unit.dir}`);
+    } catch (e) {
+      vscode.window.showErrorMessage(tr(`Could not delete "${name}": ${(e as Error).message}`, `Não foi possível excluir "${name}": ${(e as Error).message}`));
     }
     reload();
   }
