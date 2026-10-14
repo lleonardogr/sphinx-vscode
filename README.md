@@ -13,7 +13,7 @@
 
 > *Like the sphinx of the legend, Sphinx asks you questions, and you only pass if you answer them right.*
 
-HackerRank / LeetCode-style coding challenges right inside VS Code, in **English or Portuguese**, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. Two subjects ship with it: **Java Programming**, from the basic syntax to data structures, object-oriented programming and the Stream API, and **CS Fundamentals**, the theory new students need about how computers work, starting with number systems. A third, **C Programming**, takes students who know Java down to pointers, memory and linked lists.
+Coding challenges checked by tests, right inside VS Code, in **English or Portuguese**, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. Two subjects ship with it: **Java Programming**, from the basic syntax to data structures, object-oriented programming and the Stream API, and **CS Fundamentals**, the theory new students need about how computers work, starting with number systems. A third, **C Programming**, takes students who know Java down to pointers, memory and linked lists.
 
 📘 **Guides:** [Creating your own challenges](docs/creating-challenges.md) · [Tests](docs/creating-challenges.md#tests-mixed-challenges) · [Quizzes](docs/quizzes.md) · [Exams](docs/exams.md) · [AI hints](docs/ai-hints.md) · [Content guide](docs/content-guide.md)
 
@@ -162,7 +162,7 @@ For C challenges, **Sphinx: Check C Setup** shows which C compiler is used and w
 5. Made a mess? **Reset code** brings back the starter code.
 6. Want to start over? The ↺ button next to a challenge in the sidebar (**Reset Challenge**) brings back the starter code and clears its progress; next to a quiz it clears the best score. **Reset All Challenges…**, in the **…** menu at the top of the sidebar, resets everything, either progress and code or progress only. Exams are never reset.
 
-Your program reads its input and prints the answer, exactly like HackerRank. Both styles work:
+Your program reads its input and prints the answer, and the tests compare what it prints with the expected output. Both styles work:
 
 ```java
 // Modern Java (JDK 25+)

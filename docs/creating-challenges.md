@@ -42,7 +42,7 @@ That's it. The rest of this guide explains each part in detail.
 
 ## How a challenge works
 
-A challenge is a program that reads **standard input** and writes **standard output**, just like HackerRank.
+A challenge is a program that reads **standard input** and writes **standard output**.
 
 1. The student writes `Main.java`.
 2. **Run** compiles it and feeds each **visible** test's `input` to the program, then compares what it prints with the test's `output`.
