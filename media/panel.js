@@ -121,6 +121,29 @@
     return `<div class="banner ${kind}"><strong>${title}</strong>${body || ''}</div>`;
   }
 
+  /**
+   * The bonus goals' results after a Submit, and the stars in the list under the description.
+   * @param {{ results: { id: string, title: string, achieved: boolean, reason?: string }[], earned: string[] }} msg
+   */
+  function renderBonus(msg) {
+    const earned = new Set(msg.earned);
+    for (const li of document.querySelectorAll('ul.bonus li[data-bonus]')) {
+      const has = earned.has(/** @type {HTMLElement} */ (li).dataset.bonus || '');
+      li.classList.toggle('earned', has);
+      const star = li.querySelector('.star');
+      if (star) star.textContent = has ? '★' : '☆';
+    }
+    const got = msg.results.filter((r) => r.achieved).length;
+    const items = msg.results
+      .map((r) => (r.achieved ? `<li class="earned">★ ${esc(r.title)}</li>` : `<li>☆ ${esc(r.title)}: ${esc(r.reason || '')}</li>`))
+      .join('');
+    return banner(
+      got === msg.results.length ? 'success' : 'info',
+      tr(`⭐ Bonus goals: ${got} of ${msg.results.length} earned`, `⭐ Objetivos bônus: ${got} de ${msg.results.length} conquistados`),
+      `<ul class="bonus-results">${items}</ul>`,
+    );
+  }
+
   function firstDifference(expected, actual) {
     const e = normalize(expected).split('\n');
     const a = normalize(actual).split('\n');

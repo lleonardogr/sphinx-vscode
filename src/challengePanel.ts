@@ -36,6 +36,13 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+/** Escapes text and renders its `code` and **bold** spans, for short texts such as bonus goals. */
+function inlineCode(s: string): string {
+  return escapeHtml(s)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+}
+
 export function examStatusText(t: PanelExamInfo): string {
   if (!t.started) {
     return tr('Start the exam from the Exams group in the sidebar to submit answers.', 'Comece a prova no grupo Provas da barra lateral para enviar respostas.');
@@ -126,6 +133,11 @@ export class ChallengePanel {
     this.panel.webview.html = await this.render(challenge);
   }
 
+  /** The panel's current HTML, for the integration tests. */
+  html(): string | undefined {
+    return this.panel?.webview.html;
+  }
+
   post(message: unknown): void {
     if (!this.panel) {
       return;
@@ -198,6 +210,20 @@ export class ChallengePanel {
            ${aiButton}
          </div>`;
 
+    // Bonus goals: listed up front, so students know them before submitting. Not part of exams.
+    const earned = new Set(this.progress.bonusEarned(c.id));
+    const bonus = !t && c.bonus.length
+      ? `<h3>⭐ ${tr('Bonus goals', 'Objetivos bônus')}</h3>
+         <p class="muted">${tr('Optional and harder. They are checked when you submit and all the tests pass, and never change whether the challenge is solved.', 'Opcionais e mais difíceis. Eles são verificados quando você envia e todos os testes passam, e nunca mudam se o desafio está resolvido.')}</p>
+         <ul class="bonus">${c.bonus
+           .map(
+             (b) => `<li data-bonus="${escapeHtml(b.id)}"${earned.has(b.id) ? ' class="earned"' : ''}><span class="star">${earned.has(b.id) ? '★' : '☆'}</span> <strong>${escapeHtml(b.title)}</strong>: ${inlineCode(b.description)}${
+               b.hint ? `<details><summary>${tr('Hint', 'Dica')}</summary>${inlineCode(b.hint)}</details>` : ''
+             }</li>`,
+           )
+           .join('')}</ul>`
+      : '';
+
     const solved = !t && this.progress.isSolved(c.id);
     const submitLabel = t ? tr(`✔ Submit (${t.submissionsLeft} left)`, `✔ Enviar (restam ${t.submissionsLeft})`) : tr('✔ Submit', '✔ Enviar');
     const submitDisabled = t && (t.submissionsLeft === 0 || t.finished || !t.started) ? 'disabled' : '';
@@ -247,6 +273,7 @@ export class ChallengePanel {
     ${examples}
     ${hiddenCount ? `<p class="muted">${tr(`+ ${hiddenCount} hidden test${hiddenCount > 1 ? 's' : ''} run when you submit.`, `+ ${hiddenCount} teste${hiddenCount > 1 ? 's' : ''} oculto${hiddenCount > 1 ? 's' : ''} ao enviar.`)}</p>` : ''}
     ${customInput}
+    ${bonus}
     ${hints}
     <p class="muted style-note">${
       c.language === 'c'
