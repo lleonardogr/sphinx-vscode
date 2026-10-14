@@ -106,6 +106,18 @@
         "icon": "$(discard)"
       },
       {
+        "command": "sphinx.backupProgress",
+        "title": "%command.backupProgress%",
+        "category": "Sphinx",
+        "icon": "$(save)"
+      },
+      {
+        "command": "sphinx.restoreProgress",
+        "title": "%command.restoreProgress%",
+        "category": "Sphinx",
+        "icon": "$(history)"
+      },
+      {
         "command": "sphinx.resetAllChallenges",
         "title": "%command.resetAllChallenges%",
         "category": "Sphinx",
@@ -347,6 +359,16 @@
           "command": "sphinx.refresh",
           "when": "view == sphinx.list",
           "group": "navigation@1"
+        },
+        {
+          "command": "sphinx.backupProgress",
+          "when": "view == sphinx.list",
+          "group": "backup@1"
+        },
+        {
+          "command": "sphinx.restoreProgress",
+          "when": "view == sphinx.list",
+          "group": "backup@2"
         },
         {
           "command": "sphinx.resetAllChallenges",

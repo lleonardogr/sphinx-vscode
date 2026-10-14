@@ -8,6 +8,8 @@
   "command.resetProgress": "Zerar todo o progresso",
   "command.resetChallenge": "Restaurar desafio (código e progresso)",
   "command.resetQuiz": "Zerar a nota do quiz",
+  "command.backupProgress": "Fazer backup do progresso…",
+  "command.restoreProgress": "Restaurar progresso de um backup…",
   "command.resetAllChallenges": "Restaurar todos os desafios…",
   "command.askAiHint": "Pedir uma dica à IA",
   "command.setupAi": "Configurar dicas de IA (modelo local ou chave de API)",

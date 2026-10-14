@@ -1,8 +1,10 @@
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { AiHints } from './ai/hints';
 import { createChallenge, createLesson, createSubject, createUnit, validateFolder } from './authoring';
+import { BACKUP_KEYS, BackupState, createBackup, mergeState, planFiles, readBackup, summarize, writeFiles } from './backup';
 import { ChallengePanel, PanelAction, PanelExamInfo, examStatusText } from './challengePanel';
 import { Challenge, codeFileName, loadChallenges } from './challenges';
 import { Progress } from './progress';
@@ -1228,6 +1230,124 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     reload();
   }
 
+  /** Students: saves their progress, code and imported packs in one .zip, to restore on another computer. */
+  async function backupProgress(): Promise<void> {
+    const date = new Date().toISOString().slice(0, 10);
+    const target = await vscode.window.showSaveDialog({
+      defaultUri: vscode.Uri.file(path.join(os.homedir(), `sphinx-backup-${date}.zip`)),
+      filters: { [tr('Sphinx backup', 'Backup do Sphinx')]: ['zip'] },
+      saveLabel: tr('Save Backup', 'Salvar backup'),
+      title: tr('Back up your Sphinx progress', 'Fazer backup do seu progresso no Sphinx'),
+    });
+    if (!target) {
+      return;
+    }
+    try {
+      const state: BackupState = Object.fromEntries(BACKUP_KEYS.map((key) => [key, store.get<Record<string, unknown>>(key, {})]));
+      const name = store.get<string>('sphinx.studentName', '');
+      const backup = createBackup(
+        { createdAt: new Date().toISOString(), extensionVersion: String(context.extension.packageJSON.version ?? ''), ...(name ? { student: name } : {}), state },
+        codeRoot(),
+        libraryDir(),
+      );
+      fs.writeFileSync(target.fsPath, backup.zip);
+      const counts = summarize(readBackup(backup.zip).manifest, []);
+      const reveal = tr('Show File', 'Mostrar arquivo');
+      const choice = await vscode.window.showInformationMessage(
+        tr(
+          `Backup saved: ${plural(counts.solved, ['solved challenge', 'solved challenges'], ['desafio resolvido', 'desafios resolvidos'])}, ${plural(backup.codeFiles, ['code file', 'code files'], ['arquivo de código', 'arquivos de código'])} and ${plural(backup.libraryFiles, ['imported file', 'imported files'], ['arquivo importado', 'arquivos importados'])}. Keep it somewhere safe, such as a USB drive or cloud storage.`,
+          `Backup salvo: ${plural(counts.solved, ['solved challenge', 'solved challenges'], ['desafio resolvido', 'desafios resolvidos'])}, ${plural(backup.codeFiles, ['code file', 'code files'], ['arquivo de código', 'arquivos de código'])} e ${plural(backup.libraryFiles, ['imported file', 'imported files'], ['arquivo importado', 'arquivos importados'])}. Guarde-o num lugar seguro, como um pen drive ou um armazenamento na nuvem.`,
+        ),
+        reveal,
+      );
+      if (choice === reveal) {
+        await vscode.commands.executeCommand('revealFileInOS', target);
+      }
+    } catch (e) {
+      vscode.window.showErrorMessage(tr(`Could not save the backup: ${(e as Error).message}`, `Não foi possível salvar o backup: ${(e as Error).message}`));
+    }
+  }
+
+  /** Students: restores a backup, merging it with this computer's progress so nothing is lost. */
+  async function restoreProgress(): Promise<void> {
+    const picked = await vscode.window.showOpenDialog({
+      canSelectMany: false,
+      filters: { [tr('Sphinx backup', 'Backup do Sphinx')]: ['zip'] },
+      openLabel: tr('Restore', 'Restaurar'),
+      title: tr('Choose a Sphinx backup', 'Escolha um backup do Sphinx'),
+    });
+    if (!picked?.length) {
+      return;
+    }
+    let parsed: ReturnType<typeof readBackup>;
+    try {
+      parsed = readBackup(new Uint8Array(fs.readFileSync(picked[0].fsPath)));
+    } catch (e) {
+      vscode.window.showErrorMessage((e as Error).message);
+      return;
+    }
+    const { manifest, files } = parsed;
+    const counts = summarize(manifest, files);
+    const plan = planFiles(files, codeRoot(), libraryDir());
+    const when = manifest.createdAt ? new Date(manifest.createdAt).toLocaleString(language() === 'pt-br' ? 'pt-BR' : 'en') : '?';
+    const detail = [
+      tr(
+        `Made on ${when}${manifest.student ? ` by ${manifest.student}` : ''}, with Sphinx ${manifest.extensionVersion || '?'}.`,
+        `Feito em ${when}${manifest.student ? ` por ${manifest.student}` : ''}, com o Sphinx ${manifest.extensionVersion || '?'}.`,
+      ),
+      tr(
+        `It has ${plural(counts.solved, ['solved challenge', 'solved challenges'], ['desafio resolvido', 'desafios resolvidos'])}, ${plural(counts.quizzes, ['quiz', 'quizzes'], ['quiz', 'quizzes'])}, ${plural(counts.lessons, ['lesson read', 'lessons read'], ['lição lida', 'lições lidas'])}, ${plural(counts.exams, ['exam', 'exams'], ['prova', 'provas'])}, ${plural(counts.codeFiles, ['code file', 'code files'], ['arquivo de código', 'arquivos de código'])} and ${plural(counts.libraryFiles, ['imported file', 'imported files'], ['arquivo importado', 'arquivos importados'])}.`,
+        `Ele tem ${plural(counts.solved, ['solved challenge', 'solved challenges'], ['desafio resolvido', 'desafios resolvidos'])}, ${plural(counts.quizzes, ['quiz', 'quizzes'], ['quiz', 'quizzes'])}, ${plural(counts.lessons, ['lesson read', 'lessons read'], ['lição lida', 'lições lidas'])}, ${plural(counts.exams, ['exam', 'exams'], ['prova', 'provas'])}, ${plural(counts.codeFiles, ['code file', 'code files'], ['arquivo de código', 'arquivos de código'])} e ${plural(counts.libraryFiles, ['imported file', 'imported files'], ['arquivo importado', 'arquivos importados'])}.`,
+      ),
+      tr(
+        "It is merged with this computer's progress: nothing here is lost. Solved stays solved, the best quiz scores are kept, and an exam already on this computer is never replaced.",
+        'Ele é juntado ao progresso deste computador: nada daqui se perde. Resolvido continua resolvido, as melhores notas dos quizzes ficam, e uma prova que já está neste computador nunca é substituída.',
+      ),
+    ].join('\n\n');
+    const restoreLabel = tr('Restore', 'Restaurar');
+    if ((await vscode.window.showWarningMessage(tr('Restore this backup?', 'Restaurar este backup?'), { modal: true, detail }, restoreLabel)) !== restoreLabel) {
+      return;
+    }
+    let overwrite = false;
+    if (plan.conflicts.length) {
+      const keep = tr("Keep This Computer's Files", 'Manter os arquivos deste computador');
+      const take = tr("Use the Backup's Files", 'Usar os arquivos do backup');
+      const answer = await vscode.window.showWarningMessage(
+        tr(
+          `${plural(plan.conflicts.length, ['file is different', 'files are different'], ['arquivo está diferente', 'arquivos estão diferentes'])} here and in the backup. Which version should stay?`,
+          `${plural(plan.conflicts.length, ['file is different', 'files are different'], ['arquivo está diferente', 'arquivos estão diferentes'])} aqui e no backup. Qual versão deve ficar?`,
+        ),
+        { modal: true, detail: plan.conflicts.slice(0, 10).map((c) => c.target).join('\n') + (plan.conflicts.length > 10 ? '\n…' : '') },
+        keep,
+        take,
+      );
+      if (!answer) {
+        return;
+      }
+      overwrite = answer === take;
+    }
+    try {
+      writeFiles(overwrite ? [...plan.add, ...plan.conflicts] : plan.add);
+      const local: BackupState = Object.fromEntries(BACKUP_KEYS.map((key) => [key, store.get<Record<string, unknown>>(key, {})]));
+      const merged = mergeState(local, manifest.state);
+      for (const key of BACKUP_KEYS) {
+        await store.update(key, merged[key]);
+      }
+      if (manifest.student && !store.get<string>('sphinx.studentName', '')) {
+        await store.update('sphinx.studentName', manifest.student);
+      }
+      output.appendLine(`[backup] restored ${picked[0].fsPath}: ${plan.add.length} new files, ${overwrite ? plan.conflicts.length : 0} replaced, ${plan.same} identical`);
+    } catch (e) {
+      vscode.window.showErrorMessage(tr(`Could not restore the backup: ${(e as Error).message}`, `Não foi possível restaurar o backup: ${(e as Error).message}`));
+      return;
+    }
+    reload();
+    const solved = progress.solvedCount(challenges.map((c) => c.id));
+    vscode.window.showInformationMessage(
+      tr(`Backup restored. You have ${solved} of ${challenges.length} challenges solved.`, `Backup restaurado. Você tem ${solved} de ${challenges.length} desafios resolvidos.`),
+    );
+  }
+
   /** Teachers: re-grade one or more results files and compare with the scores they claim. */
   async function verifyExamResultsCommand(): Promise<void> {
     const files = await vscode.window.showOpenDialog({
@@ -1286,6 +1406,8 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     vscode.commands.registerCommand('sphinx.resetChallenge', withChallenge(resetChallenge)),
     vscode.commands.registerCommand('sphinx.resetQuiz', resetQuiz),
     vscode.commands.registerCommand('sphinx.resetAllChallenges', resetAllChallenges),
+    vscode.commands.registerCommand('sphinx.backupProgress', backupProgress),
+    vscode.commands.registerCommand('sphinx.restoreProgress', restoreProgress),
     vscode.commands.registerCommand('sphinx.askAiHint', withChallenge(askAiHint)),
     vscode.commands.registerCommand('sphinx.setupAi', () => ai.setup()),
     vscode.commands.registerCommand('sphinx.clearAiKeys', () => ai.clearApiKeys()),

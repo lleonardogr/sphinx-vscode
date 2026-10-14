@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Back up and restore progress.** **Back Up Progress…**, in the student view's `…` menu, saves the solved challenges, bonus stars, quiz scores, lessons read, exam sessions, the student's code and the packs they imported in one `.zip`. **Restore Progress from a Backup…** merges it with the computer's progress: solved stays solved, the best quiz score is kept, and an exam already on the computer is never replaced. When a code file differs, the student chooses which version stays. Settings and AI keys are not included.
+
 ## [1.9.1] - 2026-10-14
 
 ### Fixed

@@ -807,6 +807,53 @@ test('bonus goals are checked on Submit once the tests pass, and earned stars sh
   }
 });
 
+test('a student backs up their progress and code, and restores them after losing them, without losing newer work', async () => {
+  const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-backup-'));
+  const zip = vscode.Uri.file(path.join(folder, 'backup.zip'));
+  const id = 'hello-world';
+  const code = () => api.codePath(challenge(id));
+  try {
+    await submit(id, solution(id));
+    assert.ok(api.progress.isSolved(id));
+    const mine = read(code());
+
+    // Back up.
+    dialogs.answer = () => undefined;
+    dialogs.saveDialog = zip;
+    await vscode.commands.executeCommand('sphinx.backupProgress');
+    assert.ok(fs.existsSync(zip.fsPath), 'the backup was saved');
+    assert.ok(dialogs.messages.some((m) => /^info: Backup saved: \d+ solved challenge/.test(m)), dialogs.messages.slice(-3).join(' | '));
+
+    // Lose the progress and the code, then restore: both come back.
+    await api.progress.clear(id);
+    fs.rmSync(code());
+    assert.ok(!api.progress.isSolved(id));
+    dialogs.openDialog = [zip];
+    dialogs.answer = (m, buttons) => (m === 'Restore this backup?' ? buttons.find((b) => b === 'Restore') : undefined);
+    await vscode.commands.executeCommand('sphinx.restoreProgress');
+    assert.ok(api.progress.isSolved(id), 'the progress came back');
+    assert.equal(read(code()), mine, 'the code came back');
+
+    // Newer work on this computer: restoring keeps it when the student says so.
+    fs.writeFileSync(code(), mine + '// newer\n');
+    dialogs.answer = (m, buttons) => (m === 'Restore this backup?' ? 'Restore' : buttons.find((b) => b === "Keep This Computer's Files"));
+    await vscode.commands.executeCommand('sphinx.restoreProgress');
+    assert.match(read(code()), /\/\/ newer/);
+
+    // Something that isn't a backup is refused.
+    const notBackup = path.join(folder, 'notes.zip');
+    fs.writeFileSync(notBackup, 'not a zip');
+    dialogs.openDialog = [vscode.Uri.file(notBackup)];
+    await vscode.commands.executeCommand('sphinx.restoreProgress');
+    assert.ok(dialogs.messages.some((m) => /^error: This file is not a Sphinx backup/.test(m)));
+  } finally {
+    dialogs.openDialog = undefined;
+    dialogs.saveDialog = undefined;
+    dialogs.answer = () => undefined;
+    fs.rmSync(folder, { recursive: true, force: true });
+  }
+});
+
 test('state saved under the old "sphynx." keys moves to "sphinx." keys, once', () => {
   const data = new Map<string, unknown>([
     ['sphynx.progress', { 'hello-world': { solved: true } }],
