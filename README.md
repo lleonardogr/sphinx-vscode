@@ -219,6 +219,12 @@ sphinx help
 
 `sphinx test` takes a challenge folder or the id of a built-in challenge, and records nothing: practise in VS Code to keep your progress. Exams are only taken in VS Code. To use the command in every terminal, not only VS Code's, run **Sphinx: Install 'sphinx' Command in PATH…** (no admin rights needed); **Uninstall 'sphinx' Command** removes it.
 
+**`command not found: sphinx`?** Open a new terminal: terminals opened before Sphinx started don't have the command. If it still isn't found, your shell's startup file probably sets `PATH` to a fixed list, which drops the folders VS Code adds. Look in `~/.zshrc`, `~/.bashrc` or `~/.bash_profile` for a line like `export PATH=/usr/local/bin:/usr/bin:/bin` and add `:$PATH` to its end, so it keeps the folders already there:
+
+```bash
+export PATH=/usr/local/bin:/usr/bin:/bin:$PATH
+```
+
 ## For teachers
 
 Click the 💼 button at the top of the Sphinx sidebar (**Switch to Teacher View**) to open the **teacher view**. It lists **My Exams** (with their questions; press ▶ **Try Exam (Preview)** to take an exam yourself with the real timer and rules, in a practice attempt you can restart that never counts as a real one), **My Challenges, Quizzes & Lessons** (what you created or imported; click one to try it), and the **Tools**: create a challenge or a **lesson** (a quick guide or a reading guide, ready to fill in), your own **subjects** and **units** (or units added to the built-in subjects), which you can also delete from **Subjects & Units**, import, **export a pack** for your class (a `.zip` they import with one click, without the solutions), validate, and open your class's results as a **dashboard** (scores per question, time away, warnings, verification, CSV export). Your own exams, challenges, quizzes and lessons can be edited, exported and deleted from their right-click menu. Built-in content can be tried, used in your exams and graded, but not changed: it's part of the extension, and an update would undo any change. The 🎓 button switches back to the **student view**, where you can practise the learning path like your students.
