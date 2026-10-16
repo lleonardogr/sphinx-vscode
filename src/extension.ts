@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { AiHints } from './ai/hints';
 import { createChallenge, createLesson, createSubject, createUnit, validateFolder } from './authoring';
+import { isSphinxLauncher, launcherScript, onPath, userBinDir, writeLauncher } from './cliInstall';
 import { BACKUP_KEYS, BackupState, createBackup, mergeState, planFiles, readBackup, summarize, writeFiles } from './backup';
 import { ChallengePanel, PanelAction, PanelExamInfo, examStatusText } from './challengePanel';
 import { Challenge, codeFileName, loadChallenges } from './challenges';
@@ -60,6 +61,8 @@ export interface SphinxApi {
   lessonProgress: LessonProgress;
   lessons(): LessonDefinition[];
   teacherTree: TeacherTreeProvider;
+  /** The `sphinx` launcher on the PATH of VS Code's terminals (for the integration tests). */
+  cliLauncher: string;
   /** The challenge panel's current HTML (for the integration tests). */
   panelHtml: () => string | undefined;
   /** Re-grades results files (the class dashboard's "Verify all"). */
@@ -210,8 +213,102 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   const starterFor = (c: Challenge) => (c.language === 'java' && javaStyle() === 'classic' ? c.starterCodeClassic : c.starterCode);
   /** The C compiler: the sphinx.c.compiler setting and the portable compilers Sphinx downloaded (see cSetup.ts). */
   const cCompilerSetting = () => config().get<string>('c.compiler', '').trim() || undefined;
-  const cSetup = new CSetup(path.join(context.globalStorageUri.fsPath, 'compilers'), cCompilerSetting, output);
+  const cSetup = new CSetup(path.join(context.globalStorageUri.fsPath, 'compilers'), cCompilerSetting, output, () => refreshCli());
   const runnerOptions = () => ({ javaHome: javaHome(), cCompiler: cCompilerSetting(), cPortableDirs: cSetup.portableDirs() });
+
+  // The `sphinx` command line (cli.ts). A launcher in Sphinx's storage is on the PATH of VS Code's terminals;
+  // "Install 'sphinx' Command" copies it to a folder on the user's PATH. Both are rewritten on every start and
+  // when settings change, so they follow updates (the extension's folder changes with each version).
+  const CLI_KEY = 'sphinx.cliInstalledAt';
+  const cliDir = path.join(context.globalStorageUri.fsPath, 'cli');
+  const cliScript = () =>
+    launcherScript(process.platform, process.execPath, path.join(context.extensionPath, 'out', 'cli.js'), {
+      SPHINX_JAVA_HOME: javaHome(),
+      SPHINX_C_COMPILER: cCompilerSetting(),
+      SPHINX_C_PORTABLE_DIRS: cSetup.portableDirs().join(path.delimiter),
+      SPHINX_LANG: config().get<string>('language', 'en'),
+    });
+  function refreshCli(): void {
+    try {
+      const script = cliScript();
+      writeLauncher(cliDir, process.platform, script);
+      const installed = context.globalState.get<string>(CLI_KEY);
+      if (installed && isSphinxLauncher(installed)) {
+        writeLauncher(path.dirname(installed), process.platform, script);
+      }
+    } catch (e) {
+      output.appendLine(`[cli] ${(e as Error).message}`);
+    }
+    const env = context.environmentVariableCollection;
+    env.clear();
+    if (config().get<boolean>('terminalCommand', true)) {
+      env.description = tr('Adds the `sphinx` command to the terminal.', 'Acrescenta o comando `sphinx` ao terminal.');
+      env.prepend('PATH', cliDir + path.delimiter);
+    }
+  }
+  refreshCli();
+
+  /** "Install 'sphinx' Command": copies the launcher to a folder on the user's PATH, so any terminal has it. */
+  async function installCli(): Promise<void> {
+    const dir = userBinDir(process.platform, os.homedir(), process.env.LOCALAPPDATA);
+    const target = path.join(dir, process.platform === 'win32' ? 'sphinx.cmd' : 'sphinx');
+    if (fs.existsSync(target) && !isSphinxLauncher(target)) {
+      vscode.window.showWarningMessage(tr(`${target} already exists and wasn't written by Sphinx, so it was left alone.`, `${target} já existe e não foi escrito pelo Sphinx, então foi deixado como está.`));
+      return;
+    }
+    const install = tr('Install', 'Instalar');
+    const answer = await vscode.window.showInformationMessage(
+      tr("Install the 'sphinx' command for every terminal?", "Instalar o comando 'sphinx' para todos os terminais?"),
+      {
+        modal: true,
+        detail: tr(
+          `A small launcher is written to ${target}. It runs Sphinx with VS Code itself, so nothing else is installed, and no admin rights are needed. VS Code's own terminal already has the command. "Uninstall 'sphinx' Command" removes it.`,
+          `Um pequeno lançador é escrito em ${target}. Ele roda o Sphinx com o próprio VS Code, então nada mais é instalado, e não é preciso permissão de administrador. O terminal do próprio VS Code já tem o comando. "Desinstalar o comando 'sphinx'" o remove.`,
+        ),
+      },
+      install,
+    );
+    if (answer !== install) {
+      return;
+    }
+    try {
+      const file = writeLauncher(dir, process.platform, cliScript());
+      await context.globalState.update(CLI_KEY, file);
+      output.appendLine(`[cli] installed ${file}`);
+    } catch (e) {
+      vscode.window.showErrorMessage(tr(`Could not install the command: ${(e as Error).message}`, `Não foi possível instalar o comando: ${(e as Error).message}`));
+      return;
+    }
+    if (process.platform !== 'win32' && !onPath(dir, process.env.PATH, process.platform)) {
+      const line = 'export PATH="$HOME/.local/bin:$PATH"';
+      const copy = tr('Copy the Line', 'Copiar a linha');
+      const choice = await vscode.window.showWarningMessage(
+        tr(
+          `Installed in ${dir}, which isn't on your PATH yet. Add this line to ~/.zshrc (or ~/.bashrc), then open a new terminal: ${line}`,
+          `Instalado em ${dir}, que ainda não está no seu PATH. Acrescente esta linha ao ~/.zshrc (ou ~/.bashrc) e abra um terminal novo: ${line}`,
+        ),
+        copy,
+      );
+      if (choice === copy) {
+        await vscode.env.clipboard.writeText(line);
+      }
+      return;
+    }
+    vscode.window.showInformationMessage(tr("Installed. Open a new terminal and run 'sphinx help'.", "Instalado. Abra um terminal novo e rode 'sphinx help'."));
+  }
+
+  async function uninstallCli(): Promise<void> {
+    const installed = context.globalState.get<string>(CLI_KEY);
+    if (!installed || !isSphinxLauncher(installed)) {
+      await context.globalState.update(CLI_KEY, undefined);
+      vscode.window.showInformationMessage(tr("The 'sphinx' command isn't installed outside VS Code.", "O comando 'sphinx' não está instalado fora do VS Code."));
+      return;
+    }
+    fs.rmSync(installed, { force: true });
+    await context.globalState.update(CLI_KEY, undefined);
+    output.appendLine(`[cli] removed ${installed}`);
+    vscode.window.showInformationMessage(tr(`Removed ${installed}. VS Code's own terminal still has the command.`, `${installed} foi removido. O terminal do próprio VS Code continua com o comando.`));
+  }
   let jdkChecked = false;
 
   /** Modern starter code needs JDK 25+. Offer to switch to classic once per session if the JDK is older. */
@@ -1407,6 +1504,8 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
     vscode.commands.registerCommand('sphinx.resetQuiz', resetQuiz),
     vscode.commands.registerCommand('sphinx.resetAllChallenges', resetAllChallenges),
     vscode.commands.registerCommand('sphinx.backupProgress', backupProgress),
+    vscode.commands.registerCommand('sphinx.installCli', installCli),
+    vscode.commands.registerCommand('sphinx.uninstallCli', uninstallCli),
     vscode.commands.registerCommand('sphinx.restoreProgress', restoreProgress),
     vscode.commands.registerCommand('sphinx.askAiHint', withChallenge(askAiHint)),
     vscode.commands.registerCommand('sphinx.setupAi', () => ai.setup()),
@@ -1608,6 +1707,9 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
       quizController.refreshExamStatus();
     }),
     vscode.workspace.onDidChangeConfiguration((e) => {
+      if (['sphinx.java.home', 'sphinx.c.compiler', 'sphinx.language', 'sphinx.terminalCommand'].some((k) => e.affectsConfiguration(k))) {
+        refreshCli();
+      }
       if (e.affectsConfiguration('sphinx.c')) {
         clearCCompilerCache();
       }
@@ -1642,7 +1744,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   context.subscriptions.push(javaSetup);
   void javaSetup.checkQuietly();
   updateContextKey();
-  return { progress, lessonProgress, lessons: () => lessons, teacherTree, panelHtml: () => panel.html(), verifyFiles, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath, moveCodeBesideDescription, lastOutcome: (id) => lastOutcome.get(id) };
+  return { progress, lessonProgress, lessons: () => lessons, teacherTree, panelHtml: () => panel.html(), cliLauncher: path.join(cliDir, process.platform === 'win32' ? 'sphinx.cmd' : 'sphinx'), verifyFiles, view: currentView, quizProgress, examManager, tree, challenges: () => challenges, quizzes: () => quizzes, exams: () => exams, codePath, moveCodeBesideDescription, lastOutcome: (id) => lastOutcome.get(id) };
 }
 
 export function deactivate(): void {}

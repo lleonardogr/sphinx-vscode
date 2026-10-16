@@ -24,6 +24,7 @@ sphinx/**
 java-challenges/**
 out/**
 !out/extension.js
+!out/cli.js
 schemas/*.md
 media/logo/source/**
 media/logo/banner.png

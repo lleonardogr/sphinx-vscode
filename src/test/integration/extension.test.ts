@@ -854,6 +854,28 @@ test('a student backs up their progress and code, and restores them after losing
   }
 });
 
+test("VS Code's terminal gets a working 'sphinx' command, run by VS Code itself", async () => {
+  assert.ok(fs.existsSync(api.cliLauncher), `no launcher at ${api.cliLauncher}`);
+  const version = vscode.extensions.getExtension('lleonardogr.sphynx')!.packageJSON.version;
+  const { execFile } = await import('child_process');
+  const env = { ...process.env, ELECTRON_RUN_AS_NODE: undefined };
+  // A .cmd file needs cmd.exe: each argument is quoted (Windows paths can't hold quotes), so spaces survive.
+  const run = (args: string[]) =>
+    new Promise<string>((resolve, reject) => {
+      const done = (err: Error | null, stdout: string) => (err ? reject(err) : resolve(stdout));
+      if (process.platform === 'win32') {
+        const line = [api.cliLauncher, ...args].map((a) => `"${a}"`).join(' ');
+        execFile(process.env.ComSpec ?? 'cmd.exe', ['/d', '/s', '/c', `"${line}"`], { env, windowsVerbatimArguments: true }, done);
+      } else {
+        execFile(api.cliLauncher, args, { env }, done);
+      }
+    });
+  assert.equal((await run(['--version'])).trim(), version);
+  const spaced = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx cli ')), 'My Solution.java');
+  fs.copyFileSync(path.join(ROOT, 'challenges', 'hello-world', 'Solution.java'), spaced);
+  assert.match(await run(['test', 'hello-world', spaced]), /All tests pass\./);
+});
+
 test('state saved under the old "sphynx." keys moves to "sphinx." keys, once', () => {
   const data = new Map<string, unknown>([
     ['sphynx.progress', { 'hello-world': { solved: true } }],

@@ -86,6 +86,13 @@ jobs:
 
       - run: npm run package
 
+      - name: The package runs the extension and the sphinx command
+        run: |
+          unzip -l *.vsix | grep -q 'extension/out/extension.js'
+          unzip -l *.vsix | grep -q 'extension/out/cli.js'
+          mkdir -p /tmp/vsix && unzip -q -o *.vsix -d /tmp/vsix
+          node /tmp/vsix/extension/out/cli.js --version
+
       - uses: actions/upload-artifact@v4
         with:
           name: vsix
