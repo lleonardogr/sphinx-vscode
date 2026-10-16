@@ -4,7 +4,7 @@ import * as path from 'path';
 import { describe, it } from 'node:test';
 import { main, parseArgs } from '../../cli';
 import { isSphinxLauncher, launcherScript, onPath, userBinDir, writeLauncher } from '../../cliInstall';
-import { ROOT, tempDir } from './helpers';
+import { javaVersion, ROOT, tempDir } from './helpers';
 
 /** Runs the CLI and captures what it prints. */
 async function run(...argv: string[]): Promise<{ code: number; out: string }> {
@@ -40,7 +40,9 @@ describe('the sphinx command', () => {
     assert.match(unknown.out, /Unknown command "nonsense"/);
   });
 
-  it('tests a file against a built-in challenge, with its hidden tests and bonus goals, in Portuguese too', async () => {
+  it('tests a file against a built-in challenge, with its hidden tests and bonus goals, in Portuguese too', async (t) => {
+    const version = await javaVersion;
+    if (version === undefined || version < 25) return t.skip('the built-in challenges need JDK 25');
     const solution = path.join(ROOT, 'challenges', 'fizzbuzz', 'Solution.java');
     const good = await run('test', 'fizzbuzz', solution);
     assert.equal(good.code, 0, good.out);
@@ -82,7 +84,9 @@ describe('the sphinx launcher', () => {
     const dir = tempDir();
     const file = writeLauncher(dir, 'darwin', launcherScript('darwin', '/x', '/y', {}));
     assert.equal(path.basename(file), 'sphinx');
-    assert.equal(fs.statSync(file).mode & 0o111, 0o111);
+    if (process.platform !== 'win32') {
+      assert.equal(fs.statSync(file).mode & 0o111, 0o111);
+    }
     assert.ok(isSphinxLauncher(file));
     fs.writeFileSync(path.join(dir, 'other'), '#!/bin/sh\necho mine\n');
     assert.ok(!isSphinxLauncher(path.join(dir, 'other')));
