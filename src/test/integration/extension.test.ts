@@ -854,6 +854,18 @@ test('a student backs up their progress and code, and restores them after losing
   }
 });
 
+test("VS Code's terminal gets a working 'sphinx' command, run by VS Code itself", async () => {
+  assert.ok(fs.existsSync(api.cliLauncher), `no launcher at ${api.cliLauncher}`);
+  const version = vscode.extensions.getExtension('lleonardogr.sphynx')!.packageJSON.version;
+  const { execFile } = await import('child_process');
+  const run = (args: string[]) =>
+    new Promise<string>((resolve, reject) =>
+      execFile(api.cliLauncher, args, { shell: process.platform === 'win32', env: { ...process.env, ELECTRON_RUN_AS_NODE: undefined } }, (err, stdout) => (err ? reject(err) : resolve(stdout))),
+    );
+  assert.equal((await run(['--version'])).trim(), version);
+  assert.match(await run(['test', 'hello-world', path.join(ROOT, 'challenges', 'hello-world', 'Solution.java')]), /All tests pass\./);
+});
+
 test('state saved under the old "sphynx." keys moves to "sphinx." keys, once', () => {
   const data = new Map<string, unknown>([
     ['sphynx.progress', { 'hello-world': { solved: true } }],

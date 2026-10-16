@@ -109,6 +109,7 @@ Two closed **exams**, each with a quiz and three private coding questions: **C E
 - **Import**: one button in the sidebar imports the challenges, tests and exams a teacher shared, as a `.zip` or a folder. They're copied into the extension's library, solutions can be stripped for students, and **Remove Imported…** takes them out again. See [Sharing challenges with students](docs/creating-challenges.md#sharing-challenges-with-students).
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
 - **Back up and restore**: **Back Up Progress…** (in the sidebar's `…` menu) saves your progress, your code and the packs you imported in one `.zip`. **Restore Progress from a Backup…** brings it back on another computer or after reinstalling, merged with what is already there: nothing is lost, and an exam already taken is never replaced.
+- **Command line**: a `sphinx` command in VS Code's terminal to validate content, test a solution, build a pack and verify exam results (see [Command line](#command-line)).
 - **Subjects**: Java Programming, CS Fundamentals and C Programming, each with its own learning path. **Switch Subject…** (📚) changes the one in the sidebar, and its name is shown in the sidebar header.
 - **Lessons**: short pages to read before a unit's quiz and challenges, with a reading time, a ✓ once read, and a button to the next item.
 - **Bonus goals**: a challenge can offer up to 3 optional, harder goals (solve it without loops, fast enough for a huge input…), checked when it passes. Earned goals become stars in the panel, the sidebar and the unit's guide.
@@ -196,11 +197,27 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 | `sphinx.language` | `en` | Language of Sphinx: `en` (English) or `pt-br` (Português do Brasil). Challenges, quizzes, exams, panels and messages switch at once; the program's output stays the same in both. |
 | `sphinx.java.style` | `modern` | Starter code style for new challenges: `modern` (JDK 25+) or `classic` (JDK 17+). Use **Reset Code to Starter** to switch a challenge you already opened. |
 | `sphinx.java.home` | (empty) | The JDK folder, if `javac` is not on your PATH. |
+| `sphinx.terminalCommand` | `true` | Adds the `sphinx` command to VS Code's integrated terminals. |
 | `sphinx.c.compiler` | (empty) | The C compiler for C challenges, or the folder of a portable one. Empty: `cc`, `clang` or `gcc` on the PATH. |
 | `sphinx.codeFolder` | (empty) | Where solutions are saved. |
 | `sphinx.extraChallengePaths` | `[]` | Extra challenge folders provided by your teacher. |
 | `sphinx.lockPrerequisites` | `off` | Lock challenges, tests and quizzes until the units they need are practised: `half` or `all` of each unit's challenges solved. A subject's `subject.json` can turn it on too; the stricter applies. Lessons, exams and the teacher view are never locked. |
 | `sphinx.ai.provider` | `off` | AI hints provider: `ollama`, `lmstudio`, `anthropic`, `openai-compatible` or `vscode`. Run **Set Up AI Hints** for a guided setup. |
+
+## Command line
+
+Sphinx adds a `sphinx` command to VS Code's integrated terminal (open a new terminal after installing). It runs with VS Code itself, so nothing else needs to be installed, and it uses your Sphinx settings (Java folder, C compiler, language):
+
+```bash
+sphinx validate my-challenges              # check a folder of challenges, quizzes, lessons, exams or subjects
+sphinx validate my-challenges --generate   # …and fill in the expected outputs
+sphinx test fizzbuzz Main.java             # run a file against a challenge's tests (hidden ones too) and bonus goals
+sphinx pack my-challenges -o class.zip     # build a pack for students, without the solutions
+sphinx verify results/*.json               # re-grade exam results files and compare with their scores
+sphinx help
+```
+
+`sphinx test` takes a challenge folder or the id of a built-in challenge, and records nothing: practise in VS Code to keep your progress. Exams are only taken in VS Code. To use the command in every terminal, not only VS Code's, run **Sphinx: Install 'sphinx' Command in PATH…** (no admin rights needed); **Uninstall 'sphinx' Command** removes it.
 
 ## For teachers
 
@@ -249,6 +266,7 @@ Done:
 - [x] Bonus goals: optional harder goals on challenges, shown as stars
 - [x] Publishing to the Marketplace with Microsoft Entra ID, with no token to renew
 - [x] Backing up and restoring a student's progress
+- [x] A `sphinx` command line: validate, test, pack and verify, in VS Code's terminal or any terminal
 - [x] C challenges with memory checks, a portable compiler for Windows, and the C Programming subject: 9 units with quick guides, quizzes and challenges, plus 2 tests and 2 exams
 
 Content:
@@ -268,6 +286,8 @@ For students:
 Platform:
 
 - [ ] More languages for challenges (Python, JavaScript, SQL, …), each with its own runner, as C has
+- [ ] Practise from the command line (`sphinx list`, `open`, `submit`), sharing progress with VS Code
+- [ ] The `sphinx` command as an npm package, for CI without VS Code
 - [ ] A verified publisher namespace on Open VSX
 
 ## Development

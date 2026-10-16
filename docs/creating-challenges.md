@@ -538,7 +538,7 @@ Always validate before sharing. Validation checks that:
 - every `Solution*.java` follows the rules and passes every test;
 - `challenge.json` is readable and has the required fields.
 
-**In VS Code (no Node.js needed):** run **Sphinx: Validate Challenges in a Folder…**. Results appear in the **Sphinx** output panel. A typical problem looks like this:
+**In VS Code (no Node.js needed):** run **Sphinx: Validate Challenges in a Folder…**, or `sphinx validate <folder>` (add `--generate` to fill in expected outputs) in VS Code's terminal. Results appear in the **Sphinx** output panel, or in the terminal. A typical problem looks like this:
 
 ```
 ✗ sum-of-evens

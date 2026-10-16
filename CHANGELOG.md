@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **A `sphinx` command line**, in VS Code's integrated terminal with no setup: `sphinx validate <folder>` (with `--generate`), `sphinx test <challenge> <file>` (tests, hidden ones included, and bonus goals; nothing is recorded), `sphinx pack <folder>` and `sphinx verify <results.json>…`. It runs with VS Code itself, so no Node.js is needed, and uses the Sphinx settings. **Install 'sphinx' Command in PATH…** puts it in every terminal (`~/.local/bin`, or `WindowsApps` on Windows; no admin rights). The new setting `sphinx.terminalCommand` turns the terminal command off.
+
 ## [1.9.2] - 2026-10-14
 
 ### Added

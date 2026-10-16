@@ -106,6 +106,17 @@
         "icon": "$(discard)"
       },
       {
+        "command": "sphinx.installCli",
+        "title": "%command.installCli%",
+        "category": "Sphinx",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "sphinx.uninstallCli",
+        "title": "%command.uninstallCli%",
+        "category": "Sphinx"
+      },
+      {
         "command": "sphinx.backupProgress",
         "title": "%command.backupProgress%",
         "category": "Sphinx",
@@ -734,6 +745,11 @@
           ],
           "markdownDescription": "%config.java.style.description%"
         },
+        "sphinx.terminalCommand": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%config.terminalCommand.description%"
+        },
         "sphinx.c.compiler": {
           "type": "string",
           "default": "",
@@ -837,7 +853,7 @@
     "test:unit": "node --test \"out/test/unit/*.test.js\"",
     "test:integration": "node out/test/runIntegration.js",
     "package": "vsce package",
-    "bundle": "esbuild src/extension.ts --bundle --platform=node --format=cjs --target=node20 --external:vscode --outfile=out/extension.js --minify",
+    "bundle": "esbuild src/extension.ts --bundle --platform=node --format=cjs --target=node20 --external:vscode --outfile=out/extension.js --minify && esbuild src/cli.ts --bundle --platform=node --format=cjs --target=node20 --outfile=out/cli.js --minify",
     "prepare": "git config core.hooksPath .githooks || true"
   },
   "devDependencies": {
