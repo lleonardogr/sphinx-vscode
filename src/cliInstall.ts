@@ -15,6 +15,10 @@ export interface LauncherEnv {
 export const LAUNCHER_MARK = 'Written by the Sphinx VS Code extension';
 
 const shQuote = (s: string) => `'${s.replace(/'/g, `'\\''`)}'`;
+/** A value for an unquoted cmd.exe `set`: `^` escapes the characters cmd would act on, `%%` is a literal `%`; line breaks would start a new command. */
+const cmdEscape = (s: string) => s.replace(/[\r\n]/g, '').replace(/%/g, '%%').replace(/[\^&|<>()"]/g, '^$&');
+/** A path inside cmd.exe double quotes: Windows paths can't hold `"`, but `%` would still expand. */
+const cmdPath = (s: string) => `"${s.replace(/["\r\n]/g, '').replace(/%/g, '%%')}"`;
 
 /** The launcher's file name on this platform. */
 export function launcherName(platform: NodeJS.Platform): string {
@@ -31,17 +35,17 @@ export function launcherScript(platform: NodeJS.Platform, runtime: string, cli: 
     return [
       '@echo off',
       `rem ${LAUNCHER_MARK}. It is rewritten when Sphinx updates.`,
-      'setlocal',
-      ...entries.map(([k, v]) => `if not defined ${k} set "${k}=${v}"`),
+      'setlocal DisableDelayedExpansion',
+      ...entries.map(([k, v]) => `if not defined ${k} set ${k}=${cmdEscape(v ?? '')}`),
       'set ELECTRON_RUN_AS_NODE=1',
-      `"${runtime}" "${cli}" %*`,
+      `${cmdPath(runtime)} ${cmdPath(cli)} %*`,
       '',
     ].join('\r\n');
   }
   return [
     '#!/bin/sh',
     `# ${LAUNCHER_MARK}. It is rewritten when Sphinx updates.`,
-    ...entries.map(([k, v]) => `: "\${${k}:=${(v ?? '').replace(/["\\$`]/g, '\\$&')}}"; export ${k}`),
+    ...entries.map(([k, v]) => `[ -n "\${${k}:-}" ] || ${k}=${shQuote(v ?? '')}; export ${k}`),
     `ELECTRON_RUN_AS_NODE=1 exec ${shQuote(runtime)} ${shQuote(cli)} "$@"`,
     '',
   ].join('\n');

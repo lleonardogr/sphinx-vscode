@@ -1,4 +1,5 @@
 import { strict as assert } from 'assert';
+import { execFileSync, execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import { describe, it } from 'node:test';
@@ -29,6 +30,11 @@ describe('the sphinx command', () => {
     assert.equal(a.flags.get('out'), 'out.zip');
     assert.equal(a.flags.get('keep-solutions'), true);
     assert.equal(a.flags.get('lang'), 'pt-br');
+    const v = parseArgs(['verify', 'r.json', '--exams', './my exams', '--java-home', '/jdk', '--strict']);
+    assert.deepEqual(v.positional, ['verify', 'r.json']);
+    assert.equal(v.flags.get('exams'), './my exams');
+    assert.equal(v.flags.get('java-home'), '/jdk');
+    assert.equal(v.flags.get('strict'), true);
   });
 
   it('prints its version and its help, and refuses unknown commands', async () => {
@@ -71,13 +77,29 @@ describe('the sphinx launcher', () => {
   it('runs the CLI with VS Code as Node.js, keeping settings the caller already set', () => {
     const sh = launcherScript('darwin', '/Apps/VS Code/Code Helper', "/ext/it's/out/cli.js", { SPHINX_JAVA_HOME: '/jdk', SPHINX_LANG: 'pt-br' });
     assert.match(sh, /^#!\/bin\/sh\n/);
-    assert.match(sh, /: "\$\{SPHINX_JAVA_HOME:=\/jdk\}"; export SPHINX_JAVA_HOME/);
+    assert.match(sh, /\[ -n "\$\{SPHINX_JAVA_HOME:-\}" \] \|\| SPHINX_JAVA_HOME='\/jdk'; export SPHINX_JAVA_HOME/);
     assert.match(sh, /ELECTRON_RUN_AS_NODE=1 exec '\/Apps\/VS Code\/Code Helper' '\/ext\/it'\\''s\/out\/cli\.js' "\$@"/);
     assert.ok(!sh.includes('SPHINX_C_COMPILER'), 'empty settings are left out');
     const cmd = launcherScript('win32', 'C:\\VS Code\\Code.exe', 'C:\\ext\\out\\cli.js', { SPHINX_LANG: 'en' });
     assert.match(cmd, /^@echo off\r\n/);
-    assert.match(cmd, /if not defined SPHINX_LANG set "SPHINX_LANG=en"/);
+    assert.match(cmd, /if not defined SPHINX_LANG set SPHINX_LANG=en\r\n/);
     assert.match(cmd, /"C:\\VS Code\\Code\.exe" "C:\\ext\\out\\cli\.js" %\*/);
+  });
+
+  it('passes settings through untouched, even ones with quotes, % or & (nothing in them runs)', () => {
+    const dir = tempDir();
+    const marker = path.join(dir, 'ran');
+    const cli = path.join(dir, 'cli 100%.js');
+    fs.writeFileSync(cli, 'console.log(JSON.stringify([process.env.SPHINX_JAVA_HOME, process.env.SPHINX_C_COMPILER, process.argv.slice(2)]));\n');
+    const touch = process.platform === 'win32' ? `type nul > "${marker}"` : `touch '${marker}'`;
+    const env = {
+      SPHINX_JAVA_HOME: `C:\\JDK" & ${touch} & rem "%PATH%!x!^`,
+      SPHINX_C_COMPILER: `/opt/cc}'$(${touch})\`$HOME"`,
+    };
+    const file = writeLauncher(dir, process.platform, launcherScript(process.platform, process.execPath, cli, env));
+    const out = process.platform === 'win32' ? execSync(`"${file}" arg`, { encoding: 'utf8' }) : execFileSync(file, ['arg'], { encoding: 'utf8' });
+    assert.deepEqual(JSON.parse(out), [env.SPHINX_JAVA_HOME, env.SPHINX_C_COMPILER, ['arg']]);
+    assert.ok(!fs.existsSync(marker), 'a setting ran a command');
   });
 
   it('writes an executable launcher it can recognize later, in a folder on the user\'s PATH', () => {

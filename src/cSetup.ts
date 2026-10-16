@@ -15,6 +15,8 @@ export class CSetup {
     private readonly root: string,
     private readonly setting: () => string | undefined,
     private readonly output: vscode.OutputChannel,
+    /** Called after a portable compiler is installed or removed (the `sphinx` launcher lists them). */
+    private readonly onChange: () => void = () => {},
   ) {}
 
   /** The portable compilers installed in Sphinx's folder. */
@@ -129,6 +131,7 @@ export class CSetup {
       } else {
         vscode.window.showWarningMessage(tr('The portable C compiler was installed but does not work on this computer. See the "Sphinx" output.', 'O compilador de C portátil foi instalado mas não funciona neste computador. Veja a saída "Sphinx".'));
       }
+      this.onChange();
       return true;
     } catch (e) {
       const message = (e as Error).name === 'AbortError' ? tr('The download was cancelled.', 'O download foi cancelado.') : (e as Error).message;
@@ -159,6 +162,7 @@ export class CSetup {
       this.output.appendLine(`[c] ${tr('removed', 'removido')} ${dir}`);
     }
     clearCCompilerCache();
+    this.onChange();
     vscode.window.showInformationMessage(tr('The portable C compiler was removed.', 'O compilador de C portátil foi removido.'));
   }
 

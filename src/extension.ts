@@ -213,7 +213,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   const starterFor = (c: Challenge) => (c.language === 'java' && javaStyle() === 'classic' ? c.starterCodeClassic : c.starterCode);
   /** The C compiler: the sphinx.c.compiler setting and the portable compilers Sphinx downloaded (see cSetup.ts). */
   const cCompilerSetting = () => config().get<string>('c.compiler', '').trim() || undefined;
-  const cSetup = new CSetup(path.join(context.globalStorageUri.fsPath, 'compilers'), cCompilerSetting, output);
+  const cSetup = new CSetup(path.join(context.globalStorageUri.fsPath, 'compilers'), cCompilerSetting, output, () => refreshCli());
   const runnerOptions = () => ({ javaHome: javaHome(), cCompiler: cCompilerSetting(), cPortableDirs: cSetup.portableDirs() });
 
   // The `sphinx` command line (cli.ts). A launcher in Sphinx's storage is on the PATH of VS Code's terminals;

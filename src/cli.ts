@@ -25,6 +25,9 @@ interface Args {
   flags: Map<string, string | true>;
 }
 
+/** Options followed by a value (`--exams <folder>` or `--exams=<folder>`); the others are switches. */
+const VALUE_FLAGS = new Set(['out', 'exams', 'java-home', 'cc', 'lang']);
+
 export function parseArgs(argv: string[]): Args {
   const positional: string[] = [];
   const flags = new Map<string, string | true>();
@@ -34,7 +37,14 @@ export function parseArgs(argv: string[]): Args {
       flags.set('out', argv[++i] ?? '');
     } else if (a.startsWith('--')) {
       const eq = a.indexOf('=');
-      flags.set(eq > 0 ? a.slice(2, eq) : a.slice(2), eq > 0 ? a.slice(eq + 1) : true);
+      const name = eq > 0 ? a.slice(2, eq) : a.slice(2);
+      if (eq > 0) {
+        flags.set(name, a.slice(eq + 1));
+      } else if (VALUE_FLAGS.has(name)) {
+        flags.set(name, argv[++i] ?? '');
+      } else {
+        flags.set(name, true);
+      }
     } else {
       positional.push(a);
     }
