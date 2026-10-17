@@ -1,0 +1,105 @@
+{
+  "title": "Calculator",
+  "topic": "StacksQueues",
+  "requires": [
+    "Collections",
+    "Strings",
+    "Exceptions"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Use two stacks: one for numbers and one for operators and \"(\". Read the expression character by character, collecting the digits of each number.",
+    "Before pushing an operator, apply the operators on top of the stack that have higher or equal precedence (* and / over + and −). \"(\" is pushed; \")\" applies operators until the matching \"(\", which is then popped.",
+    "Applying an operator pops two numbers (the right one first) and pushes the result. At the end, apply what is left. Long division by zero throws an ArithmeticException: catch it for that line."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Calculadora",
+      "hints": [
+        "Use duas pilhas: uma para números e outra para operadores e \"(\". Leia a expressão caractere por caractere, juntando os dígitos de cada número.",
+        "Antes de empilhar um operador, aplique os operadores do topo que têm precedência maior ou igual (* e / acima de + e −). \"(\" é empilhado; \")\" aplica operadores até o \"(\" correspondente, que então sai da pilha.",
+        "Aplicar um operador desempilha dois números (o da direita primeiro) e empilha o resultado. No fim, aplique o que sobrou. A divisão de long por zero lança uma ArithmeticException: capture-a para aquela linha."
+      ],
+      "mustNotContain": [
+        "Calcule a expressão você mesmo: nada de script engine."
+      ],
+      "bonus": [
+        {
+          "title": "Números negativos",
+          "description": "Aceite também um sinal de menos que deixa um número ou um parêntese negativo, como -3 * (2 - -1) ou -(4 + 1) * 2.",
+          "hint": "Um menos é sinal, não subtração, quando vem primeiro, logo depois de \"(\" ou logo depois de outro operador. Trate-o como um operador próprio com a maior precedência, aplicado a um número só."
+        }
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "ScriptEngine|javax\\s*\\.\\s*script",
+      "message": "Evaluate the expression yourself: no script engine."
+    }
+  ],
+  "tests": [
+    {
+      "input": "4\n2 + 3 * 4\n(2 + 3) * 4\n8 - 3 - 2\n7 / (5 - 5)\n",
+      "output": "14\n20\n3\nerror: division by zero\n"
+    },
+    {
+      "input": "2\n100 / 7 * 7\n2*(3+4)/5\n",
+      "output": "98\n2\n"
+    },
+    {
+      "input": "1\n42\n",
+      "output": "42\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n((((1))))\n",
+      "output": "1\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n1 - 2 - 3\n10 / 3 / 2\n2 * 3 + 4 * 5\n",
+      "output": "-4\n1\n26\n",
+      "hidden": true
+    },
+    {
+      "input": "1\n1000000000 * 1000000000\n",
+      "output": "1000000000000000000\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n0 / 5\n5 / 0\n",
+      "output": "0\nerror: division by zero\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n 7 -  10 /2*  3 \n(1+2)*(3+4)-(5-6)*(7+8)\n",
+      "output": "-8\n36\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n230 + 69 + 600 * 628 + 629 - 519 - 456 - (741 - 420) - (739 * 959) + 738 * (112 - 375) + 955 * 109 + 160 * (76) * 81 + 955 + 88 + 793 + 233 - 845 * 508 - 370 * (813 + 786) - 796 - 675 * (((771))) - 300 + 403\n((228) - 317 - 926 + 13 - 711 * (831) - (174) + ((756 + (589)))) - 966 - 832 - ((912 - (265 + 944) - 669 - 413 * 130 - 500 * (162)) + 0 - 36 + (647) - (392 - 192) - 274 + 829 + 407 + (995) * 351 - 124) - ((77) + 429 + 393 * 44) - 357 - 241 * 662 + 904 - 254 + 874 + 770 - 448 - 733 + 133 * 419 - (3)\n((456) - 738 + 353 * 107 + 578 * 10 - 852 + 491 - (618) + 359 + 772) - (((150 - 453) + 206 + 328)) * 979 * 117 - 624 - 648 + 435 * 526 * 761 + (128) + 831 - 386 + 638 * (669) + (((914) - (664)) * (506) + 104 - 53 + (994 + 169 - 57 + 812)) * 302 * (578) - 327 * 511 + 928 + 853 + 281 - (686) - 873 + (35 + (53) + (525)) + 578\n",
+      "output": "-977247\n-928168\n22573003882\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "negative-numbers",
+      "title": "Negative Numbers",
+      "description": "Also accept a minus sign that makes a number or a parenthesis negative, such as -3 * (2 - -1) or -(4 + 1) * 2.",
+      "hint": "A minus is a sign, not a subtraction, when it comes first, right after \"(\" or right after another operator. Treat it as its own operator with the highest precedence, applied to one number.",
+      "tests": [
+        {
+          "input": "5\n-3 * (2 - -1)\n-(4 + 1) * 2\n2 * -3\n- 7 - -7\n-(-(2))\n",
+          "output": "-9\n-10\n-6\n0\n2\n"
+        },
+        {
+          "input": "2\n10 / -3\n-8 / (2 - 2)\n",
+          "output": "-3\nerror: division by zero\n"
+        }
+      ]
+    }
+  ]
+}

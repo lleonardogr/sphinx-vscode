@@ -53,9 +53,9 @@ test('Java 25+ is available to the extension', async () => {
 
 test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
-  assert.equal(api.challenges().length, 185);
-  assert.equal(api.quizzes().length, 30);
-  assert.equal(api.lessons().length, 30);
+  assert.equal(api.challenges().length, 189);
+  assert.equal(api.quizzes().length, 31);
+  assert.equal(api.lessons().length, 31);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['c-exam-1', 'c-final-exam', 'cs-exam-1', 'cs-final-exam', 'exam-1', 'exam-2', 'final-exam', 'sample-exam']);
   assert.deepEqual(api.exams().filter((e) => e.subject === 'c').map((e) => e.id).sort(), ['c-exam-1', 'c-final-exam']);
   assert.deepEqual(api.exams().filter((e) => e.subject === 'cs').map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam']);
@@ -201,12 +201,13 @@ test('Data Structures & Algorithms: each unit has its guide, challenges and quiz
     const units: [string, string[]][] = [
       ['1 · Complexity & Searching', ['Complexity and Searching', 'Repeated Tickets', 'Log Window', 'Truck Capacity', 'Rate Limiter', 'Complexity & Searching Quiz']],
       ['2 · Sorting', ['Sorting', 'Exam Scores', 'Merge Trace', 'Calendar Merge', 'Ranking Distance', 'Sorting Quiz']],
+      ['3 · Stacks & Queues', ['Stacks and Queues', 'Round-Robin Scheduler', 'Warmer Days', 'Peak Load', 'Calculator', 'Stacks & Queues Quiz']],
     ];
     assert.deepEqual(groups.map(label), units.map(([name]) => name));
     for (const [i, [name, items]] of units.entries()) {
       assert.deepEqual(api.tree.getChildren(groups[i]).map(label), items, name);
     }
-    for (const id of ['repeated-tickets', 'log-window', 'truck-capacity', 'rate-limiter', 'exam-scores', 'calendar-merge', 'ranking-distance']) {
+    for (const id of ['repeated-tickets', 'log-window', 'truck-capacity', 'rate-limiter', 'exam-scores', 'calendar-merge', 'ranking-distance', 'warmer-days', 'peak-load']) {
       const generated = challenge(id).tests.filter((t) => t.generate);
       assert.ok(generated.length >= 2 && generated.every((t) => t.hidden), id);
     }
