@@ -84,7 +84,7 @@
     },
     {
       "type": "choice",
-      "prompt": "Two pointers look for two numbers adding up to 50 in the sorted array `3 8 15 22 31 47`. `lo` is at 8 and `hi` at 47: the sum, 55, is too big. What should happen next?",
+      "prompt": "Two pointers look for two numbers adding up to 53 in the sorted array `3 8 15 22 31 47`. After 3 + 47 = 50 (too small), `lo` moved to 8, and `hi` is still at 47: the sum, 55, is too big. What should happen next?",
       "options": [
         "Move hi left, to 31: 47 is too big with every number from 8 on",
         "Move lo right, to 15",
@@ -92,7 +92,7 @@
         "Start again with lo at 3"
       ],
       "answer": 0,
-      "explanation": "Every number from lo on is at least 8, so 47 plus any of them is too big as well: 47 can be dropped. Moving lo right would only make the sum bigger."
+      "explanation": "Every number from lo on is at least 8, so 47 plus any of them is too big as well: 47 can be dropped. Moving lo right would only make the sum bigger. The search goes on to find 22 + 31 = 53."
     },
     {
       "type": "truefalse",
@@ -176,14 +176,14 @@
           "explanation": "A busca binária precisa de uma pergunta de sim ou não que muda de não para sim uma única vez conforme o valor cresce. Aqui é assim: um caminhão maior nunca precisa de mais dias."
         },
         {
-          "prompt": "Dois ponteiros procuram dois números que somam 50 no array ordenado `3 8 15 22 31 47`. `lo` está no 8 e `hi` no 47: a soma, 55, é grande demais. O que deve acontecer agora?",
+          "prompt": "Dois ponteiros procuram dois números que somam 53 no array ordenado `3 8 15 22 31 47`. Depois de 3 + 47 = 50 (pouco), `lo` foi para o 8, e `hi` continua no 47: a soma, 55, é grande demais. O que deve acontecer agora?",
           "options": [
-            "Mover hi para a esquerda, para o 31: o 47 passa de 50 com todo número a partir do 8",
+            "Mover hi para a esquerda, para o 31: o 47 passa de 53 com todo número a partir do 8",
             "Mover lo para a direita, para o 15",
             "Mover os dois ponteiros um passo",
             "Recomeçar com lo no 3"
           ],
-          "explanation": "Todo número a partir de lo é pelo menos 8, então 47 mais qualquer um deles também passa: o 47 pode ser descartado. Mover lo para a direita só aumentaria a soma."
+          "explanation": "Todo número a partir de lo é pelo menos 8, então 47 mais qualquer um deles também passa: o 47 pode ser descartado. Mover lo para a direita só aumentaria a soma. A busca continua e acha 22 + 31 = 53."
         },
         {
           "prompt": "Colocar um `break` assim que um par certo aparece deixa uma busca com laços aninhados O(n).",

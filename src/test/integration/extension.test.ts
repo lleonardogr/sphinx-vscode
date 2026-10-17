@@ -367,7 +367,7 @@ test('the teacher view lists the teacher\'s exams, own content and tools, edits 
   const label = (n: unknown) => String(t.getTreeItem(n as never).label);
   const [exams, content, subjects, tools] = t.getChildren();
   assert.deepEqual([exams, content, subjects, tools].map(label), ['My Exams', 'My Challenges, Quizzes & Lessons', 'Subjects & Units', 'Tools']);
-  assert.deepEqual(t.getChildren(subjects).map(label), ['Java Programming', 'CS Fundamentals', 'C Programming']);
+  assert.deepEqual(t.getChildren(subjects).map(label), ['Java Programming', 'CS Fundamentals', 'C Programming', 'Data Structures & Algorithms']);
   assert.deepEqual(t.getChildren(exams).map(label).sort(), ['C Exam 1: Foundations', 'C Final Exam', 'CS Exam 1: Data Representation', 'CS Final Exam', 'Class Exam', 'Exam 1: Basics to Strings', 'Exam 2: Building Blocks', 'Final Exam', 'Sample Exam: Java Basics']);
   const exam = (title: string) => t.getChildren(exams).find((n) => label(n) === title)!;
   assert.match(String(t.getTreeItem(exam('Exam 1: Basics to Strings') as never).description), /^Built-in · 4 questions · 100 pts · \d+ min$/);
