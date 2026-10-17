@@ -1,0 +1,65 @@
+{
+  "title": "Complexity and Searching",
+  "topic": "Complexity",
+  "order": 1,
+  "requires": [
+    "Algorithms"
+  ],
+  "objectives": [
+    "Predict from the input limits whether an approach fits the time limit",
+    "Replace a nested loop with a hash set, sorting or two pointers",
+    "Find boundaries in sorted data with binary search and count the values in a range",
+    "Binary-search the answer when checking a candidate is easy but finding it directly is hard"
+  ],
+  "readings": [
+    {
+      "title": "Time Complexity",
+      "source": "USACO Guide",
+      "url": "https://usaco.guide/bronze/time-comp",
+      "type": "article",
+      "minutes": 15,
+      "lang": "en",
+      "lookFor": "The table under \"Common Complexities and Constraints\": it turns an input limit into the slowest complexity that still fits. The examples can be shown in Java: pick it in the site's settings."
+    },
+    {
+      "title": "Binary Search",
+      "source": "USACO Guide",
+      "url": "https://usaco.guide/silver/binary-search",
+      "type": "article",
+      "minutes": 20,
+      "lang": "en",
+      "lookFor": "Binary search on a yes/no function (the first x where f(x) is true) and the three common mistakes: off by one, negative bounds and overflow. The first index with a value ≥ x is the same search, with f(i) = \"a[i] ≥ x\". Skip the problem lists."
+    },
+    {
+      "title": "Two Pointers",
+      "source": "USACO Guide",
+      "url": "https://usaco.guide/silver/two-pointers",
+      "type": "article",
+      "minutes": 12,
+      "lang": "en",
+      "lookFor": "\"Sum of Two Values\" (pointers from both ends of a sorted array) and \"Sliding Window\" (a start and an end that only move right, shown in an animation). Skip the problem lists."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Complexidade e busca",
+      "objectives": [
+        "Prever, pelos limites da entrada, se uma solução cabe no limite de tempo",
+        "Trocar um laço aninhado por um conjunto de hash, ordenação ou dois ponteiros",
+        "Achar fronteiras em dados ordenados com busca binária e contar os valores de um intervalo",
+        "Fazer busca binária na resposta quando testar um candidato é fácil, mas achá-lo direto é difícil"
+      ],
+      "readings": [
+        {
+          "lookFor": "A tabela em \"Common Complexities and Constraints\": ela transforma um limite da entrada na complexidade mais lenta que ainda cabe. Os exemplos podem aparecer em Java: escolha a linguagem nas configurações do site."
+        },
+        {
+          "lookFor": "Busca binária numa função de sim ou não (o primeiro x em que f(x) é verdadeira) e os três erros comuns: errar por um, limites negativos e estouro. O primeiro índice com valor ≥ x é a mesma busca, com f(i) = \"a[i] ≥ x\". Pule as listas de problemas."
+        },
+        {
+          "lookFor": "\"Sum of Two Values\" (ponteiros vindo das duas pontas de um array ordenado) e \"Sliding Window\" (um início e um fim que só andam para a direita, numa animação). Pule as listas de problemas."
+        }
+      ]
+    }
+  }
+}

@@ -294,14 +294,13 @@
     "test": {
       "type": "object",
       "required": [
-        "input",
         "output"
       ],
       "additionalProperties": false,
       "properties": {
         "input": {
           "type": "string",
-          "description": "Exactly what the program receives on standard input. End lines with \\n."
+          "description": "Exactly what the program receives on standard input. End lines with \\n. Leave out when the test has \"generate\"."
         },
         "output": {
           "type": "string",
@@ -310,9 +309,140 @@
         "hidden": {
           "type": "boolean",
           "default": false,
-          "description": "Hidden tests run only on Submit and never reveal their input. Use them for edge cases."
+          "description": "Hidden tests run only on Submit and never reveal their input. Use them for edge cases. Tests with \"generate\" are always hidden."
+        },
+        "generate": {
+          "$ref": "#/definitions/generate"
         }
-      }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "input"
+          ],
+          "not": {
+            "required": [
+              "generate"
+            ]
+          }
+        },
+        {
+          "required": [
+            "generate"
+          ],
+          "not": {
+            "required": [
+              "input"
+            ]
+          }
+        }
+      ]
+    },
+    "generate": {
+      "type": "object",
+      "required": [
+        "seed",
+        "lines"
+      ],
+      "additionalProperties": false,
+      "description": "Builds a big input instead of storing it, to test efficiency (for example 100000 numbers). The same seed always gives the same input. At most 2 000 000 numbers or characters. Keep the expected output short, such as a count or a sum: outputs over 256 KB are cut.",
+      "properties": {
+        "seed": {
+          "type": "integer",
+          "description": "Any whole number; change it for a different input."
+        },
+        "lines": {
+          "type": "array",
+          "minItems": 1,
+          "description": "The input's lines: text as it is, or a recipe for numbers or characters.",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "ints",
+                  "min",
+                  "max"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "ints": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "How many numbers per line, separated by spaces."
+                  },
+                  "min": {
+                    "type": "integer",
+                    "description": "The smallest possible number."
+                  },
+                  "max": {
+                    "type": "integer",
+                    "description": "The largest possible number."
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 1,
+                    "description": "How many lines like this."
+                  },
+                  "sorted": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Each line in ascending order."
+                  },
+                  "distinct": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "No number repeated within a line."
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "chars",
+                  "alphabet"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "chars": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "How many characters per line."
+                  },
+                  "alphabet": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "The characters to draw from. Repeat one to make it more common, such as \".....#\" for a grid that is one-sixth walls."
+                  },
+                  "rows": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 1,
+                    "description": "How many lines like this."
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "examples": [
+        {
+          "seed": 7,
+          "lines": [
+            "100000",
+            {
+              "ints": 100000,
+              "min": 1,
+              "max": 1000000000
+            }
+          ]
+        }
+      ]
     }
   }
 }

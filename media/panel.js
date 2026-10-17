@@ -172,10 +172,16 @@
     }
 
     let body = '';
-    if (r.timedOut) {
+    if (r.timedOut && r.generated) {
+      body += `<p class="muted">${tr('This test has a big input, and your program took too long. A slow approach, such as a loop inside a loop over the input, can\'t finish in time: look for a faster idea.', 'Este teste tem uma entrada grande, e seu programa demorou demais. Uma abordagem lenta, como um laço dentro de outro sobre a entrada, não termina a tempo: procure uma ideia mais rápida.')}</p>`;
+    } else if (r.timedOut) {
       body += `<p class="muted">${tr('Your program took too long. Is there an infinite loop, or is it waiting for input that never comes?', 'Seu programa demorou demais. Há um laço infinito, ou ele está esperando uma entrada que nunca chega?')}</p>`;
     }
-    if (r.hidden) {
+    if (r.hidden && r.generated) {
+      if (!r.passed && !r.timedOut) {
+        body += `<p class="muted">${tr('The input for this test is big and generated. Check that sums and counts fit their type (a long, not an int) and that repeated or extreme values are handled.', 'A entrada deste teste é grande e gerada. Confira se somas e contagens cabem no tipo (um long, não um int) e se valores repetidos ou extremos são tratados.')}</p>`;
+      }
+    } else if (r.hidden) {
       if (!r.passed) {
         body += `<p class="muted">${tr('The input for this test is hidden. Think about edge cases: zero, negative numbers, the smallest and largest values, empty or repeated values…', 'A entrada deste teste é oculta. Pense nos casos extremos: zero, números negativos, os menores e maiores valores, valores vazios ou repetidos…')}</p>`;
       }

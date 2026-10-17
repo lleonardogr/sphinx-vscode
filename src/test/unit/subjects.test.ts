@@ -12,12 +12,13 @@ import { ROOT, tempDir } from './helpers';
 
 describe('subjects', () => {
   it('loads the built-in subjects in switcher order', () => {
-    assert.deepEqual(allSubjects().map((s) => s.id), ['java', 'cs', 'c']);
+    assert.deepEqual(allSubjects().map((s) => s.id), ['java', 'cs', 'c', 'dsa']);
     assert.equal(findSubject('java')!.units.length, 11);
     assert.equal(findSubject('cs')!.units.length, 8);
     assert.equal(findSubject('cs')!.kind, 'theory');
     assert.equal(findSubject('c')!.units.length, 9);
-    assert.deepEqual(['java', 'cs', 'c'].map((id) => findSubject(id)!.language), ['java', 'java', 'c']);
+    assert.equal(findSubject('dsa')!.kind, 'theory');
+    assert.deepEqual(['java', 'cs', 'c', 'dsa'].map((id) => findSubject(id)!.language), ['java', 'java', 'c', 'java']);
   });
 
   it('finds units by key or alias, across subjects', () => {

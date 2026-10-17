@@ -1,0 +1,122 @@
+{
+  "title": "Log Window",
+  "topic": "Complexity",
+  "requires": [
+    "Arrays",
+    "Methods"
+  ],
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "The requests inside one window form one block of the sorted array. You only need where the block starts and where it ends.",
+    "Write lowerBound(times, x): the first index whose value is ≥ x, or n if there is none. Keep lo = 0 and hi = n; while lo < hi, look at mid and move lo or hi.",
+    "The count for a window a b is lowerBound(times, b + 1) − lowerBound(times, a): \"first index ≥ b + 1\" is the same as \"first index > b\"."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Janela de log",
+      "hints": [
+        "As requisições de uma janela formam um bloco do array ordenado. Você só precisa de onde o bloco começa e onde termina.",
+        "Escreva lowerBound(times, x): o primeiro índice com valor ≥ x, ou n se não houver. Mantenha lo = 0 e hi = n; enquanto lo < hi, olhe o mid e mova lo ou hi.",
+        "A contagem de uma janela a b é lowerBound(times, b + 1) − lowerBound(times, a): \"primeiro índice ≥ b + 1\" é o mesmo que \"primeiro índice > b\"."
+      ],
+      "mustNotContain": [
+        "Escreva a busca binária você mesmo: Arrays.binarySearch acha algum valor igual, não o primeiro.",
+        "Busque no próprio array ordenado, sem TreeMap nem TreeSet."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "binarySearch",
+      "message": "Write the binary search yourself: Arrays.binarySearch finds some equal value, not the first one."
+    },
+    {
+      "pattern": "\\b(TreeMap|TreeSet|NavigableMap|NavigableSet)\\b",
+      "message": "Search the sorted array itself, without a TreeMap or TreeSet."
+    }
+  ],
+  "tests": [
+    {
+      "input": "6\n2 4 4 4 7 9\n3\n4 4\n3 8\n10 20\n",
+      "output": "total: 7\nbusiest: 4\n"
+    },
+    {
+      "input": "5\n1 2 3 4 5\n2\n1 5\n6 6\n",
+      "output": "total: 5\nbusiest: 5\n"
+    },
+    {
+      "input": "1\n5\n3\n5 5\n0 4\n6 10\n",
+      "output": "total: 1\nbusiest: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n0 0 0 0\n2\n0 0\n1 1000000000\n",
+      "output": "total: 4\nbusiest: 4\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n10 20 30 40 50\n4\n15 15\n10 10\n50 50\n0 1000000000\n",
+      "output": "total: 7\nbusiest: 5\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n100 200 300\n2\n0 99\n301 400\n",
+      "output": "total: 0\nbusiest: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n1 1 2 2 3 3\n3\n2 2\n1 3\n4 9\n",
+      "output": "total: 8\nbusiest: 6\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 21,
+        "lines": [
+          "200000",
+          {
+            "ints": 200000,
+            "min": 0,
+            "max": 1000000000,
+            "sorted": true
+          },
+          "200000",
+          {
+            "ints": 2,
+            "min": 0,
+            "max": 1000000000,
+            "rows": 200000,
+            "sorted": true
+          }
+        ]
+      },
+      "output": "total: 13346907394\nbusiest: 199507\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 22,
+        "lines": [
+          "200000",
+          {
+            "ints": 200000,
+            "min": 0,
+            "max": 1000,
+            "sorted": true
+          },
+          "200000",
+          {
+            "ints": 2,
+            "min": 0,
+            "max": 1000,
+            "rows": 200000,
+            "sorted": true
+          }
+        ]
+      },
+      "output": "total: 13350874110\nbusiest: 199374\n",
+      "hidden": true
+    }
+  ]
+}

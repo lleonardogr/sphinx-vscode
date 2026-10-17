@@ -3,7 +3,7 @@ and Portuguese. Used by people and AI assistants following docs/content-guide.md
 
 A unit script imports these helpers, describes each item once, and writes the folders:
 
-    from sphinx_content import challenge, bonus_goal, classic, quiz, num, choice, out, tf, short, reading_guide
+    from sphinx_content import challenge, bonus_goal, classic, big, ints, chars, quiz, num, choice, out, tf, short, reading_guide
 
 Then fill in the expected outputs and validate (see README.md in this folder):
 
@@ -48,6 +48,39 @@ public class Main {{
 }}'''
 
 
+def ints(count, lo, hi, rows=1, sorted=False, distinct=False):
+    """A line (or `rows` lines) of `count` random whole numbers from lo to hi, for big(...)."""
+    line = {'ints': count, 'min': lo, 'max': hi}
+    if rows != 1:
+        line['rows'] = rows
+    if sorted:
+        line['sorted'] = True
+    if distinct:
+        line['distinct'] = True
+    return line
+
+
+def chars(count, alphabet, rows=1):
+    """A line (or `rows` lines) of `count` random characters from `alphabet`, for big(...)."""
+    return {'chars': count, 'alphabet': alphabet, **({'rows': rows} if rows != 1 else {})}
+
+
+def big(seed, *lines):
+    """A hidden test whose input is generated (see "generate" in docs/creating-challenges.md): lines are text,
+    ints(...) or chars(...). Use it in tests=[...] in place of an (input, hidden) pair, and in bonus tests."""
+    return {'generate': {'seed': seed, 'lines': [l if isinstance(l, (str, dict)) else str(l) for l in lines]}}
+
+
+def _test(t, hidden_default=False):
+    """A test for challenge.json from an (input, hidden) pair, an input string, or big(...)."""
+    if isinstance(t, dict):
+        return {**t, 'output': '', 'hidden': True}
+    if isinstance(t, str):
+        return {'input': t, 'output': '', **({'hidden': True} if hidden_default else {})}
+    i, h = t
+    return {'input': i, 'output': '', **({'hidden': True} if h else {})}
+
+
 def bonus_goal(id, *, title, title_pt, desc, desc_pt, solution, hint=None, hint_pt=None, must=(), mustnot=(),
                tests=(), time_limit=None, solution_classic=None):
     """An optional, harder goal for challenge(bonus=[...]): rules and/or extra tests (inputs; outputs come from
@@ -60,7 +93,7 @@ def bonus_goal(id, *, title, title_pt, desc, desc_pt, solution, hint=None, hint_
     if mustnot:
         goal['mustNotContain'] = [{'pattern': p, 'message': en} for p, en, _ in mustnot]
     if tests:
-        goal['tests'] = [{'input': i, 'output': ''} for i in tests]
+        goal['tests'] = [{k: v for k, v in _test(t).items() if k != 'hidden'} for t in tests]
     if time_limit:
         goal['timeLimitMs'] = time_limit
     pt = {'title': title_pt, 'description': desc_pt}
@@ -103,7 +136,7 @@ def _write_meta(folder, *, title, title_pt, topic, difficulty, order, hints, hin
         meta['aiHints'] = False
     if time_limit:
         meta['timeLimitMs'] = time_limit
-    meta['tests'] = [{'input': i, 'output': '', **({'hidden': True} if h else {})} for i, h in tests]
+    meta['tests'] = [_test(t) for t in tests]
     if bonus:
         meta['bonus'] = [b['goal'] for b in bonus]
         t['bonus'] = [b['pt'] for b in bonus]
@@ -116,7 +149,7 @@ def challenge(folder, *, title, title_pt, topic, difficulty, order, hints, hints
               requires=None, skills=None, unit=None, ai_hints=True, bonus=()):
     """Writes a challenge folder.
 
-    tests: (input, hidden) pairs; outputs are filled in later with `generate`.
+    tests: (input, hidden) pairs, or big(...) for a generated hidden input; outputs are filled in later with `generate`.
     must / mustnot: (pattern, English message, Portuguese message) rules.
     comments: (English, Portuguese) pairs replaced in the starters to make Starter.pt-br.java.
     """
@@ -315,7 +348,8 @@ def _validate(folders, generate):
                     shutil.copy(src, os.path.join(REPO, f, 'challenge.json'))
                     # Print every test so the outputs can be checked by hand.
                     for t in json.load(open(src, encoding='utf8'))['tests']:
-                        print(f'  {os.path.basename(f)} {t["input"][:40]!r} -> {t["output"][:120]!r}')
+                        shown = t['input'][:40] if 'input' in t else f"generated, seed {t['generate']['seed']}"
+                        print(f'  {os.path.basename(f)} {shown!r} -> {t["output"][:120]!r}')
         return result.returncode
 
 

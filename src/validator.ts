@@ -8,6 +8,7 @@ import * as path from 'path';
 import { Challenge, codeFileName, loadChallenges } from './challenges';
 import { RunOutcome, RunRequest, checkRules, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
 import { findExamDirs, loadExams } from './exams';
+import { generateProblems } from './generate';
 import { findQuizDirs, isWholeProgram, loadQuiz, loadQuizzes, quizProgram } from './quizzes';
 import { READINGS_MARKER, READING_TYPES, findLessonDirs, loadLesson } from './lessons';
 import { subjectOf, unitKey } from './path';
@@ -93,8 +94,22 @@ function examSubjectProblems(dir: string): string[] {
   }
 }
 
+/** Tests with a "generate" recipe: the recipe must work, and the test can't also have an "input". */
+function generatedTestProblems(c: Challenge): string[] {
+  const named = [
+    ...c.tests.map((t, i) => [`test ${i + 1}`, t] as const),
+    ...c.bonus.flatMap((g) => g.tests.map((t, i) => [`bonus goal "${g.id}" test ${i + 1}`, t] as const)),
+  ];
+  return named.flatMap(([where, t]) =>
+    t.generate === undefined ? [] : [...(t.input ? [`${where}: has both "input" and "generate"; keep one`] : []), ...generateProblems(t.generate).map((p) => `${where}: ${p}`)],
+  );
+}
+
 async function validateOne(c: Challenge, javacVersion: number | undefined, opts: ValidateOptions, counters: { checked: number; skipped: number }): Promise<ChallengeReport> {
-  const problems: string[] = [...referenceProblems(c)];
+  const problems: string[] = [...referenceProblems(c), ...generatedTestProblems(c)];
+  if (problems.some((p) => p.includes('"generate'))) {
+    return { id: c.id, dir: c.dir, ok: false, tests: c.tests.length, solutions: 0, problems, warnings: contentWarnings(c) };
+  }
   const files = fs.readdirSync(c.dir).sort();
   // C files always run (a missing compiler is reported); modern Java needs JDK 25.
   const runnable = (f: string) => f.endsWith('.c') || f.includes('.classic.') || (javacVersion ?? 0) >= 25;
@@ -377,7 +392,7 @@ export function contentWarnings(c: Challenge): string[] {
     warnings.push(`description.md is very short (${words} words)`);
   }
   // A program that reads no input (like Hello, World!) can't have meaningful hidden tests.
-  const readsInput = c.tests.some((t) => t.input.trim() !== '');
+  const readsInput = c.tests.some((t) => t.input.trim() !== '' || t.generate);
   const hidden = c.tests.filter((t) => t.hidden).length;
   if (readsInput && hidden < 3) {
     warnings.push(`only ${hidden} hidden test${hidden === 1 ? '' : 's'} (add edge cases: 3 or more)`);

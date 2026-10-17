@@ -13,7 +13,7 @@
 
 > *Like the sphinx of the legend, Sphinx asks you questions, and you only pass if you answer them right.*
 
-Coding challenges checked by tests, right inside VS Code, in **English or Portuguese**, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. Two subjects ship with it: **Java Programming**, from the basic syntax to data structures, object-oriented programming and the Stream API, and **CS Fundamentals**, the theory new students need about how computers work, starting with number systems. A third, **C Programming**, takes students who know Java down to pointers, memory and linked lists.
+Coding challenges checked by tests, right inside VS Code, in **English or Portuguese**, running fully offline on the student's machine, with optional **AI hints** from a local model or your own API key. Two subjects ship with it: **Java Programming**, from the basic syntax to data structures, object-oriented programming and the Stream API, and **CS Fundamentals**, the theory new students need about how computers work, starting with number systems. A third, **C Programming**, takes students who know Java down to pointers, memory and linked lists. A fourth, **Data Structures & Algorithms**, has just started: it teaches what makes a solution fast enough, with tests big enough to tell.
 
 📘 **Guides:** [Creating your own challenges](docs/creating-challenges.md) · [Tests](docs/creating-challenges.md#tests-mixed-challenges) · [Quizzes](docs/quizzes.md) · [Exams](docs/exams.md) · [AI hints](docs/ai-hints.md) · [Content guide](docs/content-guide.md)
 
@@ -83,6 +83,14 @@ The third subject, for students who already know Java: 9 units, from *From Java 
 
 Two closed **exams**, each with a quiz and three private coding questions: **C Exam 1: Foundations** (units 1–4, 90 minutes: Digital Clock, Number to Words, Bracket Checker) and the **C Final Exam** (the whole subject, focused on units 5–9, 120 minutes: Text Buffer, Sorted Linked List, LRU Cache). The C quizzes' "what does this print?" questions run real C.
 
+## Data Structures & Algorithms
+
+The fourth subject, for students who know Java's arrays, collections and methods: it turns Big O into practice. Each unit has a reading guide, a quiz and four challenges, and every challenge has hidden tests with up to 200,000 values, generated when the test runs, so a loop inside a loop runs out of time while a better approach finishes in a fraction of a second. Unit 1 is ready; sorting, stacks and queues, hashing, trees, heaps, graphs, and greedy and dynamic programming come next.
+
+| Unit | Lessons | Challenges (plus the unit's quiz) |
+|------|---------|-----------------------------------|
+| 1 · Complexity & Searching | Complexity and Searching (reading guide: USACO Guide) | Repeated Tickets (a hash set, or sorting) · Log Window (binary search for boundaries) · Truck Capacity (binary search on the answer) · Rate Limiter (sorting and two pointers) |
+
 ## Screenshots
 
 | | |
@@ -110,7 +118,7 @@ Two closed **exams**, each with a quiz and three private coding questions: **C E
 - **Create your own challenges**: **Create New Challenge** sets up a ready-to-edit example, `challenge.json` gets autocomplete and validation, and **Validate Challenges** checks your tests and fills in the expected outputs. No Node.js needed. See [Creating your own challenges](docs/creating-challenges.md).
 - **Back up and restore**: **Back Up Progress…** (in the sidebar's `…` menu) saves your progress, your code and the packs you imported in one `.zip`. **Restore Progress from a Backup…** brings it back on another computer or after reinstalling, merged with what is already there: nothing is lost, and an exam already taken is never replaced.
 - **Command line**: a `sphinx` command in VS Code's terminal to validate content, test a solution, build a pack and verify exam results (see [Command line](#command-line)).
-- **Subjects**: Java Programming, CS Fundamentals and C Programming, each with its own learning path. **Switch Subject…** (📚) changes the one in the sidebar, and its name is shown in the sidebar header.
+- **Subjects**: Java Programming, CS Fundamentals, C Programming and Data Structures & Algorithms, each with its own learning path. **Switch Subject…** (📚) changes the one in the sidebar, and its name is shown in the sidebar header.
 - **Lessons**: short pages to read before a unit's quiz and challenges, with a reading time, a ✓ once read, and a button to the next item.
 - **Bonus goals**: a challenge can offer up to 3 optional, harder goals (solve it without loops, fast enough for a huge input…), checked when it passes. Earned goals become stars in the panel, the sidebar and the unit's guide.
 - **Prerequisites**: an item can list the units it builds on, shown with the student's progress in each one. They're advice, unless a teacher turns on **prerequisite locks**: then the item opens once half (or all) of each unit it needs is solved.
@@ -274,10 +282,11 @@ Done:
 - [x] Backing up and restoring a student's progress
 - [x] A `sphinx` command line: validate, test, pack and verify, in VS Code's terminal or any terminal
 - [x] C challenges with memory checks, a portable compiler for Windows, and the C Programming subject: 9 units with quick guides, quizzes and challenges, plus 2 tests and 2 exams
+- [x] Big test inputs generated from a recipe, and unit 1 of Data Structures & Algorithms
 
 Content:
 
-- [ ] An algorithms and data structures unit
+- [ ] Data Structures & Algorithms, units 2–8: sorting, stacks and queues, hashing, trees, heaps, graphs, and greedy and dynamic programming
 - [ ] New subjects: SQL and graph theory
 
 For teachers:

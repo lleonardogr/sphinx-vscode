@@ -7,6 +7,8 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Added
 
 - **A `sphinx` command line**, in VS Code's integrated terminal with no setup: `sphinx validate <folder>` (with `--generate`), `sphinx test <challenge> <file>` (tests, hidden ones included, and bonus goals; nothing is recorded), `sphinx pack <folder>` and `sphinx verify <results.json>…`. It runs with VS Code itself, so no Node.js is needed, and uses the Sphinx settings. **Install 'sphinx' Command in PATH…** puts it in every terminal (`~/.local/bin`, or `WindowsApps` on Windows; no admin rights). The new setting `sphinx.terminalCommand` turns the terminal command off.
+- **A new subject, Data Structures & Algorithms**, starting with unit 1, *Complexity & Searching*: a reading guide on time budgets, replacing nested loops, binary search boundaries and binary search on the answer (USACO Guide readings and a diagram), a 10-question quiz, and four challenges: Repeated Tickets, Log Window, Truck Capacity and Rate Limiter.
+- **Generated test inputs.** A test can describe a big input with `"generate"` (a seed and lines of numbers or characters) instead of storing it, so efficiency can be tested with 200,000 values without bloating the challenge. The input is the same on every computer, the test is always hidden, and when it runs out of time the results say the approach is too slow rather than suggesting an endless loop. Documented in [Creating your own challenges](docs/creating-challenges.md#big-inputs-generated-tests); `big()`, `ints()` and `chars()` in the content tools write them.
 
 ## [1.9.2] - 2026-10-14
 

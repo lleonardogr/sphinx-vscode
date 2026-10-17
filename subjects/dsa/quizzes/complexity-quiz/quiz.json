@@ -1,0 +1,205 @@
+{
+  "title": "Complexity & Searching Quiz",
+  "topic": "Complexity",
+  "requires": [
+    "Arrays",
+    "Algorithms"
+  ],
+  "description": "Time budgets, replacing nested loops, binary search boundaries and searching for an answer.",
+  "questions": [
+    {
+      "type": "choice",
+      "prompt": "The input says n ≤ 200,000 and the time limit is 1 second (about 10⁸ simple steps). Which approach fits?",
+      "options": [
+        "Sort, then one pass over the array: O(n log n)",
+        "Compare every pair, stopping at the first match",
+        "Compare every pair with j > i only: about n²/2 steps",
+        "Three nested loops: O(n³)"
+      ],
+      "answer": 0,
+      "explanation": "n log n is about 3.5 million steps. Every pair is 2 × 10¹⁰ steps even when halved: halving the work or stopping early is still O(n²) in the worst case."
+    },
+    {
+      "type": "number",
+      "prompt": "An O(n²) algorithm runs with n = 100,000. At about 10⁸ simple steps per second, roughly how many **seconds** does it take?",
+      "answer": "100",
+      "explanation": "n² = 10¹⁰ steps, and 10¹⁰ / 10⁸ = 100 seconds: far over a typical 1 or 2 second limit."
+    },
+    {
+      "type": "choice",
+      "prompt": "What is the Big O of this code?",
+      "code": "long total = 0;\nfor (int i = 0; i < n; i++) {\n    total += a[i];\n}\nint above = 0;\nfor (int j = 0; j < n; j++) {\n    if (a[j] * n > total) {\n        above++;\n    }\n}",
+      "options": [
+        "O(n)",
+        "O(n²)",
+        "O(n log n)",
+        "O(1)"
+      ],
+      "answer": 0,
+      "explanation": "The loops run one after the other, not one inside the other: n + n = 2n steps, which is O(n). Only nesting multiplies."
+    },
+    {
+      "type": "choice",
+      "prompt": "What is the Big O of this code?",
+      "code": "int count = 0;\nfor (int i = 0; i < n; i++) {\n    for (int step = 1; step < n; step *= 2) {\n        count++;\n    }\n}",
+      "options": [
+        "O(n log n)",
+        "O(n²)",
+        "O(log n)",
+        "O(n)"
+      ],
+      "answer": 0,
+      "explanation": "The inner loop doubles `step`, so it runs about log₂ n times, once for each of the n outer passes: n × log n."
+    },
+    {
+      "type": "output",
+      "code": "int lowerBound(int[] a, int x) {\n    int lo = 0, hi = a.length;\n    while (lo < hi) {\n        int mid = (lo + hi) / 2;\n        if (a[mid] < x) {\n            lo = mid + 1;\n        } else {\n            hi = mid;\n        }\n    }\n    return lo;\n}\n\nvoid main() {\n    int[] a = {1, 3, 3, 3, 8, 9};\n    IO.println(lowerBound(a, 3) + \" \" + lowerBound(a, 4) + \" \" + lowerBound(a, 10));\n}",
+      "answer": "1 4 6",
+      "explanation": "3 first appears at index 1. 4 isn't in the array, so the first value ≥ 4 is 8, at index 4. No value is ≥ 10, so the search returns a.length, 6: \"past the end\"."
+    },
+    {
+      "type": "choice",
+      "prompt": "This lower bound starts with `hi = a.length - 1` instead of `a.length`. With `a = {2, 5, 7}` and `x = 10`, what does it return, and what should it return?",
+      "code": "int lo = 0, hi = a.length - 1;\nwhile (lo < hi) {\n    int mid = (lo + hi) / 2;\n    if (a[mid] < x) {\n        lo = mid + 1;\n    } else {\n        hi = mid;\n    }\n}\nreturn lo;",
+      "options": [
+        "It returns 2, but it should return 3: no value is ≥ 10",
+        "It returns 3, which is right",
+        "It never stops",
+        "It returns -1, but it should return 3"
+      ],
+      "answer": 0,
+      "explanation": "With hi starting at the last index, the answer can never be a.length, so \"nothing is big enough\" looks like \"the last element\". Pick one meaning for hi and keep it."
+    },
+    {
+      "type": "choice",
+      "prompt": "A warehouse wants the smallest truck capacity that ships every package, in order, within d days, and binary-searches it between the heaviest package and the total weight. Why does that work, when no sorted array holds the capacities?",
+      "options": [
+        "Because if a capacity ships everything in d days, every bigger capacity does too",
+        "Because the package weights are sorted",
+        "Because the answer is always halfway between the two bounds",
+        "Because checking one capacity takes O(log n) steps"
+      ],
+      "answer": 0,
+      "explanation": "Binary search needs a yes/no question that switches from no to yes only once as the value grows. Here it does: a bigger truck never needs more days."
+    },
+    {
+      "type": "choice",
+      "prompt": "Two pointers look for two numbers adding up to 53 in the sorted array `3 8 15 22 31 47`. After 3 + 47 = 50 (too small), `lo` moved to 8, and `hi` is still at 47: the sum, 55, is too big. What should happen next?",
+      "options": [
+        "Move hi left, to 31: 47 is too big with every number from 8 on",
+        "Move lo right, to 15",
+        "Move both pointers one step",
+        "Start again with lo at 3"
+      ],
+      "answer": 0,
+      "explanation": "Every number from lo on is at least 8, so 47 plus any of them is too big as well: 47 can be dropped. Moving lo right would only make the sum bigger. The search goes on to find 22 + 31 = 53."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "Adding `break` as soon as a matching pair is found makes a nested-loop search O(n).",
+      "answer": false,
+      "explanation": "Big O describes the worst case: when there is no match, the loops still check every pair, about n²/2 of them."
+    },
+    {
+      "type": "choice",
+      "prompt": "A program reads 200,000 ids and must answer \"have I seen this id before?\" for each one. Which keeps every check fast?",
+      "options": [
+        "A HashSet: about constant time per check",
+        "An ArrayList with contains()",
+        "An array searched from the start each time",
+        "One String with every id, searched with indexOf()"
+      ],
+      "answer": 0,
+      "explanation": "contains() on a list and indexOf() on a string both scan: up to 200,000 steps per check, 4 × 10¹⁰ in total. A HashSet jumps straight to where the id would be."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de complexidade e busca",
+      "description": "Orçamentos de tempo, como trocar laços aninhados, fronteiras com busca binária e busca pela resposta.",
+      "questions": [
+        {
+          "prompt": "A entrada diz n ≤ 200.000 e o limite de tempo é 1 segundo (uns 10⁸ passos simples). Qual abordagem cabe?",
+          "options": [
+            "Ordenar e depois uma passada pelo array: O(n log n)",
+            "Comparar todos os pares, parando no primeiro que bater",
+            "Comparar todos os pares só com j > i: uns n²/2 passos",
+            "Três laços aninhados: O(n³)"
+          ],
+          "explanation": "n log n dá uns 3,5 milhões de passos. Todos os pares dão 2 × 10¹⁰ passos mesmo pela metade: cortar o trabalho pela metade ou parar cedo continua O(n²) no pior caso."
+        },
+        {
+          "prompt": "Um algoritmo O(n²) roda com n = 100.000. A uns 10⁸ passos simples por segundo, mais ou menos quantos **segundos** ele leva?",
+          "explanation": "n² = 10¹⁰ passos, e 10¹⁰ / 10⁸ = 100 segundos: muito acima de um limite comum de 1 ou 2 segundos."
+        },
+        {
+          "prompt": "Qual é o Big O deste código?",
+          "options": [
+            "O(n)",
+            "O(n²)",
+            "O(n log n)",
+            "O(1)"
+          ],
+          "explanation": "Os laços rodam um depois do outro, não um dentro do outro: n + n = 2n passos, que é O(n). Só o aninhamento multiplica."
+        },
+        {
+          "prompt": "Qual é o Big O deste código?",
+          "options": [
+            "O(n log n)",
+            "O(n²)",
+            "O(log n)",
+            "O(n)"
+          ],
+          "explanation": "O laço de dentro dobra `step`, então roda umas log₂ n vezes, uma vez para cada uma das n passadas do laço de fora: n × log n."
+        },
+        {
+          "explanation": "O 3 aparece primeiro no índice 1. O 4 não está no array, então o primeiro valor ≥ 4 é o 8, no índice 4. Nenhum valor é ≥ 10, então a busca devolve a.length, 6: \"depois do fim\"."
+        },
+        {
+          "prompt": "Este lower bound começa com `hi = a.length - 1` em vez de `a.length`. Com `a = {2, 5, 7}` e `x = 10`, o que ele devolve, e o que deveria devolver?",
+          "options": [
+            "Devolve 2, mas deveria devolver 3: nenhum valor é ≥ 10",
+            "Devolve 3, que está certo",
+            "Nunca para",
+            "Devolve -1, mas deveria devolver 3"
+          ],
+          "explanation": "Com hi começando no último índice, a resposta nunca pode ser a.length, então \"nenhum é grande o bastante\" parece \"o último elemento\". Escolha um significado para hi e mantenha."
+        },
+        {
+          "prompt": "Um depósito quer a menor capacidade de caminhão que entrega todos os pacotes, em ordem, em até d dias, e faz busca binária entre o pacote mais pesado e o peso total. Por que isso funciona, se nenhum array ordenado guarda as capacidades?",
+          "options": [
+            "Porque se uma capacidade entrega tudo em d dias, toda capacidade maior também entrega",
+            "Porque os pesos dos pacotes estão ordenados",
+            "Porque a resposta está sempre no meio dos dois limites",
+            "Porque testar uma capacidade leva O(log n) passos"
+          ],
+          "explanation": "A busca binária precisa de uma pergunta de sim ou não que muda de não para sim uma única vez conforme o valor cresce. Aqui é assim: um caminhão maior nunca precisa de mais dias."
+        },
+        {
+          "prompt": "Dois ponteiros procuram dois números que somam 53 no array ordenado `3 8 15 22 31 47`. Depois de 3 + 47 = 50 (pouco), `lo` foi para o 8, e `hi` continua no 47: a soma, 55, é grande demais. O que deve acontecer agora?",
+          "options": [
+            "Mover hi para a esquerda, para o 31: o 47 passa de 53 com todo número a partir do 8",
+            "Mover lo para a direita, para o 15",
+            "Mover os dois ponteiros um passo",
+            "Recomeçar com lo no 3"
+          ],
+          "explanation": "Todo número a partir de lo é pelo menos 8, então 47 mais qualquer um deles também passa: o 47 pode ser descartado. Mover lo para a direita só aumentaria a soma. A busca continua e acha 22 + 31 = 53."
+        },
+        {
+          "prompt": "Colocar um `break` assim que um par certo aparece deixa uma busca com laços aninhados O(n).",
+          "explanation": "O Big O descreve o pior caso: quando não há par certo, os laços ainda conferem todos os pares, uns n²/2."
+        },
+        {
+          "prompt": "Um programa lê 200.000 ids e precisa responder \"já vi este id?\" para cada um. O que mantém cada consulta rápida?",
+          "options": [
+            "Um HashSet: tempo mais ou menos constante por consulta",
+            "Um ArrayList com contains()",
+            "Um array percorrido desde o começo a cada vez",
+            "Uma String com todos os ids, buscada com indexOf()"
+          ],
+          "explanation": "O contains() de uma lista e o indexOf() de uma string percorrem tudo: até 200.000 passos por consulta, 4 × 10¹⁰ no total. Um HashSet vai direto para onde o id estaria."
+        }
+      ]
+    }
+  }
+}

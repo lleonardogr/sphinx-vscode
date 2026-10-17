@@ -212,6 +212,35 @@ Each test has an `input` (exactly what the program reads), an `output` (exactly 
 
 **JSON escaping:** a new line in a JSON string is `\n`, a quote is `\"`, and a backslash is `\\`.
 
+### Big inputs: generated tests
+
+To check that a solution is fast enough, a test needs a big input, such as 200,000 numbers, where a loop inside a loop takes minutes and a better approach a fraction of a second. Instead of storing that input, describe it with `"generate"`:
+
+```json
+{
+  "generate": {
+    "seed": 7,
+    "lines": ["200000", { "ints": 200000, "min": 1, "max": 1000000000 }]
+  },
+  "output": ""
+}
+```
+
+Sphinx builds the input just before the test runs, and the same recipe gives the same input on every computer. `lines` lists the input's lines:
+
+| Line | What it writes |
+|------|----------------|
+| `"200000"` | the text as it is |
+| `{ "ints": 5, "min": 1, "max": 9 }` | one line of 5 random whole numbers from 1 to 9, separated by spaces |
+| `{ "ints": 2, "min": 0, "max": 100, "rows": 1000 }` | 1,000 such lines |
+| `"sorted": true`, `"distinct": true` | each line in ascending order, or with no number repeated |
+| `{ "chars": 30, "alphabet": ".....#", "rows": 30 }` | 30 lines of 30 characters; repeat a character to make it more common |
+
+- **Generated tests are always hidden**, and results show only the start of their input. A test has either `"input"` or `"generate"`, not both.
+- **Keep the expected output short**, such as a count, a sum or the best value: outputs over 256 KB are cut. Fill it in with **Validate and fill in expected outputs** as usual.
+- **At most 2,000,000** numbers or characters per test. Change the `seed` for a different input.
+- **Check the timing.** The right approach should take well under a second, and the slow one many times the time limit (5 seconds unless `timeLimitMs` says otherwise). `sphinx test <challenge> <file>` runs a slow solution against the tests to confirm it fails them.
+
 ---
 
 ## Tests: mixed challenges

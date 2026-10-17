@@ -53,9 +53,9 @@ test('Java 25+ is available to the extension', async () => {
 
 test('loads the built-in challenges, quizzes, lessons and exams', () => {
   assert.equal(api.challenges().filter((c) => !c.dir.includes(`${path.sep}subjects${path.sep}`)).length, 100);
-  assert.equal(api.challenges().length, 177);
-  assert.equal(api.quizzes().length, 28);
-  assert.equal(api.lessons().length, 28);
+  assert.equal(api.challenges().length, 181);
+  assert.equal(api.quizzes().length, 29);
+  assert.equal(api.lessons().length, 29);
   assert.deepEqual(api.exams().map((e) => e.id).sort(), ['c-exam-1', 'c-final-exam', 'cs-exam-1', 'cs-final-exam', 'exam-1', 'exam-2', 'final-exam', 'sample-exam']);
   assert.deepEqual(api.exams().filter((e) => e.subject === 'c').map((e) => e.id).sort(), ['c-exam-1', 'c-final-exam']);
   assert.deepEqual(api.exams().filter((e) => e.subject === 'cs').map((e) => e.id).sort(), ['cs-exam-1', 'cs-final-exam']);
@@ -186,6 +186,30 @@ test('C Programming: a programming subject whose challenges are in C, unit by un
     }
     for (const c of api.challenges().filter((x) => findSubject('c')!.units.some((u) => u.key === x.topic || u.key === x.unit))) {
       assert.equal(c.language, 'c', c.id);
+    }
+  } finally {
+    await vscode.commands.executeCommand('sphinx.switchSubject', 'java');
+  }
+});
+
+test('Data Structures & Algorithms: unit 1 has its guide, challenges and quiz, and big generated tests stay hidden', async () => {
+  const label = (n: unknown) => String(api.tree.getTreeItem(n as never).label);
+  await vscode.commands.executeCommand('sphinx.switchSubject', 'dsa');
+  try {
+    assert.equal(api.tree.subject, 'dsa');
+    const groups = api.tree.getChildren().filter((n) => (n as { kind: string }).kind === 'group');
+    assert.deepEqual(groups.map(label), ['1 · Complexity & Searching']);
+    assert.deepEqual(api.tree.getChildren(groups[0]).map(label), [
+      'Complexity and Searching',
+      'Repeated Tickets',
+      'Log Window',
+      'Truck Capacity',
+      'Rate Limiter',
+      'Complexity & Searching Quiz',
+    ]);
+    for (const id of ['repeated-tickets', 'log-window', 'truck-capacity', 'rate-limiter']) {
+      const generated = challenge(id).tests.filter((t) => t.generate);
+      assert.ok(generated.length >= 2 && generated.every((t) => t.hidden), id);
     }
   } finally {
     await vscode.commands.executeCommand('sphinx.switchSubject', 'java');
@@ -343,7 +367,7 @@ test('the teacher view lists the teacher\'s exams, own content and tools, edits 
   const label = (n: unknown) => String(t.getTreeItem(n as never).label);
   const [exams, content, subjects, tools] = t.getChildren();
   assert.deepEqual([exams, content, subjects, tools].map(label), ['My Exams', 'My Challenges, Quizzes & Lessons', 'Subjects & Units', 'Tools']);
-  assert.deepEqual(t.getChildren(subjects).map(label), ['Java Programming', 'CS Fundamentals', 'C Programming']);
+  assert.deepEqual(t.getChildren(subjects).map(label), ['Java Programming', 'CS Fundamentals', 'C Programming', 'Data Structures & Algorithms']);
   assert.deepEqual(t.getChildren(exams).map(label).sort(), ['C Exam 1: Foundations', 'C Final Exam', 'CS Exam 1: Data Representation', 'CS Final Exam', 'Class Exam', 'Exam 1: Basics to Strings', 'Exam 2: Building Blocks', 'Final Exam', 'Sample Exam: Java Basics']);
   const exam = (title: string) => t.getChildren(exams).find((n) => label(n) === title)!;
   assert.match(String(t.getTreeItem(exam('Exam 1: Basics to Strings') as never).description), /^Built-in · 4 questions · 100 pts · \d+ min$/);

@@ -1,0 +1,110 @@
+{
+  "title": "Repeated Tickets",
+  "topic": "Complexity",
+  "requires": [
+    "Arrays",
+    "Collections"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "First make it right on the small examples, then think about the 200,000-ticket test: a loop inside a loop over the tickets is far too slow.",
+    "Keep a HashSet of the ids already seen. When add() returns false, the id is a repeat.",
+    "An id seen three times must still count once: keep a second set with the repeated ids, and print its size."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Ingressos repetidos",
+      "hints": [
+        "Primeiro acerte os exemplos pequenos, depois pense no teste com 200.000 ingressos: um laço dentro de outro sobre os ingressos é lento demais.",
+        "Guarde num HashSet os ids já vistos. Quando add() devolve false, o id é repetido.",
+        "Um id visto três vezes ainda conta uma vez só: guarde num segundo conjunto os ids repetidos e imprima o tamanho dele."
+      ],
+      "bonus": [
+        {
+          "title": "Sem Set",
+          "description": "Resolva sem set nem map: ordene os ids primeiro, para que ids iguais fiquem lado a lado.",
+          "hint": "Depois do Arrays.sort, cada id repetido forma uma sequência de vizinhos iguais: conte as sequências de tamanho 2 ou mais.",
+          "mustNotContain": [
+            "Ordene os ids e compare vizinhos, sem set nem map."
+          ]
+        }
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "7\n5 3 5 9 3 5 1\n",
+      "output": "2\n"
+    },
+    {
+      "input": "4\n10 20 30 40\n",
+      "output": "0\n"
+    },
+    {
+      "input": "1\n42\n",
+      "output": "0\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n7 7 7 7 7 7\n",
+      "output": "1\n",
+      "hidden": true
+    },
+    {
+      "input": "8\n1 2 1 2 3 3 4 5\n",
+      "output": "3\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n1000000000 1 1000000000 1 999999999\n",
+      "output": "2\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 11,
+        "lines": [
+          "200000",
+          {
+            "ints": 200000,
+            "min": 1,
+            "max": 150000
+          }
+        ]
+      },
+      "output": "57622\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 12,
+        "lines": [
+          "200000",
+          {
+            "ints": 200000,
+            "min": 1,
+            "max": 1000000000,
+            "distinct": true
+          }
+        ]
+      },
+      "output": "0\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "no-set",
+      "title": "Without a Set",
+      "description": "Solve it without a set or a map: sort the ids first, so equal ids end up side by side.",
+      "hint": "After Arrays.sort, every repeated id is a run of equal neighbours: count the runs of length 2 or more.",
+      "mustNotContain": [
+        {
+          "pattern": "\\b(Set|HashSet|TreeSet|LinkedHashSet|Map|HashMap|TreeMap|LinkedHashMap)\\b|groupingBy|distinct\\s*\\(|frequency\\s*\\(",
+          "message": "Sort the ids and compare neighbours, without a set or a map."
+        }
+      ]
+    }
+  ]
+}
