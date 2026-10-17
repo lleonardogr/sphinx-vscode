@@ -9,13 +9,14 @@ export type GeneratedLine =
   | {
       /** How many numbers per line, separated by spaces. */
       ints: number;
-      min: number;
-      max: number;
+      /** The range of every number, or one range per column, such as min [0, 1] and max [1000000000, 60]. */
+      min: number | number[];
+      max: number | number[];
       /** How many lines like this (1 by default). */
       rows?: number;
-      /** Each line in ascending order. */
+      /** Each line in ascending order (one range for every number only). */
       sorted?: boolean;
-      /** No number repeated within a line. */
+      /** No number repeated within a line (one range for every number only). */
       distinct?: boolean;
     }
   | {
@@ -62,14 +63,28 @@ export function generateProblems(spec: unknown): string[] {
       problems.push(`${where}: "rows" must be a whole number above 0`);
       return;
     }
-    if ('ints' in line) {
+    if ('ints' in line && (Array.isArray(line.min) || Array.isArray(line.max))) {
+      const mins = line.min as unknown[];
+      const maxs = line.max as unknown[];
+      if (!Number.isInteger(line.ints) || line.ints < 1) {
+        problems.push(`${where}: "ints" must be a whole number above 0`);
+      } else if (!Array.isArray(mins) || !Array.isArray(maxs) || mins.length !== line.ints || maxs.length !== line.ints) {
+        problems.push(`${where}: per-column "min" and "max" must both be lists with one value per number (${line.ints})`);
+      } else if (mins.some((lo, c) => !Number.isSafeInteger(lo) || !Number.isSafeInteger(maxs[c]) || (lo as number) > (maxs[c] as number) || !Number.isSafeInteger((maxs[c] as number) - (lo as number) + 1))) {
+        problems.push(`${where}: every column needs whole numbers with min <= max`);
+      } else if (line.sorted || line.distinct) {
+        problems.push(`${where}: "sorted" and "distinct" need one range for every number, not one per column`);
+      } else {
+        total += line.ints * rows;
+      }
+    } else if ('ints' in line) {
       if (!Number.isInteger(line.ints) || line.ints < 1) {
         problems.push(`${where}: "ints" must be a whole number above 0`);
       } else if (!Number.isSafeInteger(line.min) || !Number.isSafeInteger(line.max) || line.min > line.max) {
         problems.push(`${where}: "min" and "max" must be whole numbers with min <= max (at most ${Number.MAX_SAFE_INTEGER} in size)`);
-      } else if (!Number.isSafeInteger(line.max - line.min + 1)) {
+      } else if (!Number.isSafeInteger((line.max as number) - (line.min as number) + 1)) {
         problems.push(`${where}: the range from "min" to "max" is too wide`);
-      } else if (line.distinct && line.ints > line.max - line.min + 1) {
+      } else if (line.distinct && line.ints > (line.max as number) - (line.min as number) + 1) {
         problems.push(`${where}: ${line.ints} distinct numbers don't fit between ${line.min} and ${line.max}`);
       } else {
         total += line.ints * rows;
@@ -111,7 +126,13 @@ function below(next: () => number, span: number): number {
 }
 
 function intRow(next: () => number, line: Extract<GeneratedLine, { ints: number }>): number[] {
-  const span = line.max - line.min + 1;
+  if (Array.isArray(line.min)) {
+    const mins = line.min;
+    const maxs = line.max as number[];
+    return mins.map((lo, c) => lo + below(next, maxs[c] - lo + 1));
+  }
+  const min = line.min;
+  const span = (line.max as number) - min + 1;
   let values: number[];
   if (line.distinct) {
     // Floyd's sampling: `ints` different numbers from the span, without listing the whole span.
@@ -128,7 +149,7 @@ function intRow(next: () => number, line: Extract<GeneratedLine, { ints: number 
   } else {
     values = Array.from({ length: line.ints }, () => below(next, span));
   }
-  values = values.map((v) => v + line.min);
+  values = values.map((v) => v + min);
   return line.sorted ? values.sort((a, b) => a - b) : values;
 }
 

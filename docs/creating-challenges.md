@@ -234,6 +234,7 @@ Sphinx builds the input just before the test runs, and the same recipe gives the
 | `{ "ints": 5, "min": 1, "max": 9 }` | one line of 5 random whole numbers from 1 to 9, separated by spaces |
 | `{ "ints": 2, "min": 0, "max": 100, "rows": 1000 }` | 1,000 such lines |
 | `"sorted": true`, `"distinct": true` | each line in ascending order, or with no number repeated |
+| `{ "ints": 2, "min": [0, 1], "max": [1000000000, 60], "rows": 1000 }` | 1,000 lines, each with a number from 0 to 1,000,000,000 and one from 1 to 60: one range per column |
 | `{ "chars": 30, "alphabet": ".....#", "rows": 30 }` | 30 lines of 30 characters; repeat a character to make it more common |
 
 - **Generated tests are always hidden**, and results show only the start of their input. A test has either `"input"` or `"generate"`, not both.

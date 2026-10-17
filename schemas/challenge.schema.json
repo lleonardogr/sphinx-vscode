@@ -375,12 +375,34 @@
                     "description": "How many numbers per line, separated by spaces."
                   },
                   "min": {
-                    "type": "integer",
-                    "description": "The smallest possible number."
+                    "oneOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        },
+                        "minItems": 1
+                      }
+                    ],
+                    "description": "The smallest possible number, or a list with one per column."
                   },
                   "max": {
-                    "type": "integer",
-                    "description": "The largest possible number."
+                    "oneOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        },
+                        "minItems": 1
+                      }
+                    ],
+                    "description": "The largest possible number, or a list with one per column."
                   },
                   "rows": {
                     "type": "integer",
@@ -391,12 +413,12 @@
                   "sorted": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Each line in ascending order."
+                    "description": "Each line in ascending order (only with one range for every number)."
                   },
                   "distinct": {
                     "type": "boolean",
                     "default": false,
-                    "description": "No number repeated within a line."
+                    "description": "No number repeated within a line (only with one range for every number)."
                   }
                 }
               },

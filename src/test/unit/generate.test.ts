@@ -28,6 +28,18 @@ describe('generated test inputs', () => {
     assert.deepEqual([...all].sort((a, b) => a - b), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   });
 
+  it('can give each column its own range, such as a start and a short length', () => {
+    const rows = generateInput({ seed: 4, lines: [{ ints: 2, min: [0, 1], max: [1000000000, 60], rows: 1000 }] }).trim().split('\n');
+    assert.equal(rows.length, 1000);
+    for (const row of rows) {
+      const [start, length] = row.split(' ').map(Number);
+      assert.ok(start >= 0 && start <= 1e9 && length >= 1 && length <= 60, row);
+    }
+    assert.match(generateProblems({ seed: 1, lines: [{ ints: 2, min: [0], max: [1, 2] }] }).join(), /one value per number/);
+    assert.match(generateProblems({ seed: 1, lines: [{ ints: 2, min: [0, 5], max: [1, 2] }] }).join(), /min <= max/);
+    assert.match(generateProblems({ seed: 1, lines: [{ ints: 2, min: [0, 0], max: [9, 9], sorted: true }] }).join(), /one range for every number/);
+  });
+
   it('reject recipes that are broken or too big', () => {
     assert.deepEqual(generateProblems({ seed: 1, lines: ['1', { ints: 3, min: 0, max: 9 }] }), []);
     assert.match(generateProblems({ lines: ['1'] }).join(), /seed/);
