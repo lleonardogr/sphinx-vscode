@@ -1,0 +1,105 @@
+{
+  "title": "Truck Capacity",
+  "topic": "Complexity",
+  "requires": [
+    "Arrays",
+    "Methods"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Write days(weights, capacity): simulate the loading and return how many days it takes. Checking one capacity is easy.",
+    "The answer is between the heaviest package (a smaller truck can't carry it) and the total weight (everything in one day), and days(...) never grows when the capacity grows.",
+    "Binary-search the first capacity with days(...) ≤ d: if mid works, the answer is mid or smaller (hi = mid); otherwise it is bigger (lo = mid + 1)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Capacidade do caminhão",
+      "hints": [
+        "Escreva days(weights, capacity): simule o carregamento e devolva quantos dias leva. Testar uma capacidade é fácil.",
+        "A resposta está entre o pacote mais pesado (um caminhão menor não o carrega) e o peso total (tudo num dia), e days(...) nunca aumenta quando a capacidade aumenta.",
+        "Faça busca binária na primeira capacidade com days(...) ≤ d: se mid funciona, a resposta é mid ou menor (hi = mid); senão é maior (lo = mid + 1)."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "6 3\n3 2 2 4 1 4\n",
+      "output": "6\n"
+    },
+    {
+      "input": "5 1\n1 2 3 4 5\n",
+      "output": "15\n"
+    },
+    {
+      "input": "1 1\n7\n",
+      "output": "7\n",
+      "hidden": true
+    },
+    {
+      "input": "5 5\n1 9 2 8 3\n",
+      "output": "9\n",
+      "hidden": true
+    },
+    {
+      "input": "4 2\n100000 100000 100000 100000\n",
+      "output": "200000\n",
+      "hidden": true
+    },
+    {
+      "input": "7 3\n1 2 3 4 5 6 7\n",
+      "output": "11\n",
+      "hidden": true
+    },
+    {
+      "input": "10 4\n9 1 1 1 1 1 1 1 1 9\n",
+      "output": "9\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 31,
+        "lines": [
+          "200000 1000",
+          {
+            "ints": 200000,
+            "min": 1,
+            "max": 100000
+          }
+        ]
+      },
+      "output": "10054171\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 32,
+        "lines": [
+          "200000 1",
+          {
+            "ints": 200000,
+            "min": 100000,
+            "max": 100000
+          }
+        ]
+      },
+      "output": "20000000000\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 33,
+        "lines": [
+          "200000 7",
+          {
+            "ints": 200000,
+            "min": 1,
+            "max": 100000
+          }
+        ]
+      },
+      "output": "1428792978\n",
+      "hidden": true
+    }
+  ]
+}

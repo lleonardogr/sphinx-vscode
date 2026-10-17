@@ -1,0 +1,21 @@
+{
+  "id": "dsa",
+  "title": "Data Structures & Algorithms",
+  "kind": "theory",
+  "order": 4,
+  "units": [
+    {
+      "key": "Complexity",
+      "title": "Complexity & Searching",
+      "icon": "search"
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Estruturas de Dados e Algoritmos",
+      "units": {
+        "Complexity": "Complexidade e busca"
+      }
+    }
+  }
+}

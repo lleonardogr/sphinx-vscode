@@ -1,0 +1,95 @@
+{
+  "title": "Rate Limiter",
+  "topic": "Complexity",
+  "requires": [
+    "Arrays",
+    "Methods"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Sort the times. For each start i, find the first j with times[j] ≥ times[i] + w: that window holds j − i requests. As i grows, j never moves back, so one pass does it.",
+    "For the earliest start, only replace the best window when a count is strictly bigger.",
+    "Limiter: store accepted times in an array as you accept them, with an index `oldest`. Before deciding on time t, move oldest forward while accepted[oldest] ≤ t − w. Accept when (accepted so far − oldest) < L."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Limitador de requisições",
+      "hints": [
+        "Ordene os instantes. Para cada início i, ache o primeiro j com times[j] ≥ times[i] + w: essa janela tem j − i requisições. Quando i cresce, j nunca volta, então uma passada resolve.",
+        "Para o início mais cedo, só troque a melhor janela quando uma contagem for estritamente maior.",
+        "Limitador: guarde num array os instantes aceitos conforme os aceita, com um índice `oldest`. Antes de decidir o instante t, avance oldest enquanto accepted[oldest] ≤ t − w. Aceite quando (aceitas até agora − oldest) < L."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "7 10 2\n14 1 5 25 12 3 13\n",
+      "output": "busiest start: 5\nbusiest count: 4\nrejected: 2\n"
+    },
+    {
+      "input": "5 3 1\n0 1 2 3 4\n",
+      "output": "busiest start: 0\nbusiest count: 3\nrejected: 3\n"
+    },
+    {
+      "input": "1 5 1\n7\n",
+      "output": "busiest start: 7\nbusiest count: 1\nrejected: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "4 1 1\n5 5 5 5\n",
+      "output": "busiest start: 5\nbusiest count: 4\nrejected: 3\n",
+      "hidden": true
+    },
+    {
+      "input": "6 1000000000 3\n1000000000 0 999999999 1 500000000 1000000000\n",
+      "output": "busiest start: 1\nbusiest count: 5\nrejected: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "5 10 5\n3 1 4 1 5\n",
+      "output": "busiest start: 1\nbusiest count: 5\nrejected: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "6 2 1\n10 0 20 30 40 50\n",
+      "output": "busiest start: 0\nbusiest count: 1\nrejected: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "8 5 2\n9 0 4 5 10 14 15 19\n",
+      "output": "busiest start: 0\nbusiest count: 2\nrejected: 0\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 41,
+        "lines": [
+          "200000 1000 5",
+          {
+            "ints": 200000,
+            "min": 0,
+            "max": 1000000000
+          }
+        ]
+      },
+      "output": "busiest start: 665598586\nbusiest count: 6\nrejected: 1\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 42,
+        "lines": [
+          "200000 1000000 50",
+          {
+            "ints": 200000,
+            "min": 0,
+            "max": 100000000
+          }
+        ]
+      },
+      "output": "busiest start: 60635722\nbusiest count: 2181\nrejected: 195000\n",
+      "hidden": true
+    }
+  ]
+}
