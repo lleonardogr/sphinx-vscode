@@ -8,13 +8,19 @@
       "key": "Complexity",
       "title": "Complexity & Searching",
       "icon": "search"
+    },
+    {
+      "key": "Sorting",
+      "title": "Sorting",
+      "icon": "list-ordered"
     }
   ],
   "translations": {
     "pt-br": {
       "title": "Estruturas de Dados e Algoritmos",
       "units": {
-        "Complexity": "Complexidade e busca"
+        "Complexity": "Complexidade e busca",
+        "Sorting": "Ordenação"
       }
     }
   }

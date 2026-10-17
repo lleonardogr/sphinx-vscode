@@ -49,7 +49,8 @@ public class Main {{
 
 
 def ints(count, lo, hi, rows=1, sorted=False, distinct=False):
-    """A line (or `rows` lines) of `count` random whole numbers from lo to hi, for big(...)."""
+    """A line (or `rows` lines) of `count` random whole numbers from lo to hi, for big(...). lo and hi can be lists
+    with one range per column, such as ints(2, [0, 1], [10**9, 60], rows=1000) for a start and a short length."""
     line = {'ints': count, 'min': lo, 'max': hi}
     if rows != 1:
         line['rows'] = rows

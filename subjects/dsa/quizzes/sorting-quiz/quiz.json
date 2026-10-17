@@ -1,0 +1,177 @@
+{
+  "title": "Sorting Quiz",
+  "topic": "Sorting",
+  "requires": [
+    "Arrays",
+    "Collections"
+  ],
+  "description": "Merge sort, quicksort and counting sort, comparators, stability and inversions.",
+  "questions": [
+    {
+      "type": "number",
+      "prompt": "Bottom-up merge sort starts with runs of 1 value and doubles the run size every pass. How many passes does it make on **1,024** values?",
+      "answer": "10",
+      "explanation": "Runs of 1, 2, 4, …, 512 are merged into runs twice as long: 10 passes, since 2¹⁰ = 1,024. Each pass moves all 1,024 values, so the total is about n log₂ n."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why does merge sort take O(n log n) steps?",
+      "options": [
+        "It makes about log₂ n passes, and each pass moves every value once",
+        "It compares every pair of values once",
+        "It splits the array into n parts that each take log n steps",
+        "Merging two sorted lists takes log n steps"
+      ],
+      "answer": 0,
+      "explanation": "Run sizes double every pass, so there are about log₂ n passes, and merging is linear: one comparison per value taken. Comparing every pair would be O(n²)."
+    },
+    {
+      "type": "output",
+      "code": "void main() {\n    int[] left = {1, 4, 9};\n    int[] right = {2, 3, 10, 12};\n    int[] merged = new int[left.length + right.length];\n    int i = 0, j = 0, k = 0, comparisons = 0;\n    while (i < left.length && j < right.length) {\n        comparisons++;\n        if (left[i] <= right[j]) {\n            merged[k++] = left[i++];\n        } else {\n            merged[k++] = right[j++];\n        }\n    }\n    while (i < left.length) {\n        merged[k++] = left[i++];\n    }\n    while (j < right.length) {\n        merged[k++] = right[j++];\n    }\n    IO.println(Arrays.toString(merged) + \" \" + comparisons);\n}",
+      "answer": "[1, 2, 3, 4, 9, 10, 12] 5",
+      "explanation": "Each comparison takes the smaller front value: 1, 2, 3, 4 and 9, which is 5 comparisons. Then the left side is empty, and 10 and 12 are copied without comparing."
+    },
+    {
+      "type": "choice",
+      "prompt": "A quicksort always uses the first element as its pivot. Which input makes it do about n²/2 comparisons?",
+      "options": [
+        "An array that is already sorted",
+        "An array in random order",
+        "An array with no repeated values",
+        "A very short array"
+      ],
+      "answer": 0,
+      "explanation": "On a sorted array the first element is the smallest, so every partition leaves all the other values on one side: n − 1, then n − 2, … comparisons. Random pivots, or the middle element, avoid this in practice."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "Counting sort decides the order of the values by comparing them in pairs.",
+      "answer": false,
+      "explanation": "It never compares two values: it counts how often each possible value appears, then writes the values out in order. That is why it beats O(n log n) when the range is small."
+    },
+    {
+      "type": "choice",
+      "prompt": "Where does counting sort fit best?",
+      "options": [
+        "The ages of 10 million people, from 0 to 120",
+        "1,000 phone numbers with 11 digits",
+        "A list of students' names",
+        "Prices in cents up to 1,000,000,000"
+      ],
+      "answer": 0,
+      "explanation": "Counting sort needs an array with one counter per possible value: 121 counters for ages, but billions for phone numbers or prices, and names aren't small numbers at all."
+    },
+    {
+      "type": "choice",
+      "prompt": "A class list is sorted by name. Then it is sorted again by grade, with a **stable** sort. How are the students with the same grade ordered?",
+      "options": [
+        "By name, because a stable sort keeps the order equal elements already had",
+        "In random order",
+        "In reverse name order",
+        "In the order they were first typed in"
+      ],
+      "answer": 0,
+      "explanation": "Stable means elements that compare as equal (the same grade) keep their previous order, which was by name. Sorting by the second key first and the main key last relies on this."
+    },
+    {
+      "type": "output",
+      "code": "List<String> words = new ArrayList<>(List.of(\"pear\", \"fig\", \"apple\", \"kiwi\", \"date\"));\nwords.sort(Comparator.comparingInt(String::length).thenComparing(Comparator.naturalOrder()));\nIO.println(words);",
+      "answer": "[fig, date, kiwi, pear, apple]",
+      "explanation": "The comparator sorts by length first, and words of the same length alphabetically: fig (3), then date, kiwi and pear (4), then apple (5)."
+    },
+    {
+      "type": "number",
+      "prompt": "An **inversion** is a pair of positions whose values are in the wrong order. How many inversions does `3 1 4 2` have?",
+      "answer": "3",
+      "explanation": "The pairs out of order are (3, 1), (3, 2) and (4, 2). A sorted array has 0, and a reversed one has the most, n(n − 1)/2."
+    },
+    {
+      "type": "choice",
+      "prompt": "`(a, b) -> a - b` looks like a correct comparator for `Integer`s. When does it give the wrong order?",
+      "options": [
+        "When a − b overflows, such as a = 2,000,000,000 and b = −1,000,000,000",
+        "When a and b are equal",
+        "When both values are negative",
+        "Never: it is always right"
+      ],
+      "answer": 0,
+      "explanation": "2,000,000,000 − (−1,000,000,000) = 3,000,000,000 doesn't fit in an int, so it wraps to a negative number and the comparator says a < b. Integer.compare(a, b) never overflows."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de ordenação",
+      "description": "Merge sort, quicksort e ordenação por contagem, comparators, estabilidade e inversões.",
+      "questions": [
+        {
+          "prompt": "O merge sort de baixo para cima começa com sequências de 1 valor e dobra o tamanho delas a cada passada. Quantas passadas ele faz em **1.024** valores?",
+          "explanation": "Sequências de 1, 2, 4, …, 512 viram sequências com o dobro do tamanho: 10 passadas, já que 2¹⁰ = 1.024. Cada passada move os 1.024 valores, então o total é uns n log₂ n."
+        },
+        {
+          "prompt": "Por que o merge sort leva O(n log n) passos?",
+          "options": [
+            "Ele faz umas log₂ n passadas, e cada passada move cada valor uma vez",
+            "Ele compara cada par de valores uma vez",
+            "Ele divide o array em n partes que levam log n passos cada",
+            "Intercalar duas listas ordenadas leva log n passos"
+          ],
+          "explanation": "O tamanho das sequências dobra a cada passada, então são umas log₂ n passadas, e a intercalação é linear: uma comparação por valor retirado. Comparar todos os pares seria O(n²)."
+        },
+        {
+          "explanation": "Cada comparação pega o menor valor da frente: 1, 2, 3, 4 e 9, ou seja, 5 comparações. Aí o lado esquerdo acaba, e 10 e 12 são copiados sem comparar."
+        },
+        {
+          "prompt": "Um quicksort sempre usa o primeiro elemento como pivô. Que entrada o faz fazer umas n²/2 comparações?",
+          "options": [
+            "Um array que já está ordenado",
+            "Um array em ordem aleatória",
+            "Um array sem valores repetidos",
+            "Um array bem curto"
+          ],
+          "explanation": "Num array ordenado o primeiro elemento é o menor, então toda partição deixa todos os outros valores de um lado só: n − 1, depois n − 2, … comparações. Pivôs aleatórios, ou o elemento do meio, evitam isso na prática."
+        },
+        {
+          "prompt": "A ordenação por contagem decide a ordem dos valores comparando-os aos pares.",
+          "explanation": "Ela nunca compara dois valores: conta quantas vezes cada valor possível aparece e depois escreve os valores em ordem. Por isso ela vence o O(n log n) quando o intervalo é pequeno."
+        },
+        {
+          "prompt": "Onde a ordenação por contagem se encaixa melhor?",
+          "options": [
+            "As idades de 10 milhões de pessoas, de 0 a 120",
+            "1.000 telefones com 11 dígitos",
+            "Uma lista de nomes de alunos",
+            "Preços em centavos até 1.000.000.000"
+          ],
+          "explanation": "A ordenação por contagem precisa de um array com um contador por valor possível: 121 contadores para idades, mas bilhões para telefones ou preços, e nomes nem são números pequenos."
+        },
+        {
+          "prompt": "Uma lista de turma está ordenada por nome. Depois ela é ordenada de novo por nota, com uma ordenação **estável**. Como ficam os alunos com a mesma nota?",
+          "options": [
+            "Por nome, porque uma ordenação estável mantém a ordem que os iguais já tinham",
+            "Em ordem aleatória",
+            "Em ordem inversa de nome",
+            "Na ordem em que foram digitados"
+          ],
+          "explanation": "Estável quer dizer que elementos considerados iguais (a mesma nota) mantêm a ordem anterior, que era por nome. Ordenar primeiro pela segunda chave e por último pela principal depende disso."
+        },
+        {
+          "explanation": "O comparator ordena primeiro pelo tamanho, e palavras do mesmo tamanho em ordem alfabética: fig (3), depois date, kiwi e pear (4), depois apple (5)."
+        },
+        {
+          "prompt": "Uma **inversão** é um par de posições cujos valores estão na ordem errada. Quantas inversões `3 1 4 2` tem?",
+          "explanation": "Os pares fora de ordem são (3, 1), (3, 2) e (4, 2). Um array ordenado tem 0, e um invertido tem o máximo, n(n − 1)/2."
+        },
+        {
+          "prompt": "`(a, b) -> a - b` parece um comparator certo para `Integer`s. Quando ele dá a ordem errada?",
+          "options": [
+            "Quando a − b estoura, como a = 2.000.000.000 e b = −1.000.000.000",
+            "Quando a e b são iguais",
+            "Quando os dois valores são negativos",
+            "Nunca: ele está sempre certo"
+          ],
+          "explanation": "2.000.000.000 − (−1.000.000.000) = 3.000.000.000 não cabe num int, então vira um número negativo e o comparator diz que a < b. Integer.compare(a, b) nunca estoura."
+        }
+      ]
+    }
+  }
+}
