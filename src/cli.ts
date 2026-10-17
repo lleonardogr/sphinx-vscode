@@ -202,7 +202,7 @@ function describeOutcome(outcome: RunOutcome): string[] {
         if (r.passed) {
           lines.push(`✓ ${name} (${r.timeMs} ms)`);
         } else if (r.timedOut) {
-          lines.push(`✗ ${name}: ${tr('took too long', 'demorou demais')}`);
+          lines.push(`✗ ${name}: ${r.generated ? tr('took too long on a big input (is there a faster approach?)', 'demorou demais numa entrada grande (há uma abordagem mais rápida?)') : tr('took too long', 'demorou demais')}`);
         } else if (r.crash || r.exitCode !== 0) {
           lines.push(`✗ ${name}: ${r.crash ?? tr(`your program crashed (exit code ${r.exitCode})`, `o seu programa travou (código de saída ${r.exitCode})`)}`);
         } else if (r.hidden) {

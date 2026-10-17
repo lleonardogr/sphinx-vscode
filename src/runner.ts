@@ -6,6 +6,7 @@ import * as os from 'os';
 import * as path from 'path';
 import { exec } from './exec';
 import { compileC, explainCrash, findCCompiler, runEnvironment } from './cRunner';
+import { GeneratedInput, inputPreview, testInput } from './generate';
 
 export { exec };
 
@@ -13,6 +14,8 @@ export interface TestCase {
   input: string;
   output: string;
   hidden?: boolean;
+  /** A big input built from a recipe instead of "input" (see generate.ts); such tests are always hidden. */
+  generate?: GeneratedInput;
 }
 
 export interface Rule {
@@ -39,6 +42,8 @@ export interface TestResult {
   timeMs: number;
   /** For C: how the program crashed, in plain words (from the sanitizer report, exit code or signal). */
   crash?: string;
+  /** The test's input was generated (big): a timeout usually means a too-slow approach, not an endless loop. */
+  generated?: boolean;
 }
 
 export type RunOutcome =
@@ -240,7 +245,7 @@ export async function runChallengeCode(req: RunRequest): Promise<RunOutcome> {
     for (const [index, test] of req.tests.entries()) {
       const r = await exec(command, args, {
         cwd: compiled.outDir,
-        input: test.input,
+        input: testInput(test),
         timeoutMs: req.timeLimitMs ?? 5000,
       });
       if (r.spawnError) {
@@ -250,7 +255,8 @@ export async function runChallengeCode(req: RunRequest): Promise<RunOutcome> {
         index,
         hidden: !!test.hidden,
         passed: !r.timedOut && r.code === 0 && normalizeOutput(r.stdout) === normalizeOutput(test.output),
-        input: test.input,
+        input: inputPreview(test),
+        ...(test.generate ? { generated: true } : {}),
         expected: test.output,
         actual: r.stdout,
         stderr: r.stderr,
@@ -275,12 +281,13 @@ async function runC(req: RunRequest): Promise<RunOutcome> {
     const env = runEnvironment(compiler!);
     const results: TestResult[] = [];
     for (const [index, test] of req.tests.entries()) {
-      const r = await exec(compiled.exe, [], { cwd: compiled.outDir, input: test.input, timeoutMs: req.timeLimitMs ?? 5000, env });
+      const r = await exec(compiled.exe, [], { cwd: compiled.outDir, input: testInput(test), timeoutMs: req.timeLimitMs ?? 5000, env });
       results.push({
         index,
         hidden: !!test.hidden,
         passed: !r.timedOut && r.code === 0 && normalizeOutput(r.stdout) === normalizeOutput(test.output),
-        input: test.input,
+        input: inputPreview(test),
+        ...(test.generate ? { generated: true } : {}),
         expected: test.output,
         actual: r.stdout,
         stderr: r.stderr,

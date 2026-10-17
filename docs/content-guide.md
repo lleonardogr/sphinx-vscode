@@ -190,6 +190,7 @@ Follow the structure in [Creating your own challenges](creating-challenges.md): 
 - Hidden tests target **edge cases and misconceptions**: zero, one, the largest and smallest values, boundaries (127/128, 255/256), invalid input, and the mistake a student is most likely to make.
 - **Input is ASCII only.** The runner doesn't fix the input encoding, so accented letters or emoji in stdin can arrive differently on Windows. Represent them another way (`U+00E9`).
 - **No empty expected outputs.** Every test prints something.
+- **Efficiency tests** use a [generated input](creating-challenges.md#big-inputs-generated-tests) of up to 200,000 values: big enough that a quadratic loop takes many times the limit, while the expected approach finishes in well under a second, Java's start-up included.
 - Numbers print in English format; the runner fixes the locale, so `%.2f` gives `1.50` everywhere.
 
 ### Rules

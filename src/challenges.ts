@@ -117,10 +117,15 @@ function parseBonus(raw: unknown, translations: ChallengeTranslation['bonus']): 
         hint: text(t.hint) ?? text(b.hint),
         mustContain: translateRules(b.mustContain, t.mustContain),
         mustNotContain: translateRules(b.mustNotContain, t.mustNotContain),
-        tests: Array.isArray(b.tests) ? b.tests : [],
+        tests: Array.isArray(b.tests) ? b.tests.map(withGenerated) : [],
         timeLimitMs: typeof b.timeLimitMs === 'number' ? b.timeLimitMs : undefined,
       };
     });
+}
+
+/** A test with a "generate" recipe is always hidden: its input can be megabytes. */
+function withGenerated(t: TestCase): TestCase {
+  return t && typeof t === 'object' && t.generate ? { ...t, input: typeof t.input === 'string' ? t.input : '', hidden: true } : t;
 }
 
 function translateRules(rules: Rule[] | undefined, messages: string[] | undefined): Rule[] {
@@ -155,7 +160,7 @@ export function loadChallenge(dir: string, lang: Lang = language()): Challenge {
     hints: Array.isArray(t.hints) && t.hints.length ? t.hints : meta.hints ?? [],
     mustContain: translateRules(meta.mustContain, t.mustContain),
     mustNotContain: translateRules(meta.mustNotContain, t.mustNotContain),
-    tests: meta.tests,
+    tests: meta.tests.map(withGenerated),
     skills: Array.isArray(meta.skills) ? meta.skills.filter((s: unknown) => typeof s === 'string') : [],
     unit: typeof meta.unit === 'string' && meta.unit.trim() ? meta.unit.trim() : undefined,
     timeLimitMs: meta.timeLimitMs ?? 5000,

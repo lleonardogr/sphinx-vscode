@@ -52,6 +52,7 @@ Use the helpers in [scripts/content](../../../scripts/content/README.md), from a
 - **Challenges:**
   - **Descriptions:** start with the hook, then the task, a worked example, **Input**, **Output** and **Things to know** (2–4 bullets).
   - **Tests:** at least 2 visible and 5 hidden. Hidden tests target edges and misconceptions.
+  - **Efficiency tests:** when the unit's idea is a faster approach, add hidden tests with `big(seed, ...)` (generated inputs of up to 200,000 values) and a short expected output. Then run a slow solution with `node out/cli.js test <folder> <file>` to confirm it fails only those tests.
   - **Hints:** 3, from a nudge to almost the answer.
   - **Solutions:** two reference solutions, modern and classic, written **differently**.
   - **Rules:** forbid the library shortcut that would do the exercise. Rules must accept both solutions; don't require a loop when recursion is just as valid.
