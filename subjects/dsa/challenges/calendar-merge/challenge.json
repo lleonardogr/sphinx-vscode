@@ -1,0 +1,133 @@
+{
+  "title": "Calendar Merge",
+  "topic": "Sorting",
+  "requires": [
+    "Arrays",
+    "Collections"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Sort the meetings by start time. Then overlapping meetings sit next to each other, and one pass can join them.",
+    "Keep the current block's start and end. A meeting that starts after the block's end begins a new block; otherwise it may stretch the block's end.",
+    "When a block closes, add its length to the busy time and compare the gap to the next block with the longest one so far. Don't forget the last block."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Agenda unificada",
+      "hints": [
+        "Ordene as reuniões pelo início. Aí reuniões que se sobrepõem ficam vizinhas, e uma passada consegue juntá-las.",
+        "Guarde o início e o fim do bloco atual. Uma reunião que começa depois do fim do bloco abre um bloco novo; senão ela pode esticar o fim do bloco.",
+        "Quando um bloco fecha, some o tamanho dele ao tempo ocupado e compare o intervalo até o próximo bloco com o maior até agora. Não esqueça o último bloco."
+      ],
+      "bonus": [
+        {
+          "title": "Dois arrays ordenados",
+          "description": "Resolva sem comparator: coloque os inícios e os fins em dois arrays de int e ordene cada um separadamente.",
+          "hint": "Juntar o i-ésimo menor início com o i-ésimo menor fim muda as reuniões, mas não os blocos ocupados: um bloco termina em ends[i] exatamente quando starts[i + 1] > ends[i].",
+          "mustNotContain": [
+            "Ordene dois arrays de int, os inícios e os fins, sem comparator, lambda nem record."
+          ]
+        }
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "5\n8 2\n1 2\n15 3\n2 4\n10 2\n",
+      "output": "blocks: 3\nbusy: 12\nlongest free gap: 3\n"
+    },
+    {
+      "input": "3\n0 10\n2 1\n4 1\n",
+      "output": "blocks: 1\nbusy: 10\nlongest free gap: 0\n"
+    },
+    {
+      "input": "1\n5 4\n",
+      "output": "blocks: 1\nbusy: 4\nlongest free gap: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n1 1\n3 1\n",
+      "output": "blocks: 2\nbusy: 2\nlongest free gap: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n1 4\n5 2\n7 2\n9 1\n",
+      "output": "blocks: 1\nbusy: 9\nlongest free gap: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n10 10\n10 5\n0 100000\n500 100\n",
+      "output": "blocks: 1\nbusy: 100000\nlongest free gap: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n100 100\n0 50\n300 100\n50 10\n250 10\n",
+      "output": "blocks: 4\nbusy: 270\nlongest free gap: 50\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n1000000000 100000\n999950000 60000\n0 1\n",
+      "output": "blocks: 2\nbusy: 150001\nlongest free gap: 999949999\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 71,
+        "lines": [
+          "200000",
+          {
+            "ints": 2,
+            "min": [
+              0,
+              1
+            ],
+            "max": [
+              1000000000,
+              10000
+            ],
+            "rows": 200000
+          }
+        ]
+      },
+      "output": "blocks: 73610\nbusy: 631458740\nlongest free gap: 56218\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 72,
+        "lines": [
+          "200000",
+          {
+            "ints": 2,
+            "min": [
+              0,
+              1
+            ],
+            "max": [
+              100000000,
+              1000
+            ],
+            "rows": 200000
+          }
+        ]
+      },
+      "output": "blocks: 73277\nbusy: 63353116\nlongest free gap: 6493\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "two-arrays",
+      "title": "Two Sorted Arrays",
+      "description": "Solve it without a comparator: put the starts and the ends in two int arrays and sort each one on its own.",
+      "hint": "Pairing the i-th smallest start with the i-th smallest end changes the meetings, but not the busy blocks: a block ends at ends[i] exactly when starts[i + 1] > ends[i].",
+      "mustNotContain": [
+        {
+          "pattern": "\\bComparator\\b|\\bcompare\\s*\\(|->|::|\\brecord\\b|\\bComparable\\b",
+          "message": "Sort two int arrays, the starts and the ends, without a comparator, lambda or record."
+        }
+      ]
+    }
+  ]
+}

@@ -85,11 +85,12 @@ Two closed **exams**, each with a quiz and three private coding questions: **C E
 
 ## Data Structures & Algorithms
 
-The fourth subject, for students who know Java's arrays, collections and methods: it turns Big O into practice. Each unit has a reading guide, a quiz and four challenges, and every challenge has hidden tests with up to 200,000 values, generated when the test runs, so a loop inside a loop runs out of time while a better approach finishes in a fraction of a second. Unit 1 is ready; sorting, stacks and queues, hashing, trees, heaps, graphs, and greedy and dynamic programming come next.
+The fourth subject, for students who know Java's arrays, collections and methods: it turns Big O into practice. Each unit has a reading guide, a quiz and four challenges, and every challenge has hidden tests with up to 200,000 values, generated when the test runs, so a loop inside a loop runs out of time while a better approach finishes in a fraction of a second. Units 1 and 2 are ready; stacks and queues, hashing, trees, heaps, graphs, and greedy and dynamic programming come next.
 
 | Unit | Lessons | Challenges (plus the unit's quiz) |
 |------|---------|-----------------------------------|
 | 1 · Complexity & Searching | Complexity and Searching (reading guide: USACO Guide) | Repeated Tickets (a hash set, or sorting) · Log Window (binary search for boundaries) · Truck Capacity (binary search on the answer) · Rate Limiter (sorting and two pointers) |
+| 2 · Sorting | Sorting (reading guide: VisuAlgo, dev.java) | Exam Scores (counting sort) · Merge Trace (bottom-up merge sort, step by step) · Calendar Merge (sorting with a comparator, then one sweep) · Ranking Distance (counting inversions with merge sort) |
 
 ## Screenshots
 
@@ -282,11 +283,11 @@ Done:
 - [x] Backing up and restoring a student's progress
 - [x] A `sphinx` command line: validate, test, pack and verify, in VS Code's terminal or any terminal
 - [x] C challenges with memory checks, a portable compiler for Windows, and the C Programming subject: 9 units with quick guides, quizzes and challenges, plus 2 tests and 2 exams
-- [x] Big test inputs generated from a recipe, and unit 1 of Data Structures & Algorithms
+- [x] Big test inputs generated from a recipe, and units 1 and 2 of Data Structures & Algorithms
 
 Content:
 
-- [ ] Data Structures & Algorithms, units 2–8: sorting, stacks and queues, hashing, trees, heaps, graphs, and greedy and dynamic programming
+- [ ] Data Structures & Algorithms, units 3–8: stacks and queues, hashing, trees, heaps, graphs, and greedy and dynamic programming
 - [ ] New subjects: SQL and graph theory
 
 For teachers:

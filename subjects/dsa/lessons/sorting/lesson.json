@@ -1,0 +1,53 @@
+{
+  "title": "Sorting",
+  "topic": "Sorting",
+  "order": 1,
+  "requires": [
+    "Complexity"
+  ],
+  "objectives": [
+    "Trace merge sort's merges and explain why it takes O(n log n)",
+    "Write the merge step, and reuse it to count inversions",
+    "Sort by a key with a comparator, then sweep the sorted data in one pass",
+    "Use counting sort when the values fall in a small range"
+  ],
+  "readings": [
+    {
+      "title": "Sorting",
+      "source": "VisuAlgo (National University of Singapore)",
+      "url": "https://visualgo.net/en/sorting",
+      "type": "interactive",
+      "minutes": 20,
+      "lang": "en",
+      "lookFor": "Pick Merge Sort, Quick Sort and Counting Sort from the top menu and run each on your own short array. Watch the merge take the smaller front value, the partition move values around the pivot, and counting sort never compare two values."
+    },
+    {
+      "title": "Writing and Combining Comparators",
+      "source": "dev.java (Oracle)",
+      "url": "https://dev.java/learn/language/fp/lambdas/writing-comparators/",
+      "type": "article",
+      "minutes": 8,
+      "lang": "en",
+      "lookFor": "Comparator.comparing and comparingInt build a comparator from a key, thenComparing breaks ties with a second key, and reversed() flips the order. Note why (i1 - i2) is a bad comparator."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Ordenação",
+      "objectives": [
+        "Acompanhar as intercalações do merge sort e explicar por que ele leva O(n log n)",
+        "Escrever a etapa de intercalação e reaproveitá-la para contar inversões",
+        "Ordenar por uma chave com um comparator e depois percorrer os dados ordenados numa passada",
+        "Usar a ordenação por contagem quando os valores ficam num intervalo pequeno"
+      ],
+      "readings": [
+        {
+          "lookFor": "Escolha Merge Sort, Quick Sort e Counting Sort no menu de cima e rode cada um num array curto seu. Repare na intercalação pegando o menor valor da frente, na partição movendo valores em volta do pivô e na ordenação por contagem nunca comparando dois valores."
+        },
+        {
+          "lookFor": "Comparator.comparing e comparingInt montam um comparator a partir de uma chave, thenComparing desempata com uma segunda chave e reversed() inverte a ordem. Repare por que (i1 - i2) é um comparator ruim."
+        }
+      ]
+    }
+  }
+}

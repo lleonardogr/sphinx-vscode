@@ -1,0 +1,93 @@
+{
+  "title": "Ranking Distance",
+  "topic": "Sorting",
+  "requires": [
+    "Arrays",
+    "Recursion"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "A pair the two rankings order differently is an inversion in Bruno's list: a bigger number before a smaller one. Comparing every pair is O(n²), too slow for 200,000 movies.",
+    "Merge sort Bruno's list. While merging two sorted halves, whenever the right half's front value is taken, it jumps ahead of every value still waiting in the left half: that many inversions.",
+    "Add mid − i to the count each time you take from the right half, where i is the left half's front. The count can reach 2 × 10¹⁰: use a long."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Distância entre rankings",
+      "hints": [
+        "Um par que os dois rankings ordenam diferente é uma inversão na lista do Bruno: um número maior antes de um menor. Comparar todos os pares é O(n²), lento demais para 200.000 filmes.",
+        "Faça merge sort na lista do Bruno. Ao intercalar duas metades ordenadas, sempre que o valor da frente da metade direita é retirado, ele passa na frente de todos os valores que ainda esperam na metade esquerda: são essas as inversões.",
+        "Some mid − i à contagem cada vez que retirar da metade direita, onde i é a frente da metade esquerda. A contagem pode chegar a 2 × 10¹⁰: use long."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "5\n2 1 5 3 4\n",
+      "output": "different pairs: 3\nagreement: 70.0%\n"
+    },
+    {
+      "input": "4\n1 2 3 4\n",
+      "output": "different pairs: 0\nagreement: 100.0%\n"
+    },
+    {
+      "input": "1\n1\n",
+      "output": "different pairs: 0\nagreement: 100.0%\n",
+      "hidden": true
+    },
+    {
+      "input": "2\n2 1\n",
+      "output": "different pairs: 1\nagreement: 0.0%\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n6 5 4 3 2 1\n",
+      "output": "different pairs: 15\nagreement: 0.0%\n",
+      "hidden": true
+    },
+    {
+      "input": "8\n1 3 5 7 2 4 6 8\n",
+      "output": "different pairs: 6\nagreement: 78.6%\n",
+      "hidden": true
+    },
+    {
+      "input": "3\n3 1 2\n",
+      "output": "different pairs: 2\nagreement: 33.3%\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 81,
+        "lines": [
+          "200000",
+          {
+            "ints": 200000,
+            "min": 1,
+            "max": 200000,
+            "distinct": true
+          }
+        ]
+      },
+      "output": "different pairs: 9996407667\nagreement: 50.0%\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 82,
+        "lines": [
+          "200000",
+          {
+            "ints": 200000,
+            "min": 1,
+            "max": 200000,
+            "sorted": true,
+            "distinct": true
+          }
+        ]
+      },
+      "output": "different pairs: 0\nagreement: 100.0%\n",
+      "hidden": true
+    }
+  ]
+}
