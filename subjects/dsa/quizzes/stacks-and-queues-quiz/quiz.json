@@ -1,0 +1,176 @@
+{
+  "title": "Stacks & Queues Quiz",
+  "topic": "StacksQueues",
+  "requires": [
+    "Collections"
+  ],
+  "description": "Stacks and queues with ArrayDeque, turn-taking, monotonic stacks and deques, and evaluating expressions.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "Deque<Integer> stack = new ArrayDeque<>();\nstack.push(1);\nstack.push(2);\nstack.push(3);\nstack.pop();\nstack.push(4);\nIO.println(stack);",
+      "answer": "[4, 2, 1]",
+      "explanation": "push adds at the front and pop removes from the front: after 1, 2, 3 the front is 3, pop removes it, and 4 goes on top. Printing goes from the front: [4, 2, 1]."
+    },
+    {
+      "type": "output",
+      "code": "Deque<String> queue = new ArrayDeque<>();\nqueue.offer(\"A\");\nqueue.offer(\"B\");\nqueue.offer(\"C\");\nString first = queue.poll();\nqueue.offer(first);\nIO.println(queue.peek() + \" \" + queue);",
+      "answer": "B [B, C, A]",
+      "explanation": "offer adds at the back and poll removes from the front. A leaves first and goes back in at the end, so B is now at the front: B [B, C, A]. Round robin works just like this."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which pairs each task with the right structure?",
+      "options": [
+        "Undo history: a stack. Print jobs: a queue.",
+        "Undo history: a queue. Print jobs: a stack.",
+        "Both need a queue.",
+        "Both need a stack."
+      ],
+      "answer": 0,
+      "explanation": "Undo must reverse the most recent change first (last in, first out). Print jobs are served in the order they were sent (first in, first out)."
+    },
+    {
+      "type": "number",
+      "prompt": "Round robin with a time slice of 2: jobs A (needs 3) and B (needs 1) arrive at time 0, in that order. At what time does A finish?",
+      "answer": "4",
+      "explanation": "A runs from 0 to 2 and goes back to the queue with 1 left. B runs from 2 to 3 and finishes. A runs from 3 to 4 and finishes."
+    },
+    {
+      "type": "choice",
+      "prompt": "The \"next warmer day\" solution with a monotonic stack has a while loop inside a for loop. Why is it still O(n)?",
+      "options": [
+        "Each day is pushed once and popped at most once, so the inner loop runs at most n times in total",
+        "The inner loop always stops after one pop",
+        "The stack never holds more than log n days",
+        "ArrayDeque operations are O(1), and that makes any loop O(n)"
+      ],
+      "answer": 0,
+      "explanation": "Count the pops over the whole run instead of per day: a day can only be popped once after being pushed once, so all the while loops together do at most n pops."
+    },
+    {
+      "type": "choice",
+      "prompt": "A sliding-window maximum keeps a deque of loads, front to back: `50, 30, 20`. Then `40` arrives. What does the deque hold after adding it?",
+      "options": [
+        "50, 40",
+        "50, 30, 20, 40",
+        "40",
+        "50, 30, 40"
+      ],
+      "answer": 0,
+      "explanation": "30 and 20 are older and smaller than 40, so they can never be the maximum again: they leave from the back. 50 is bigger and stays at the front."
+    },
+    {
+      "type": "number",
+      "prompt": "Evaluate the postfix expression `5 1 2 + 4 * + 3 -` with a stack: numbers are pushed, and each operator pops two numbers and pushes the result.",
+      "answer": "14",
+      "explanation": "1 + 2 = 3, then 3 × 4 = 12, then 5 + 12 = 17, then 17 − 3 = 14. Postfix needs no parentheses or precedence: the order of the operators already says everything."
+    },
+    {
+      "type": "choice",
+      "prompt": "Evaluating `8 - 3 - 2` with two stacks: the operator stack has `-` on top when the second `-` arrives. What happens?",
+      "options": [
+        "The first − is applied (8 − 3 = 5) before pushing the second: same precedence goes left to right",
+        "The second − is pushed on top of the first",
+        "3 − 2 is computed first",
+        "It is an error: two operators in a row"
+      ],
+      "answer": 0,
+      "explanation": "Before pushing an operator, apply the ones on the stack with higher or equal precedence. Otherwise you would compute 8 − (3 − 2) = 7 instead of 3."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "`pop()` on an empty `ArrayDeque` returns `null`.",
+      "answer": false,
+      "explanation": "pop() throws a NoSuchElementException. poll() and peek() are the ones that return null on an empty deque."
+    },
+    {
+      "type": "choice",
+      "prompt": "Checking brackets with a stack: after reading `( [ {` the next character is `]`. What does the check say?",
+      "options": [
+        "Not balanced: the top of the stack is {, which ] can't close",
+        "Fine so far: there is a [ in the stack",
+        "Pop the [ from under the { and go on",
+        "Push the ] and decide at the end"
+      ],
+      "answer": 0,
+      "explanation": "A closing bracket must match the most recent opening one, which is the top of the stack: { needs }, so ] here means the brackets are crossed."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de pilhas e filas",
+      "description": "Pilhas e filas com ArrayDeque, revezamento, pilhas e deques monotônicos, e cálculo de expressões.",
+      "questions": [
+        {
+          "explanation": "push coloca na frente e pop tira da frente: depois de 1, 2, 3 a frente é o 3, pop o remove, e o 4 vai para o topo. A impressão vai da frente: [4, 2, 1]."
+        },
+        {
+          "explanation": "offer coloca no fundo e poll tira da frente. O A sai primeiro e volta no fim, então o B fica na frente: B [B, C, A]. O round robin funciona exatamente assim."
+        },
+        {
+          "prompt": "Qual alternativa liga cada tarefa à estrutura certa?",
+          "options": [
+            "Histórico de desfazer: uma pilha. Trabalhos de impressão: uma fila.",
+            "Histórico de desfazer: uma fila. Trabalhos de impressão: uma pilha.",
+            "Os dois precisam de uma fila.",
+            "Os dois precisam de uma pilha."
+          ],
+          "explanation": "Desfazer precisa reverter primeiro a mudança mais recente (último a entrar, primeiro a sair). Trabalhos de impressão são atendidos na ordem em que foram enviados (primeiro a entrar, primeiro a sair)."
+        },
+        {
+          "prompt": "Round robin com fatia de tempo 2: os trabalhos A (precisa de 3) e B (precisa de 1) chegam no tempo 0, nessa ordem. Em que tempo o A termina?",
+          "explanation": "O A roda de 0 a 2 e volta para a fila faltando 1. O B roda de 2 a 3 e termina. O A roda de 3 a 4 e termina."
+        },
+        {
+          "prompt": "A solução do \"próximo dia mais quente\" com pilha monotônica tem um while dentro de um for. Por que ela continua O(n)?",
+          "options": [
+            "Cada dia entra na pilha uma vez e sai no máximo uma vez, então o laço de dentro roda no máximo n vezes no total",
+            "O laço de dentro sempre para depois de um pop",
+            "A pilha nunca guarda mais que log n dias",
+            "As operações do ArrayDeque são O(1), e isso deixa qualquer laço O(n)"
+          ],
+          "explanation": "Conte os pops na execução inteira em vez de por dia: um dia só pode sair uma vez depois de entrar uma vez, então todos os whiles juntos fazem no máximo n pops."
+        },
+        {
+          "prompt": "Um máximo de janela deslizante guarda um deque de cargas, da frente para o fundo: `50, 30, 20`. Então chega `40`. O que o deque guarda depois de adicioná-lo?",
+          "options": [
+            "50, 40",
+            "50, 30, 20, 40",
+            "40",
+            "50, 30, 40"
+          ],
+          "explanation": "30 e 20 são mais antigos e menores que 40, então nunca mais podem ser o máximo: saem pelo fundo. O 50 é maior e fica na frente."
+        },
+        {
+          "prompt": "Calcule a expressão pós-fixa `5 1 2 + 4 * + 3 -` com uma pilha: números são empilhados, e cada operador desempilha dois números e empilha o resultado.",
+          "explanation": "1 + 2 = 3, depois 3 × 4 = 12, depois 5 + 12 = 17, depois 17 − 3 = 14. A forma pós-fixa não precisa de parênteses nem de precedência: a ordem dos operadores já diz tudo."
+        },
+        {
+          "prompt": "Calculando `8 - 3 - 2` com duas pilhas: a pilha de operadores tem `-` no topo quando chega o segundo `-`. O que acontece?",
+          "options": [
+            "O primeiro − é aplicado (8 − 3 = 5) antes de empilhar o segundo: mesma precedência vai da esquerda para a direita",
+            "O segundo − é empilhado em cima do primeiro",
+            "3 − 2 é calculado primeiro",
+            "É um erro: dois operadores seguidos"
+          ],
+          "explanation": "Antes de empilhar um operador, aplique os da pilha com precedência maior ou igual. Senão você calcularia 8 − (3 − 2) = 7 em vez de 3."
+        },
+        {
+          "prompt": "`pop()` num `ArrayDeque` vazio devolve `null`.",
+          "explanation": "pop() lança uma NoSuchElementException. poll() e peek() é que devolvem null num deque vazio."
+        },
+        {
+          "prompt": "Conferindo parênteses com uma pilha: depois de ler `( [ {` o próximo caractere é `]`. O que a conferência diz?",
+          "options": [
+            "Desbalanceado: o topo da pilha é {, que ] não fecha",
+            "Tudo certo até aqui: há um [ na pilha",
+            "Tire o [ de baixo do { e continue",
+            "Empilhe o ] e decida no fim"
+          ],
+          "explanation": "Um fechamento precisa combinar com a abertura mais recente, que é o topo da pilha: { precisa de }, então ] aqui quer dizer que os pares se cruzaram."
+        }
+      ]
+    }
+  }
+}

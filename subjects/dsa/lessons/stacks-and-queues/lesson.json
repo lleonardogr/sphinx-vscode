@@ -1,0 +1,67 @@
+{
+  "title": "Stacks and Queues",
+  "topic": "StacksQueues",
+  "order": 1,
+  "requires": [
+    "Collections"
+  ],
+  "objectives": [
+    "Choose between a stack and a queue for a task, and use ArrayDeque as either",
+    "Simulate a process that takes turns with a queue",
+    "Find each element's next bigger value with a monotonic stack, in O(n)",
+    "Keep a sliding window's maximum with a monotonic deque",
+    "Evaluate an expression with operator precedence using two stacks"
+  ],
+  "readings": [
+    {
+      "title": "Stacks and Queues",
+      "source": "dev.java (Oracle)",
+      "url": "https://dev.java/learn/api/collections-and-streams/collections-framework/stacks-queues/",
+      "type": "article",
+      "minutes": 6,
+      "lang": "en",
+      "lookFor": "The method tables: which methods throw an exception on an empty (or full) deque and which return null or false, and why ArrayDeque replaces the old Stack class."
+    },
+    {
+      "title": "Stacks",
+      "source": "USACO Guide",
+      "url": "https://usaco.guide/gold/stacks",
+      "type": "article",
+      "minutes": 10,
+      "lang": "en",
+      "lookFor": "\"Nearest Smaller Element\": the stack keeps only values that can still be an answer, which makes it monotonic. Warmer Days is the same idea with \"bigger\" and to the right. Pick Java in the site's settings to see Java code."
+    },
+    {
+      "title": "Sliding Window",
+      "source": "USACO Guide",
+      "url": "https://usaco.guide/gold/sliding-window",
+      "type": "article",
+      "minutes": 15,
+      "lang": "en",
+      "lookFor": "\"Sliding Window Maximum in O(N)\", Method 1 (Deque): values leave the back when a bigger one arrives and the front when they leave the window. Skip \"With Two Pointers\" (unit 1 covered it) and the problem lists."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Pilhas e filas",
+      "objectives": [
+        "Escolher entre uma pilha e uma fila para uma tarefa, e usar ArrayDeque como qualquer uma das duas",
+        "Simular um processo que funciona em turnos com uma fila",
+        "Achar o próximo valor maior de cada elemento com uma pilha monotônica, em O(n)",
+        "Manter o máximo de uma janela deslizante com um deque monotônico",
+        "Calcular uma expressão com precedência de operadores usando duas pilhas"
+      ],
+      "readings": [
+        {
+          "lookFor": "As tabelas de métodos: quais lançam uma exceção num deque vazio (ou cheio) e quais devolvem null ou false, e por que o ArrayDeque substitui a velha classe Stack."
+        },
+        {
+          "lookFor": "\"Nearest Smaller Element\": a pilha guarda só os valores que ainda podem ser resposta, e isso a deixa monotônica. Warmer Days é a mesma ideia com \"maior\" e para a direita. Escolha Java nas configurações do site para ver código em Java."
+        },
+        {
+          "lookFor": "\"Sliding Window Maximum in O(N)\", Method 1 (Deque): os valores saem pelo fundo quando chega um maior e pela frente quando saem da janela. Pule \"With Two Pointers\" (a unidade 1 cobriu) e as listas de problemas."
+        }
+      ]
+    }
+  }
+}

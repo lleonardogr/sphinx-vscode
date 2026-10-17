@@ -1,0 +1,106 @@
+{
+  "title": "Peak Load",
+  "topic": "StacksQueues",
+  "requires": [
+    "Collections",
+    "Arrays"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Taking the maximum of every window separately is O(n·k): with k = 100,000, that is billions of steps.",
+    "Keep a deque of indexes whose loads go down from front to back. Before adding second i, remove from the back every index whose load is ≤ load[i]: it can never be a maximum again.",
+    "Also remove the front index once it is out of the window (≤ i − k). From i = k − 1 on, the front is the current window's peak; keep the smallest peak, and its earliest start."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Pico de carga",
+      "hints": [
+        "Tirar o máximo de cada janela separadamente é O(n·k): com k = 100.000, são bilhões de passos.",
+        "Guarde um deque de índices cujas cargas descem da frente para o fundo. Antes de adicionar o segundo i, remova do fundo todo índice com carga ≤ load[i]: ele nunca mais pode ser máximo.",
+        "Remova também o índice da frente quando ele sair da janela (≤ i − k). De i = k − 1 em diante, a frente é o pico da janela atual; guarde o menor pico, e seu início mais cedo."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "8 3\n40 75 31 22 28 90 60 35\n",
+      "output": "best start: 3\nbest peak: 31\n"
+    },
+    {
+      "input": "5 5\n3 1 4 1 5\n",
+      "output": "best start: 1\nbest peak: 5\n"
+    },
+    {
+      "input": "1 1\n7\n",
+      "output": "best start: 1\nbest peak: 7\n",
+      "hidden": true
+    },
+    {
+      "input": "6 1\n9 4 7 4 8 4\n",
+      "output": "best start: 2\nbest peak: 4\n",
+      "hidden": true
+    },
+    {
+      "input": "6 2\n5 5 5 5 5 5\n",
+      "output": "best start: 1\nbest peak: 5\n",
+      "hidden": true
+    },
+    {
+      "input": "7 3\n1 2 3 4 5 6 7\n",
+      "output": "best start: 1\nbest peak: 3\n",
+      "hidden": true
+    },
+    {
+      "input": "7 3\n7 6 5 4 3 2 1\n",
+      "output": "best start: 5\nbest peak: 3\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 121,
+        "lines": [
+          "200000 100000",
+          {
+            "ints": 200000,
+            "min": 0,
+            "max": 1000000
+          }
+        ]
+      },
+      "output": "best start: 1\nbest peak: 999992\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 122,
+        "lines": [
+          "200000 1000",
+          {
+            "ints": 200000,
+            "min": 0,
+            "max": 1000000
+          }
+        ]
+      },
+      "output": "best start: 189643\nbest peak: 992769\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 123,
+        "lines": [
+          "200000 50000",
+          {
+            "ints": 200000,
+            "min": 0,
+            "max": 1000000,
+            "sorted": true
+          }
+        ]
+      },
+      "output": "best start: 1\nbest peak: 248738\n",
+      "hidden": true
+    }
+  ]
+}

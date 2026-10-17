@@ -1,0 +1,121 @@
+{
+  "title": "Warmer Days",
+  "topic": "StacksQueues",
+  "requires": [
+    "Collections",
+    "Arrays"
+  ],
+  "difficulty": "Medium",
+  "order": 2,
+  "hints": [
+    "Scanning forward from every day is O(n²): with 200,000 days at the same temperature, every scan goes to the end.",
+    "Keep a stack of the days still waiting for a warmer one; their temperatures go down from bottom to top. When today is warmer than the day on top, that day's wait is over: pop it and record today − that day.",
+    "Days left in the stack at the end never get warmer. For the earliest day with the longest wait, compare the days as you pop them: pops don't come in day order."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Dias mais quentes",
+      "hints": [
+        "Varrer para a frente a partir de cada dia é O(n²): com 200.000 dias na mesma temperatura, toda varredura vai até o fim.",
+        "Guarde numa pilha os dias que ainda esperam um mais quente; as temperaturas descem da base para o topo. Quando hoje é mais quente que o dia do topo, a espera daquele dia acabou: desempilhe-o e registre hoje − aquele dia.",
+        "Os dias que sobram na pilha no fim nunca ficam mais quentes. Para o dia mais cedo com a maior espera, compare os dias quando os desempilhar: os pops não vêm em ordem de dia."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "7\n30 28 26 27 31 25 25\n",
+      "output": "longest wait: 4\nfrom day: 1\nnever warmer: 3\n"
+    },
+    {
+      "input": "5\n10 20 30 40 50\n",
+      "output": "longest wait: 1\nfrom day: 1\nnever warmer: 1\n"
+    },
+    {
+      "input": "1\n15\n",
+      "output": "longest wait: 0\nfrom day: none\nnever warmer: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n5 5 5 5\n",
+      "output": "longest wait: 0\nfrom day: none\nnever warmer: 4\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n-10 -20 -5 -30 -1 0\n",
+      "output": "longest wait: 2\nfrom day: 1\nnever warmer: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "7\n50 -50 49 -49 48 -48 50\n",
+      "output": "longest wait: 4\nfrom day: 3\nnever warmer: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "8\n3 1 2 1 2 1 2 4\n",
+      "output": "longest wait: 7\nfrom day: 1\nnever warmer: 1\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 111,
+        "lines": [
+          "200000",
+          {
+            "ints": 200000,
+            "min": 20,
+            "max": 20
+          }
+        ]
+      },
+      "output": "longest wait: 0\nfrom day: none\nnever warmer: 200000\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 112,
+        "lines": [
+          "200000",
+          {
+            "ints": 200000,
+            "min": -50,
+            "max": 50
+          }
+        ]
+      },
+      "output": "longest wait: 621\nfrom day: 1790\nnever warmer: 1967\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 113,
+        "lines": [
+          "200000",
+          {
+            "ints": 200000,
+            "min": -50,
+            "max": 50,
+            "sorted": true
+          }
+        ]
+      },
+      "output": "longest wait: 2060\nfrom day: 1989\nnever warmer: 1929\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 114,
+        "lines": [
+          "200000",
+          {
+            "ints": 200000,
+            "min": 10,
+            "max": 11
+          }
+        ]
+      },
+      "output": "longest wait: 17\nfrom day: 183559\nnever warmer: 99748\n",
+      "hidden": true
+    }
+  ]
+}

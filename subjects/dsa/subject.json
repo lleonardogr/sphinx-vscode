@@ -13,6 +13,11 @@
       "key": "Sorting",
       "title": "Sorting",
       "icon": "list-ordered"
+    },
+    {
+      "key": "StacksQueues",
+      "title": "Stacks & Queues",
+      "icon": "layers"
     }
   ],
   "translations": {
@@ -20,7 +25,8 @@
       "title": "Estruturas de Dados e Algoritmos",
       "units": {
         "Complexity": "Complexidade e busca",
-        "Sorting": "Ordenação"
+        "Sorting": "Ordenação",
+        "StacksQueues": "Pilhas e filas"
       }
     }
   }

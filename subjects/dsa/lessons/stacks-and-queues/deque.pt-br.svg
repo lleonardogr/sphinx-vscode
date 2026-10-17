@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 230" role="img" aria-label="Uma pilha faz push e pop na frente, então C, o último a entrar, sai primeiro. Uma fila faz offer no fundo e poll na frente, então A, o primeiro a entrar, sai primeiro.">
+  <style>
+    text { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    .v { font-size: 18px; font-weight: 700; text-anchor: middle; }
+    .t { font-size: 15px; font-weight: 700; }
+    .m { font-size: 14px; font-family: ui-monospace, Menlo, Consolas, monospace; fill: #8a94a6; }
+    .s { font-size: 12px; fill: #8a94a6; text-anchor: middle; }
+  </style>
+  <text x="220" y="34" class="t" fill="#3b82f6">pilha: último a entrar, primeiro a sair</text>
+  <rect x="220" y="48" width="56" height="40" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="248" y="74" class="v" fill="#3b82f6">C</text>
+  <rect x="280" y="48" width="56" height="40" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="308" y="74" class="v" fill="#3b82f6">B</text>
+  <rect x="340" y="48" width="56" height="40" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="368" y="74" class="v" fill="#3b82f6">A</text>
+  <path d="M120 60 H206" stroke="#3b82f6" stroke-width="2"/>
+  <path d="M205 55 L214 60 L205 65 Z" fill="#3b82f6"/>
+  <text x="112" y="65" class="m" style="text-anchor: end">push</text>
+  <path d="M214 78 H128" stroke="#3b82f6" stroke-width="2"/>
+  <path d="M129 73 L120 78 L129 83 Z" fill="#3b82f6"/>
+  <text x="112" y="83" class="m" style="text-anchor: end">pop</text>
+  <text x="248" y="106" class="s">frente</text>
+  <text x="220" y="146" class="t" fill="#f59e0b">fila: primeiro a entrar, primeiro a sair</text>
+  <rect x="220" y="160" width="56" height="40" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="248" y="186" class="v" fill="#f59e0b">A</text>
+  <rect x="280" y="160" width="56" height="40" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="308" y="186" class="v" fill="#f59e0b">B</text>
+  <rect x="340" y="160" width="56" height="40" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="368" y="186" class="v" fill="#f59e0b">C</text>
+  <path d="M214 180 H128" stroke="#f59e0b" stroke-width="2"/>
+  <path d="M129 175 L120 180 L129 185 Z" fill="#f59e0b"/>
+  <text x="112" y="185" class="m" style="text-anchor: end">poll</text>
+  <path d="M500 180 H412" stroke="#f59e0b" stroke-width="2"/>
+  <path d="M413 175 L404 180 L413 185 Z" fill="#f59e0b"/>
+  <text x="508" y="185" class="m">offer</text>
+  <text x="248" y="218" class="s">frente</text>
+  <text x="368" y="218" class="s">fundo</text>
+</svg>
