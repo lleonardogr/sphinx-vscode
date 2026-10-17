@@ -1,0 +1,69 @@
+{
+  "title": "Round-Robin Scheduler",
+  "topic": "StacksQueues",
+  "requires": [
+    "Collections",
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Put every process in a queue (an ArrayDeque) in input order, with the time it still needs.",
+    "Repeat until the queue is empty: poll the front process, run it for min(slice, time left), and advance the clock. If it still needs time, offer it to the back; otherwise print when it finished.",
+    "A process that arrived at time 0 waited finish − burst. Add those up and divide by n, with String.format(\"%.2f\", …)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Escalonador round-robin",
+      "hints": [
+        "Coloque cada processo numa fila (um ArrayDeque) na ordem da entrada, com o tempo que ainda falta.",
+        "Repita até a fila esvaziar: tire o processo da frente com poll, rode-o por min(fatia, tempo restante) e avance o relógio. Se ainda faltar tempo, coloque-o no fundo com offer; senão imprima quando ele terminou.",
+        "Um processo que chegou no tempo 0 esperou fim − duração. Some isso e divida por n, com String.format(\"%.2f\", …)."
+      ],
+      "mustContain": [
+        "Guarde os processos que esperam numa fila, como um ArrayDeque."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\b(ArrayDeque|LinkedList|Queue|Deque)\\b",
+      "message": "Keep the waiting processes in a queue, such as an ArrayDeque."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3 3\nA 5\nB 2\nC 4\n",
+      "output": "B finishes at 5\nA finishes at 10\nC finishes at 11\naverage waiting: 5.00\n"
+    },
+    {
+      "input": "2 10\nX 4\nY 6\n",
+      "output": "X finishes at 4\nY finishes at 10\naverage waiting: 2.00\n"
+    },
+    {
+      "input": "1 1\nSOLO 7\n",
+      "output": "SOLO finishes at 7\naverage waiting: 0.00\n",
+      "hidden": true
+    },
+    {
+      "input": "3 1\nA 2\nB 2\nC 2\n",
+      "output": "A finishes at 4\nB finishes at 5\nC finishes at 6\naverage waiting: 3.00\n",
+      "hidden": true
+    },
+    {
+      "input": "4 4\nP1 4\nP2 8\nP3 1\nP4 5\n",
+      "output": "P1 finishes at 4\nP3 finishes at 9\nP2 finishes at 17\nP4 finishes at 18\naverage waiting: 7.50\n",
+      "hidden": true
+    },
+    {
+      "input": "3 5\nweb 5\ndb 10\nmail 5\n",
+      "output": "web finishes at 5\nmail finishes at 15\ndb finishes at 20\naverage waiting: 6.67\n",
+      "hidden": true
+    },
+    {
+      "input": "300 7\nP1 409\nP2 642\nP3 819\nP4 930\nP5 506\nP6 555\nP7 471\nP8 668\nP9 242\nP10 973\nP11 685\nP12 637\nP13 261\nP14 122\nP15 995\nP16 937\nP17 250\nP18 534\nP19 985\nP20 135\nP21 98\nP22 833\nP23 457\nP24 567\nP25 728\nP26 974\nP27 648\nP28 865\nP29 842\nP30 318\nP31 36\nP32 649\nP33 682\nP34 879\nP35 762\nP36 180\nP37 296\nP38 838\nP39 570\nP40 832\nP41 328\nP42 988\nP43 483\nP44 225\nP45 634\nP46 756\nP47 788\nP48 469\nP49 944\nP50 979\nP51 17\nP52 789\nP53 990\nP54 18\nP55 890\nP56 966\nP57 73\nP58 844\nP59 460\nP60 291\nP61 200\nP62 988\nP63 351\nP64 167\nP65 783\nP66 964\nP67 577\nP68 611\nP69 623\nP70 25\nP71 899\nP72 831\nP73 635\nP74 325\nP75 39\nP76 74\nP77 360\nP78 169\nP79 398\nP80 90\nP81 36\nP82 463\nP83 740\nP84 294\nP85 770\nP86 941\nP87 993\nP88 394\nP89 786\nP90 110\nP91 700\nP92 4\nP93 873\nP94 724\nP95 826\nP96 111\nP97 291\nP98 981\nP99 441\nP100 769\nP101 88\nP102 583\nP103 316\nP104 587\nP105 210\nP106 287\nP107 541\nP108 926\nP109 430\nP110 318\nP111 668\nP112 149\nP113 916\nP114 593\nP115 160\nP116 887\nP117 405\nP118 993\nP119 791\nP120 389\nP121 941\nP122 246\nP123 70\nP124 475\nP125 799\nP126 111\nP127 118\nP128 614\nP129 744\nP130 225\nP131 42\nP132 305\nP133 291\nP134 807\nP135 272\nP136 967\nP137 735\nP138 636\nP139 719\nP140 289\nP141 32\nP142 971\nP143 822\nP144 611\nP145 420\nP146 567\nP147 342\nP148 414\nP149 725\nP150 846\nP151 147\nP152 331\nP153 300\nP154 165\nP155 344\nP156 367\nP157 171\nP158 325\nP159 486\nP160 169\nP161 449\nP162 131\nP163 654\nP164 714\nP165 249\nP166 394\nP167 886\nP168 844\nP169 667\nP170 542\nP171 861\nP172 108\nP173 686\nP174 619\nP175 61\nP176 138\nP177 826\nP178 940\nP179 29\nP180 578\nP181 425\nP182 550\nP183 859\nP184 249\nP185 563\nP186 288\nP187 931\nP188 444\nP189 523\nP190 767\nP191 792\nP192 369\nP193 407\nP194 228\nP195 350\nP196 540\nP197 653\nP198 148\nP199 492\nP200 953\nP201 362\nP202 515\nP203 810\nP204 871\nP205 404\nP206 787\nP207 965\nP208 98\nP209 527\nP210 474\nP211 424\nP212 54\nP213 977\nP214 95\nP215 547\nP216 801\nP217 398\nP218 286\nP219 625\nP220 110\nP221 517\nP222 605\nP223 38\nP224 823\nP225 240\nP226 808\nP227 300\nP228 129\nP229 628\nP230 998\nP231 470\nP232 900\nP233 426\nP234 411\nP235 352\nP236 694\nP237 806\nP238 28\nP239 366\nP240 115\nP241 193\nP242 759\nP243 210\nP244 765\nP245 808\nP246 813\nP247 324\nP248 141\nP249 344\nP250 589\nP251 138\nP252 774\nP253 41\nP254 730\nP255 980\nP256 316\nP257 30\nP258 979\nP259 257\nP260 885\nP261 240\nP262 322\nP263 275\nP264 689\nP265 881\nP266 182\nP267 60\nP268 761\nP269 978\nP270 218\nP271 491\nP272 105\nP273 489\nP274 51\nP275 528\nP276 452\nP277 904\nP278 520\nP279 169\nP280 316\nP281 490\nP282 207\nP283 193\nP284 97\nP285 717\nP286 592\nP287 232\nP288 295\nP289 891\nP290 633\nP291 581\nP292 228\nP293 409\nP294 941\nP295 969\nP296 673\nP297 932\nP298 18\nP299 906\nP300 382\n",
+      "output": "P92 finishes at 641\nP51 finishes at 4543\nP54 finishes at 4561\nP298 finishes at 6259\nP70 finishes at 6746\nP238 finishes at 7915\nP141 finishes at 9298\nP179 finishes at 9558\nP257 finishes at 10092\nP31 finishes at 10597\nP75 finishes at 10881\nP81 finishes at 10917\nP131 finishes at 11260\nP223 finishes at 11886\nP253 finishes at 12088\nP212 finishes at 15810\nP274 finishes at 16211\nP175 finishes at 17546\nP267 finishes at 18145\nP123 finishes at 19174\nP57 finishes at 20703\nP76 finishes at 20819\nP80 finishes at 24738\nP101 finishes at 24868\nP21 finishes at 26317\nP208 finishes at 27514\nP214 finishes at 27546\nP284 finishes at 27993\nP272 finishes at 29827\nP90 finishes at 30560\nP96 finishes at 30594\nP126 finishes at 30789\nP172 finishes at 31093\nP220 finishes at 31392\nP127 finishes at 32665\nP240 finishes at 33375\nP14 finishes at 33840\nP162 finishes at 36582\nP228 finishes at 36984\nP20 finishes at 37553\nP176 finishes at 38489\nP251 finishes at 38949\nP151 finishes at 40153\nP248 finishes at 40735\nP112 finishes at 41710\nP198 finishes at 42229\nP115 finishes at 43509\nP64 finishes at 44999\nP154 finishes at 45507\nP78 finishes at 46831\nP157 finishes at 47275\nP160 finishes at 47290\nP279 finishes at 47970\nP36 finishes at 48325\nP266 finishes at 49634\nP241 finishes at 52921\nP283 finishes at 53149\nP61 finishes at 53622\nP105 finishes at 55547\nP243 finishes at 56331\nP282 finishes at 56538\nP270 finishes at 59822\nP44 finishes at 60250\nP130 finishes at 60699\nP194 finishes at 61067\nP292 finishes at 61582\nP287 finishes at 63186\nP9 finishes at 63323\nP225 finishes at 64508\nP261 finishes at 64692\nP17 finishes at 64984\nP122 finishes at 65552\nP165 finishes at 65773\nP184 finishes at 65875\nP259 finishes at 67861\nP13 finishes at 68136\nP135 finishes at 70340\nP263 finishes at 72575\nP106 finishes at 73317\nP218 finishes at 73918\nP60 finishes at 74636\nP84 finishes at 74748\nP97 finishes at 74815\nP133 finishes at 74987\nP140 finishes at 75024\nP186 finishes at 75256\nP37 finishes at 76021\nP153 finishes at 76594\nP227 finishes at 76971\nP288 finishes at 77238\nP132 finishes at 77963\nP30 finishes at 80402\nP103 finishes at 80753\nP110 finishes at 80784\nP256 finishes at 81492\nP262 finishes at 81513\nP280 finishes at 81584\nP41 finishes at 81891\nP74 finishes at 82062\nP158 finishes at 82422\nP247 finishes at 82872\nP152 finishes at 83798\nP147 finishes at 85162\nP155 finishes at 86563\nP195 finishes at 86759\nP249 finishes at 87019\nP63 finishes at 87538\nP235 finishes at 88317\nP77 finishes at 88943\nP201 finishes at 89487\nP156 finishes at 90603\nP192 finishes at 90776\nP239 finishes at 90995\nP300 finishes at 93841\nP120 finishes at 94405\nP79 finishes at 95517\nP88 finishes at 95554\nP166 finishes at 95850\nP217 finishes at 96108\nP117 finishes at 96954\nP205 finishes at 97316\nP1 finishes at 97690\nP193 finishes at 98510\nP234 finishes at 98690\nP293 finishes at 98889\nP145 finishes at 99554\nP148 finishes at 99562\nP181 finishes at 100890\nP211 finishes at 101027\nP233 finishes at 101117\nP109 finishes at 101834\nP99 finishes at 102982\nP188 finishes at 104476\nP161 finishes at 105527\nP276 finishes at 105958\nP23 finishes at 106156\nP59 finishes at 106343\nP48 finishes at 107435\nP82 finishes at 107548\nP7 finishes at 108369\nP124 finishes at 108830\nP210 finishes at 109143\nP231 finishes at 109214\nP43 finishes at 109648\nP159 finishes at 111128\nP273 finishes at 111533\nP281 finishes at 111561\nP199 finishes at 112361\nP271 finishes at 112600\nP5 finishes at 113771\nP202 finishes at 115532\nP221 finishes at 115601\nP189 finishes at 116537\nP278 finishes at 116805\nP209 finishes at 117626\nP275 finishes at 117811\nP18 finishes at 117960\nP107 finishes at 119299\nP170 finishes at 119491\nP196 finishes at 119576\nP182 finishes at 120518\nP215 finishes at 120603\nP6 finishes at 120871\nP24 finishes at 121893\nP146 finishes at 122348\nP185 finishes at 122449\nP39 finishes at 122914\nP67 finishes at 123953\nP180 finishes at 124300\nP291 finishes at 124587\nP102 finishes at 124988\nP104 finishes at 124994\nP114 finishes at 125916\nP250 finishes at 126281\nP286 finishes at 126362\nP222 finishes at 127954\nP68 finishes at 128411\nP128 finishes at 128577\nP144 finishes at 128635\nP69 finishes at 129272\nP174 finishes at 129548\nP219 finishes at 130481\nP229 finishes at 130500\nP12 finishes at 130731\nP45 finishes at 130847\nP73 finishes at 130950\nP138 finishes at 131117\nP290 finishes at 131456\nP2 finishes at 131496\nP27 finishes at 132354\nP32 finishes at 132373\nP163 finishes at 133475\nP197 finishes at 133561\nP8 finishes at 134565\nP111 finishes at 134862\nP169 finishes at 134990\nP296 finishes at 135992\nP11 finishes at 136033\nP33 finishes at 136092\nP173 finishes at 136449\nP264 finishes at 137348\nP91 finishes at 137670\nP236 finishes at 137965\nP164 finishes at 139183\nP139 finishes at 139825\nP285 finishes at 140094\nP25 finishes at 140185\nP94 finishes at 140384\nP149 finishes at 140500\nP137 finishes at 141123\nP254 finishes at 141328\nP83 finishes at 141620\nP129 finishes at 142343\nP46 finishes at 142756\nP35 finishes at 143336\nP242 finishes at 143738\nP268 finishes at 143799\nP85 finishes at 144044\nP100 finishes at 144092\nP190 finishes at 144229\nP244 finishes at 144322\nP252 finishes at 144893\nP65 finishes at 145137\nP47 finishes at 145617\nP52 finishes at 145636\nP89 finishes at 145708\nP119 finishes at 145764\nP206 finishes at 145893\nP191 finishes at 146370\nP125 finishes at 146777\nP216 finishes at 146899\nP134 finishes at 147265\nP203 finishes at 147354\nP226 finishes at 147385\nP237 finishes at 147400\nP245 finishes at 147403\nP3 finishes at 147494\nP246 finishes at 147852\nP95 finishes at 148118\nP143 finishes at 148177\nP177 finishes at 148212\nP224 finishes at 148265\nP22 finishes at 148398\nP40 finishes at 148439\nP72 finishes at 148514\nP38 finishes at 148827\nP29 finishes at 149193\nP58 finishes at 149246\nP150 finishes at 149350\nP168 finishes at 149361\nP171 finishes at 150068\nP183 finishes at 150080\nP28 finishes at 150252\nP93 finishes at 150670\nP204 finishes at 150757\nP34 finishes at 150908\nP265 finishes at 151124\nP116 finishes at 151318\nP167 finishes at 151350\nP260 finishes at 151416\nP55 finishes at 151536\nP289 finishes at 151706\nP71 finishes at 151828\nP232 finishes at 151937\nP277 finishes at 152211\nP299 finishes at 152235\nP113 finishes at 152360\nP4 finishes at 152709\nP108 finishes at 152816\nP187 finishes at 152858\nP16 finishes at 152948\nP297 finishes at 153131\nP49 finishes at 153172\nP86 finishes at 153210\nP121 finishes at 153234\nP178 finishes at 153250\nP294 finishes at 153302\nP200 finishes at 153576\nP56 finishes at 153681\nP66 finishes at 153693\nP207 finishes at 153734\nP10 finishes at 153783\nP136 finishes at 153854\nP142 finishes at 153859\nP295 finishes at 153897\nP26 finishes at 153912\nP50 finishes at 153925\nP213 finishes at 153964\nP255 finishes at 153978\nP258 finishes at 153984\nP269 finishes at 153989\nP19 finishes at 154001\nP98 finishes at 154030\nP42 finishes at 154052\nP53 finishes at 154055\nP62 finishes at 154056\nP87 finishes at 154062\nP118 finishes at 154068\nP15 finishes at 154076\nP230 finishes at 154080\naverage waiting: 102154.38\n",
+      "hidden": true
+    }
+  ]
+}
