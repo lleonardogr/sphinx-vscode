@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.9.3] - 2026-10-17
+
 ### Added
 
 - **A `sphinx` command line**, in VS Code's integrated terminal with no setup: `sphinx validate <folder>` (with `--generate`), `sphinx test <challenge> <file>` (tests, hidden ones included, and bonus goals; nothing is recorded), `sphinx pack <folder>` and `sphinx verify <results.json>…`. It runs with VS Code itself, so no Node.js is needed, and uses the Sphinx settings. **Install 'sphinx' Command in PATH…** puts it in every terminal (`~/.local/bin`, or `WindowsApps` on Windows; no admin rights). The new setting `sphinx.terminalCommand` turns the terminal command off.
@@ -384,7 +386,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.2...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.3...HEAD
+[1.9.3]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.2...v1.9.3
 [1.9.2]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.8.1...v1.9.0
