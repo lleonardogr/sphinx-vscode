@@ -1,0 +1,55 @@
+{
+  "title": "Trees",
+  "topic": "Trees",
+  "order": 1,
+  "requires": [
+    "Recursion"
+  ],
+  "objectives": [
+    "Represent a tree with a parent array or with nodes, and find its levels",
+    "Build a binary search tree and traverse it in-order, pre-order and post-order",
+    "Explain why a BST's height decides its speed, and when it turns into a list",
+    "Answer prefix questions with a trie, or with sorted words",
+    "Add values up a tree with a post-order traversal"
+  ],
+  "readings": [
+    {
+      "title": "Binary Search Tree",
+      "source": "VisuAlgo (National University of Singapore)",
+      "url": "https://visualgo.net/en/bst",
+      "type": "interactive",
+      "minutes": 20,
+      "lang": "en",
+      "lookFor": "Insert your own keys, then try Search and the in-order traversal. Insert 1, 2, 3, 4, 5 into an empty tree to see it become a chain, and note what the AVL tree in the same module does to avoid that."
+    },
+    {
+      "title": "Introduction to Tree Algorithms",
+      "source": "USACO Guide",
+      "url": "https://usaco.guide/silver/intro-tree",
+      "type": "article",
+      "minutes": 12,
+      "lang": "en",
+      "lookFor": "The vocabulary (root, parent, subtree, depth), the three traversal orders, and the Subordinates example: a node's subtree size is one plus its children's, the same idea as a folder's total size. Pick Java in the site's settings to see Java code."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Árvores",
+      "objectives": [
+        "Representar uma árvore com um array de pais ou com nós, e achar seus níveis",
+        "Construir uma árvore binária de busca e percorrê-la em ordem, pré-ordem e pós-ordem",
+        "Explicar por que a altura de uma BST decide sua velocidade, e quando ela vira uma lista",
+        "Responder perguntas sobre prefixos com uma trie, ou com palavras ordenadas",
+        "Somar valores subindo por uma árvore com um percurso em pós-ordem"
+      ],
+      "readings": [
+        {
+          "lookFor": "Insira suas próprias chaves e depois experimente Search e o percurso em ordem (inorder). Insira 1, 2, 3, 4, 5 numa árvore vazia para vê-la virar uma corrente, e repare no que a árvore AVL do mesmo módulo faz para evitar isso."
+        },
+        {
+          "lookFor": "O vocabulário (raiz, pai, subárvore, profundidade), as três ordens de percurso e o exemplo Subordinates: o tamanho da subárvore de um nó é um mais o dos filhos, a mesma ideia do tamanho total de uma pasta. Escolha Java nas configurações do site para ver código em Java."
+        }
+      ]
+    }
+  }
+}
