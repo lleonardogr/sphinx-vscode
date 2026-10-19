@@ -66,6 +66,12 @@ def chars(count, alphabet, rows=1):
     return {'chars': count, 'alphabet': alphabet, **({'rows': rows} if rows != 1 else {})}
 
 
+def parents(n, max_gap=None):
+    """A random tree of n nodes for big(...): one line with the parent of nodes 2..n, each smaller than its node.
+    max_gap=1 makes a chain (the deepest tree); leave it out for a bushy tree."""
+    return {'parents': n, **({'maxGap': max_gap} if max_gap else {})}
+
+
 def big(seed, *lines):
     """A hidden test whose input is generated (see "generate" in docs/creating-challenges.md): lines are text,
     ints(...) or chars(...). Use it in tests=[...] in place of an (input, hidden) pair, and in bonus tests."""

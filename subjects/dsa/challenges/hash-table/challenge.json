@@ -1,0 +1,137 @@
+{
+  "title": "Hash Table",
+  "topic": "Hashing",
+  "requires": [
+    "Collections",
+    "Arrays",
+    "OOP"
+  ],
+  "difficulty": "Hard",
+  "order": 4,
+  "hints": [
+    "Start with an array of buckets, each the head of a linked list of nodes (key, value, next). The bucket of a key is a hash of the key modulo the number of buckets.",
+    "put walks the key's bucket: if the key is there, replace the value; otherwise add a node. get walks the bucket and returns the value or nothing. remove unlinks the node.",
+    "When the number of keys passes 3/4 of the buckets, make an array twice as big and move every node over, or the lists grow long and every operation slows down."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Tabela hash",
+      "hints": [
+        "Comece com um array de baldes, cada um a cabeça de uma lista encadeada de nós (chave, valor, próximo). O balde de uma chave é um hash da chave módulo o número de baldes.",
+        "put percorre o balde da chave: se a chave está lá, troque o valor; senão adicione um nó. get percorre o balde e devolve o valor ou nada. remove desliga o nó.",
+        "Quando o número de chaves passar de 3/4 dos baldes, faça um array com o dobro do tamanho e mova todos os nós, senão as listas crescem e toda operação fica lenta."
+      ],
+      "mustNotContain": [
+        "Construa a tabela você mesmo, com arrays: nada de maps ou sets do java.util."
+      ]
+    }
+  },
+  "mustNotContain": [
+    {
+      "pattern": "\\b(HashMap|Hashtable|TreeMap|LinkedHashMap|IdentityHashMap|ConcurrentHashMap|WeakHashMap|HashSet|TreeSet|LinkedHashSet|Map|Set)\\b",
+      "message": "Build the table yourself, with arrays: no java.util maps or sets."
+    }
+  ],
+  "tests": [
+    {
+      "input": "7\n1 5 100\n1 7 200\n2 5 0\n1 5 300\n2 5 0\n3 7 0\n2 7 0\n",
+      "output": "found: 2\nmissing: 1\nsum: 400\nsize: 1\n"
+    },
+    {
+      "input": "4\n2 1 0\n3 1 0\n1 1 9\n2 1 0\n",
+      "output": "found: 1\nmissing: 1\nsum: 9\nsize: 1\n"
+    },
+    {
+      "input": "1\n1 0 0\n",
+      "output": "found: 0\nmissing: 0\nsum: 0\nsize: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n1 1000000000 1000000\n1 0 1\n2 1000000000 0\n2 0 0\n2 999999999 0\n",
+      "output": "found: 2\nmissing: 1\nsum: 1000001\nsize: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n1 4 10\n3 4 0\n3 4 0\n1 4 20\n2 4 0\n1 8 30\n",
+      "output": "found: 1\nmissing: 0\nsum: 20\nsize: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "8\n1 16 1\n1 32 2\n1 48 3\n1 64 4\n3 32 0\n2 48 0\n2 32 0\n2 64 0\n",
+      "output": "found: 2\nmissing: 1\nsum: 7\nsize: 3\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 161,
+        "lines": [
+          "200000",
+          {
+            "ints": 3,
+            "min": [
+              1,
+              0,
+              0
+            ],
+            "max": [
+              3,
+              100000,
+              1000000
+            ],
+            "rows": 200000
+          }
+        ]
+      },
+      "output": "found: 14840\nmissing: 51889\nsum: 7458053030\nsize: 36698\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 162,
+        "lines": [
+          "200000",
+          {
+            "ints": 3,
+            "min": [
+              1,
+              0,
+              0
+            ],
+            "max": [
+              2,
+              1000000000,
+              1000000
+            ],
+            "rows": 200000
+          }
+        ]
+      },
+      "output": "found: 6\nmissing: 100054\nsum: 3038290\nsize: 99935\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 163,
+        "lines": [
+          "200000",
+          {
+            "ints": 3,
+            "min": [
+              1,
+              0,
+              0
+            ],
+            "max": [
+              3,
+              1000,
+              1000000
+            ],
+            "rows": 200000
+          }
+        ]
+      },
+      "output": "found: 33298\nmissing: 33310\nsum: 16657497169\nsize: 512\n",
+      "hidden": true
+    }
+  ]
+}

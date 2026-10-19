@@ -1,0 +1,176 @@
+{
+  "title": "Hash Tables Quiz",
+  "topic": "Hashing",
+  "requires": [
+    "Collections"
+  ],
+  "description": "Buckets and collisions, resizing, hashCode and equals, counting, grouping keys and prefix sums.",
+  "questions": [
+    {
+      "type": "number",
+      "prompt": "A hash table with 8 buckets puts each key in bucket `key % 8`. Which bucket does key **45** go to?",
+      "answer": "5",
+      "explanation": "45 = 5 × 8 + 5, so the remainder is 5. Real tables first mix the bits of the hash code, so that keys that differ only in their high bits don't all collide."
+    },
+    {
+      "type": "choice",
+      "prompt": "In that table, keys 13 and 21 both go to bucket 5. What happens?",
+      "options": [
+        "They collide, and bucket 5 keeps both, for example in a short list",
+        "The second key replaces the first",
+        "The table throws an exception",
+        "The second key is not stored"
+      ],
+      "answer": 0,
+      "explanation": "A collision isn't an error: the bucket holds both keys, and a lookup compares the keys in that bucket with equals() to find the right one."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why does a HashMap double its number of buckets when it gets about 75% full?",
+      "options": [
+        "To keep the lists in each bucket short, so operations stay O(1) on average",
+        "To save memory",
+        "To keep the keys in sorted order",
+        "Because a Java array can't hold more elements"
+      ],
+      "answer": 0,
+      "explanation": "With n keys in m buckets, a bucket holds n/m keys on average. Doubling m when n/m passes 0.75 keeps that small. The rebuild costs O(n), but it happens so rarely that it averages out to O(1) per insertion."
+    },
+    {
+      "type": "output",
+      "code": "Map<String, Integer> counts = new HashMap<>();\nfor (String word : \"to be or not to be\".split(\" \")) {\n    counts.merge(word, 1, Integer::sum);\n}\nIO.println(counts.get(\"to\") + \" \" + counts.get(\"be\") + \" \" + counts.getOrDefault(\"is\", 0));",
+      "answer": "2 2 0",
+      "explanation": "merge puts 1 for a new word and adds 1 to an existing count, so \"to\" and \"be\" end at 2. getOrDefault gives 0 for a word that was never counted, where get would give null."
+    },
+    {
+      "type": "choice",
+      "prompt": "A class overrides `equals` but not `hashCode`. Two objects that are equal are added to a `HashSet`. What happens?",
+      "options": [
+        "The set can keep both: their different hash codes send them to different buckets, where equals is never called",
+        "The set keeps only one, because equals says they are the same",
+        "It doesn't compile",
+        "add throws an exception"
+      ],
+      "answer": 0,
+      "explanation": "A HashSet only calls equals on keys in the same bucket. Without a matching hashCode, equal objects usually land in different buckets, so the set never notices they are equal."
+    },
+    {
+      "type": "output",
+      "code": "char[] a = \"listen\".toCharArray();\nchar[] b = \"silent\".toCharArray();\nArrays.sort(a);\nArrays.sort(b);\nString key = new String(a);\nIO.println(key + \" \" + key.equals(new String(b)));",
+      "answer": "eilnst true",
+      "explanation": "Sorting the letters gives the same string for every anagram, so it works as a grouping key: both words become \"eilnst\"."
+    },
+    {
+      "type": "number",
+      "prompt": "How many ranges of consecutive values in `1 2 1 2 1` add up to **3**?",
+      "answer": "4",
+      "explanation": "The ranges are 1 2, 2 1, 1 2 and 2 1, starting at positions 1, 2, 3 and 4. No longer range works: 1 2 1 is already 4."
+    },
+    {
+      "type": "choice",
+      "prompt": "Going through an array with a running sum `s` and a map of how often each prefix sum appeared so far, how many ranges ending at the current position add up to `k`?",
+      "options": [
+        "As many as the times s − k has appeared so far",
+        "As many as the times k has appeared so far",
+        "One, if s equals k",
+        "As many as the times s has appeared so far"
+      ],
+      "answer": 0,
+      "explanation": "A range from i to here sums to k exactly when prefix[i] = s − k. The map already counts the earlier prefix sums, so the answer is one lookup: counts.getOrDefault(s − k, 0)."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "A HashMap lookup takes O(1) time even in the worst case.",
+      "answer": false,
+      "explanation": "O(1) is the average. If many keys share a bucket, a lookup has to look through all of them. Java's HashMap turns a long bucket into a small tree to limit the damage to O(log n)."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which of these is a **bad** key for a HashMap?",
+      "options": [
+        "A list you keep adding items to after using it as a key",
+        "A String",
+        "An Integer",
+        "A record with two int fields"
+      ],
+      "answer": 0,
+      "explanation": "A list's hash code changes when it changes, so after an add the map looks in the wrong bucket and can't find the entry. Strings, Integers and records with final fields never change."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de tabelas hash",
+      "description": "Baldes e colisões, redimensionamento, hashCode e equals, contagem, chaves de agrupamento e somas de prefixo.",
+      "questions": [
+        {
+          "prompt": "Uma tabela hash com 8 baldes coloca cada chave no balde `chave % 8`. Em que balde vai a chave **45**?",
+          "explanation": "45 = 5 × 8 + 5, então o resto é 5. Tabelas de verdade primeiro misturam os bits do código hash, para que chaves que só diferem nos bits altos não colidam todas."
+        },
+        {
+          "prompt": "Nessa tabela, as chaves 13 e 21 vão as duas para o balde 5. O que acontece?",
+          "options": [
+            "Elas colidem, e o balde 5 guarda as duas, por exemplo numa lista curta",
+            "A segunda chave substitui a primeira",
+            "A tabela lança uma exceção",
+            "A segunda chave não é guardada"
+          ],
+          "explanation": "Uma colisão não é um erro: o balde guarda as duas chaves, e uma busca compara as chaves daquele balde com equals() para achar a certa."
+        },
+        {
+          "prompt": "Por que um HashMap dobra o número de baldes quando fica uns 75% cheio?",
+          "options": [
+            "Para manter curtas as listas de cada balde, e as operações continuarem O(1) em média",
+            "Para economizar memória",
+            "Para manter as chaves em ordem",
+            "Porque um array em Java não aguenta mais elementos"
+          ],
+          "explanation": "Com n chaves em m baldes, um balde guarda em média n/m chaves. Dobrar m quando n/m passa de 0,75 mantém isso pequeno. A reconstrução custa O(n), mas acontece tão raramente que, na média, sai O(1) por inserção."
+        },
+        {
+          "explanation": "merge coloca 1 para uma palavra nova e soma 1 a uma contagem existente, então \"to\" e \"be\" terminam em 2. getOrDefault dá 0 para uma palavra nunca contada, enquanto get daria null."
+        },
+        {
+          "prompt": "Uma classe sobrescreve `equals` mas não `hashCode`. Dois objetos iguais são adicionados a um `HashSet`. O que acontece?",
+          "options": [
+            "O set pode guardar os dois: os códigos hash diferentes mandam cada um para um balde, onde equals nunca é chamado",
+            "O set guarda só um, porque equals diz que são iguais",
+            "Não compila",
+            "add lança uma exceção"
+          ],
+          "explanation": "Um HashSet só chama equals em chaves do mesmo balde. Sem um hashCode compatível, objetos iguais normalmente caem em baldes diferentes, e o set nunca percebe que são iguais."
+        },
+        {
+          "explanation": "Ordenar as letras dá a mesma string para todo anagrama, então ela serve como chave de agrupamento: as duas palavras viram \"eilnst\"."
+        },
+        {
+          "prompt": "Quantos intervalos de valores seguidos em `1 2 1 2 1` somam **3**?",
+          "explanation": "Os intervalos são 1 2, 2 1, 1 2 e 2 1, começando nas posições 1, 2, 3 e 4. Nenhum intervalo mais longo serve: 1 2 1 já dá 4."
+        },
+        {
+          "prompt": "Percorrendo um array com uma soma acumulada `s` e um mapa de quantas vezes cada soma de prefixo apareceu até agora, quantos intervalos terminando na posição atual somam `k`?",
+          "options": [
+            "Tantos quantas forem as vezes que s − k apareceu até agora",
+            "Tantos quantas forem as vezes que k apareceu até agora",
+            "Um, se s for igual a k",
+            "Tantos quantas forem as vezes que s apareceu até agora"
+          ],
+          "explanation": "Um intervalo de i até aqui soma k exatamente quando prefix[i] = s − k. O mapa já conta as somas de prefixo anteriores, então a resposta é uma consulta: counts.getOrDefault(s − k, 0)."
+        },
+        {
+          "prompt": "Uma consulta num HashMap leva tempo O(1) mesmo no pior caso.",
+          "explanation": "O(1) é a média. Se muitas chaves dividem um balde, a consulta precisa olhar todas. O HashMap do Java transforma um balde longo numa pequena árvore para limitar o estrago a O(log n)."
+        },
+        {
+          "prompt": "Qual destas é uma chave **ruim** para um HashMap?",
+          "options": [
+            "Uma lista em que você continua adicionando itens depois de usá-la como chave",
+            "Uma String",
+            "Um Integer",
+            "Um record com dois campos int"
+          ],
+          "explanation": "O código hash de uma lista muda quando ela muda, então depois de um add o mapa procura no balde errado e não acha a entrada. Strings, Integers e records com campos final nunca mudam."
+        }
+      ]
+    }
+  }
+}

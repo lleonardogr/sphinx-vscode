@@ -1,0 +1,109 @@
+{
+  "title": "Anagram Groups",
+  "topic": "Hashing",
+  "requires": [
+    "Collections",
+    "Strings"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Two words are anagrams when they have the same letters. Find a key that is the same for all anagrams and different otherwise.",
+    "Sort each word's letters (toCharArray, Arrays.sort, new String): \"listen\" and \"silent\" both become \"eilnst\". Count the words per key in a HashMap.",
+    "The number of groups is the map's size. Then go through its values for the largest group and the groups of size 1."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Grupos de anagramas",
+      "hints": [
+        "Duas palavras são anagramas quando têm as mesmas letras. Ache uma chave que seja igual para todos os anagramas e diferente nos outros casos.",
+        "Ordene as letras de cada palavra (toCharArray, Arrays.sort, new String): \"listen\" e \"silent\" viram \"eilnst\". Conte as palavras por chave num HashMap.",
+        "O número de grupos é o tamanho do mapa. Depois percorra os valores dele para achar o maior grupo e os grupos de tamanho 1."
+      ],
+      "bonus": [
+        {
+          "title": "Conte as letras",
+          "description": "Monte a chave sem ordenar: conte quantas vezes cada letra aparece e transforme as 26 contagens na chave.",
+          "hint": "Um int[26] com count[c - 'a']++ descreve as letras de uma palavra; Arrays.toString(count) ou as contagens escritas como caracteres formam uma chave String em O(tamanho).",
+          "mustNotContain": [
+            "Monte a chave a partir das contagens de letras, sem ordenar."
+          ]
+        }
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "6\nlisten\nsilent\nenlist\ngoogle\ntinsel\nbanana\n",
+      "output": "groups: 3\nlargest group: 4\nalone: 2\n"
+    },
+    {
+      "input": "3\nabc\nbca\ncab\n",
+      "output": "groups: 1\nlargest group: 3\nalone: 0\n"
+    },
+    {
+      "input": "1\na\n",
+      "output": "groups: 1\nlargest group: 1\nalone: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "4\nab\nba\nab\nba\n",
+      "output": "groups: 1\nlargest group: 4\nalone: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "5\nab\ncd\nef\ngh\nij\n",
+      "output": "groups: 5\nlargest group: 1\nalone: 5\n",
+      "hidden": true
+    },
+    {
+      "input": "3\naab\naba\nabb\n",
+      "output": "groups: 2\nlargest group: 2\nalone: 1\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 131,
+        "lines": [
+          "200000",
+          {
+            "chars": 6,
+            "alphabet": "abcdef",
+            "rows": 200000
+          }
+        ]
+      },
+      "output": "groups: 461\nlargest group: 2975\nalone: 0\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 132,
+        "lines": [
+          "200000",
+          {
+            "chars": 8,
+            "alphabet": "abcdefghijklmnopqrstuvwxyz",
+            "rows": 200000
+          }
+        ]
+      },
+      "output": "groups: 197853\nlargest group: 3\nalone: 195726\n",
+      "hidden": true
+    }
+  ],
+  "bonus": [
+    {
+      "id": "letter-counts",
+      "title": "Count the Letters",
+      "description": "Build the key without sorting: count how many times each letter appears, and turn the 26 counts into the key.",
+      "hint": "An int[26] with count[c - 'a']++ describes a word's letters; Arrays.toString(count) or the counts written as characters makes a String key in O(length).",
+      "mustNotContain": [
+        {
+          "pattern": "\\bsort\\b|sorted\\s*\\(",
+          "message": "Build the key from letter counts, without sorting."
+        }
+      ]
+    }
+  ]
+}
