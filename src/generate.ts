@@ -3,7 +3,7 @@
 // The same recipe gives the same input on every computer. Declarative only: imported packs can't run code.
 // No vscode dependency (the validator and the CLI use it).
 
-/** One line of a generated input: literal text, numbers or characters. */
+/** One line of a generated input: literal text, numbers, characters or a tree. */
 export type GeneratedLine =
   | string
   | {
@@ -24,6 +24,12 @@ export type GeneratedLine =
       chars: number;
       alphabet: string;
       rows?: number;
+    }
+  | {
+      /** A random tree of this many nodes, numbered 1 to n: one line with the parent of nodes 2 to n, each smaller than its node. */
+      parents: number;
+      /** Each parent is at most this far below its node: 1 makes a chain, bigger values a bushier tree (any by default). */
+      maxGap?: number;
     };
 
 export interface GeneratedInput {
@@ -55,10 +61,20 @@ export function generateProblems(spec: unknown): string[] {
       return;
     }
     if (!line || typeof line !== 'object') {
-      problems.push(`${where} must be text or an object with "ints" or "chars"`);
+      problems.push(`${where} must be text or an object with "ints", "chars" or "parents"`);
       return;
     }
-    const rows = line.rows ?? 1;
+    if ('parents' in line) {
+      if (!Number.isInteger(line.parents) || line.parents < 2) {
+        problems.push(`${where}: "parents" must be a whole number of nodes, 2 or more`);
+      } else if (line.maxGap !== undefined && (!Number.isInteger(line.maxGap) || line.maxGap < 1)) {
+        problems.push(`${where}: "maxGap" must be a whole number above 0`);
+      } else {
+        total += line.parents;
+      }
+      return;
+    }
+    const rows = (line as { rows?: number }).rows ?? 1;
     if (!Number.isInteger(rows) || rows < 1) {
       problems.push(`${where}: "rows" must be a whole number above 0`);
       return;
@@ -98,7 +114,7 @@ export function generateProblems(spec: unknown): string[] {
         total += line.chars * rows;
       }
     } else {
-      problems.push(`${where} must be text or an object with "ints" or "chars"`);
+      problems.push(`${where} must be text or an object with "ints", "chars" or "parents"`);
     }
   });
   if (total > MAX_GENERATED_VALUES) {
@@ -164,6 +180,14 @@ export function generateInput(spec: GeneratedInput): string {
   for (const line of spec.lines) {
     if (typeof line === 'string') {
       out.push(line);
+      continue;
+    }
+    if ('parents' in line) {
+      const parents: number[] = [];
+      for (let node = 2; node <= line.parents; node++) {
+        parents.push(node - 1 - below(next, Math.min(line.maxGap ?? node, node - 1)));
+      }
+      out.push(parents.join(' '));
       continue;
     }
     for (let r = 0; r < (line.rows ?? 1); r++) {

@@ -447,6 +447,25 @@
                     "description": "How many lines like this."
                   }
                 }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "parents"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "parents": {
+                    "type": "integer",
+                    "minimum": 2,
+                    "description": "A random tree with this many nodes, numbered 1 to n: one line with the parent of nodes 2 to n, each parent smaller than its node, so node 1 is the root."
+                  },
+                  "maxGap": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Each parent is at most this many numbers below its node: 1 makes a chain (the deepest tree), bigger values bushier trees. Any by default."
+                  }
+                }
               }
             ]
           }

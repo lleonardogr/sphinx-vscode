@@ -18,6 +18,11 @@
       "key": "StacksQueues",
       "title": "Stacks & Queues",
       "icon": "layers"
+    },
+    {
+      "key": "Hashing",
+      "title": "Hash Tables",
+      "icon": "symbol-key"
     }
   ],
   "translations": {
@@ -26,7 +31,8 @@
       "units": {
         "Complexity": "Complexidade e busca",
         "Sorting": "Ordenação",
-        "StacksQueues": "Pilhas e filas"
+        "StacksQueues": "Pilhas e filas",
+        "Hashing": "Tabelas hash"
       }
     }
   }

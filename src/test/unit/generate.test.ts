@@ -40,6 +40,17 @@ describe('generated test inputs', () => {
     assert.match(generateProblems({ seed: 1, lines: [{ ints: 2, min: [0, 0], max: [9, 9], sorted: true }] }).join(), /one range for every number/);
   });
 
+  it('build random trees as parent lists, from bushy to a chain', () => {
+    const parents = generateInput({ seed: 6, lines: [{ parents: 1000 }] }).trim().split(' ').map(Number);
+    assert.equal(parents.length, 999);
+    assert.ok(parents.every((p, i) => p >= 1 && p < i + 2), 'every parent is smaller than its node');
+    assert.equal(generateInput({ seed: 6, lines: [{ parents: 6, maxGap: 1 }] }), '1 2 3 4 5\n');
+    const close = generateInput({ seed: 7, lines: [{ parents: 500, maxGap: 3 }] }).trim().split(' ').map(Number);
+    assert.ok(close.every((p, i) => i + 2 - p <= 3));
+    assert.match(generateProblems({ seed: 1, lines: [{ parents: 1 }] }).join(), /2 or more/);
+    assert.match(generateProblems({ seed: 1, lines: [{ parents: 5, maxGap: 0 }] }).join(), /maxGap/);
+  });
+
   it('reject recipes that are broken or too big', () => {
     assert.deepEqual(generateProblems({ seed: 1, lines: ['1', { ints: 3, min: 0, max: 9 }] }), []);
     assert.match(generateProblems({ lines: ['1'] }).join(), /seed/);
@@ -47,7 +58,7 @@ describe('generated test inputs', () => {
     assert.match(generateProblems({ seed: 1, lines: [{ ints: 5, min: 1, max: 3, distinct: true }] }).join(), /don't fit/);
     assert.match(generateProblems({ seed: 1, lines: [{ ints: 2, min: 5, max: 1 }] }).join(), /min <= max/);
     assert.match(generateProblems({ seed: 1, lines: [{ chars: 3, alphabet: '' }] }).join(), /alphabet/);
-    assert.match(generateProblems({ seed: 1, lines: [{ words: 3 }] }).join(), /"ints" or "chars"/);
+    assert.match(generateProblems({ seed: 1, lines: [{ words: 3 }] }).join(), /"ints", "chars" or "parents"/);
     assert.match(generateProblems({ seed: 1, lines: [{ ints: 1000, rows: MAX_GENERATED_VALUES, min: 0, max: 1 }] }).join(), /the most is/);
     assert.throws(() => generateInput({ seed: 1, lines: [] }), /list of lines/);
   });
