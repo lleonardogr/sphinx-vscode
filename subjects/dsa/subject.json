@@ -23,6 +23,11 @@
       "key": "Hashing",
       "title": "Hash Tables",
       "icon": "symbol-key"
+    },
+    {
+      "key": "Trees",
+      "title": "Trees",
+      "icon": "type-hierarchy"
     }
   ],
   "translations": {
@@ -32,7 +37,8 @@
         "Complexity": "Complexidade e busca",
         "Sorting": "Ordenação",
         "StacksQueues": "Pilhas e filas",
-        "Hashing": "Tabelas hash"
+        "Hashing": "Tabelas hash",
+        "Trees": "Árvores"
       }
     }
   }
