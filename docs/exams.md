@@ -140,7 +140,7 @@ A question `id` is either:
 - the name of a **quiz folder inside the exam folder**: a private [quiz](quizzes.md#quizzes-in-exams), submitted once; or
 - the id of **any challenge or quiz** the extension knows, such as `even-or-odd` (a built-in one), a bigger mixed test such as `calculator-menu`, or one of your own challenges from `extraChallengePaths`.
 
-Copy the built-in example from the repository's [`exams/sample-exam`](../exams/sample-exam) folder to get started. Then validate your exam folder with **Sphinx: Validate Challenges in a Folder…**. It checks the private questions and reports unknown question ids.
+With an AI assistant such as Claude Code, the [`sphinx-exam` skill](../.claude/skills/sphinx-exam/SKILL.md) walks through planning the questions, writing them and checking the exam. Or copy the built-in example from the repository's [`exams/sample-exam`](../exams/sample-exam) folder to get started. Then validate your exam folder with **Sphinx: Validate Challenges in a Folder…**. It checks the private questions and reports unknown question ids.
 
 ---
 
