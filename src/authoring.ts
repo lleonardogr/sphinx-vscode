@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import { CUSTOM_TOPIC, Challenge, topicOrder } from './challenges';
 import { formatReport, reportPassed, validateChallenges } from './validator';
 import { LessonDefinition } from './lessons';
-import { SubjectDef, allSubjects, findSubject, findUnit, subjectTitle } from './subjects';
+import { SubjectDef, allSubjects, findSubject, findUnit, subjectContentRoots, subjectTitle } from './subjects';
 import { unitName } from './path';
 import { tr } from './i18n';
 
@@ -694,7 +694,8 @@ export async function validateFolder(deps: AuthoringDeps): Promise<void> {
     (progress) =>
       validateChallenges([folder], {
         generate: mode.generate,
-        referenceRoots: ['challenges', 'custom', 'tests'].map((dir) => path.join(deps.extensionPath, dir)),
+        // Every built-in challenge, test and quiz, so a teacher's exam can use any of them as a question.
+        referenceRoots: [...['challenges', 'custom', 'tests', 'quizzes'].map((dir) => path.join(deps.extensionPath, dir)), ...allSubjects().flatMap(subjectContentRoots)],
         javaHome: deps.javaHome(),
         onChallenge: (c) => progress.report({ message: c.id }),
       }),
