@@ -1,0 +1,105 @@
+{
+  "title": "Budget Periods",
+  "topic": "Hashing",
+  "requires": [
+    "Collections",
+    "Arrays"
+  ],
+  "difficulty": "Medium",
+  "order": 3,
+  "hints": [
+    "Let prefix be the running total. The days i+1..j add up to prefix[j] − prefix[i], so a period sums to k when an earlier prefix equals the current total minus k.",
+    "Keep a HashMap from each prefix total to how many times it has appeared (start with 0 appearing once, before day 1). At each day, add counts.getOrDefault(total − k, 0) to the answer.",
+    "For the longest period, keep a second map with the first day each total appeared: the period from just after that day to today is the longest one ending today."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Períodos do orçamento",
+      "hints": [
+        "Seja prefix o total acumulado. Os dias i+1..j somam prefix[j] − prefix[i], então um período soma k quando um prefixo anterior é igual ao total atual menos k.",
+        "Guarde um HashMap de cada total de prefixo para quantas vezes ele apareceu (comece com 0 aparecendo uma vez, antes do dia 1). Em cada dia, some counts.getOrDefault(total − k, 0) à resposta.",
+        "Para o período mais longo, guarde um segundo mapa com o primeiro dia em que cada total apareceu: o período logo depois daquele dia até hoje é o mais longo que termina hoje."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "6 5\n2 3 -1 4 -3 5\n",
+      "output": "periods: 4\nlongest: 5\n"
+    },
+    {
+      "input": "5 0\n0 0 0 0 0\n",
+      "output": "periods: 15\nlongest: 5\n"
+    },
+    {
+      "input": "1 7\n7\n",
+      "output": "periods: 1\nlongest: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "1 7\n3\n",
+      "output": "periods: 0\nlongest: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "4 -2\n-1 -1 -1 -1\n",
+      "output": "periods: 3\nlongest: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "6 3\n1 2 1 2 1 2\n",
+      "output": "periods: 5\nlongest: 2\n",
+      "hidden": true
+    },
+    {
+      "input": "3 1000000000\n1000 1000 1000\n",
+      "output": "periods: 0\nlongest: 0\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 151,
+        "lines": [
+          "200000 0",
+          {
+            "ints": 200000,
+            "min": -1000,
+            "max": 1000
+          }
+        ]
+      },
+      "output": "periods: 86210\nlongest: 151646\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 152,
+        "lines": [
+          "200000 500",
+          {
+            "ints": 200000,
+            "min": -1000,
+            "max": 1000
+          }
+        ]
+      },
+      "output": "periods: 75032\nlongest: 180694\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 153,
+        "lines": [
+          "200000 0",
+          {
+            "ints": 200000,
+            "min": 0,
+            "max": 0
+          }
+        ]
+      },
+      "output": "periods: 20000100000\nlongest: 200000\n",
+      "hidden": true
+    }
+  ]
+}
