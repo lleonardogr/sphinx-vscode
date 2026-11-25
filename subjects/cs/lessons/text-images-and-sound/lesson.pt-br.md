@@ -2,7 +2,7 @@
 
 Os computadores guardam texto como números: cada caractere tem um **código**. No **ASCII**, `A` é 65, `a` é 97, o dígito `0` é 48 e o espaço é 32, e cada letra minúscula fica exatamente 32 depois da sua maiúscula. No Java um `char` é um número, então `'a' - 'A'` é 32.
 
-O ASCII só tem 128 códigos. O **Unicode** numera todos os caracteres de todos os idiomas, de é a 😀, com um **code point** como `U+00E9`. O **UTF-8** guarda code points em 1 a 4 bytes: caracteres ASCII ocupam 1, letras com acento 2, emoji 4. Texto embaralhado como "Ã©" no lugar de "é" quer dizer que bytes UTF-8 foram lidos com a tabela errada.
+O ASCII só tem 128 códigos. O **Unicode** numera todos os caracteres de todos os idiomas, de é a 😀, com um **code point** como `U+00E9`. O **UTF-8** guarda code points em 1 a 4 bytes, mais para code points maiores: `A` ocupa 1, `é` 2, `€` e `☕` 3, e `😀` 4. Texto embaralhado como "Ã©" no lugar de "é" quer dizer que bytes UTF-8 foram lidos com a tabela errada.
 
 ![Como é, U+00E9, vira os bytes UTF-8 C3 A9](utf8.pt-br.svg)
 

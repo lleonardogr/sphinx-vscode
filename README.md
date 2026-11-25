@@ -122,7 +122,7 @@ The fourth subject, for students who know Java's arrays, collections and methods
 - **Command line**: a `sphinx` command in VS Code's terminal to validate content, test a solution, build a pack and verify exam results (see [Command line](#command-line)).
 - **Subjects**: Java Programming, CS Fundamentals, C Programming and Data Structures & Algorithms, each with its own learning path. **Switch Subject…** (📚) changes the one in the sidebar, and its name is shown in the sidebar header.
 - **Lessons**: short pages to read before a unit's quiz and challenges, with a reading time, a ✓ once read, and a button to the next item.
-- **Notebook lessons**: every unit's guide, in all four subjects, opens as a notebook in VS Code's notebook editor. Students run and change small Java or C experiments, with no Jupyter or kernel to install (Sphinx runs the cells with the JDK and C compiler the challenges use), and solve the unit's challenges in cells that run all the tests and count in their progress.
+- **Notebook lessons**: every unit's guide, in all four subjects, opens as a notebook in VS Code's notebook editor. Students run and change small Java (JDK 25 or newer) or C experiments, with no Jupyter or kernel to install (Sphinx runs the cells with the JDK and C compiler the challenges use), and solve the unit's challenges in cells that run all the tests and count in their progress.
 - **Bonus goals**: a challenge can offer up to 3 optional, harder goals (solve it without loops, fast enough for a huge input…), checked when it passes. Earned goals become stars in the panel, the sidebar and the unit's guide.
 - **Prerequisites**: an item can list the units it builds on, shown with the student's progress in each one. They're advice, unless a teacher turns on **prerequisite locks**: then the item opens once half (or all) of each unit it needs is solved.
 - **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/100 solved` counter for the current subject in the status bar.
@@ -209,7 +209,7 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 | `sphinx.java.style` | `modern` | Starter code style for new challenges: `modern` (JDK 25+) or `classic` (JDK 17+). Use **Reset Code to Starter** to switch a challenge you already opened. |
 | `sphinx.java.home` | (empty) | The JDK folder, if `javac` is not on your PATH. |
 | `sphinx.terminalCommand` | `true` | Adds the `sphinx` command to VS Code's integrated terminals. |
-| `sphinx.notebookLessons` | `true` | Opens lessons that come with a notebook (every built-in unit's guide) as the notebook. Turn off to open them as reading pages. |
+| `sphinx.notebookLessons` | `true` | Opens lessons that come with a notebook (every built-in unit's guide) as the notebook. Java cells need JDK 25 or newer; with an older JDK, turn this off. Turn off to open them as reading pages. |
 | `sphinx.c.compiler` | (empty) | The C compiler for C challenges, or the folder of a portable one. Empty: `cc`, `clang` or `gcc` on the PATH. |
 | `sphinx.codeFolder` | (empty) | Where solutions are saved. |
 | `sphinx.extraChallengePaths` | `[]` | Extra challenge folders provided by your teacher. |

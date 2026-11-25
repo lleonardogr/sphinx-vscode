@@ -2,7 +2,7 @@
 
 A **stack** gives back the last value put in (last in, first out): undo history, a browser's Back button, matching brackets, the method calls of a running program. A **queue** gives back the first (first in, first out): print jobs, a CPU taking turns between programs, messages waiting to be handled.
 
-In Java, `ArrayDeque` is both. As a stack: `push`, `pop` and `peek`. As a queue: `offer`, `poll` and `peek`. Every operation is O(1).
+In Java, `ArrayDeque` is both. As a stack: `push`, `pop` and `peek`. As a queue: `offer`, `poll` and `peek`. These operations at the ends take amortized O(1) time.
 
 ![A stack and a queue in an ArrayDeque](deque.svg)
 

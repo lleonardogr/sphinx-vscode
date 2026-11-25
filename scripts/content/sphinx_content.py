@@ -391,7 +391,7 @@ def lesson_notebook(folder, insert=None, challenges=True):
     paragraph k (paragraphs are split at blank lines, the "## In short" heading is 0); the readings with their
     "look for" notes; the text after the readings ("Check yourself"); and, when challenges is True, a cell with
     the starter code for every challenge of the lesson's unit and the test that closes it."""
-    d = os.path.join(REPO, folder)
+    d = os.path.normpath(os.path.join(REPO, folder))
     meta = json.load(open(os.path.join(d, 'lesson.json'), encoding='utf8'))
     pt_meta = meta.get('translations', {}).get('pt-br', {})
     subject_dir = os.path.dirname(os.path.dirname(d))

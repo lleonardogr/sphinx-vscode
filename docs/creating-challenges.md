@@ -430,9 +430,9 @@ Sphinx runs the notebook's cells itself (the **Sphinx** kernel): Java with the s
 | starts with `// shared` | a definition: its methods, records and fields can be used by every cell below it |
 | starts with `// sphinx: challenge <id>` | a solution to that challenge: running it runs all its tests, hidden ones included, and counts in the student's progress like **Submit** |
 
-Each cell runs on its own: variables don't carry over from one cell to the next (put what several cells need in a `// shared` cell). Cells can't read keyboard input, but challenge cells get each test's input. A plain cell stops after 20 seconds.
+Java cells use compact source files (`void main()` and statements on their own), so they need JDK 25 or newer, like the modern starters; with an older JDK, turn `sphinx.notebookLessons` off to read the lessons as pages. Each cell runs on its own: variables don't carry over from one cell to the next (put what several cells need in a `// shared` cell). Cells can't read keyboard input, but challenge cells get each test's input. A plain cell stops after 20 seconds.
 
-The validator runs every cell of every notebook (Java with JDK 25 or newer) and reports the ones that don't compile, compile with warnings (C) or crash, checks that each challenge cell names a Java challenge, and warns when a translation such as `lesson.pt-br.ipynb` is missing. In this repository, `lesson_notebook()` in [scripts/content](../scripts/content/README.md) builds a guide's notebooks from `lesson.json` and `lesson.md`, with the code cells you give it and a cell for each challenge of the unit.
+The validator runs every plain cell of every notebook (Java with JDK 25 or newer) and reports the ones that don't compile, compile with warnings (C) or crash. Challenge cells hold the starter code, which is checked with the challenge itself: for them it only checks that the id names a challenge in the cell's language. It also warns when a translation such as `lesson.pt-br.ipynb` is missing. In this repository, `lesson_notebook()` in [scripts/content](../scripts/content/README.md) builds a guide's notebooks from `lesson.json` and `lesson.md`, with the code cells you give it and a cell for each challenge of the unit.
 
 ### Prerequisites
 

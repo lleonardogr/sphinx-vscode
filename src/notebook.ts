@@ -154,7 +154,8 @@ export function registerNotebookController(host: NotebookHost): vscode.NotebookC
       : tr(`${c.title}: ${passed} of ${outcome.results.length} tests pass.`, `${c.title}: ${passed} de ${outcome.results.length} testes passam.`);
     await execution.replaceOutput(new vscode.NotebookCellOutput([vscode.NotebookCellOutputItem.text(`${header}\n\n${outcome.results.map(testLine).join('\n')}`)]));
     await host.onChallengeResult(c, solved);
-    return true;
+    // A wrong answer still counts as a run (the cell did its job); a test that ran out of time is an error.
+    return !outcome.results.some((r) => r.timedOut);
   }
 
   controller.executeHandler = async (cells) => {
