@@ -1,0 +1,176 @@
+{
+  "title": "Trees Quiz",
+  "topic": "Trees",
+  "requires": [
+    "Recursion"
+  ],
+  "description": "Parent arrays, binary search trees and their height, traversals, tries and deep recursion.",
+  "questions": [
+    {
+      "type": "output",
+      "code": "int[] parent = {0, 0, 1, 1, 2, 2, 3}; // node 0 is the root\nint[] depth = new int[parent.length];\nfor (int i = 1; i < parent.length; i++) {\n    depth[i] = depth[parent[i]] + 1;\n}\nIO.println(Arrays.toString(depth));",
+      "answer": "[0, 1, 2, 2, 3, 3, 3]",
+      "explanation": "Every parent comes before its children, so a node's depth is its parent's plus one, already computed: one pass, O(n), with no walking up to the root."
+    },
+    {
+      "type": "choice",
+      "prompt": "Which traversal visits a binary search tree's keys in increasing order?",
+      "options": [
+        "In-order: left subtree, node, right subtree",
+        "Pre-order: node, left, right",
+        "Post-order: left, right, node",
+        "Level by level, from the root"
+      ],
+      "answer": 0,
+      "explanation": "Everything on a node's left is smaller and everything on its right is bigger, so left, node, right comes out sorted."
+    },
+    {
+      "type": "number",
+      "prompt": "Insert 1, 2, 3, 4, 5, in that order, into an empty binary search tree. What is its height, counting the levels?",
+      "answer": "5",
+      "explanation": "Each key is bigger than all the others so far, so it always goes to the right: a chain of 5 levels. Searching it is no faster than a linked list."
+    },
+    {
+      "type": "choice",
+      "prompt": "Why do `TreeMap` operations stay O(log n) even when keys are inserted in sorted order?",
+      "options": [
+        "It rebalances the tree on insertions and removals, so its height stays about log n",
+        "It sorts the keys after every insertion",
+        "It uses a hash table inside",
+        "It only stores keys that arrive in random order"
+      ],
+      "answer": 0,
+      "explanation": "TreeMap is a red-black tree: rotations after insertions and removals keep the height within about 2 log₂ n, so the chain never forms."
+    },
+    {
+      "type": "output",
+      "code": "record Node(int key, Node left, Node right) {}\n\nvoid preOrder(Node n, List<Integer> out) {\n    if (n == null) {\n        return;\n    }\n    out.add(n.key());\n    preOrder(n.left(), out);\n    preOrder(n.right(), out);\n}\n\nvoid main() {\n    Node root = new Node(5, new Node(3, new Node(1, null, null), null), new Node(8, null, new Node(9, null, null)));\n    List<Integer> out = new ArrayList<>();\n    preOrder(root, out);\n    IO.println(out);\n}",
+      "answer": "[5, 3, 1, 8, 9]",
+      "explanation": "Pre-order visits the node before its subtrees: 5, then all of the left subtree (3, then 1), then the right subtree (8, then 9)."
+    },
+    {
+      "type": "choice",
+      "prompt": "A folder's size is the size of its files plus the sizes of its subfolders. Why does computing it need a **post-order** traversal?",
+      "options": [
+        "A folder's total needs its subfolders' totals first, and post-order finishes the children before the node",
+        "Post-order visits fewer folders",
+        "Post-order visits the folders in alphabetical order",
+        "Pre-order would count each file twice"
+      ],
+      "answer": 0,
+      "explanation": "Post-order (children, then node) means that by the time you reach a folder, every subfolder total is ready to add."
+    },
+    {
+      "type": "number",
+      "prompt": "A trie stores the words **car**, **cat** and **cart**, one letter per node. How many nodes does it have, not counting the root?",
+      "answer": "5",
+      "explanation": "c → a is shared by all three words. Under a there are r and t, and under r there is t: c, a, r, t (cart) and t (cat), 5 nodes. Shared prefixes are stored once."
+    },
+    {
+      "type": "truefalse",
+      "prompt": "Searching a binary search tree always takes O(log n) steps.",
+      "answer": false,
+      "explanation": "A search is O(height). A balanced tree has height about log n, but keys inserted in sorted order make a chain, and then a search can take n steps."
+    },
+    {
+      "type": "choice",
+      "prompt": "Where is the smallest key in a binary search tree?",
+      "options": [
+        "Go left from the root until a node has no left child",
+        "At the root",
+        "In the leftmost leaf of the bottom level",
+        "At the end of the right-most path"
+      ],
+      "answer": 0,
+      "explanation": "Every step left gives a smaller key, so the node where you can't go left anymore holds the smallest. It doesn't have to be a leaf: it can still have a right child."
+    },
+    {
+      "type": "choice",
+      "prompt": "A recursive function that measures depth crashes with `StackOverflowError` on a chain of 200,000 nodes. What fixes it?",
+      "options": [
+        "Replace the recursion with a loop: process the nodes in order with the parent array, or keep your own stack or queue",
+        "Use long instead of int",
+        "Catch the error and try again",
+        "Make the tree a hash map"
+      ],
+      "answer": 0,
+      "explanation": "Each recursive call uses some of the thread's call stack, and 200,000 nested calls is too many. A loop with an explicit ArrayDeque, or a pass in parent-before-child order, uses heap memory instead."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Quiz de árvores",
+      "description": "Arrays de pais, árvores binárias de busca e sua altura, percursos, tries e recursão funda.",
+      "questions": [
+        {
+          "explanation": "Todo pai vem antes dos filhos, então a profundidade de um nó é a do pai mais um, já calculada: uma passada, O(n), sem subir até a raiz."
+        },
+        {
+          "prompt": "Que percurso visita as chaves de uma árvore binária de busca em ordem crescente?",
+          "options": [
+            "Em ordem: subárvore esquerda, nó, subárvore direita",
+            "Pré-ordem: nó, esquerda, direita",
+            "Pós-ordem: esquerda, direita, nó",
+            "Nível por nível, a partir da raiz"
+          ],
+          "explanation": "Tudo à esquerda de um nó é menor e tudo à direita é maior, então esquerda, nó, direita sai ordenado."
+        },
+        {
+          "prompt": "Insira 1, 2, 3, 4, 5, nessa ordem, numa árvore binária de busca vazia. Qual é a altura dela, contando os níveis?",
+          "explanation": "Cada chave é maior que todas as anteriores, então sempre vai para a direita: uma corrente de 5 níveis. Buscar nela não é mais rápido que numa lista encadeada."
+        },
+        {
+          "prompt": "Por que as operações do `TreeMap` continuam O(log n) mesmo quando as chaves são inseridas em ordem?",
+          "options": [
+            "Ele rebalanceia a árvore nas inserções e remoções, então a altura fica perto de log n",
+            "Ele ordena as chaves depois de cada inserção",
+            "Ele usa uma tabela hash por dentro",
+            "Ele só guarda chaves que chegam em ordem aleatória"
+          ],
+          "explanation": "O TreeMap é uma árvore rubro-negra: rotações depois de inserções e remoções mantêm a altura em até uns 2 log₂ n, então a corrente nunca se forma."
+        },
+        {
+          "explanation": "A pré-ordem visita o nó antes das subárvores: 5, depois toda a subárvore esquerda (3, depois 1), depois a direita (8, depois 9)."
+        },
+        {
+          "prompt": "O tamanho de uma pasta é o tamanho dos seus arquivos mais o das subpastas. Por que calculá-lo precisa de um percurso em **pós-ordem**?",
+          "options": [
+            "O total de uma pasta precisa antes dos totais das subpastas, e a pós-ordem termina os filhos antes do nó",
+            "A pós-ordem visita menos pastas",
+            "A pós-ordem visita as pastas em ordem alfabética",
+            "A pré-ordem contaria cada arquivo duas vezes"
+          ],
+          "explanation": "Pós-ordem (filhos, depois o nó) quer dizer que, quando você chega numa pasta, todos os totais das subpastas já estão prontos para somar."
+        },
+        {
+          "prompt": "Uma trie guarda as palavras **car**, **cat** e **cart**, uma letra por nó. Quantos nós ela tem, sem contar a raiz?",
+          "explanation": "c → a é compartilhado pelas três palavras. Embaixo de a ficam r e t, e embaixo de r fica t: c, a, r, t (cart) e t (cat), 5 nós. Prefixos em comum são guardados uma vez só."
+        },
+        {
+          "prompt": "Buscar numa árvore binária de busca sempre leva O(log n) passos.",
+          "explanation": "Uma busca é O(altura). Uma árvore balanceada tem altura perto de log n, mas chaves inseridas em ordem formam uma corrente, e aí uma busca pode levar n passos."
+        },
+        {
+          "prompt": "Onde fica a menor chave de uma árvore binária de busca?",
+          "options": [
+            "Vá para a esquerda a partir da raiz até um nó sem filho esquerdo",
+            "Na raiz",
+            "Na folha mais à esquerda do último nível",
+            "No fim do caminho mais à direita"
+          ],
+          "explanation": "Cada passo para a esquerda dá uma chave menor, então o nó em que não dá mais para ir à esquerda guarda a menor. Ele não precisa ser uma folha: ainda pode ter um filho direito."
+        },
+        {
+          "prompt": "Uma função recursiva que mede profundidades quebra com `StackOverflowError` numa corrente de 200.000 nós. O que resolve?",
+          "options": [
+            "Trocar a recursão por um laço: processar os nós em ordem com o array de pais, ou manter sua própria pilha ou fila",
+            "Usar long em vez de int",
+            "Capturar o erro e tentar de novo",
+            "Transformar a árvore num mapa hash"
+          ],
+          "explanation": "Cada chamada recursiva usa um pouco da pilha de chamadas da thread, e 200.000 chamadas aninhadas é demais. Um laço com um ArrayDeque explícito, ou uma passada na ordem pai-antes-do-filho, usa memória do heap."
+        }
+      ]
+    }
+  }
+}

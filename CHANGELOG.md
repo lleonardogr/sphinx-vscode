@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Added
 
 - **Data Structures & Algorithms unit 4, *Hash Tables***: a reading guide on buckets, collisions, resizing, grouping keys and prefix sums (VisuAlgo, USACO Guide and dev.java readings, and a diagram of buckets with a collision), a 10-question quiz, four challenges (Anagram Groups, Longest Streak, Budget Periods and Hash Table, where students build their own) and the test Server Log Report, which closes units 1 to 4.
+- **Data Structures & Algorithms unit 5, *Trees***: a reading guide on parent arrays, binary search trees and their height, traversals and tries (VisuAlgo and USACO Guide readings, and a BST diagram), a 10-question quiz, and four challenges: Org Chart, BST Builder, Autocomplete and Folder Sizes.
 - **Generated trees.** A generated input can hold a random tree as a list of parents (`{"parents": n}`), from bushy to a chain with `maxGap`.
 
 ## [1.9.3] - 2026-10-17
