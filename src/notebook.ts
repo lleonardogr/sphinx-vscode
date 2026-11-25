@@ -10,7 +10,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { Challenge } from './challenges';
 import { tr } from './i18n';
-import { CELL_TIME_LIMIT_MS, cellChallenge, cellProgram, isSharedCell, runCellSource } from './notebookCells';
+import { CELL_TIME_LIMIT_MS, CellLanguage, cellChallenge, cellProgram, isSharedCell, runCellSource } from './notebookCells';
 import { RunOutcome, TestResult } from './runner';
 
 export const CONTROLLER_ID = 'sphinx-java';
@@ -23,6 +23,11 @@ export interface NotebookHost {
   onChallengeResult(c: Challenge, solved: boolean): Promise<void>;
   /** A cell ran without errors in a lesson notebook. */
   onCellRan(notebook: vscode.NotebookDocument): void;
+}
+
+/** A cell's language: C cells are marked "c" in the notebook; everything else runs as Java. */
+function cellLanguage(cell: vscode.NotebookCell): CellLanguage {
+  return cell.document.languageId === 'c' ? 'c' : 'java';
 }
 
 function problemOutput(outcome: RunOutcome, firstLine: number): vscode.NotebookCellOutput | undefined {
@@ -50,7 +55,8 @@ function testLine(r: TestResult): string {
     return `✗ ${name}: ${r.generated ? tr('took too long on a big input (is there a faster approach?)', 'demorou demais numa entrada grande (há uma abordagem mais rápida?)') : tr('took too long', 'demorou demais')}`;
   }
   if (r.exitCode !== 0) {
-    return `✗ ${name}: ${tr('crashed', 'travou')}${r.stderr.trim() ? `\n    ${r.stderr.trim().split('\n')[0]}` : ''}`;
+    const why = r.crash ?? r.stderr.trim().split('\n')[0];
+    return `✗ ${name}: ${tr('crashed', 'travou')}${why ? `\n    ${why}` : ''}`;
   }
   if (r.hidden) {
     return `✗ ${name}: ${tr('wrong answer', 'resposta errada')}`;
@@ -60,10 +66,10 @@ function testLine(r: TestResult): string {
 }
 
 export function registerNotebookController(host: NotebookHost): vscode.NotebookController {
-  const controller = vscode.notebooks.createNotebookController(CONTROLLER_ID, 'jupyter-notebook', 'Sphinx: Java');
-  controller.supportedLanguages = ['java'];
+  const controller = vscode.notebooks.createNotebookController(CONTROLLER_ID, 'jupyter-notebook', 'Sphinx');
+  controller.supportedLanguages = ['java', 'c'];
   controller.supportsExecutionOrder = true;
-  controller.description = tr('Runs Java cells with your JDK', 'Roda células Java com o seu JDK');
+  controller.description = tr('Runs Java and C cells with your JDK and C compiler', 'Roda células Java e C com o seu JDK e compilador de C');
   let order = 0;
 
   async function runCell(cell: vscode.NotebookCell): Promise<void> {
@@ -76,7 +82,7 @@ export function registerNotebookController(host: NotebookHost): vscode.NotebookC
     try {
       const challengeId = cellChallenge(code);
       if (challengeId) {
-        ok = await runChallengeCell(execution, challengeId, code);
+        ok = await runChallengeCell(execution, cell, challengeId, code);
       } else {
         ok = await runPlainCell(execution, cell, code);
       }
@@ -90,13 +96,14 @@ export function registerNotebookController(host: NotebookHost): vscode.NotebookC
   }
 
   async function runPlainCell(execution: vscode.NotebookCellExecution, cell: vscode.NotebookCell, code: string): Promise<boolean> {
+    const lang = cellLanguage(cell);
     const shared = cell.notebook
       .getCells()
-      .filter((c) => c.index < cell.index && c.kind === vscode.NotebookCellKind.Code && isSharedCell(c.document.getText()))
+      .filter((c) => c.index < cell.index && c.kind === vscode.NotebookCellKind.Code && cellLanguage(c) === lang && isSharedCell(c.document.getText()))
       .map((c) => c.document.getText());
     const isShared = isSharedCell(code);
-    const { source, firstLine } = cellProgram(shared, code, isShared);
-    const outcome = await runCellSource(source, { tests: [{ input: '', output: '' }], timeLimitMs: CELL_TIME_LIMIT_MS, ...host.runnerOptions() });
+    const { source, firstLine } = cellProgram(shared, code, isShared, lang);
+    const outcome = await runCellSource(source, { tests: [{ input: '', output: '' }], timeLimitMs: CELL_TIME_LIMIT_MS, ...host.runnerOptions() }, lang);
     const problem = problemOutput(outcome, firstLine);
     if (problem || outcome.kind !== 'tests') {
       await execution.replaceOutput(problem ?? []);
@@ -104,6 +111,12 @@ export function registerNotebookController(host: NotebookHost): vscode.NotebookC
     }
     const r = outcome.results[0];
     const items: vscode.NotebookCellOutputItem[] = [];
+    if (outcome.warnings?.length) {
+      items.push(vscode.NotebookCellOutputItem.stderr(`${tr('Compiler warnings:', 'Avisos do compilador:')}\n${outcome.warnings.map((w) => `${tr('line', 'linha')} ${Math.max(1, w.line - firstLine + 1)}: ${w.message}`).join('\n')}\n`));
+    }
+    if (r.crash) {
+      items.push(vscode.NotebookCellOutputItem.stderr(`✗ ${r.crash}\n`));
+    }
     if (isShared && !r.actual) {
       items.push(vscode.NotebookCellOutputItem.text(tr('✓ Defined: the cells below can use it.', '✓ Definido: as células abaixo podem usar.')));
     }
@@ -120,13 +133,14 @@ export function registerNotebookController(host: NotebookHost): vscode.NotebookC
     return !r.timedOut && r.exitCode === 0;
   }
 
-  async function runChallengeCell(execution: vscode.NotebookCellExecution, id: string, code: string): Promise<boolean> {
+  async function runChallengeCell(execution: vscode.NotebookCellExecution, cell: vscode.NotebookCell, id: string, code: string): Promise<boolean> {
     const c = host.findChallenge(id);
-    if (!c || c.language !== 'java') {
-      await execution.replaceOutput(new vscode.NotebookCellOutput([vscode.NotebookCellOutputItem.stderr(tr(`No Java challenge called "${id}".`, `Nenhum desafio em Java chamado "${id}".`))]));
+    const lang = cellLanguage(cell);
+    if (!c || c.language !== lang) {
+      await execution.replaceOutput(new vscode.NotebookCellOutput([vscode.NotebookCellOutputItem.stderr(tr(`No ${lang === 'c' ? 'C' : 'Java'} challenge called "${id}".`, `Nenhum desafio em ${lang === 'c' ? 'C' : 'Java'} chamado "${id}".`))]));
       return false;
     }
-    const outcome = await runCellSource(code, { tests: c.tests, mustContain: c.mustContain, mustNotContain: c.mustNotContain, timeLimitMs: c.timeLimitMs, ...host.runnerOptions() });
+    const outcome = await runCellSource(code, { tests: c.tests, mustContain: c.mustContain, mustNotContain: c.mustNotContain, timeLimitMs: c.timeLimitMs, ...host.runnerOptions() }, lang);
     const problem = problemOutput(outcome, 1);
     if (problem || outcome.kind !== 'tests') {
       await execution.replaceOutput(problem ?? []);

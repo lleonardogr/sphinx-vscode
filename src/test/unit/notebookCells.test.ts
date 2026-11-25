@@ -2,6 +2,7 @@ import { strict as assert } from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
 import { describe, it } from 'node:test';
+import { findCCompiler } from '../../cRunner';
 import { cellChallenge, cellProgram, isSharedCell, lessonNotebooks, notebookProblems, readNotebook } from '../../notebookCells';
 import { javaVersion, tempDir } from './helpers';
 
@@ -36,13 +37,21 @@ describe('notebook lesson cells', () => {
     assert.match(shared.source, /void main\(\) \{\n\}\n$/, 'a shared cell compiles with an empty main');
   });
 
+  it('turn a C cell into a C program, with the usual headers and int main(void)', () => {
+    const statements = cellProgram(['// shared\nint twice(int x) { return 2 * x; }'], 'printf("%d\\n", twice(21));', false, 'c');
+    assert.match(statements.source, /^#include <stdio\.h>[\s\S]*int twice[\s\S]*int main\(void\) \{\n {4}printf[\s\S]*return 0;\n\}\n$/);
+    assert.equal(statements.source.split('\n')[statements.firstLine - 1].trim(), 'printf("%d\\n", twice(21));');
+    const whole = cellProgram([], 'int main(void) {\n    return 0;\n}', false, 'c');
+    assert.equal(whole.source.split('\n')[whole.firstLine - 1], 'int main(void) {');
+  });
+
   it('read notebooks and find a lesson\'s translations', () => {
     const dir = tempDir();
     writeNotebook(dir, 'lesson.ipynb', [cell('markdown', '# Hi'), cell('code', 'IO.println(1);\n')]);
     writeNotebook(dir, 'lesson.pt-br.ipynb', [cell('markdown', '# Oi')]);
     fs.writeFileSync(path.join(dir, 'notes.ipynb'), '{}');
     assert.deepEqual(lessonNotebooks(dir).map((f) => path.basename(f)), ['lesson.ipynb', 'lesson.pt-br.ipynb']);
-    assert.deepEqual(readNotebook(path.join(dir, 'lesson.ipynb')), [{ kind: 'markdown', source: '# Hi' }, { kind: 'code', source: 'IO.println(1);\n' }]);
+    assert.deepEqual(readNotebook(path.join(dir, 'lesson.ipynb')), [{ kind: 'markdown', source: '# Hi', language: 'java' }, { kind: 'code', source: 'IO.println(1);\n', language: 'java' }]);
     assert.throws(() => readNotebook(path.join(dir, 'notes.ipynb')), /not a notebook/);
   });
 
@@ -60,10 +69,25 @@ describe('notebook lesson cells', () => {
     const languages: Record<string, string> = { known: 'java', 'in-c': 'c' };
     const { problems, cellsRun } = await notebookProblems(dir, version, (id) => languages[id]);
     assert.ok(problems.some((p) => /no challenge called "unknown"/.test(p)), problems.join('\n'));
-    assert.ok(problems.some((p) => /"in-c" is a c challenge/.test(p)), problems.join('\n'));
+    assert.ok(problems.some((p) => /"in-c" is a c challenge, but the cell is java/.test(p)), problems.join('\n'));
     if (version === undefined || version < 25) return t.skip('running cells needs JDK 25');
     assert.equal(cellsRun, 3);
     assert.ok(problems.some((p) => /cell 3 does not compile/.test(p)), problems.join('\n'));
     assert.ok(!problems.some((p) => /cell [12] /.test(p)), 'the shared cell and the cell using it run');
+  });
+
+  it('run C cells in C notebooks, and report compiler warnings', async (t) => {
+    if (!(await findCCompiler())) return t.skip('no C compiler on this machine');
+    const dir = tempDir();
+    const cCell = (text: string) => ({ cell_type: 'code', execution_count: null, metadata: { vscode: { languageId: 'c' } }, outputs: [], source: [text] });
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'lesson.ipynb'), JSON.stringify({
+      cells: [cCell('printf("%d\\n", 6 * 7);\n'), cCell('int unused = 3;\nprintf("x\\n");\n'), cCell('// sphinx: challenge in-c\nint main(void) { return 0; }\n')],
+      metadata: { language_info: { name: 'c' } }, nbformat: 4, nbformat_minor: 5,
+    }));
+    const { problems, cellsRun } = await notebookProblems(dir, undefined, (id) => (id === 'in-c' ? 'c' : undefined));
+    assert.equal(cellsRun, 2, 'C cells run without a JDK');
+    assert.ok(problems.some((p) => /cell 2 compiles with warnings/.test(p)), problems.join('\n'));
+    assert.ok(!problems.some((p) => /cell [13]\b/.test(p)), problems.join('\n'));
   });
 });

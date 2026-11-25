@@ -324,7 +324,7 @@ export function isWholeProgram(code: string, lang: SnippetLanguage = 'java'): bo
 }
 
 /** The headers every C snippet gets, so short snippets can call printf, strcpy, malloc or use uint32_t. */
-const C_HEADERS = '#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdint.h>\n';
+export const C_HEADERS = '#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdint.h>\n';
 
 /** Turns a snippet into a program the runner can compile, so its real output can be checked. */
 export function quizProgram(code: string, lang: SnippetLanguage = 'java'): string {

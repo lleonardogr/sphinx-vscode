@@ -338,14 +338,15 @@ def nb_note(en, pt):
 
 
 def nb_code(en, pt=None):
-    """A Java code cell for lesson_notebook(): statements (run inside void main()) or a whole program. Start it
-    with "// shared" to define methods the cells below can use. pt defaults to en (translate the comments)."""
+    """A code cell for lesson_notebook(), in the subject's language (Java, or C for a C subject): statements (run
+    inside void main(), or int main(void) in C) or a whole program. Start it with "// shared" to define methods or
+    functions the cells below can use. pt defaults to en (translate the comments)."""
     return ('code', en, pt if pt is not None else en)
 
 
 _NB_INTRO = {
-    'en': '*Run a cell with ▶ (or Shift+Enter): Sphinx runs the Java with your JDK. Change the code and run it again: this notebook is your own copy.*',
-    'pt-br': '*Rode uma célula com ▶ (ou Shift+Enter): o Sphinx roda o Java com o seu JDK. Mude o código e rode de novo: este notebook é a sua cópia.*',
+    'en': '*Run a cell with ▶ (or Shift+Enter): Sphinx compiles and runs it on your computer. Change the code and run it again: this notebook is your own copy.*',
+    'pt-br': '*Rode uma célula com ▶ (ou Shift+Enter): o Sphinx compila e roda a célula no seu computador. Mude o código e rode de novo: este notebook é a sua cópia.*',
 }
 _NB_OBJECTIVES = {'en': '**After this unit you can:**', 'pt-br': '**Depois desta unidade você consegue:**'}
 _NB_READINGS = {'en': '## Readings', 'pt-br': '## Leituras'}
@@ -361,18 +362,18 @@ _NB_LEVEL = {'en': {'Easy': 'Easy', 'Medium': 'Medium', 'Hard': 'Hard'}, 'pt-br'
 _NB_TEST = {'en': 'Test', 'pt-br': 'Teste'}
 
 
-def _nb_cell(kind, text):
+def _nb_cell(kind, text, language='java'):
     lines = text.strip('\n').splitlines(keepends=True)
     if kind == 'markdown':
         return {'cell_type': 'markdown', 'metadata': {}, 'source': lines}
-    return {'cell_type': 'code', 'execution_count': None, 'metadata': {'vscode': {'languageId': 'java'}}, 'outputs': [], 'source': lines}
+    return {'cell_type': 'code', 'execution_count': None, 'metadata': {'vscode': {'languageId': language}}, 'outputs': [], 'source': lines}
 
 
 def _unit_challenges(subject_dir, unit):
-    """The Java challenges of a unit, then the test that closes it, in path order."""
+    """The challenges of a unit, then the test that closes it, in path order: from the subject's folder, and from the
+    repository's top-level challenges/ and tests/ (Java Programming's content lives there)."""
     found = []
-    for kind in ('challenges', 'tests'):
-        base = os.path.join(subject_dir, kind)
+    for kind, base in [(k, os.path.join(d, k)) for d in (subject_dir, REPO) for k in ('challenges', 'tests')]:
         for name in sorted(os.listdir(base)) if os.path.isdir(base) else []:
             meta_path = os.path.join(base, name, 'challenge.json')
             if not os.path.exists(meta_path):
@@ -380,6 +381,7 @@ def _unit_challenges(subject_dir, unit):
             meta = json.load(open(meta_path, encoding='utf8'))
             if meta.get('topic') == unit or (meta.get('topic') == 'Tests' and meta.get('unit') == unit):
                 found.append((kind == 'tests', meta.get('order', 0), name, meta, os.path.join(base, name)))
+    found = list({f[2]: f for f in found}.values())
     return [(name, meta, folder, is_test) for is_test, _, name, meta, folder in sorted(found)]
 
 
@@ -393,6 +395,9 @@ def lesson_notebook(folder, insert=None, challenges=True):
     meta = json.load(open(os.path.join(d, 'lesson.json'), encoding='utf8'))
     pt_meta = meta.get('translations', {}).get('pt-br', {})
     subject_dir = os.path.dirname(os.path.dirname(d))
+    subject = json.load(open(os.path.join(subject_dir, 'subject.json'), encoding='utf8'))
+    language = 'c' if subject.get('language') == 'c' else 'java'
+    ext = 'c' if language == 'c' else 'java'
     insert = insert or {}
     for lang, md_file, out_file in (('en', 'lesson.md', 'lesson.ipynb'), ('pt-br', 'lesson.pt-br.md', 'lesson.pt-br.ipynb')):
         pick = (lambda en, pt: pt) if lang == 'pt-br' else (lambda en, pt: en)
@@ -410,7 +415,7 @@ def lesson_notebook(folder, insert=None, challenges=True):
                 cells.append(_nb_cell('markdown', '\n\n'.join(chunk)))
                 chunk = []
                 for kind, en, pt in insert[i]:
-                    cells.append(_nb_cell(kind, pick(en, pt)))
+                    cells.append(_nb_cell(kind, pick(en, pt), language))
         if chunk:
             cells.append(_nb_cell('markdown', '\n\n'.join(chunk)))
         readings = []
@@ -430,11 +435,11 @@ def lesson_notebook(folder, insert=None, challenges=True):
                 level = _NB_LEVEL[lang].get(cmeta.get('difficulty', 'Easy'), cmeta.get('difficulty', ''))
                 prefix = f'{_NB_TEST[lang]}: ' if is_test else ''
                 cells.append(_nb_cell('markdown', f'### {prefix}{ctitle} · {level}'))
-                starter = os.path.join(cfolder, 'Starter.pt-br.java' if lang == 'pt-br' else 'Starter.java')
+                starter = os.path.join(cfolder, f'Starter.pt-br.{ext}' if lang == 'pt-br' else f'Starter.{ext}')
                 if not os.path.exists(starter):
-                    starter = os.path.join(cfolder, 'Starter.java')
-                cells.append(_nb_cell('code', f'// sphinx: challenge {name}\n' + open(starter, encoding='utf8').read()))
-        nb = {'cells': cells, 'metadata': {'language_info': {'name': 'java'}}, 'nbformat': 4, 'nbformat_minor': 5}
+                    starter = os.path.join(cfolder, f'Starter.{ext}')
+                cells.append(_nb_cell('code', f'// sphinx: challenge {name}\n' + open(starter, encoding='utf8').read(), language))
+        nb = {'cells': cells, 'metadata': {'language_info': {'name': language}}, 'nbformat': 4, 'nbformat_minor': 5}
         with open(os.path.join(d, out_file), 'w', encoding='utf8') as f:
             f.write(json.dumps(nb, indent=1, ensure_ascii=False) + '\n')
     print(f'{folder}: lesson.ipynb and lesson.pt-br.ipynb written')
