@@ -14,7 +14,7 @@ Decide, and show the person before writing files:
 - **Scope:** which units, and what it focuses on. The built-in pattern:
   - a midterm covers the first half of a subject in 60–90 minutes (*CS Exam 1: Data Representation*, units 1–5);
   - a final covers the whole subject, focused on its second half, in 120 minutes.
-- **Structure:** the built-in exams use one private quiz plus three private coding questions:
+- **Structure:** the built-in exams use one private quiz plus three private coding questions. Use this pattern for new exams; Java's Exam 1 and Exam 2 are older and have 6-question quizzes:
 
   | Question | Points | Level |
   |---|---|---|
@@ -23,7 +23,7 @@ Decide, and show the person before writing files:
   | coding 2 | 30 (25) | Medium |
   | coding 3 | 30 | Hard |
 
-  Points total 100. Partial credit is points × tests passed ÷ tests, so every coding question needs enough tests (6–10) for the credit to mean something.
+  Points total 100. Partial credit is points × tests passed ÷ tests, so every coding question needs enough tests for the credit to mean something: 7 to 10, at least 2 visible and 5 hidden.
 - **Each question:** its objective, the units it combines, why it isn't a copy of a practice challenge, and a real-world hook.
 - **Settings:**
   - `durationMinutes`;

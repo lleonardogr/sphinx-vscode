@@ -14,7 +14,7 @@ The subject's `"kind"` in `subject.json` decides it, and the validator checks ag
 | | Reading guide (`theory`: CS Fundamentals, Data Structures & Algorithms) | Quick guide (`programming`: Java, C) |
 |---|---|---|
 | Objectives | 3–5 | 2–3 |
-| "In short" | 150–250 words, with one diagram | 60–120 words of text around one ~10-line code example; the validator warns above 180 words with the code |
+| "In short" | 150–250 words, with a diagram when the idea is visual | 60–120 words of text around one ~10-line code example; the validator warns above 180 words with the code |
 | Watch out | the common mistake, inside the summary | one **Watch out** line |
 | Readings | 1–3 | 1, plus at most one extra (a video, or a page on newer syntax) |
 | Check yourself | 2–3 questions | none |
@@ -26,7 +26,7 @@ Examples to copy: [`subjects/cs/lessons/how-a-computer-works`](../../../subjects
 
 Things a student **does**, with a verb you could check: convert, predict, trace, compute, choose, explain why, build. "Find the network address of an IPv4 address with a prefix", not "Understand subnets". Each objective must be practised later by at least one quiz question and one challenge of the unit.
 
-If the lesson is new, show the objectives and the candidate readings to the person and wait for an approval before writing files, as in sphinx-unit.
+Whether the lesson is new or reworked, show the objectives and the candidate readings (and, for a rework, what changes and why) to the person, and wait for an approval before writing files, as in sphinx-unit.
 
 ## 3. Choose and check the readings
 
@@ -54,7 +54,9 @@ Rejected before, and why:
 - Don't repeat what an earlier unit or subject already taught (Big O basics are in CS Fundamentals' Algorithms unit). Build on it and set `requires` to that unit.
 - **Both languages:** `lesson.md` and `lesson.pt-br.md`, the title, objectives and "look for" notes.
 
-## 5. Draw the diagram (reading guides)
+## 5. Draw the diagram (when the idea is visual)
+
+A reading guide gets a diagram when the idea is visual: place values, a packet, a tree, a sorted array's boundaries. Skip it rather than draw a decorative one.
 
 - **SVG**, readable in light and dark themes: mid-tone colors such as `#3b82f6`, `#f59e0b` and `#8a94a6`, no background, and every `<text>` with an explicit fill.
 - Make a `.pt-br.svg` copy when the diagram has words, and give both an `aria-label` in their language.
