@@ -236,6 +236,7 @@ Sphinx builds the input just before the test runs, and the same recipe gives the
 | `"sorted": true`, `"distinct": true` | each line in ascending order, or with no number repeated |
 | `{ "ints": 2, "min": [0, 1], "max": [1000000000, 60], "rows": 1000 }` | 1,000 lines, each with a number from 0 to 1,000,000,000 and one from 1 to 60: one range per column |
 | `{ "chars": 30, "alphabet": ".....#", "rows": 30 }` | 30 lines of 30 characters; repeat a character to make it more common |
+| `{ "parents": 200000, "maxGap": 3 }` | a random tree of 200,000 nodes: one line with the parent of nodes 2 to 200,000, each smaller than its node. `maxGap` 1 makes a chain; leave it out for a bushy tree |
 
 - **Generated tests are always hidden**, and results show only the start of their input. A test has either `"input"` or `"generate"`, not both.
 - **Keep the expected output short**, such as a count, a sum or the best value: outputs over 256 KB are cut. Fill it in with **Validate and fill in expected outputs** as usual.

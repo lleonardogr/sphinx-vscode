@@ -1,0 +1,65 @@
+{
+  "title": "Hash Tables",
+  "topic": "Hashing",
+  "order": 1,
+  "requires": [
+    "Collections"
+  ],
+  "objectives": [
+    "Explain how a hash table finds a key in about O(1): hash codes, buckets, collisions and resizing",
+    "Choose a key that makes equal things land together, such as an anagram's sorted letters",
+    "Replace a nested loop with a map of counts or prefix sums",
+    "Build a hash table by hand"
+  ],
+  "readings": [
+    {
+      "title": "Hash Table",
+      "source": "VisuAlgo (National University of Singapore)",
+      "url": "https://visualgo.net/en/hashtable",
+      "type": "interactive",
+      "minutes": 20,
+      "lang": "en",
+      "lookFor": "Insert a few keys with Separate Chaining, then with Linear Probing, and watch where collisions go. Note the load factor α = N/M and why the table is rebuilt bigger when α grows."
+    },
+    {
+      "title": "Prefix Sums",
+      "source": "USACO Guide",
+      "url": "https://usaco.guide/silver/prefix-sums",
+      "type": "article",
+      "minutes": 10,
+      "lang": "en",
+      "lookFor": "The prefix array and the range-sum formula, prefix[r + 1] − prefix[l]. Budget Periods adds one step: a map of the prefix sums seen so far. Pick Java in the site's settings to see Java code."
+    },
+    {
+      "title": "Using Maps to Store Key Value Pairs",
+      "source": "dev.java (Oracle)",
+      "url": "https://dev.java/learn/api/collections-and-streams/collections-framework/maps/",
+      "type": "article",
+      "minutes": 7,
+      "lang": "en",
+      "lookFor": "How HashMap stores pairs, the operations to get, check, update and remove them, iterating over the entries, and why a key must not change while it is in a map."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Tabelas hash",
+      "objectives": [
+        "Explicar como uma tabela hash acha uma chave em cerca de O(1): códigos hash, baldes, colisões e redimensionamento",
+        "Escolher uma chave que junta coisas equivalentes, como as letras ordenadas de um anagrama",
+        "Trocar um laço aninhado por um mapa de contagens ou de somas de prefixo",
+        "Construir uma tabela hash à mão"
+      ],
+      "readings": [
+        {
+          "lookFor": "Insira algumas chaves com Separate Chaining, depois com Linear Probing, e veja para onde vão as colisões. Repare no fator de carga α = N/M e por que a tabela é refeita maior quando α cresce."
+        },
+        {
+          "lookFor": "O array de prefixos e a fórmula da soma de um intervalo, prefix[r + 1] − prefix[l]. Budget Periods acrescenta um passo: um mapa das somas de prefixo vistas até agora. Escolha Java nas configurações do site para ver código em Java."
+        },
+        {
+          "lookFor": "Como o HashMap guarda pares, as operações para obter, conferir, atualizar e remover, como percorrer as entradas, e por que uma chave não pode mudar enquanto está num mapa."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "title": "Server Log Report",
+  "topic": "Tests",
+  "skills": [
+    "Complexity",
+    "Sorting",
+    "Hashing"
+  ],
+  "unit": "Hashing",
+  "requires": [
+    "Arrays",
+    "Collections",
+    "Methods"
+  ],
+  "difficulty": "Hard",
+  "order": 1,
+  "hints": [
+    "Each line of the report needs one tool: a HashMap of requests per user, the sorted latencies, and the sorted times.",
+    "For the busiest minute, sort the times and use two pointers: for each start i, move j forward while times[j] < times[i] + 60. For the longest quiet, compare neighbours in the sorted times.",
+    "p95 is sorted latencies[(95 * n + 99) / 100 − 1]. Check the ties: the smallest user id among the most active, and the earliest start among the busiest minutes."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Relatório de logs do servidor",
+      "hints": [
+        "Cada linha do relatório pede uma ferramenta: um HashMap de requisições por usuário, as latências ordenadas e os instantes ordenados.",
+        "Para o minuto mais movimentado, ordene os instantes e use dois ponteiros: para cada início i, avance j enquanto times[j] < times[i] + 60. Para o maior silêncio, compare vizinhos nos instantes ordenados.",
+        "O p95 é latencies[(95 * n + 99) / 100 − 1] ordenado. Confira os empates: o menor id entre os usuários mais ativos e o início mais cedo entre os minutos mais movimentados."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "8\n100 7 120\n40 3 80\n160 7 300\n45 7 90\n100 3 110\n900 5 2000\n130 3 95\n101 7 100\n",
+      "output": "users: 3\ntop user: 7\ntop user requests: 4\np95 latency: 2000\nbusiest minute: 4\nbusiest minute starts: 45\nlongest quiet: 740\n"
+    },
+    {
+      "input": "3\n10 1 50\n20 2 60\n30 3 70\n",
+      "output": "users: 3\ntop user: 1\ntop user requests: 1\np95 latency: 70\nbusiest minute: 3\nbusiest minute starts: 10\nlongest quiet: 10\n"
+    },
+    {
+      "input": "1\n0 42 5\n",
+      "output": "users: 1\ntop user: 42\ntop user requests: 1\np95 latency: 5\nbusiest minute: 1\nbusiest minute starts: 0\nlongest quiet: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n5 9 10\n5 9 20\n5 4 30\n5 4 40\n",
+      "output": "users: 2\ntop user: 4\ntop user requests: 2\np95 latency: 40\nbusiest minute: 4\nbusiest minute starts: 5\nlongest quiet: 0\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n0 1 1\n59 1 1\n60 2 1\n119 2 1\n120 3 1\n1000000000 3 10000\n",
+      "output": "users: 3\ntop user: 1\ntop user requests: 2\np95 latency: 10000\nbusiest minute: 2\nbusiest minute starts: 0\nlongest quiet: 999999880\n",
+      "hidden": true
+    },
+    {
+      "input": "20\n0 1 1\n10 2 371\n20 3 741\n30 1 111\n40 2 481\n50 3 851\n60 1 221\n70 2 591\n80 3 961\n90 1 331\n100 2 701\n110 3 71\n120 1 441\n130 2 811\n140 3 181\n150 1 551\n160 2 921\n170 3 291\n180 1 661\n190 2 31\n",
+      "output": "users: 3\ntop user: 1\ntop user requests: 7\np95 latency: 921\nbusiest minute: 6\nbusiest minute starts: 0\nlongest quiet: 10\n",
+      "hidden": true
+    },
+    {
+      "input": "5\n300 8 100\n100 8 100\n200 6 100\n0 6 100\n400 7 100\n",
+      "output": "users: 3\ntop user: 6\ntop user requests: 2\np95 latency: 100\nbusiest minute: 1\nbusiest minute starts: 0\nlongest quiet: 100\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 171,
+        "lines": [
+          "200000",
+          {
+            "ints": 3,
+            "min": [
+              0,
+              1,
+              1
+            ],
+            "max": [
+              1000000000,
+              1000000,
+              10000
+            ],
+            "rows": 200000
+          }
+        ]
+      },
+      "output": "users: 181164\ntop user: 142704\ntop user requests: 5\np95 latency: 9497\nbusiest minute: 3\nbusiest minute starts: 2190363\nlongest quiet: 56877\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 172,
+        "lines": [
+          "200000",
+          {
+            "ints": 3,
+            "min": [
+              0,
+              1,
+              1
+            ],
+            "max": [
+              100000,
+              1000,
+              10000
+            ],
+            "rows": 200000
+          }
+        ]
+      },
+      "output": "users: 1000\ntop user: 567\ntop user requests: 247\np95 latency: 9508\nbusiest minute: 162\nbusiest minute starts: 33806\nlongest quiet: 7\n",
+      "hidden": true
+    }
+  ]
+}

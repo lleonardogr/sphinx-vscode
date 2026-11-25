@@ -1,0 +1,96 @@
+{
+  "title": "Org Chart",
+  "topic": "Trees",
+  "requires": [
+    "Arrays",
+    "Loops"
+  ],
+  "difficulty": "Easy",
+  "order": 1,
+  "hints": [
+    "Every manager has a smaller number than their employees, so when you reach employee i, their manager's level is already known.",
+    "level[1] = 1 and level[i] = level[manager[i]] + 1, in one pass from 2 to n. Then count how many people are on each level.",
+    "For \"no reports\", mark every employee who appears as somebody's manager; the others have no reports."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Organograma",
+      "hints": [
+        "Todo gerente tem um número menor que seus funcionários, então quando você chega no funcionário i, o nível do gerente dele já é conhecido.",
+        "level[1] = 1 e level[i] = level[manager[i]] + 1, numa passada de 2 até n. Depois conte quantas pessoas há em cada nível.",
+        "Para \"no reports\", marque cada funcionário que aparece como gerente de alguém; os outros não têm subordinados."
+      ]
+    }
+  },
+  "tests": [
+    {
+      "input": "10\n1 1 2 2 3 4 4 5 5\n",
+      "output": "levels: 4\nwidest level: 4\nwidest level size: 4\nno reports: 5\n"
+    },
+    {
+      "input": "5\n1 1 1 1\n",
+      "output": "levels: 2\nwidest level: 2\nwidest level size: 4\nno reports: 4\n"
+    },
+    {
+      "input": "1\n\n",
+      "output": "levels: 1\nwidest level: 1\nwidest level size: 1\nno reports: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "4\n1 2 3\n",
+      "output": "levels: 4\nwidest level: 1\nwidest level size: 1\nno reports: 1\n",
+      "hidden": true
+    },
+    {
+      "input": "7\n1 1 2 2 3 3\n",
+      "output": "levels: 3\nwidest level: 3\nwidest level size: 4\nno reports: 4\n",
+      "hidden": true
+    },
+    {
+      "input": "6\n1 2 1 4 4\n",
+      "output": "levels: 3\nwidest level: 3\nwidest level size: 3\nno reports: 3\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 181,
+        "lines": [
+          "200000",
+          {
+            "parents": 200000,
+            "maxGap": 1
+          }
+        ]
+      },
+      "output": "levels: 200000\nwidest level: 1\nwidest level size: 1\nno reports: 1\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 182,
+        "lines": [
+          "200000",
+          {
+            "parents": 200000
+          }
+        ]
+      },
+      "output": "levels: 28\nwidest level: 12\nwidest level size: 25088\nno reports: 100137\n",
+      "hidden": true
+    },
+    {
+      "generate": {
+        "seed": 183,
+        "lines": [
+          "200000",
+          {
+            "parents": 200000,
+            "maxGap": 3
+          }
+        ]
+      },
+      "output": "levels: 99891\nwidest level: 951\nwidest level size: 5\nno reports: 59552\n",
+      "hidden": true
+    }
+  ]
+}
