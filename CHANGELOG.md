@@ -4,12 +4,20 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.9.4] - 2026-11-25
+
 ### Added
 
 - **Data Structures & Algorithms unit 4, *Hash Tables***: a reading guide on buckets, collisions, resizing, grouping keys and prefix sums (VisuAlgo, USACO Guide and dev.java readings, and a diagram of buckets with a collision), a 10-question quiz, four challenges (Anagram Groups, Longest Streak, Budget Periods and Hash Table, where students build their own) and the test Server Log Report, which closes units 1 to 4.
 - **Data Structures & Algorithms unit 5, *Trees***: a reading guide on parent arrays, binary search trees and their height, traversals and tries (VisuAlgo and USACO Guide readings, and a BST diagram), a 10-question quiz, and four challenges: Org Chart, BST Builder, Autocomplete and Folder Sizes.
 - **Generated trees.** A generated input can hold a random tree as a list of parents (`{"parents": n}`), from bushy to a chain with `maxGap`.
 - **Notebook lessons.** Every unit's guide, in all four subjects (Java Programming, CS Fundamentals, C Programming and Data Structures & Algorithms), now opens as a notebook in VS Code's notebook editor, copied to `sphinx/notebooks/` so students keep their changes. Sphinx runs the cells itself, Java with the student's JDK and C with the same compiler and memory checks as the challenges, so nothing else is installed. Each notebook has the guide's text, diagram and readings, small experiments to run and change (integer division, aliased arrays, a recursive call traced, cache misses, 0.1 + 0.2, `sizeof` and padding, a linked list freed node by node, a quicksort with a bad pivot…), and a cell for each of the unit's challenges and its test: running it runs every test, hidden ones included, and counts in the student's progress. A cell starting with `// shared` defines methods or functions for the plain cells below it. The setting `sphinx.notebookLessons` opens lessons as reading pages instead. Teachers can add `lesson.ipynb` to their own lessons, and the validator runs every cell (C without warnings) and checks the challenge cells.
+
+### Fixed
+
+- **Validating a teacher's exam.** **Validate Challenges in a Folder…** now knows every built-in challenge, test and quiz, so an exam that uses a built-in quiz, or a CS Fundamentals, C or Data Structures challenge, as a question no longer reports an unknown question id.
+- **Label Printer's starter** reads the width line with `fgets`, so a first name that starts with spaces keeps them; **String Compression's** starter says to print the original text when compressing doesn't make it shorter.
+- Lesson texts: 0 needs 1 bit, a `double` has 53 bits of precision, UTF-8 length depends on the code point, `ArrayDeque`'s end operations are amortized O(1), and the notes on shifts and out-of-bounds access in C and Java are more precise.
 
 ## [1.9.3] - 2026-10-17
 
@@ -393,7 +401,8 @@ First release of **Tech Challenges**, starting with Java.
 - CI on Linux, macOS and Windows (JDK 25) plus JDK 17 (classic style), and a tag-triggered release workflow that publishes the `.vsix`.
 - Contribution workflow: [Conventional Commits](https://www.conventionalcommits.org), enforced by a `commit-msg` hook (enabled by `npm install`) and a **Conventional commits** CI check on pull requests; squash merges into a protected `main`.
 
-[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.3...HEAD
+[Unreleased]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.4...HEAD
+[1.9.4]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.3...v1.9.4
 [1.9.3]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.2...v1.9.3
 [1.9.2]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/lleonardogr/sphinx-vscode/compare/v1.9.0...v1.9.1
