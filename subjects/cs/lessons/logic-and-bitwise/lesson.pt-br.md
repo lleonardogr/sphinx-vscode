@@ -6,7 +6,7 @@ As portas também fazem contas. Somar dois bits dá um bit de **soma**, que é e
 
 ![Um meio somador: o XOR dá a soma, o AND dá o vai um](half-adder.pt-br.svg)
 
-O Java aplica uma porta aos 32 bits de um `int` de uma vez: `&`, `|`, `^` e `~`. Deslocar move os bits: `x << 1` dobra, `x >> 1` divide ao meio. Uma **máscara** é um número só com os bits que interessam ligados; `1 << k` seleciona o bit k:
+O Java aplica uma porta aos 32 bits de um `int` de uma vez: `&`, `|`, `^` e `~`. Deslocar move os bits: `x << 1` dobra (descartando os bits que estouram), e `x >> 1` divide ao meio, arredondando para baixo: `-3 >> 1` dá −2. Uma **máscara** é um número só com os bits que interessam ligados; `1 << k` seleciona o bit k:
 
 | Tarefa | Código |
 |--------|--------|

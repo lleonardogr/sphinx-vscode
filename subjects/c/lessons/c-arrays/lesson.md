@@ -24,6 +24,6 @@ int main(void) {
 
 A function gets the array itself, not a copy, so it can change its elements (`const` promises it won't). A local array lives on the **stack**, which holds only a few megabytes: make a very large array `static` or global.
 
-**Watch out:** C never checks an index. `temps[7]` compiles and reads or overwrites whatever is next in memory. Sphinx's memory checks catch it and tell you the line.
+**Watch out:** C never checks an index. `temps[7]` compiles, but it is undefined behavior: it may read or overwrite other data, crash, or seem to work. Sphinx's memory checks catch it and tell you the line.
 
 <!-- readings -->

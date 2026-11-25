@@ -78,6 +78,12 @@ export function readNotebook(file: string): NotebookCell[] {
     throw new Error(`${path.basename(file)} is not a notebook: it has no "cells"`);
   }
   const notebookLanguage = nb.metadata?.language_info?.name === 'c' ? 'c' : 'java';
+  nb.cells.forEach((c: { source?: unknown }, i: number) => {
+    const ok = typeof c?.source === 'string' || (Array.isArray(c?.source) && c.source.every((line: unknown) => typeof line === 'string'));
+    if (!ok) {
+      throw new Error(`${path.basename(file)}, cell ${i + 1}: "source" must be text or a list of lines`);
+    }
+  });
   return nb.cells.map((c: { cell_type?: string; source?: string | string[]; metadata?: { vscode?: { languageId?: string } } }) => ({
     kind: c.cell_type === 'code' ? 'code' : 'markdown',
     source: Array.isArray(c.source) ? c.source.join('') : (c.source ?? ''),

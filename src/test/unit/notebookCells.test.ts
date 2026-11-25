@@ -53,6 +53,8 @@ describe('notebook lesson cells', () => {
     assert.deepEqual(lessonNotebooks(dir).map((f) => path.basename(f)), ['lesson.ipynb', 'lesson.pt-br.ipynb']);
     assert.deepEqual(readNotebook(path.join(dir, 'lesson.ipynb')), [{ kind: 'markdown', source: '# Hi', language: 'java' }, { kind: 'code', source: 'IO.println(1);\n', language: 'java' }]);
     assert.throws(() => readNotebook(path.join(dir, 'notes.ipynb')), /not a notebook/);
+    fs.writeFileSync(path.join(dir, 'bad.ipynb'), JSON.stringify({ cells: [{ cell_type: 'code', source: 42 }] }));
+    assert.throws(() => readNotebook(path.join(dir, 'bad.ipynb')), /cell 1: "source" must be text/);
   });
 
   it('are checked by the validator: cells must run, and challenge cells must name a Java challenge', async (t) => {

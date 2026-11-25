@@ -25,6 +25,6 @@ int main(void) {
 
 A **mask** selects a field: `(value >> 5) & 0x3F` takes the 6 bits that start at bit 5.
 
-**Watch out:** shifting by the type's width or more, or shifting a negative signed value, is undefined behavior. Shift unsigned values by less than their width.
+**Watch out:** shift only unsigned values, by less than their width: other shifts are undefined behavior or depend on the compiler.
 
 <!-- readings -->

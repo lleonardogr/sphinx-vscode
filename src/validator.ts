@@ -386,7 +386,9 @@ export function readingProblems(readings: unknown, most = 3): string[] {
 export function contentWarnings(c: Challenge): string[] {
   const warnings: string[] = [];
   const words = c.description.split(/\s+/).filter(Boolean).length;
-  if (!/^\*\*Things to know\*\*|^#+\s*Things to know/im.test(c.description)) {
+  // The heading in English, or in a Portuguese description (with --lang=pt-br).
+  const knowHeading = '(Things to know|Bom saber|Coisas para saber|O que você precisa saber)';
+  if (!new RegExp(`^\\*\\*${knowHeading}\\*\\*|^#+\\s*${knowHeading}`, 'im').test(c.description)) {
     warnings.push('description.md has no "Things to know" section about the Java features involved');
   }
   if (words < 40) {

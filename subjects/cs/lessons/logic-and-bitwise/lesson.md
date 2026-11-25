@@ -6,7 +6,7 @@ Gates also do arithmetic. Adding two bits gives a **sum** bit, which is exactly 
 
 ![A half adder: XOR gives the sum, AND gives the carry](half-adder.svg)
 
-Java can apply a gate to all 32 bits of an `int` at once: `&`, `|`, `^` and `~`. Shifting moves bits: `x << 1` doubles, `x >> 1` halves. A **mask** is a number with only the bits you care about turned on; `1 << k` selects bit k:
+Java can apply a gate to all 32 bits of an `int` at once: `&`, `|`, `^` and `~`. Shifting moves bits: `x << 1` doubles (dropping bits that overflow), and `x >> 1` halves, rounding down: `-3 >> 1` is −2. A **mask** is a number with only the bits you care about turned on; `1 << k` selects bit k:
 
 | Task | Code |
 |------|------|
