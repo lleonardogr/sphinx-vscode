@@ -37,6 +37,8 @@ reading_guide('subjects/cs/lessons/algorithms-and-complexity', title='Algorithms
     md_pt='''## Em resumo\n\n…''', files={'growth.svg': '<svg …>', 'growth.pt-br.svg': '<svg …>'})
 ```
 
+For a **notebook lesson**, write the reading guide first, then call `lesson_notebook(folder, insert={k: [nb_note(en, pt), nb_code(en, pt)]})`: it writes `lesson.ipynb` and `lesson.pt-br.ipynb` from `lesson.json` and `lesson.md`, with your cells after paragraph `k` of "In short" (the heading is paragraph 0) and a cell for each challenge of the unit. Run `node out/cli.js validate <lesson folder>` to run every cell.
+
 For a **big hidden test**, pass `big(seed, *lines)` in `tests=[...]` instead of an `(input, hidden)` pair. Its lines are text, `ints(count, lo, hi, rows=1, sorted=False, distinct=False)` or `chars(count, alphabet, rows=1)`, and it writes a [generated test](../../docs/creating-challenges.md#big-inputs-generated-tests): `big(1, '200000', ints(200000, 1, 10**9))`.
 
 For a **C** challenge, use `c_challenge`: the same arguments as `challenge`, with `starter`, `solution` and `solution_alt` (a second solution written differently) in C instead of the Java pairs, and `bonus_goal(solution=…)` in C. It writes `Starter.c` (and `Starter.pt-br.c` from `comments`), `Solution.c`, `Solution.alt.c` and `Solution.bonus.<id>.c`. "What does this print?" questions (`out`) in a C unit's quiz run as C; for an exam's quiz, which has no unit, pass `quiz(..., topic=None, language='c')`.

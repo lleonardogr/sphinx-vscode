@@ -273,6 +273,12 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
     const lesson = items[0];
     assert.equal(String(api.tree.getTreeItem(lesson as never).description), 'Lesson · 1 min · 3 readings');
     await vscode.commands.executeCommand('sphinx.openLesson', 'place-value-and-binary');
+    // Theory lessons open as notebooks, copied to the student's sphinx/notebooks folder with their diagrams.
+    const notebook = vscode.window.activeNotebookEditor?.notebook;
+    assert.ok(notebook?.uri.fsPath.endsWith(path.join('notebooks', 'place-value-and-binary.ipynb')), `opened ${notebook?.uri.fsPath}`);
+    assert.ok(fs.existsSync(path.join(path.dirname(notebook!.uri.fsPath), 'place-values.svg')), 'the diagram is copied next to it');
+    assert.ok(notebook!.getCells().some((c) => c.document.getText().startsWith('// sphinx: challenge base-converter')), 'with a cell for each challenge');
+    await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
     await api.lessonProgress.markRead('place-value-and-binary');
     assert.equal((api.tree.getTreeItem(api.tree.getChildren(numberSystems)[0] as never).iconPath as vscode.ThemeIcon).id, 'pass-filled');
     // Prerequisites: in the description, and with progress in the tooltip.

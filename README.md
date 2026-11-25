@@ -46,7 +46,7 @@ Three exams close the stages, each with a quiz and three private coding question
 
 ## CS Fundamentals
 
-The second subject covers what new students should know about **how a computer works**: 8 units, from the processor and memory to number systems, text, logic, algorithms and networks, with 8 reading guides, 8 quizzes, 32 challenges, 2 tests and 2 exams. Switch to it with the 📚 button at the top of the sidebar (**Switch Subject…**). Each unit starts with a **reading guide**: a short summary with a diagram, the unit's objectives, and curated videos, articles and interactive pages from the web. Then come challenges solved in Java and a quiz:
+The second subject covers what new students should know about **how a computer works**: 8 units, from the processor and memory to number systems, text, logic, algorithms and networks, with 8 reading guides, 8 quizzes, 32 challenges, 2 tests and 2 exams. Switch to it with the 📚 button at the top of the sidebar (**Switch Subject…**). Each unit starts with a **reading guide**: a short summary with a diagram, the unit's objectives, and curated videos, articles and interactive pages from the web. It opens as an **interactive notebook**, with small Java experiments to run and change, and a cell for each of the unit's challenges. Then come the challenges, in the notebook or the problem panel, and a quiz:
 
 | Unit | Lessons | Challenges (plus the unit's quiz) |
 |------|---------|-----------------------------------|
@@ -85,7 +85,7 @@ Two closed **exams**, each with a quiz and three private coding questions: **C E
 
 ## Data Structures & Algorithms
 
-The fourth subject, for students who know Java's arrays, collections and methods: it turns Big O into practice. Each unit has a reading guide, a quiz and four challenges, and every challenge has hidden tests with up to 200,000 values, generated when the test runs, so a loop inside a loop runs out of time while a better approach finishes in a fraction of a second. Units 1 to 3 are ready; hashing, trees, heaps, graphs, and greedy and dynamic programming come next.
+The fourth subject, for students who know Java's arrays, collections and methods: it turns Big O into practice. Each unit has a reading guide, opened as an interactive notebook with experiments and a cell for each challenge, a quiz and four challenges, and every challenge has hidden tests with up to 200,000 values, generated when the test runs, so a loop inside a loop runs out of time while a better approach finishes in a fraction of a second. Units 1 to 3 are ready; hashing, trees, heaps, graphs, and greedy and dynamic programming come next.
 
 | Unit | Lessons | Challenges (plus the unit's quiz) |
 |------|---------|-----------------------------------|
@@ -122,6 +122,7 @@ The fourth subject, for students who know Java's arrays, collections and methods
 - **Command line**: a `sphinx` command in VS Code's terminal to validate content, test a solution, build a pack and verify exam results (see [Command line](#command-line)).
 - **Subjects**: Java Programming, CS Fundamentals, C Programming and Data Structures & Algorithms, each with its own learning path. **Switch Subject…** (📚) changes the one in the sidebar, and its name is shown in the sidebar header.
 - **Lessons**: short pages to read before a unit's quiz and challenges, with a reading time, a ✓ once read, and a button to the next item.
+- **Notebook lessons**: the theory subjects' reading guides open as notebooks in VS Code's notebook editor. Students run and change small Java experiments, with no Jupyter or Java kernel to install (Sphinx runs the cells with the JDK the challenges use), and solve the unit's challenges in cells that run all the tests and count in their progress.
 - **Bonus goals**: a challenge can offer up to 3 optional, harder goals (solve it without loops, fast enough for a huge input…), checked when it passes. Earned goals become stars in the panel, the sidebar and the unit's guide.
 - **Prerequisites**: an item can list the units it builds on, shown with the student's progress in each one. They're advice, unless a teacher turns on **prerequisite locks**: then the item opens once half (or all) of each unit it needs is solved.
 - **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/100 solved` counter for the current subject in the status bar.
@@ -208,6 +209,7 @@ The file is always `Main.java`. In classic Java, the public class must be named 
 | `sphinx.java.style` | `modern` | Starter code style for new challenges: `modern` (JDK 25+) or `classic` (JDK 17+). Use **Reset Code to Starter** to switch a challenge you already opened. |
 | `sphinx.java.home` | (empty) | The JDK folder, if `javac` is not on your PATH. |
 | `sphinx.terminalCommand` | `true` | Adds the `sphinx` command to VS Code's integrated terminals. |
+| `sphinx.notebookLessons` | `true` | Opens lessons that come with a notebook (the theory subjects' reading guides) as the notebook. Turn off to open them as reading pages. |
 | `sphinx.c.compiler` | (empty) | The C compiler for C challenges, or the folder of a portable one. Empty: `cc`, `clang` or `gcc` on the PATH. |
 | `sphinx.codeFolder` | (empty) | Where solutions are saved. |
 | `sphinx.extraChallengePaths` | `[]` | Extra challenge folders provided by your teacher. |

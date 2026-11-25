@@ -105,6 +105,10 @@ A reading guide replaces the long text lesson. It has three parts, shown in this
 | floating-point-gui.de | floating point |
 | Joel Spolsky, "The Absolute Minimum… Unicode" | text and encodings |
 
+### Notebooks (theory subjects)
+
+In a theory subject, the reading guide also ships as a [notebook](creating-challenges.md#notebook-lessons), which is what students open. It adds **2 to 4 runnable experiments** to the guide's own text: small programs that make the idea visible (count the steps as n doubles, time two approaches, print the bytes of a character), each introduced by one sentence that says what to try or predict. They never solve a challenge: show the idea on a different problem, or use the library call the challenge forbids so students can check their answers. The notebook ends with a cell for each of the unit's challenges, with its starter code.
+
 ### 3. Check yourself (both languages)
 
 **2 or 3 questions** that the reading should let the student answer, such as "Why does the same 1 TB disk show 931 GB on Windows?". They point to the quiz, where the answers are checked.

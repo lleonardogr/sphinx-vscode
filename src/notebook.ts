@@ -6,17 +6,14 @@
 //   - A cell starting with "// sphinx: challenge <id>" is a solution to that challenge: running it runs the
 //     challenge's tests, hidden ones included, and counts in the student's progress.
 import * as fs from 'fs';
-import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { Challenge } from './challenges';
 import { tr } from './i18n';
-import { isWholeProgram, quizProgram } from './quizzes';
-import { RunOutcome, TestResult, runChallengeCode } from './runner';
+import { CELL_TIME_LIMIT_MS, cellChallenge, cellProgram, isSharedCell, runCellSource } from './notebookCells';
+import { RunOutcome, TestResult } from './runner';
 
 export const CONTROLLER_ID = 'sphinx-java';
-const CHALLENGE_MARK = /^\s*\/\/\s*sphinx:\s*challenge\s+([\w-]+)/;
-const SHARED_MARK = /^\s*\/\/\s*(shared|compartilhado)\b/i;
 
 /** What the controller needs from the extension. */
 export interface NotebookHost {
@@ -26,38 +23,6 @@ export interface NotebookHost {
   onChallengeResult(c: Challenge, solved: boolean): Promise<void>;
   /** A cell ran without errors in a lesson notebook. */
   onCellRan(notebook: vscode.NotebookDocument): void;
-}
-
-/** The program a plain cell runs, and the line where the cell's own code starts in it (1-based). */
-export function cellProgram(shared: string[], code: string, isShared: boolean): { source: string; firstLine: number } {
-  const prefix = shared.length ? `${shared.join('\n\n')}\n\n` : '';
-  const before = prefix.split('\n').length - 1;
-  if (isShared) {
-    return { source: `${prefix}${code}\n\nvoid main() {\n}\n`, firstLine: before + 1 };
-  }
-  const whole = isWholeProgram(code);
-  return { source: prefix + quizProgram(code), firstLine: before + (whole ? 1 : 2) };
-}
-
-/** The challenge a cell answers, from its first line. */
-export function cellChallenge(code: string): string | undefined {
-  return CHALLENGE_MARK.exec(code.split('\n')[0] ?? '')?.[1];
-}
-
-function isSharedCell(code: string): boolean {
-  return SHARED_MARK.test(code.split('\n')[0] ?? '');
-}
-
-/** Runs `source` as Main.java in a temp folder with the given tests. */
-async function runSource(source: string, request: Omit<Parameters<typeof runChallengeCode>[0], 'file'>): Promise<RunOutcome> {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sphinx-cell-'));
-  try {
-    const file = path.join(dir, 'Main.java');
-    fs.writeFileSync(file, source);
-    return await runChallengeCode({ ...request, file });
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true });
-  }
 }
 
 function problemOutput(outcome: RunOutcome, firstLine: number): vscode.NotebookCellOutput | undefined {
@@ -131,7 +96,7 @@ export function registerNotebookController(host: NotebookHost): vscode.NotebookC
       .map((c) => c.document.getText());
     const isShared = isSharedCell(code);
     const { source, firstLine } = cellProgram(shared, code, isShared);
-    const outcome = await runSource(source, { tests: [{ input: '', output: '' }], timeLimitMs: 20000, ...host.runnerOptions() });
+    const outcome = await runCellSource(source, { tests: [{ input: '', output: '' }], timeLimitMs: CELL_TIME_LIMIT_MS, ...host.runnerOptions() });
     const problem = problemOutput(outcome, firstLine);
     if (problem || outcome.kind !== 'tests') {
       await execution.replaceOutput(problem ?? []);
@@ -161,7 +126,7 @@ export function registerNotebookController(host: NotebookHost): vscode.NotebookC
       await execution.replaceOutput(new vscode.NotebookCellOutput([vscode.NotebookCellOutputItem.stderr(tr(`No Java challenge called "${id}".`, `Nenhum desafio em Java chamado "${id}".`))]));
       return false;
     }
-    const outcome = await runSource(code, { tests: c.tests, mustContain: c.mustContain, mustNotContain: c.mustNotContain, timeLimitMs: c.timeLimitMs, ...host.runnerOptions() });
+    const outcome = await runCellSource(code, { tests: c.tests, mustContain: c.mustContain, mustNotContain: c.mustNotContain, timeLimitMs: c.timeLimitMs, ...host.runnerOptions() });
     const problem = problemOutput(outcome, 1);
     if (problem || outcome.kind !== 'tests') {
       await execution.replaceOutput(problem ?? []);

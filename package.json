@@ -820,6 +820,11 @@
           "type": "string",
           "default": "",
           "markdownDescription": "%config.ai.responseLanguage.description%"
+        },
+        "sphinx.notebookLessons": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.notebookLessons%"
         }
       }
     },

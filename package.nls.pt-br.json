@@ -76,5 +76,6 @@
   "command.exportPack": "Exportar um pacote para os alunos…",
   "command.classResults": "Resultados da turma… (professores)",
   "command.switchSubject": "Trocar de matéria…",
-  "command.openLesson": "Abrir lição"
+  "command.openLesson": "Abrir lição",
+  "config.notebookLessons": "Abrir as lições que têm um notebook como o notebook, onde os alunos rodam os exemplos e resolvem os desafios da unidade. Desligue para abri-las como páginas de leitura."
 }

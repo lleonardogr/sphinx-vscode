@@ -699,7 +699,7 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   const itemTitle = pathItemTitle;
 
   async function openLesson(lesson: LessonDefinition): Promise<void> {
-    const notebook = lessonNotebookFile(lesson.dir, language());
+    const notebook = config().get<boolean>('notebookLessons', true) ? lessonNotebookFile(lesson.dir, language()) : undefined;
     if (notebook) {
       await openLessonNotebook(lesson, notebook);
       return;

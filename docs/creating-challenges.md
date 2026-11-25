@@ -417,6 +417,23 @@ Write for a beginner: short sections with `##` headings, a table or a diagram wh
 
 Share your lessons like challenges: in a [pack](#the-easy-way-export-a-pack-then-import) or a [live folder](#sharing-a-live-folder). A lesson's whole folder travels with it, diagrams and translations included.
 
+#### Notebook lessons
+
+A lesson can also come as a **notebook**: put `lesson.ipynb` (and `lesson.pt-br.ipynb`) in its folder. Clicking the lesson then copies the notebook to the student's `sphinx/notebooks/` folder, with the images next to it, and opens it in VS Code's notebook editor, where students run and change the code. A copy that is already there is kept, with the student's changes. The built-in reading guides of CS Fundamentals and Data Structures & Algorithms work this way. The setting `sphinx.notebookLessons` turns it off.
+
+Sphinx runs the notebook's Java cells itself, with the student's JDK (the **Sphinx: Java** kernel): there's no Jupyter or Java kernel to install. Write the cells in Java:
+
+| A code cell that… | Runs as |
+|---|---|
+| has statements, like `IO.println(2 + 2);` | the statements inside `void main()` |
+| has `void main()` | the whole program |
+| starts with `// shared` | a definition: its methods, records and fields can be used by every cell below it |
+| starts with `// sphinx: challenge <id>` | a solution to that challenge: running it runs all its tests, hidden ones included, and counts in the student's progress like **Submit** |
+
+Each cell runs on its own: variables don't carry over from one cell to the next (put what several cells need in a `// shared` cell). Cells can't read keyboard input, but challenge cells get each test's input. A plain cell stops after 20 seconds.
+
+The validator runs every cell of every notebook (with JDK 25 or newer) and reports the ones that don't compile or crash, checks that each challenge cell names a Java challenge, and warns when a translation such as `lesson.pt-br.ipynb` is missing. In this repository, `lesson_notebook()` in [scripts/content](../scripts/content/README.md) builds a guide's notebooks from `lesson.json` and `lesson.md`, with the code cells you give it and a cell for each challenge of the unit.
+
 ### Prerequisites
 
 Challenges, quizzes and lessons can list the units a student should know first:

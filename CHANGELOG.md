@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- **Notebook lessons.** The reading guides of CS Fundamentals and Data Structures & Algorithms now open as notebooks in VS Code's notebook editor, copied to `sphinx/notebooks/` so students keep their changes. Sphinx runs the Java cells itself, with the JDK the challenges use, so nothing else is installed. Each notebook has the guide's text, diagram and readings, small experiments to run and change (cache misses, overflow, 0.1 + 0.2, a quicksort with a bad pivot, a monotonic stack step by step…), and a cell for each of the unit's challenges: running it runs every test, hidden ones included, and counts in the student's progress. A cell starting with `// shared` defines methods for the cells below it. The setting `sphinx.notebookLessons` opens lessons as reading pages instead. Teachers can add `lesson.ipynb` to their own lessons, and the validator runs every cell and checks the challenge cells.
+
 ## [1.9.3] - 2026-10-17
 
 ### Added
