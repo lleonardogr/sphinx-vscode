@@ -25,6 +25,6 @@ int main(void) {
 
 Uma **máscara** seleciona um campo: `(value >> 5) & 0x3F` pega os 6 bits que começam no bit 5.
 
-**Cuidado:** deslocar pela largura do tipo ou mais, ou deslocar um valor com sinal negativo, é comportamento indefinido. Desloque valores sem sinal por menos que a largura deles.
+**Cuidado:** desloque só valores sem sinal, por menos que a largura deles: os outros deslocamentos são comportamento indefinido ou dependem do compilador.
 
 <!-- readings -->

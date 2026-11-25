@@ -1,6 +1,6 @@
 ## In short
 
-A **bit** is 0 or 1, and a **byte** is 8 bits. Every extra bit doubles the possibilities, so **n bits have 2ⁿ values**, from 0 to 2ⁿ − 1: a byte holds 0 to 255. Turned around, a number needs as many bits as the times you can halve it before reaching 0: 300 needs 9.
+A **bit** is 0 or 1, and a **byte** is 8 bits. Every extra bit doubles the possibilities, so **n bits have 2ⁿ values**, from 0 to 2ⁿ − 1: a byte holds 0 to 255. Turned around, a number needs as many bits as the times you can halve it before reaching 0: 300 needs 9 (and 0 still needs 1 bit).
 
 ![Every extra bit doubles the patterns: 2, 4, 8](bit-patterns.svg)
 

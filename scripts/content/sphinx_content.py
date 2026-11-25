@@ -4,6 +4,7 @@ and Portuguese. Used by people and AI assistants following docs/content-guide.md
 A unit script imports these helpers, describes each item once, and writes the folders:
 
     from sphinx_content import challenge, bonus_goal, classic, big, ints, chars, quiz, num, choice, out, tf, short, reading_guide
+    from sphinx_content import lesson_notebook, nb_note, nb_code   # a reading guide as a notebook
 
 Then fill in the expected outputs and validate (see README.md in this folder):
 
@@ -332,6 +333,122 @@ def quick_guide(folder, *, title, title_pt, topic, order, objectives, objectives
     summary = md.split('<!-- readings -->')[0]
     prose = re.sub(r'```.*?```', '', summary, flags=re.S)
     print(f'{folder}: "In short" has {len(prose.split())} words of text (aim for 60 to 120) and {len(summary.split())} with the code (the validator warns above 180)')
+    return d
+
+
+# ------------------------------------------------------------------------------------ notebook lessons
+
+def nb_note(en, pt):
+    """A Markdown cell for lesson_notebook(), in both languages."""
+    return ('markdown', en, pt)
+
+
+def nb_code(en, pt=None):
+    """A code cell for lesson_notebook(), in the subject's language (Java, or C for a C subject): statements (run
+    inside void main(), or int main(void) in C) or a whole program. Start it with "// shared" to define methods or
+    functions the cells below can use. pt defaults to en (translate the comments)."""
+    return ('code', en, pt if pt is not None else en)
+
+
+_NB_INTRO = {
+    'en': '*Run a cell with ▶ (or Shift+Enter): Sphinx compiles and runs it on your computer. Change the code and run it again: this notebook is your own copy.*',
+    'pt-br': '*Rode uma célula com ▶ (ou Shift+Enter): o Sphinx compila e roda a célula no seu computador. Mude o código e rode de novo: este notebook é a sua cópia.*',
+}
+_NB_OBJECTIVES = {'en': '**After this unit you can:**', 'pt-br': '**Depois desta unidade você consegue:**'}
+_NB_READINGS = {'en': '## Readings', 'pt-br': '## Leituras'}
+_NB_CHALLENGES = {
+    'en': """## Challenges
+
+Solve the unit's challenges right here: each cell starts with `// sphinx: challenge …`, and running it runs **all** of the challenge's tests, hidden ones included. A pass counts in your progress in the Sphinx sidebar, just like Submit. The full description, with examples and hints, opens from the sidebar.""",
+    'pt-br': """## Desafios
+
+Resolva os desafios da unidade aqui mesmo: cada célula começa com `// sphinx: challenge …`, e rodá-la roda **todos** os testes do desafio, inclusive os ocultos. Passar conta no seu progresso na barra lateral do Sphinx, como o Submit. A descrição completa, com exemplos e dicas, abre pela barra lateral.""",
+}
+_NB_LEVEL = {'en': {'Easy': 'Easy', 'Medium': 'Medium', 'Hard': 'Hard'}, 'pt-br': {'Easy': 'Fácil', 'Medium': 'Médio', 'Hard': 'Difícil'}}
+_NB_TEST = {'en': 'Test', 'pt-br': 'Teste'}
+
+
+def _nb_cell(kind, text, language='java'):
+    lines = text.strip('\n').splitlines(keepends=True)
+    if kind == 'markdown':
+        return {'cell_type': 'markdown', 'metadata': {}, 'source': lines}
+    return {'cell_type': 'code', 'execution_count': None, 'metadata': {'vscode': {'languageId': language}}, 'outputs': [], 'source': lines}
+
+
+def _unit_challenges(subject_dir, unit):
+    """The challenges of a unit, then the test that closes it, in path order: from the subject's folder, and from the
+    repository's top-level challenges/ and tests/ (Java Programming's content lives there)."""
+    found = []
+    for kind, base in [(k, os.path.join(d, k)) for d in (subject_dir, REPO) for k in ('challenges', 'tests')]:
+        for name in sorted(os.listdir(base)) if os.path.isdir(base) else []:
+            meta_path = os.path.join(base, name, 'challenge.json')
+            if not os.path.exists(meta_path):
+                continue
+            meta = json.load(open(meta_path, encoding='utf8'))
+            if meta.get('topic') == unit or (meta.get('topic') == 'Tests' and meta.get('unit') == unit):
+                found.append((kind == 'tests', meta.get('order', 0), name, meta, os.path.join(base, name)))
+    found = list({f[2]: f for f in found}.values())
+    return [(name, meta, folder, is_test) for is_test, _, name, meta, folder in sorted(found)]
+
+
+def lesson_notebook(folder, insert=None, challenges=True):
+    """Writes lesson.ipynb and lesson.pt-br.ipynb next to a reading guide, built from the lesson itself: the title,
+    intro and objectives; lesson.md's "In short" with the cells in insert[k] (nb_note/nb_code) placed after its
+    paragraph k (paragraphs are split at blank lines, the "## In short" heading is 0); the readings with their
+    "look for" notes; the text after the readings ("Check yourself"); and, when challenges is True, a cell with
+    the starter code for every challenge of the lesson's unit and the test that closes it."""
+    d = os.path.normpath(os.path.join(REPO, folder))
+    meta = json.load(open(os.path.join(d, 'lesson.json'), encoding='utf8'))
+    pt_meta = meta.get('translations', {}).get('pt-br', {})
+    subject_dir = os.path.dirname(os.path.dirname(d))
+    subject = json.load(open(os.path.join(subject_dir, 'subject.json'), encoding='utf8'))
+    language = 'c' if subject.get('language') == 'c' else 'java'
+    ext = 'c' if language == 'c' else 'java'
+    insert = insert or {}
+    for lang, md_file, out_file in (('en', 'lesson.md', 'lesson.ipynb'), ('pt-br', 'lesson.pt-br.md', 'lesson.pt-br.ipynb')):
+        pick = (lambda en, pt: pt) if lang == 'pt-br' else (lambda en, pt: en)
+        text = open(os.path.join(d, md_file), encoding='utf8').read()
+        before, _, after = text.partition('<!-- readings -->')
+        paragraphs = [p.strip() for p in before.split('\n\n') if p.strip()]
+        assert max(insert, default=0) < len(paragraphs), f'{folder}: insert points past the {len(paragraphs)} paragraphs of {md_file}'
+        title = pt_meta.get('title', meta['title']) if lang == 'pt-br' else meta['title']
+        objectives = pt_meta.get('objectives', meta['objectives']) if lang == 'pt-br' else meta['objectives']
+        cells = [_nb_cell('markdown', f"# {title}\n\n{_NB_INTRO[lang]}\n\n{_NB_OBJECTIVES[lang]}\n" + ''.join(f'- {o}\n' for o in objectives))]
+        chunk = []
+        for i, p in enumerate(paragraphs):
+            chunk.append(p)
+            if i in insert:
+                cells.append(_nb_cell('markdown', '\n\n'.join(chunk)))
+                chunk = []
+                for kind, en, pt in insert[i]:
+                    cells.append(_nb_cell(kind, pick(en, pt), language))
+        if chunk:
+            cells.append(_nb_cell('markdown', '\n\n'.join(chunk)))
+        readings = []
+        for i, r in enumerate(meta.get('readings', [])):
+            look = pt_meta.get('readings', [{}] * (i + 1))[i].get('lookFor', r['lookFor']) if lang == 'pt-br' else r['lookFor']
+            readings.append(f"- [{r['title']}]({r['url']}) ({r['source']}, {r['minutes']} min): {look}")
+        if readings:
+            cells.append(_nb_cell('markdown', _NB_READINGS[lang] + '\n\n' + '\n'.join(readings)))
+        if after.strip():
+            cells.append(_nb_cell('markdown', after.strip()))
+        if challenges and meta.get('topic'):
+            unit = _unit_challenges(subject_dir, meta['topic'])
+            if unit:
+                cells.append(_nb_cell('markdown', _NB_CHALLENGES[lang]))
+            for name, cmeta, cfolder, is_test in unit:
+                ctitle = cmeta.get('translations', {}).get('pt-br', {}).get('title', cmeta['title']) if lang == 'pt-br' else cmeta['title']
+                level = _NB_LEVEL[lang].get(cmeta.get('difficulty', 'Easy'), cmeta.get('difficulty', ''))
+                prefix = f'{_NB_TEST[lang]}: ' if is_test else ''
+                cells.append(_nb_cell('markdown', f'### {prefix}{ctitle} · {level}'))
+                starter = os.path.join(cfolder, f'Starter.pt-br.{ext}' if lang == 'pt-br' else f'Starter.{ext}')
+                if not os.path.exists(starter):
+                    starter = os.path.join(cfolder, f'Starter.{ext}')
+                cells.append(_nb_cell('code', f'// sphinx: challenge {name}\n' + open(starter, encoding='utf8').read(), language))
+        nb = {'cells': cells, 'metadata': {'language_info': {'name': language}}, 'nbformat': 4, 'nbformat_minor': 5}
+        with open(os.path.join(d, out_file), 'w', encoding='utf8') as f:
+            f.write(json.dumps(nb, indent=1, ensure_ascii=False) + '\n')
+    print(f'{folder}: lesson.ipynb and lesson.pt-br.ipynb written')
     return d
 
 

@@ -76,5 +76,6 @@
   "command.exportPack": "Export a Pack for Students…",
   "command.classResults": "Class Results… (Teachers)",
   "command.switchSubject": "Switch Subject…",
-  "command.openLesson": "Open Lesson"
+  "command.openLesson": "Open Lesson",
+  "config.notebookLessons": "Open lessons that come with a notebook as the notebook, where students run the examples and solve the unit's challenges. Turn off to open them as reading pages."
 }

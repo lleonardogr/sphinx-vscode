@@ -66,7 +66,19 @@ A reading guide gets a diagram when the idea is visual: place values, a packet, 
   - lines showing through see-through shapes: end each line at the shape's border;
   - text overlapping.
 
-## 6. Write the files and validate
+## 6. Build the notebook
+
+Every built-in lesson also ships as a notebook (`lesson.ipynb` and `lesson.pt-br.ipynb`), which is what students open. Its format is in [Notebook lessons](../../../docs/creating-challenges.md#notebook-lessons), and the experiments' standard is in the content guide's [Notebooks](../../../docs/content-guide.md#notebooks).
+
+- **The cells:** write the experiments in the subject's language (Java, or C for a C subject):
+  - 2–4 for a reading guide, 1–2 for a quick guide;
+  - each one introduced by one sentence that says what to try or predict.
+- **What they show:** the idea, never a challenge's solution. Use a different problem, or the library call the challenge forbids, so students can check their answers.
+- **Generating:** `lesson_notebook(folder, insert={k: [nb_note(en, pt), nb_code(en, pt)]})` places the cells after paragraph `k` of "In short" (the heading is paragraph 0). Never put a cell after a paragraph that sits inside a fenced code block. It adds the readings, "Check yourself", and a cell for every challenge of the unit.
+- **Rerun it** whenever `lesson.md` or the unit's challenges change, since the notebook copies them.
+- **Time and memory:** keep each cell well under the 20-second limit on a slow machine. C cells must compile without warnings and free what they allocate.
+
+## 7. Write the files and validate
 
 Use the helpers in [scripts/content](../../../scripts/content/README.md), from a script outside the repository. `reading_guide(..., files={'diagram.svg': ..., 'diagram.pt-br.svg': ...})` prints the summary's word count, and `quick_guide` prints the text and code counts.
 

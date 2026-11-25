@@ -8,6 +8,7 @@ import * as path from 'path';
 import { Challenge, codeFileName, loadChallenges } from './challenges';
 import { RunOutcome, RunRequest, checkRules, javacMajorVersion, normalizeOutput, runChallengeCode } from './runner';
 import { findExamDirs, loadExams } from './exams';
+import { lessonNotebooks, notebookProblems } from './notebookCells';
 import { generateProblems } from './generate';
 import { findQuizDirs, isWholeProgram, loadQuiz, loadQuizzes, quizProgram } from './quizzes';
 import { READINGS_MARKER, READING_TYPES, findLessonDirs, loadLesson } from './lessons';
@@ -385,7 +386,9 @@ export function readingProblems(readings: unknown, most = 3): string[] {
 export function contentWarnings(c: Challenge): string[] {
   const warnings: string[] = [];
   const words = c.description.split(/\s+/).filter(Boolean).length;
-  if (!/^\*\*Things to know\*\*|^#+\s*Things to know/im.test(c.description)) {
+  // The heading in English, or in a Portuguese description (with --lang=pt-br).
+  const knowHeading = '(Things to know|Bom saber|Coisas para saber|O que você precisa saber)';
+  if (!new RegExp(`^\\*\\*${knowHeading}\\*\\*|^#+\\s*${knowHeading}`, 'im').test(c.description)) {
     warnings.push('description.md has no "Things to know" section about the Java features involved');
   }
   if (words < 40) {
@@ -466,10 +469,24 @@ async function validateRoots(roots: string[], opts: ValidateOptions): Promise<Va
     reports.push(report);
     opts.onChallenge?.(report);
   }
+  // Notebook lessons: their cells must run, and their challenge cells must name a Java challenge.
+  const known = new Map([...challenges, ...references].map((c) => [c.id, c.language]));
+  const tools = { javaHome: opts.javaHome, cCompiler: opts.cCompiler, cPortableDirs: opts.cPortableDirs };
   for (const dir of findLessonDirs(roots)) {
     const report = validateLesson(dir);
+    const notebooks = lessonNotebooks(dir);
+    if (notebooks.length) {
+      const checked = await notebookProblems(dir, javacVersion, (id) => known.get(id), tools);
+      report.problems.push(...checked.problems);
+      report.ok = report.problems.length === 0;
+      report.solutions = checked.cellsRun;
+      counters.checked += checked.cellsRun;
+    }
     for (const lang of opts.languages ?? []) {
       report.warnings = [...(report.warnings ?? []), ...translationProblems(dir, lang).map((p) => `${lang}: ${p}`)];
+      if (notebooks.some((f) => path.basename(f) === 'lesson.ipynb') && !notebooks.some((f) => path.basename(f) === `lesson.${lang}.ipynb`)) {
+        report.warnings.push(`${lang}: the lesson has a notebook but no lesson.${lang}.ipynb`);
+      }
     }
     if (opts.strict && report.warnings?.length) {
       report.ok = false;
@@ -487,7 +504,7 @@ export function formatReport(report: ValidationReport, generate = false): string
     const summary = c.kind === 'quiz'
       ? `quiz, ${c.tests} questions, ${c.solutions} code snippet${c.solutions === 1 ? '' : 's'} run`
       : c.kind === 'lesson'
-        ? `lesson, ${c.tests} words`
+        ? `lesson, ${c.tests} words${c.solutions ? `, ${c.solutions} notebook cell${c.solutions === 1 ? '' : 's'} run` : ''}`
         : `${c.tests} tests × ${c.solutions} solution${c.solutions === 1 ? '' : 's'}`;
     const warn = (c.warnings ?? []).map((w) => `\n  ⚠ ${w}`).join('');
     lines.push(c.problems.length ? `✗ ${c.id}\n  ${c.problems.join('\n  ')}${warn}` : `${c.ok ? '✓' : '✗'} ${c.id} (${summary})${generate ? ', outputs written' : ''}${warn}`);

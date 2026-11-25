@@ -9,9 +9,11 @@ static void border(int width) {
 }
 
 int main(void) {
-    int width;
+    int width = 0;
     char name[128], cell[41];
-    scanf("%d ", &width);
+    if (fgets(name, sizeof name, stdin) == NULL || sscanf(name, "%d", &width) != 1) {
+        return 1;
+    }
     border(width);
     while (fgets(name, sizeof name, stdin)) {
         name[strcspn(name, "\n")] = '\0';

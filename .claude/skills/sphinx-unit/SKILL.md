@@ -60,6 +60,7 @@ Use the helpers in [scripts/content](../../../scripts/content/README.md), from a
   - **Solutions:** two reference solutions, modern and classic, written **differently**.
   - **Rules:** forbid the library shortcut that would do the exercise. Rules must accept both solutions; don't require a loop when recursion is just as valid.
   - **Bonus goals:** where the idea has a harder version, add 1–3 [bonus goals](../../../docs/content-guide.md#bonus-goals) (a different approach, efficiency, a constraint or robustness), each with its own `Solution.bonus.<id>.*`. Use `bonus_goal(...)` in `challenge(bonus=[...])`. Keep efficiency limits generous.
+- **Notebook:** after the guide, call `lesson_notebook(folder, insert={...})` with runnable experiments in the subject's language (`nb_note` + `nb_code`, both languages; 2–4 for a reading guide, 1–2 for a quick guide), placed after a paragraph of text, never inside a code block. They show the idea without solving a challenge. The notebook gets a cell for each challenge of the unit automatically. See [Notebooks](../../../docs/content-guide.md#notebooks).
 - **Quiz:** numbers with `num` (set `base`, and `tolerance` for decimals); predictions with `out`, with the answer left `''`, so the validator fills it in. Prompts can contain Markdown tables.
 - **Both languages for everything Sphinx writes:** titles, descriptions, hints, rule messages, starter comments, questions, explanations, objectives, summaries and "look for" notes.
 

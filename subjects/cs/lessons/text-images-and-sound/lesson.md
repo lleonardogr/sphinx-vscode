@@ -2,7 +2,7 @@
 
 Computers store text as numbers: each character has a **code**. In **ASCII**, `A` is 65, `a` is 97, the digit `0` is 48 and the space is 32, and each lower-case letter is exactly 32 after its upper-case one. In Java a `char` is a number, so `'a' - 'A'` is 32.
 
-ASCII has only 128 codes. **Unicode** numbers every character of every language, from é to 😀, with a **code point** such as `U+00E9`. **UTF-8** stores code points in 1 to 4 bytes: ASCII characters take 1, accented letters 2, emoji 4. Garbled text like "Ã©" instead of "é" means UTF-8 bytes were read with the wrong table.
+ASCII has only 128 codes. **Unicode** numbers every character of every language, from é to 😀, with a **code point** such as `U+00E9`. **UTF-8** stores code points in 1 to 4 bytes, more for bigger code points: `A` takes 1, `é` 2, `€` and `☕` 3, and `😀` 4. Garbled text like "Ã©" instead of "é" means UTF-8 bytes were read with the wrong table.
 
 ![How é, U+00E9, becomes the UTF-8 bytes C3 A9](utf8.svg)
 

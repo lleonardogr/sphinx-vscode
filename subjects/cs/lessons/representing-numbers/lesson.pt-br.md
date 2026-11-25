@@ -6,7 +6,7 @@ Bits não têm sinal de menos, então os computadores usam **complemento de dois
 
 Para inverter o sinal de um número, inverta todos os bits e some 1: 5 é `00000101`, então −5 é `11111010` + 1 = `11111011`. O `int` do Java usa 32 bits, de −2.147.483.648 a 2.147.483.647. Quando um resultado não cabe, os bits extras são descartados e ele **dá a volta**: `Integer.MAX_VALUE + 1` é `-2147483648`, e o Java não dá erro. Isso é **overflow** (estouro).
 
-Frações são mais difíceis. Depois da vírgula binária as posições valem ½, ¼, ⅛, … então 0,5 e 0,25 são exatos, mas **0,1 se repete para sempre** em binário, como 1/3 no decimal. Um `double` guarda o valor mais próximo que consegue, em 64 bits: um sinal, um expoente e 52 bits significativos, cerca de 15–16 dígitos decimais. É por isso que `0.1 + 0.2` imprime `0.30000000000000004`.
+Frações são mais difíceis. Depois da vírgula binária as posições valem ½, ¼, ⅛, … então 0,5 e 0,25 são exatos, mas **0,1 se repete para sempre** em binário, como 1/3 no decimal. Um `double` guarda o valor mais próximo que consegue, em 64 bits: um sinal, um expoente e uma fração de 52 bits, que com um 1 inicial implícito dá 53 bits de precisão, cerca de 15–16 dígitos decimais. É por isso que `0.1 + 0.2` imprime `0.30000000000000004`.
 
 Então: compare doubles com uma tolerância, `Math.abs(a - b) < 1e-9`, e guarde dinheiro em centavos inteiros num `long`, ou em `BigDecimal`.
 

@@ -20,6 +20,7 @@ import { PathItem, Requirement, TESTS_TOPIC, buildPath, nextInPath, pathItemTitl
 import { DEFAULT_SUBJECT, LockRule, SubjectDef, UnitDef, addTeacherSubjects, stricterLock, allSubjects, findSubject, loadSubjects, removeUnitFromSubjectFile, setSubjects, subjectContentRoots, subjectTitle } from './subjects';
 import { LessonDefinition, loadLessons } from './lessons';
 import { LessonPanel, LessonProgress } from './lessonPanel';
+import { CONTROLLER_ID, copyLessonNotebook, lessonNotebookFile, registerNotebookController } from './notebook';
 import { language, plural, setLanguage, tr } from './i18n';
 import { JavaSetup } from './javaSetup';
 import { clearJavaCache } from './runner';
@@ -215,6 +216,22 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   const cCompilerSetting = () => config().get<string>('c.compiler', '').trim() || undefined;
   const cSetup = new CSetup(path.join(context.globalStorageUri.fsPath, 'compilers'), cCompilerSetting, output, () => refreshCli());
   const runnerOptions = () => ({ javaHome: javaHome(), cCompiler: cCompilerSetting(), cPortableDirs: cSetup.portableDirs() });
+
+  // Experimental: lessons as notebooks, whose Java cells Sphinx runs itself (see notebook.ts).
+  /** The lesson each opened notebook copy belongs to, by file path. */
+  const notebookLessons = new Map<string, string>();
+  const notebookController = registerNotebookController({
+    findChallenge: (id) => findChallenge(id),
+    runnerOptions,
+    onChallengeResult: (c, solved) => progress.recordAttempt(c.id, solved),
+    onCellRan: (notebook) => {
+      const lessonId = notebookLessons.get(notebook.uri.fsPath) ?? lessons.find((l) => notebook.uri.fsPath === path.join(codeRoot(), 'notebooks', `${l.id}.ipynb`))?.id;
+      if (lessonId) {
+        void lessonProgress.markRead(lessonId);
+      }
+    },
+  });
+  context.subscriptions.push(notebookController);
 
   // The `sphinx` command line (cli.ts). A launcher in Sphinx's storage is on the PATH of VS Code's terminals;
   // "Install 'sphinx' Command" copies it to a folder on the user's PATH. Both are rewritten on every start and
@@ -682,6 +699,11 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
   const itemTitle = pathItemTitle;
 
   async function openLesson(lesson: LessonDefinition): Promise<void> {
+    const notebook = config().get<boolean>('notebookLessons', true) ? lessonNotebookFile(lesson.dir, language()) : undefined;
+    if (notebook) {
+      await openLessonNotebook(lesson, notebook);
+      return;
+    }
     const next = nextItem(lesson);
     await lessonPanel.show(lesson, {
       read: lessonProgress.isRead(lesson.id),
@@ -691,6 +713,20 @@ export function activate(context: vscode.ExtensionContext): SphinxApi {
         .filter((c) => c.bonus.length)
         .map((c) => ({ challenge: c.title, goals: c.bonus.map((b) => ({ title: b.title, earned: progress.bonusEarned(c.id).includes(b.id) })) })),
     });
+  }
+
+  /** Opens the student's copy of a lesson's notebook, with Sphinx's Java runner chosen for it. */
+  async function openLessonNotebook(lesson: LessonDefinition, source: string): Promise<void> {
+    const file = copyLessonNotebook(source, path.join(codeRoot(), 'notebooks'), lesson.id);
+    notebookLessons.set(file, lesson.id);
+    const doc = await vscode.workspace.openNotebookDocument(vscode.Uri.file(file));
+    notebookController.updateNotebookAffinity(doc, vscode.NotebookControllerAffinity.Preferred);
+    const editor = await vscode.window.showNotebookDocument(doc, { viewColumn: vscode.ViewColumn.One });
+    try {
+      await vscode.commands.executeCommand('notebook.selectKernel', { notebookEditor: editor, id: CONTROLLER_ID, extension: context.extension.id });
+    } catch {
+      // Older VS Code: the student picks "Sphinx: Java" from the kernel picker.
+    }
   }
 
   /** The challenges and tests of a unit, in path order. */

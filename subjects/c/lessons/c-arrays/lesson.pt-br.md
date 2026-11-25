@@ -24,6 +24,6 @@ int main(void) {
 
 Uma função recebe o próprio array, não uma cópia, então pode mudar os elementos (`const` promete que não vai). Um array local fica na **pilha**, que tem só alguns megabytes: faça um array muito grande `static` ou global.
 
-**Cuidado:** o C nunca confere um índice. `temps[7]` compila e lê ou sobrescreve o que estiver em seguida na memória. As verificações de memória do Sphinx pegam isso e dizem a linha.
+**Cuidado:** o C nunca confere um índice. `temps[7]` compila, mas é comportamento indefinido: pode ler ou sobrescrever outros dados, travar ou parecer funcionar. As verificações de memória do Sphinx pegam isso e dizem a linha.
 
 <!-- readings -->
