@@ -427,7 +427,7 @@ Sphinx runs the notebook's cells itself (the **Sphinx** kernel): Java with the s
 |---|---|
 | has statements, like `IO.println(2 + 2);` | the statements inside `void main()` (in C, inside `int main(void)`, with `stdio.h`, `stdlib.h`, `string.h` and `stdint.h` included) |
 | has `void main()` (in C, `main`) | the whole program |
-| starts with `// shared` | a definition: its methods, records and fields can be used by every cell below it |
+| starts with `// shared` | a definition: its methods, records and fields (functions and types in C) can be used by every plain cell below it. Challenge cells run on their own, like Submit |
 | starts with `// sphinx: challenge <id>` | a solution to that challenge: running it runs all its tests, hidden ones included, and counts in the student's progress like **Submit** |
 
 Java cells use compact source files (`void main()` and statements on their own), so they need JDK 25 or newer, like the modern starters; with an older JDK, turn `sphinx.notebookLessons` off to read the lessons as pages. Each cell runs on its own: variables don't carry over from one cell to the next (put what several cells need in a `// shared` cell). Cells can't read keyboard input, but challenge cells get each test's input. A plain cell stops after 20 seconds.
