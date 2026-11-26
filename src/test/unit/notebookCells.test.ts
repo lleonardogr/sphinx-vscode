@@ -92,4 +92,30 @@ describe('notebook lesson cells', () => {
     assert.ok(problems.some((p) => /cell 2 compiles with warnings/.test(p)), problems.join('\n'));
     assert.ok(!problems.some((p) => /cell [13]\b/.test(p)), problems.join('\n'));
   });
+
+  it('run each exercise\'s hidden answer: it must print ✓ and no ✗, while the starter may have warnings', async (t) => {
+    if (!(await findCCompiler())) return t.skip('no C compiler on this machine');
+    const dir = tempDir();
+    const exercise = (starter: string, solution: string) => ({
+      cell_type: 'code', execution_count: null, metadata: { vscode: { languageId: 'c' }, sphinx: { solution } }, outputs: [], source: [starter],
+    });
+    const check = '// shared\nvoid check(int ok) {\n    printf(ok ? "✓\\n" : "✗\\n");\n}\n';
+    const starter = 'int twice(int n) {\n    // TODO\n    return 0;\n}\n\nint main(void) {\n    check(twice(2) == 4);\n    return 0;\n}\n';
+    const answer = (body: string) => `int twice(int n) {\n    ${body}\n}\n\nint main(void) {\n    check(twice(2) == 4);\n    return 0;\n}\n`;
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'lesson.ipynb'), JSON.stringify({
+      cells: [
+        { cell_type: 'code', execution_count: null, metadata: { vscode: { languageId: 'c' } }, outputs: [], source: [check] },
+        exercise(starter, answer('return n * 2;')),
+        exercise(starter, answer('return n + 1;')),
+        exercise(starter, answer('int unused = 1;\n    return n * 2;')),
+      ],
+      metadata: { language_info: { name: 'c' } }, nbformat: 4, nbformat_minor: 5,
+    }));
+    const { problems, cellsRun } = await notebookProblems(dir, undefined, () => undefined);
+    assert.equal(cellsRun, 7, 'the shared cell, three starters and three answers');
+    assert.ok(!problems.some((p) => /cell 2\b/.test(p)), `a right answer passes, and its starter's warning is allowed:\n${problems.join('\n')}`);
+    assert.ok(problems.some((p) => /cell 3: the exercise's answer fails its checks/.test(p)), problems.join('\n'));
+    assert.ok(problems.some((p) => /cell 4: the exercise's answer doesn't run cleanly/.test(p)), problems.join('\n'));
+  });
 });

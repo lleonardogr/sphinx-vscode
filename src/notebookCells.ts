@@ -146,7 +146,8 @@ export async function notebookProblems(
           problems.push(`${where} does not compile:\n${outcome.raw}`);
         } else if (outcome.kind !== 'tests') {
           problems.push(`${where}: ${outcome.kind === 'toolMissing' ? outcome.message : outcome.messages.join('; ')}`);
-        } else if (outcome.warnings?.length) {
+        } else if (outcome.warnings?.length && cell.solution === undefined) {
+          // An exercise's starter is incomplete on purpose (unused parameters...); its answer must have no warnings.
           problems.push(`${where} compiles with warnings:\n${outcome.warnings.map((w) => `  - line ${w.line}: ${w.message}`).join('\n')}`);
         } else if (outcome.results[0].timedOut) {
           problems.push(`${where} runs for more than ${CELL_TIME_LIMIT_MS / 1000} seconds`);

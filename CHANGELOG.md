@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- **Notebook lessons teach; challenges are the practice.** Every notebook, in all four subjects, now has a step-by-step **storyboard**: numbered pictures, like slides, of the unit's idea. Examples: a value leaving a stack and a queue; each variable appearing in the stack and its object in the heap; a call stack growing and shrinking; a pointer writing into `x`; `malloc`, `realloc` and `free`; a bit field read with a shift and a mask. Each notebook also has two or three short **exercises** on the basic operations, such as reversing words with a stack or a countdown written recursively, each with `check(...)` lines that print ✓ or ✗ and an answer under **Show an answer**. The challenge cells are replaced by a **Practice** list of the unit's challenges, solved in the sidebar, so the notebook no longer repeats them. The validator runs each exercise's hidden answer and requires ✓ and no ✗.
+
 ## [1.9.4] - 2026-11-25
 
 ### Added

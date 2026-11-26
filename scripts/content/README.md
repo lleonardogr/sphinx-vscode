@@ -37,7 +37,13 @@ reading_guide('subjects/cs/lessons/algorithms-and-complexity', title='Algorithms
     md_pt='''## Em resumo\n\n…''', files={'growth.svg': '<svg …>', 'growth.pt-br.svg': '<svg …>'})
 ```
 
-For a **notebook lesson**, write the reading guide first, then call `lesson_notebook(folder, insert={k: [nb_note(en, pt), nb_code(en, pt)]})`: it writes `lesson.ipynb` and `lesson.pt-br.ipynb` from `lesson.json` and `lesson.md`, with your cells after paragraph `k` of "In short" (the heading is paragraph 0) and a cell for each challenge of the unit. Run `node out/cli.js validate <lesson folder>` to run every cell.
+For a **notebook lesson**, write the reading guide first, then call `lesson_notebook(folder, insert={k: [...]})`: it writes `lesson.ipynb` and `lesson.pt-br.ipynb` from `lesson.json` and `lesson.md`, with the items in `insert[k]` after paragraph `k` of "In short" (the heading is paragraph 0), and ends with a practice list of the unit's challenges. The items are:
+
+- `nb_note(en, pt)` and `nb_code(en, pt)`: a sentence and an experiment to run;
+- `nb_slides(name, frames, title, title_pt, aria, aria_pt)`: a storyboard written to `<name>.svg` and `<name>.pt-br.svg`. `frames(t)` returns the panels, where `t(en, pt)` picks the language; [sphinx_slides.py](sphinx_slides.py) draws them (`stack_panel`, `queue_panel`, `array_panel`, `memory_panel` for the stack and the heap, `list_panel`, `tree_panel`, `bits_panel`, `text_panel`, or your own `Panel`);
+- `java_exercise(...)` and `c_exercise(...)`: an exercise from a signature, a TODO, the answer's body and `(label, label_pt, call, expected)` checks. The notebook then gets the shared `check` cell.
+
+Run `node out/cli.js validate <lesson folder>` to run every cell and every exercise's answer.
 
 For a **big hidden test**, pass `big(seed, *lines)` in `tests=[...]` instead of an `(input, hidden)` pair. Its lines are text, `ints(count, lo, hi, rows=1, sorted=False, distinct=False)` or `chars(count, alphabet, rows=1)`, and it writes a [generated test](../../docs/creating-challenges.md#big-inputs-generated-tests): `big(1, '200000', ints(200000, 1, 10**9))`.
 

@@ -357,6 +357,49 @@ def nb_exercise(title, title_pt, task, task_pt, starter, solution, starter_pt=No
     return ('exercise', (title, task, starter, solution), (title_pt, task_pt, starter_pt or starter, solution_pt or solution))
 
 
+def nb_slides(name, frames, title, title_pt, aria, aria_pt):
+    """A step-by-step storyboard for lesson_notebook(): frames(t) returns the panels (see sphinx_slides.py), with
+    t(en, pt) picking each language's text. Writes <name>.svg and <name>.pt-br.svg next to the lesson."""
+    return ('slides', (name, frames, title, aria), (name, frames, title_pt, aria_pt))
+
+
+def _indent(code, n=4):
+    return '\n'.join((' ' * n + l) if l.strip() else '' for l in code.strip('\n').split('\n'))
+
+
+def java_exercise(title, title_pt, task, task_pt, signature, default, todo, todo_pt, body, checks, before=''):
+    """nb_exercise() for a Java method: `signature` and the answer's `body`; the starter returns `default` after a
+    TODO. checks: (label, label_pt, call, expected) tuples, run in main() with check(). `before` holds extra
+    declarations (records, classes) placed above the method."""
+    def program(lang, inside):
+        lines = '\n'.join(f'    check("{lp if lang == "pt" else le}", {call}, {exp});' for le, lp, call, exp in checks)
+        top = f'{before.strip()}\n\n' if before.strip() else ''
+        return f'{top}{signature} {{\n{_indent(inside)}\n}}\n\nvoid main() {{\n{lines}\n}}'
+    starter = lambda lang, todo_text: program(lang, f'// TODO: {todo_text}' + (f'\nreturn {default};' if default is not None else ''))
+    return nb_exercise(title, title_pt, task, task_pt, starter('en', todo), program('en', body),
+                       starter('pt', todo_pt), program('pt', body))
+
+
+def c_exercise(title, title_pt, task, task_pt, signature, default, todo, todo_pt, body, checks, before=''):
+    """nb_exercise() for a C function, like java_exercise(). checks: (label, label_pt, call, expected) tuples;
+    an expected value in double quotes is compared with check_str, anything else with check_int. A check can also
+    be a plain line of C (setup such as a variable or a call), written as is."""
+    def program(lang, inside):
+        out = []
+        for c in checks:
+            if isinstance(c, str):
+                out.append(f'    {c}')
+                continue
+            le, lp, call, exp = c
+            fn = 'check_str' if exp.startswith('"') else 'check_int'
+            out.append(f'    {fn}("{lp if lang == "pt" else le}", {call}, {exp});')
+        top = f'{before.strip()}\n\n' if before.strip() else ''
+        return f'{top}{signature} {{\n{_indent(inside)}\n}}\n\nint main(void) {{\n' + '\n'.join(out) + '\n    return 0;\n}'
+    starter = lambda lang, todo_text: program(lang, f'// TODO: {todo_text}' + (f'\nreturn {default};' if default is not None else ''))
+    return nb_exercise(title, title_pt, task, task_pt, starter('en', todo), program('en', body),
+                       starter('pt', todo_pt), program('pt', body))
+
+
 _NB_CHECK = {
     'java': {
         'en': """// shared: check(...) prints ✓ or ✗; the exercises below use it
@@ -387,6 +430,9 @@ void check_int(const char *what, long actual, long expected) {
 }
 
 void check_str(const char *what, const char *actual, const char *expected) {
+    if (actual == NULL) {
+        actual = "(NULL)";
+    }
     if (strcmp(actual, expected) == 0) {
         printf("✓ %s\\n", what);
     } else {
@@ -403,6 +449,9 @@ void check_int(const char *what, long actual, long expected) {
 }
 
 void check_str(const char *what, const char *actual, const char *expected) {
+    if (actual == NULL) {
+        actual = "(NULL)";
+    }
     if (strcmp(actual, expected) == 0) {
         printf("✓ %s\\n", what);
     } else {
@@ -493,7 +542,15 @@ def lesson_notebook(folder, insert=None, practice=True):
                 cells.append(_nb_cell('markdown', '\n\n'.join(chunk)))
                 chunk = []
                 for kind, en, pt in insert[i]:
-                    if kind == 'exercise':
+                    if kind == 'slides':
+                        slide_name, frames, slide_title, aria = pick(en, pt)
+                        import sphinx_slides
+                        t = (lambda a, b: b) if lang == 'pt-br' else (lambda a, b: a)
+                        file = f"{slide_name}{'.pt-br' if lang == 'pt-br' else ''}.svg"
+                        with open(os.path.join(d, file), 'w', encoding='utf8') as f:
+                            f.write(sphinx_slides.storyboard(frames(t), aria))
+                        cells.append(_nb_cell('markdown', f'#### 🎞️ {slide_title}\n\n![{aria}]({file})'))
+                    elif kind == 'exercise':
                         ex_title, task, starter_code, solution = pick(en, pt)
                         cells.append(_nb_cell('markdown', f'### {_NB_EXERCISE[lang]}: {ex_title}\n\n{task}'))
                         cell = _nb_cell('code', starter_code, language)
