@@ -4,8 +4,8 @@
 <circle cx="18" cy="18" r="11" fill="#3b82f6"/>
 <text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
 <text x="16" y="50" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">é = U+00E9</text>
-<text x="16" y="70" fill="#8a94a6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">  = 233</text>
-<text x="16" y="90" fill="#f59e0b" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">  = 11101001</text>
+<text x="16" y="70" fill="#8a94a6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">  = 233</text>
+<text x="16" y="90" fill="#f59e0b" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">  = 11101001</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">é has code point U+00E9: 8</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">bits, too many for one UTF-8</text>
 <text x="115.0" y="236" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">byte</text>
@@ -22,7 +22,7 @@
 <rect x="0.75" y="0.75" width="228.5" height="249.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
 <circle cx="18" cy="18" r="11" fill="#3b82f6"/>
 <text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
-<text x="16" y="50" fill="#f59e0b" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">   00011   101001</text>
+<text x="16" y="50" fill="#f59e0b" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">   00011   101001</text>
 <text x="16" y="70" fill="#8a94a6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">110xxxxx 10xxxxxx</text>
 <text x="16" y="90" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">11000011 10101001</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">Pad the bits to 11 and fill</text>
@@ -33,7 +33,7 @@
 <circle cx="18" cy="18" r="11" fill="#3b82f6"/>
 <text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
 <text x="16" y="50" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">11000011 10101001</text>
-<text x="16" y="70" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">   C3       A9</text>
+<text x="16" y="70" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">   C3       A9</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">é is stored as the bytes C3 A9</text>
 </g>
 </svg>

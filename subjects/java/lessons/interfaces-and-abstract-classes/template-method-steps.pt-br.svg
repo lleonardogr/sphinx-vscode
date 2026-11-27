@@ -4,7 +4,7 @@
 <circle cx="18" cy="18" r="11" fill="#3b82f6"/>
 <text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
 <text x="16" y="50" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">Priced p =</text>
-<text x="16" y="68" fill="#f59e0b" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">  new StudentTicket(&quot;Show&quot;);</text>
+<text x="16" y="68" fill="#f59e0b" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">  new StudentTicket(&quot;Show&quot;);</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">O tipo de p é a interface; o</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">objeto é um StudentTicket</text>
 </g>
@@ -14,8 +14,8 @@
 <text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
 <text x="16" y="50" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">p.price()</text>
 <text x="16" y="68" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
-<text x="16" y="86" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">written once, in</text>
-<text x="16" y="104" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">abstract class Ticket:</text>
+<text x="16" y="86" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">escrito uma vez, na</text>
+<text x="16" y="104" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">classe abstrata Ticket:</text>
 <text x="16" y="122" fill="#10b981" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">100 * (1 - discount())</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">price() é o trabalho comum, na</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">classe abstrata</text>
@@ -24,9 +24,9 @@
 <rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
 <circle cx="18" cy="18" r="11" fill="#3b82f6"/>
 <text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
-<text x="16" y="50" fill="#8a94a6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">discount() is abstract</text>
+<text x="16" y="50" fill="#8a94a6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">discount() é abstrato</text>
 <text x="16" y="68" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
-<text x="16" y="86" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">StudentTicket writes it:</text>
+<text x="16" y="86" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">StudentTicket o escreve:</text>
 <text x="16" y="104" fill="#f59e0b" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">return 0.5;</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">A parte que falta vem da</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">subclasse</text>
@@ -46,7 +46,7 @@
 <text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">5</text>
 <text x="16" y="50" fill="#8a94a6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">new Ticket(&quot;Show&quot;)</text>
 <text x="16" y="68" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
-<text x="16" y="86" fill="#ef4444" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">error: Ticket is abstract</text>
+<text x="16" y="86" fill="#ef4444" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">erro: Ticket é abstrata</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">Uma classe abstrata não pode</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">ser criada sozinha</text>
 </g>

@@ -34,7 +34,8 @@ class Panel:
     def text(self, x, y, s, color=GRAY, size=13, anchor='middle', bold=False, mono=False):
         weight = ' font-weight="700"' if bold else ''
         family = MONO if mono else FONT
-        self.parts.append(f'<text x="{x}" y="{y}" fill="{color}" font-size="{size}" text-anchor="{anchor}" font-family="{family}"{weight}>{escape(str(s))}</text>')
+        keep = ' xml:space="preserve"' if mono and str(s).startswith(' ') else ''   # code keeps its indentation
+        self.parts.append(f'<text x="{x}" y="{y}" fill="{color}" font-size="{size}" text-anchor="{anchor}" font-family="{family}"{weight}{keep}>{escape(str(s))}</text>')
         return self
 
     def arrow(self, x1, y1, x2, y2, color=GRAY, width=1.5):
