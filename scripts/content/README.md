@@ -41,7 +41,10 @@ For a **notebook lesson**, write the reading guide first, then call `lesson_note
 
 - `nb_note(en, pt)` and `nb_code(en, pt)`: a sentence and an experiment to run;
 - `nb_slides(name, frames, title, title_pt, aria, aria_pt)`: a storyboard written to `<name>.svg` and `<name>.pt-br.svg`. `frames(t)` returns the panels, where `t(en, pt)` picks the language; [sphinx_slides.py](sphinx_slides.py) draws them (`stack_panel`, `queue_panel`, `array_panel`, `memory_panel` for the stack and the heap, `list_panel`, `tree_panel`, `bits_panel`, `text_panel`, or your own `Panel`);
+- `nb_try(en, pt)`: a 🧪 "Try it" prompt after a cell: what to change, and what to predict before running;
 - `java_exercise(...)` and `c_exercise(...)`: an exercise from a signature, a TODO, the answer's body and `(label, label_pt, call, expected)` checks. The notebook then gets the shared `check` cell.
+
+For a **detailed notebook**, pass `steps=[nb_step(title, title_pt, *items), …]` too: each step is a numbered section with one idea, placed before "In short", which then works as the recap. The notebook lists the steps under the objectives.
 
 Run `node out/cli.js validate <lesson folder>` to run every cell and every exercise's answer.
 

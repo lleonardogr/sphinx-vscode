@@ -357,6 +357,17 @@ def nb_exercise(title, title_pt, task, task_pt, starter, solution, starter_pt=No
     return ('exercise', (title, task, starter, solution), (title_pt, task_pt, starter_pt or starter, solution_pt or solution))
 
 
+def nb_try(en, pt):
+    """A "Try it" prompt for lesson_notebook(): what to change in the cell above, and what to predict first."""
+    return ('markdown', f'🧪 **Try it:** {en}', f'🧪 **Experimente:** {pt}')
+
+
+def nb_step(title, title_pt, *items):
+    """One section of a notebook's step-by-step part (lesson_notebook(steps=[...])): a numbered heading and its
+    items (nb_note, nb_code, nb_try, nb_slides, nb_exercise...), one idea per step, in teaching order."""
+    return (title, title_pt, items)
+
+
 def nb_slides(name, frames, title, title_pt, aria, aria_pt):
     """A step-by-step storyboard for lesson_notebook(): frames(t) returns the panels (see sphinx_slides.py), with
     t(en, pt) picking each language's text. Writes <name>.svg and <name>.pt-br.svg next to the lesson."""
@@ -475,6 +486,11 @@ The notebook covered the basics. Now apply them in the unit's challenges, in the
 O notebook cobriu o básico. Agora aplique nos desafios da unidade, na barra lateral do Sphinx, onde o Submit roda todos os testes, inclusive os ocultos:""",
 }
 
+_NB_CONTENTS = {
+    'en': '**In this notebook**, one idea at a time (run each cell before moving on):',
+    'pt-br': '**Neste notebook**, uma ideia de cada vez (rode cada célula antes de seguir):',
+}
+
 _NB_INTRO = {
     'en': '*Run a cell with ▶ (or Shift+Enter): Sphinx compiles and runs it on your computer. Change the code and run it again: this notebook is your own copy.*',
     'pt-br': '*Rode uma célula com ▶ (ou Shift+Enter): o Sphinx compila e roda a célula no seu computador. Mude o código e rode de novo: este notebook é a sua cópia.*',
@@ -508,9 +524,10 @@ def _unit_challenges(subject_dir, unit):
     return [(name, meta, folder, is_test) for is_test, _, name, meta, folder in sorted(found)]
 
 
-def lesson_notebook(folder, insert=None, practice=True):
+def lesson_notebook(folder, insert=None, practice=True, steps=None):
     """Writes lesson.ipynb and lesson.pt-br.ipynb next to a reading guide, built from the lesson itself: the title,
-    intro and objectives; lesson.md's "In short" with the cells in insert[k] (nb_note/nb_code) placed after its
+    intro and objectives; the step-by-step sections in `steps` (nb_step), numbered, with a list of them under the
+    objectives, before the recap; lesson.md's "In short" with the cells in insert[k] (nb_note/nb_code) placed after its
     paragraph k (paragraphs are split at blank lines, the "## In short" heading is 0); the readings with their
     "look for" notes; the text after the readings ("Check yourself"); and, when challenges is True, a cell with
     the unit's challenges as a "Practice" list (practice=False leaves it out). Exercises (nb_exercise) get a
@@ -531,34 +548,46 @@ def lesson_notebook(folder, insert=None, practice=True):
         assert max(insert, default=0) < len(paragraphs), f'{folder}: insert points past the {len(paragraphs)} paragraphs of {md_file}'
         title = pt_meta.get('title', meta['title']) if lang == 'pt-br' else meta['title']
         objectives = pt_meta.get('objectives', meta['objectives']) if lang == 'pt-br' else meta['objectives']
-        cells = [_nb_cell('markdown', f"# {title}\n\n{_NB_INTRO[lang]}\n\n{_NB_OBJECTIVES[lang]}\n" + ''.join(f'- {o}\n' for o in objectives))]
-        if any(kind == 'exercise' for items in insert.values() for kind, _, _ in items):
+        steps = steps or []
+        step_titles = [pick(st[0], st[1]) for st in steps]
+        contents = ''.join(f'{n}. {st}\n' for n, st in enumerate(step_titles, 1))
+        cells = [_nb_cell('markdown', f"# {title}\n\n{_NB_INTRO[lang]}\n\n{_NB_OBJECTIVES[lang]}\n" + ''.join(f'- {o}\n' for o in objectives)
+                          + (f"\n{_NB_CONTENTS[lang]}\n{contents}" if steps else ''))]
+        all_items = [item for items in insert.values() for item in items] + [item for st in steps for item in st[2]]
+        if any(kind == 'exercise' for kind, _, _ in all_items):
             cells.append(_nb_cell('markdown', _NB_CHECK_NOTE[lang]))
             cells.append(_nb_cell('code', _NB_CHECK[language][lang], language))
+
+        def render(items):
+            for kind, en, pt in items:
+                if kind == 'slides':
+                    slide_name, frames, slide_title, aria = pick(en, pt)
+                    import sphinx_slides
+                    t = (lambda a, b: b) if lang == 'pt-br' else (lambda a, b: a)
+                    file = f"{slide_name}{'.pt-br' if lang == 'pt-br' else ''}.svg"
+                    with open(os.path.join(d, file), 'w', encoding='utf8') as f:
+                        f.write(sphinx_slides.storyboard(frames(t), aria))
+                    cells.append(_nb_cell('markdown', f'#### 🎞️ {slide_title}\n\n![{aria}]({file})'))
+                elif kind == 'exercise':
+                    ex_title, task, starter_code, solution = pick(en, pt)
+                    cells.append(_nb_cell('markdown', f'### {_NB_EXERCISE[lang]}: {ex_title}\n\n{task}'))
+                    cell = _nb_cell('code', starter_code, language)
+                    cell['metadata']['sphinx'] = {'solution': solution.strip('\n') + '\n'}
+                    cells.append(cell)
+                    cells.append(_nb_cell('markdown', f'<details>\n<summary>{_NB_ANSWER[lang]}</summary>\n\n```{language}\n{solution.strip()}\n```\n\n</details>'))
+                else:
+                    cells.append(_nb_cell(kind, pick(en, pt), language))
+
+        for n, (st, (_, _, items)) in enumerate(zip(step_titles, steps), 1):
+            cells.append(_nb_cell('markdown', f'## {n}. {st}'))
+            render(items)
         chunk = []
         for i, p in enumerate(paragraphs):
             chunk.append(p)
             if i in insert:
                 cells.append(_nb_cell('markdown', '\n\n'.join(chunk)))
                 chunk = []
-                for kind, en, pt in insert[i]:
-                    if kind == 'slides':
-                        slide_name, frames, slide_title, aria = pick(en, pt)
-                        import sphinx_slides
-                        t = (lambda a, b: b) if lang == 'pt-br' else (lambda a, b: a)
-                        file = f"{slide_name}{'.pt-br' if lang == 'pt-br' else ''}.svg"
-                        with open(os.path.join(d, file), 'w', encoding='utf8') as f:
-                            f.write(sphinx_slides.storyboard(frames(t), aria))
-                        cells.append(_nb_cell('markdown', f'#### 🎞️ {slide_title}\n\n![{aria}]({file})'))
-                    elif kind == 'exercise':
-                        ex_title, task, starter_code, solution = pick(en, pt)
-                        cells.append(_nb_cell('markdown', f'### {_NB_EXERCISE[lang]}: {ex_title}\n\n{task}'))
-                        cell = _nb_cell('code', starter_code, language)
-                        cell['metadata']['sphinx'] = {'solution': solution.strip('\n') + '\n'}
-                        cells.append(cell)
-                        cells.append(_nb_cell('markdown', f'<details>\n<summary>{_NB_ANSWER[lang]}</summary>\n\n```{language}\n{solution.strip()}\n```\n\n</details>'))
-                    else:
-                        cells.append(_nb_cell(kind, pick(en, pt), language))
+                render(insert[i])
         if chunk:
             cells.append(_nb_cell('markdown', '\n\n'.join(chunk)))
         readings = []
