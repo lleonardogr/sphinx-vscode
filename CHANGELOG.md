@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- **Faster validation.** The validator checks up to 4 challenges, quizzes and notebooks at the same time, one per CPU core, keeping the report in order. `--jobs=N` sets the number, in `sphinx validate` and the validation script. In this repository, pull requests validate only the subjects and challenge folders they change, every push to `main` still validates everything, and the release waits for that run instead of validating again.
+
 ## [1.9.5] - 2026-11-27
 
 ### Changed
