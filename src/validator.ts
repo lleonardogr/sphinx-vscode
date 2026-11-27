@@ -527,10 +527,22 @@ async function validateRoots(roots: string[], opts: ValidateOptions): Promise<Va
   }
   // Notebook lessons: their cells must run, and their challenge cells must name a Java challenge.
   const known = new Map([...challenges, ...references].map((c) => [c.id, c.language]));
+  const byId = new Map([...references, ...challenges].map((c) => [c.id, c]));
   const tools = { javaHome: opts.javaHome, cCompiler: opts.cCompiler, cPortableDirs: opts.cPortableDirs };
   for (const dir of findLessonDirs(roots)) {
     tasks.push(async () => {
       const report = validateLesson(dir);
+      // The challenges a lesson lists (shown right after it) must exist, in the lesson's unit.
+      const meta = JSON.parse(fs.readFileSync(path.join(dir, 'lesson.json'), 'utf8'));
+      for (const id of Array.isArray(meta.challenges) ? meta.challenges : []) {
+        const c = byId.get(id);
+        if (!c) {
+          report.problems.push(`lesson.json lists a challenge that doesn't exist: "${id}"`);
+        } else if (c.topic !== meta.topic) {
+          report.problems.push(`lesson.json lists "${id}", which is in the unit "${c.topic}", not "${meta.topic}"`);
+        }
+      }
+      report.ok = report.problems.length === 0;
       const notebooks = lessonNotebooks(dir);
       if (notebooks.length) {
         const checked = await notebookProblems(dir, javacVersion, (id) => known.get(id), tools, runSlot);

@@ -292,7 +292,7 @@ def reading(title, source, url, type, minutes, look_for, look_for_pt, lang='en')
             {'lookFor': look_for_pt})
 
 
-def reading_guide(folder, *, title, title_pt, topic, order, objectives, objectives_pt, readings, md, md_pt, files=None, requires=None):
+def reading_guide(folder, *, title, title_pt, topic, order, objectives, objectives_pt, readings, md, md_pt, challenges=None, files=None, requires=None):
     """Writes a reading guide: lesson.json, lesson.md and lesson.pt-br.md (with a <!-- readings --> line
     where the cards go), plus extra files such as diagram.svg and diagram.pt-br.svg."""
     assert 3 <= len(objectives) <= 5 and len(objectives) == len(objectives_pt), 'a unit has 3 to 5 objectives, in both languages'
@@ -302,6 +302,8 @@ def reading_guide(folder, *, title, title_pt, topic, order, objectives, objectiv
     meta = {'title': title, 'topic': topic, 'order': order}
     if requires:
         meta['requires'] = requires
+    if challenges:
+        meta['challenges'] = challenges   # the unit's challenges that practise this lesson, shown right after it
     meta.update({'objectives': objectives, 'readings': [r for r, _ in readings],
                  'translations': {'pt-br': {'title': title_pt, 'objectives': objectives_pt, 'readings': [p for _, p in readings]}}})
     _write_json(f'{d}/lesson.json', meta)
@@ -315,7 +317,7 @@ def reading_guide(folder, *, title, title_pt, topic, order, objectives, objectiv
     return d
 
 
-def quick_guide(folder, *, title, title_pt, topic, order, objectives, objectives_pt, readings, md, md_pt, requires=None):
+def quick_guide(folder, *, title, title_pt, topic, order, objectives, objectives_pt, readings, md, md_pt, challenges=None, requires=None):
     """Writes a quick guide, the reading guide of a programming subject: 2 or 3 objectives, 1 reading (plus
     an optional video), and a lesson.md with a short "In short", one code example and a "Watch out" line."""
     assert 2 <= len(objectives) <= 3 and len(objectives) == len(objectives_pt), 'a quick guide has 2 or 3 objectives, in both languages'
@@ -325,6 +327,8 @@ def quick_guide(folder, *, title, title_pt, topic, order, objectives, objectives
     meta = {'title': title, 'topic': topic, 'order': order}
     if requires:
         meta['requires'] = requires
+    if challenges:
+        meta['challenges'] = challenges   # the unit's challenges that practise this lesson, shown right after it
     meta.update({'objectives': objectives, 'readings': [r for r, _ in readings],
                  'translations': {'pt-br': {'title': title_pt, 'objectives': objectives_pt, 'readings': [p for _, p in readings]}}})
     _write_json(f'{d}/lesson.json', meta)
@@ -529,6 +533,27 @@ def _unit_challenges(subject_dir, unit):
     return [(name, meta, folder, is_test) for is_test, _, name, meta, folder in sorted(found)]
 
 
+def _lesson_practice(d, subject_dir, meta):
+    """The challenges a lesson's Practice list shows. A lesson that lists its challenges (lesson.json
+    "challenges") shows those; the unit's last lesson also shows the challenges no lesson lists and the test.
+    Without lists, every lesson shows the whole unit."""
+    unit = _unit_challenges(subject_dir, meta['topic'])
+    siblings = []
+    lessons_dir = os.path.dirname(d)
+    for name in os.listdir(lessons_dir):
+        path = os.path.join(lessons_dir, name, 'lesson.json')
+        if os.path.exists(path):
+            other = json.load(open(path, encoding='utf8'))
+            if other.get('topic') == meta['topic']:
+                siblings.append(other)
+    claimed = {cid for other in siblings for cid in other.get('challenges', [])}
+    if not claimed:
+        return unit
+    last = meta.get('order', 0) == max(o.get('order', 0) for o in siblings)
+    mine = set(meta.get('challenges', []))
+    return [u for u in unit if u[0] in mine or (last and (u[0] not in claimed or u[3]))]
+
+
 def lesson_notebook(folder, insert=None, practice=True, steps=None):
     """Writes lesson.ipynb and lesson.pt-br.ipynb next to a reading guide, built from the lesson itself: the title,
     intro and objectives; the step-by-step sections in `steps` (nb_step), numbered, with a list of them under the
@@ -604,7 +629,7 @@ def lesson_notebook(folder, insert=None, practice=True, steps=None):
         if after.strip():
             cells.append(_nb_cell('markdown', after.strip()))
         if practice and meta.get('topic'):
-            unit = _unit_challenges(subject_dir, meta['topic'])
+            unit = _lesson_practice(d, subject_dir, meta)
             items = []
             for name, cmeta, cfolder, is_test in unit:
                 ctitle = cmeta.get('translations', {}).get('pt-br', {}).get('title', cmeta['title']) if lang == 'pt-br' else cmeta['title']

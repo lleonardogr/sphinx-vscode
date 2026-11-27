@@ -5,7 +5,7 @@ import { ExamManager, formatDuration, formatWait } from './examSession';
 import { ExamDefinition, ExamQuestion, maxScore, questionKey, questionTitle } from './exams';
 import { QuizProgress } from './quizController';
 import { QuizDefinition } from './quizzes';
-import { PathGroup, PathItem, Requirement, TESTS_TOPIC, buildPath, groupLabel, pathSequence, requirementStatus, solvedToUnlock, unitIcon, unitName } from './path';
+import { PathGroup, PathItem, Requirement, TESTS_TOPIC, buildPath, groupLabel, pathSequence, requirementStatus, solvedToUnlock, unitIcon, unitItems, unitName } from './path';
 import { LockRule } from './subjects';
 import { LessonDefinition } from './lessons';
 import { LessonProgress, readingCount } from './lessonPanel';
@@ -77,13 +77,10 @@ export class ChallengeTreeProvider implements vscode.TreeDataProvider<ChallengeN
       case 'bucket':
         return node.items;
       case 'group':
-        // A unit lists its lessons, its challenges, then its quiz, then the tests that close the stage.
-        return [
-          ...node.group.lessons.map((lesson): ChallengeNode => ({ kind: 'lesson', lesson })),
-          ...node.group.challenges.map((challenge): ChallengeNode => ({ kind: 'challenge', challenge })),
-          ...node.group.quizzes.map((quiz): ChallengeNode => ({ kind: 'quiz', quiz })),
-          ...node.group.tests.map((challenge): ChallengeNode => ({ kind: 'challenge', challenge })),
-        ];
+        // A unit lists each lesson with its challenges, then the other challenges, the quiz and the tests.
+        return unitItems(node.group).map((it): ChallengeNode =>
+          it.kind === 'lesson' ? { kind: 'lesson', lesson: it.lesson } : it.kind === 'quiz' ? { kind: 'quiz', quiz: it.quiz } : { kind: 'challenge', challenge: it.challenge },
+        );
       case 'examsRoot':
         return this.visibleExams().map((exam) => ({ kind: 'exam', exam }));
       case 'exam':

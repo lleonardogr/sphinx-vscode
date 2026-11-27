@@ -1,37 +1,39 @@
 ## Em resumo
 
-Uma **classe** descreve um tipo de objeto: seus **campos** (o que ele sabe) e seus **métodos** (o que ele faz). `new` cria um objeto, e o **construtor** o prepara. Deixe os campos `private`, para o resto do código passar pelos métodos.
+Uma **classe** descreve um tipo de objeto: os **campos** (o que cada objeto sabe) e os **métodos** (o que ele faz). O `new` cria um objeto, e o **construtor** (em que `this.name` é o campo e `name` o parâmetro) dá os primeiros valores aos campos. Uma variável de um tipo de classe guarda uma **referência** ao objeto, não o objeto em si.
 
 ```java
-record Song(String title, int seconds) {}
+class Pet {
+    private final String name;
+    private int age;
+    static int count = 0;
 
-class Playlist {
-    private final List<Song> songs = new ArrayList<>();
-
-    void add(Song song) {
-        songs.add(song);
+    Pet(String name, int age) {
+        this.name = name;
+        this.age = age;
+        count++;
     }
 
-    int totalSeconds() {
-        int total = 0;
-        for (Song s : songs) {
-            total += s.seconds();
-        }
-        return total;
+    void birthday() {
+        age++;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (" + age + ")";
     }
 }
 
 void main() {
-    Playlist mix = new Playlist();
-    mix.add(new Song("Intro", 95));
-    mix.add(new Song("Tema", 210));
-    IO.println(mix.totalSeconds() + " segundos");
-    IO.println(new Song("Intro", 95));
+    Pet rex = new Pet("Rex", 3);
+    Pet same = rex;
+    same.birthday();
+    IO.println(rex + ", " + Pet.count + " pet(s)");
 }
 ```
 
-Um **record** escreve para você o construtor, os getters, o `toString` e o `equals`. Um `enum` lista valores fixos. Uma classe pode estender (`extends`) outra ou implementar (`implements`) uma interface, e `@Override` substitui um método herdado.
+Cada objeto tem a própria cópia dos campos; um campo `static` pertence à classe e é compartilhado por todos os objetos.
 
-**Cuidado:** dois objetos com os mesmos valores não são `==`. Compare-os com `equals`: records já o têm; numa classe você escreve o `equals` (e o `hashCode`).
+**Cuidado:** `Pet same = rex;` copia a referência, não o objeto. As duas variáveis agora mudam o mesmo pet.
 
 <!-- readings -->

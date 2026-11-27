@@ -38,6 +38,8 @@ export interface LessonDefinition {
   body: string;
   /** Units the student should know first, e.g. ["Loops"]. */
   requires: string[];
+  /** The unit's challenges that practise this lesson, listed right after it (ids, from lesson.json). */
+  challenges: string[];
   /** What a student can do after the unit, in the current language. */
   objectives: string[];
   /** Curated readings (reading guides); empty for a plain lesson. */
@@ -101,6 +103,7 @@ export function loadLesson(dir: string, lang: Lang = language()): LessonDefiniti
     minutes: typeof meta.minutes === 'number' && meta.minutes > 0 ? meta.minutes : readingMinutes(body),
     body,
     requires: strings(meta.requires),
+    challenges: strings(meta.challenges),
     objectives: strings(t.objectives).length ? strings(t.objectives) : strings(meta.objectives),
     readings: parseReadings(meta.readings, t.readings),
     subject: typeof meta.subject === 'string' && meta.subject.trim() ? meta.subject.trim() : undefined,

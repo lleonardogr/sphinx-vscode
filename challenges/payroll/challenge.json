@@ -2,7 +2,7 @@
   "title": "Payroll (Polymorphism)",
   "topic": "OOP",
   "difficulty": "Hard",
-  "order": 11,
+  "order": 12,
   "hints": [
     "Each subclass calls super(name) first, then stores its own fields, and overrides type() and pay().",
     "Hourly: the first 160 hours are paid at the normal rate and each hour beyond at 1.5 times the rate.",

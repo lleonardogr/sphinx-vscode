@@ -34,8 +34,8 @@ describe('built-in content', () => {
     assert.equal(new Set(ids).size, ids.length);
   });
 
-  it('has the 100 challenges of the Java learning path', () => {
-    assert.equal(java.length, 100);
+  it('has the 101 challenges of the Java learning path', () => {
+    assert.equal(java.length, 101);
   });
 
   it('uses unique ids', () => {
