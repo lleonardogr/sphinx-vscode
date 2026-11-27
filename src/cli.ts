@@ -79,9 +79,10 @@ const HELP = () =>
     `Sphinx command line
 
 Usage:
-  sphinx validate <folder>... [--generate] [--strict] [--lang=pt-br]
+  sphinx validate <folder>... [--generate] [--strict] [--lang=pt-br] [--jobs=N]
       Check challenges, quizzes, lessons, exams and subjects: starters compile, reference
       solutions pass every test, bonus goals are earned. --generate fills in expected outputs.
+      --jobs sets how many checks run at once (default: one per core, up to 4).
   sphinx test <challenge> <file>
       Run your Main.java or main.c against a challenge's tests (hidden ones included) and its
       bonus goals. <challenge> is a challenge folder, or the id of a built-in challenge (fizzbuzz).
@@ -98,10 +99,11 @@ Options for test and verify: --java-home <folder>, --cc <compiler>.
     `Linha de comando do Sphinx
 
 Uso:
-  sphinx validate <pasta>... [--generate] [--strict] [--lang=pt-br]
+  sphinx validate <pasta>... [--generate] [--strict] [--lang=pt-br] [--jobs=N]
       Confere desafios, quizzes, lições, provas e matérias: os códigos iniciais compilam, as
       soluções passam em todos os testes, os objetivos bônus são alcançados. --generate preenche
-      as saídas esperadas.
+      as saídas esperadas. --jobs define quantas conferências rodam ao mesmo tempo (padrão: uma
+      por núcleo, até 4).
   sphinx test <desafio> <arquivo>
       Roda o seu Main.java ou main.c nos testes de um desafio (inclusive os ocultos) e nos objetivos
       bônus. <desafio> é a pasta de um desafio, ou o id de um desafio incluído (fizzbuzz).
@@ -168,6 +170,7 @@ async function runValidation(args: Args, roots: string[], referenceRoots: string
     languages: [...args.flags.entries()].filter(([k]) => k === 'lang').map(([, v]) => String(v)),
     referenceRoots,
     ...tools(args),
+    jobs: args.flags.has('jobs') ? Math.max(1, parseInt(String(args.flags.get('jobs')), 10) || 1) : undefined,
     onChallenge: (c) => process.stdout.write(c.ok ? '.' : 'x'),
   });
   process.stdout.write('\n');

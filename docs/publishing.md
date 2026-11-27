@@ -69,7 +69,7 @@ git checkout main && git pull
 git tag vX.Y.Z && git push origin vX.Y.Z
 ```
 
-The Release workflow validates the content, builds the `.vsix`, creates the GitHub Release and publishes it. The Marketplace usually shows a new version a few minutes later.
+The Release workflow waits for the CI run of the tagged commit on `main` to pass (that run validated all the content on three systems, so the release doesn't do it again), then builds the `.vsix`, creates the GitHub Release and publishes it. Push the tag right after merging the release PR: the workflow waits up to an hour for CI to finish, and stops if it failed. The Marketplace usually shows a new version a few minutes later.
 
 ## Notes
 

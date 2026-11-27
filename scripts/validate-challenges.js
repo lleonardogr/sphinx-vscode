@@ -18,6 +18,9 @@ async function main() {
   const strict = args.includes('--strict');
   // --lang=pt-br: also report missing translations in that language (repeatable).
   const languages = args.filter((a) => a.startsWith('--lang=')).map((a) => a.slice('--lang='.length));
+  // --jobs=N: how many checks run at the same time (default: one per core, up to 4).
+  const jobsArg = args.find((a) => a.startsWith('--jobs='));
+  const jobs = jobsArg ? Math.max(1, parseInt(jobsArg.slice('--jobs='.length), 10) || 1) : undefined;
   // Subjects first: they define the units that "topic", "unit" and "requires" refer to.
   const subjects = loadSubjects([path.join(__dirname, '..', 'subjects')]);
   subjects.errors.forEach((e) => console.error(`✗ ${e}`));
@@ -33,6 +36,7 @@ async function main() {
     strict,
     languages,
     referenceRoots: builtIn,
+    jobs,
     onChallenge: (c) => process.stdout.write(c.ok ? '.' : 'x'),
   });
   process.stdout.write('\n');

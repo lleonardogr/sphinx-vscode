@@ -21,6 +21,8 @@ jobs:
           - { os: ubuntu-latest, java: 17 }
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2   # a pull request's merge commit and its base, to see what changed
 
       - uses: actions/setup-node@v5
         with:
@@ -34,8 +36,20 @@ jobs:
 
       - run: npm ci
 
+      # A pull request that changes only content validates just those subjects and challenges;
+      # one that changes the engine, scripts or build validates everything, and so does every push
+      # to main, which is what a release is made from.
+      - name: What to validate
+        id: scope
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: node scripts/changed-content.js >> "$GITHUB_OUTPUT"
+
+      # The validator checks up to 4 challenges, quizzes and notebooks at a time.
       - name: Compile and validate challenges
-        run: npm run validate
+        if: steps.scope.outputs.mode != 'none'
+        shell: bash
+        run: npm run compile && node scripts/validate-challenges.js --strict --lang=pt-br ${{ steps.scope.outputs.roots }}
 
       # C challenges use the system's compiler: gcc (Linux), clang (macOS), MinGW gcc without memory checks (Windows).
       - name: C compiler
