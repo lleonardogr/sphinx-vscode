@@ -70,7 +70,7 @@ def _wrap(s, width_px, size=12.5):
             line = f'{line} {word}'.strip()
     if line:
         lines.append(line)
-    return lines[:3]
+    return lines   # storyboard() makes every panel taller when a caption needs more than two lines
 
 
 def storyboard(panels, aria, per_row=4):
@@ -161,9 +161,12 @@ def array_panel(values, caption, highlight=(), pointers=None, label=None, colors
         p.text(x0 + i * cell + cell / 2, y + 46, (below or {}).get(i, i) if isinstance(below, dict) else (below[i] if below else i), GRAY, 10)
     if label:
         p.text(W / 2, 66 if not pointers else 40, label, GRAY, 11)
-    for k, (name, idx) in enumerate((pointers or {}).items()):
+    at = {}   # names that point at the same index share one label: "low/high"
+    for name, idx in (pointers or {}).items():
+        at.setdefault(idx, []).append(name)
+    for idx, names in at.items():
         x = x0 + idx * cell + cell / 2
-        p.text(x, 54 - (k % 2) * 0, name, AMBER, 12, bold=True)
+        p.text(x, 54, '/'.join(names), AMBER, 12, bold=True)
         p.arrow(x, 58, x, y - 3, AMBER)
     return p
 

@@ -378,12 +378,17 @@ def _indent(code, n=4):
     return '\n'.join((' ' * n + l) if l.strip() else '' for l in code.strip('\n').split('\n'))
 
 
+def _literal(text):
+    """A check's label as a Java or C string literal, with quotes and backslashes escaped."""
+    return '"' + text.replace('\\', '\\\\').replace('"', '\\"') + '"'
+
+
 def java_exercise(title, title_pt, task, task_pt, signature, default, todo, todo_pt, body, checks, before=''):
     """nb_exercise() for a Java method: `signature` and the answer's `body`; the starter returns `default` after a
     TODO. checks: (label, label_pt, call, expected) tuples, run in main() with check(). `before` holds extra
     declarations (records, classes) placed above the method."""
     def program(lang, inside):
-        lines = '\n'.join(f'    check("{lp if lang == "pt" else le}", {call}, {exp});' for le, lp, call, exp in checks)
+        lines = '\n'.join(f'    check({_literal(lp if lang == "pt" else le)}, {call}, {exp});' for le, lp, call, exp in checks)
         top = f'{before.strip()}\n\n' if before.strip() else ''
         return f'{top}{signature} {{\n{_indent(inside)}\n}}\n\nvoid main() {{\n{lines}\n}}'
     starter = lambda lang, todo_text: program(lang, f'// TODO: {todo_text}' + (f'\nreturn {default};' if default is not None else ''))
@@ -403,7 +408,7 @@ def c_exercise(title, title_pt, task, task_pt, signature, default, todo, todo_pt
                 continue
             le, lp, call, exp = c
             fn = 'check_str' if exp.startswith('"') else 'check_int'
-            out.append(f'    {fn}("{lp if lang == "pt" else le}", {call}, {exp});')
+            out.append(f'    {fn}({_literal(lp if lang == "pt" else le)}, {call}, {exp});')
         top = f'{before.strip()}\n\n' if before.strip() else ''
         return f'{top}{signature} {{\n{_indent(inside)}\n}}\n\nint main(void) {{\n' + '\n'.join(out) + '\n    return 0;\n}'
     starter = lambda lang, todo_text: program(lang, f'// TODO: {todo_text}' + (f'\nreturn {default};' if default is not None else ''))
