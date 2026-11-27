@@ -171,6 +171,7 @@ async function runValidation(args: Args, roots: string[], referenceRoots: string
     referenceRoots,
     ...tools(args),
     jobs: args.flags.has('jobs') ? Math.max(1, parseInt(String(args.flags.get('jobs')), 10) || 1) : undefined,
+    shard: parseShard(args.flags.get('shard')),
     onChallenge: (c) => process.stdout.write(c.ok ? '.' : 'x'),
   });
   process.stdout.write('\n');
@@ -179,6 +180,12 @@ async function runValidation(args: Args, roots: string[], referenceRoots: string
   }
   console.log(formatReport(report, generate).join('\n'));
   return reportPassed(report) ? 0 : 1;
+}
+
+/** --shard=K/N: the Kth of N parts of the items to validate (CI splits the work between machines). */
+function parseShard(value: string | true | undefined): { index: number; count: number } | undefined {
+  const m = typeof value === 'string' ? /^(\d+)\/(\d+)$/.exec(value) : null;
+  return m && +m[1] >= 1 && +m[1] <= +m[2] ? { index: +m[1], count: +m[2] } : undefined;
 }
 
 /** A challenge folder, or the id of a built-in challenge. */

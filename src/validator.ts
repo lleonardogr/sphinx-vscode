@@ -51,9 +51,32 @@ export interface ValidateOptions {
   languages?: string[];
   /** Called after each challenge, e.g. to print progress (in the original order). */
   onChallenge?: (report: ChallengeReport) => void;
-  /** How many challenges, quizzes and lessons to check at the same time (default: one per CPU core, up to 4). */
+  /** How many compilers and programs run at the same time (default: one per CPU core, up to 4). */
   jobs?: number;
+  /** Check only part of the items, to split the work between machines: shard 1 of 2, 2 of 2… */
+  shard?: { index: number; count: number };
 }
+
+/** A gate that lets at most `n` calls run at once; the others wait their turn. */
+export function limiter(n: number): <T>(fn: () => Promise<T>) => Promise<T> {
+  let active = 0;
+  const waiting: (() => void)[] = [];
+  return async <T>(fn: () => Promise<T>): Promise<T> => {
+    while (active >= n) {
+      await new Promise<void>((resolve) => waiting.push(resolve));
+    }
+    active++;
+    try {
+      return await fn();
+    } finally {
+      active--;
+      waiting.shift()?.();
+    }
+  };
+}
+
+/** Every compile and run of a validation goes through this gate (set for the length of a validation). */
+let runSlot: <T>(fn: () => Promise<T>) => Promise<T> = (fn) => fn();
 
 /** The default number of parallel checks: one per core, up to 4, so time limits keep a margin. */
 export function defaultJobs(): number {
@@ -61,23 +84,35 @@ export function defaultJobs(): number {
   return Math.max(1, Math.min(4, cores));
 }
 
-/** Runs the tasks with at most `limit` at a time, and reports each result in the tasks' order. */
+/**
+ * Runs the tasks with at most `limit` at a time, and reports each result in the tasks' order. If a task
+ * throws, no new task starts, the running ones finish, and then the first error is thrown.
+ */
 export async function inOrder<T>(tasks: (() => Promise<T>)[], limit: number, onResult: (result: T) => void): Promise<T[]> {
   const results: T[] = new Array(tasks.length);
   const done: boolean[] = new Array(tasks.length).fill(false);
   let next = 0;
   let reported = 0;
+  let failure: { error: unknown } | undefined;
   const worker = async () => {
-    while (next < tasks.length) {
+    while (next < tasks.length && !failure) {
       const i = next++;
-      results[i] = await tasks[i]();
+      try {
+        results[i] = await tasks[i]();
+      } catch (error) {
+        failure ??= { error };
+        return;
+      }
       done[i] = true;
       while (reported < tasks.length && done[reported]) {
         onResult(results[reported++]);
       }
     }
   };
-  await Promise.all(Array.from({ length: Math.max(1, Math.min(limit, tasks.length)) }, worker));
+  await Promise.allSettled(Array.from({ length: Math.max(1, Math.min(limit, tasks.length)) }, worker));
+  if (failure) {
+    throw failure.error;
+  }
   return results;
 }
 
@@ -86,7 +121,7 @@ async function runAs(source: string, request: Omit<RunRequest, 'file'>, fileName
   const file = path.join(dir, fileName);
   fs.writeFileSync(file, source);
   try {
-    return await runChallengeCode({ ...request, file });
+    return await runSlot(() => runChallengeCode({ ...request, file }));
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -498,7 +533,7 @@ async function validateRoots(roots: string[], opts: ValidateOptions): Promise<Va
       const report = validateLesson(dir);
       const notebooks = lessonNotebooks(dir);
       if (notebooks.length) {
-        const checked = await notebookProblems(dir, javacVersion, (id) => known.get(id), tools);
+        const checked = await notebookProblems(dir, javacVersion, (id) => known.get(id), tools, runSlot);
         report.problems.push(...checked.problems);
         report.ok = report.problems.length === 0;
         report.solutions = checked.cellsRun;
@@ -512,8 +547,20 @@ async function validateRoots(roots: string[], opts: ValidateOptions): Promise<Va
       return finish(report, dir);
     });
   }
-  // Checks run in parallel (each compiles in its own temporary folder); reports keep the original order.
-  const reports = await inOrder(tasks, opts.jobs ?? defaultJobs(), (report) => opts.onChallenge?.(report));
+  // Many items are checked at once, so a notebook's cells and a challenge's solutions overlap with other
+  // items; the gate keeps the compilers and programs actually running to `jobs`. Each one compiles in its
+  // own temporary folder, and the reports keep the original order.
+  const shard = opts.shard;
+  const mine = shard ? tasks.filter((_, i) => i % shard.count === shard.index - 1) : tasks;
+  const jobs = opts.jobs ?? defaultJobs();
+  const previous = runSlot;
+  runSlot = limiter(jobs);
+  let reports: ChallengeReport[];
+  try {
+    reports = await inOrder(mine, jobs * 3, (report) => opts.onChallenge?.(report));
+  } finally {
+    runSlot = previous;
+  }
   return { javacVersion, loadErrors: errors, challenges: reports, checkedSolutions: counters.checked, skippedSolutions: counters.skipped };
 }
 

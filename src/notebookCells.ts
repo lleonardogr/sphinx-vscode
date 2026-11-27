@@ -109,16 +109,33 @@ export async function notebookProblems(
   javacVersion: number | undefined,
   challengeLanguage: (id: string) => string | undefined,
   tools: Pick<RunRequest, 'javaHome' | 'cCompiler' | 'cPortableDirs'> = {},
+  slot: <T>(fn: () => Promise<T>) => Promise<T> = (fn) => fn(),
 ): Promise<{ problems: string[]; cellsRun: number }> {
-  const problems: string[] = [];
+  // Every cell is its own program, so all of them start at once and `slot` (the validator's gate) decides how
+  // many really run; each cell's problems keep their place in the report.
+  const ordered: string[][] = [];
+  const pending: Promise<void>[] = [];
   let cellsRun = 0;
+  const run = (source: string, language: CellLanguage, check: (outcome: RunOutcome) => string | undefined) => {
+    const out: string[] = [];
+    ordered.push(out);
+    pending.push(
+      slot(() => runCellSource(source, { tests: [{ input: '', output: '' }], timeLimitMs: CELL_TIME_LIMIT_MS, ...tools }, language)).then((outcome) => {
+        cellsRun++;
+        const problem = check(outcome);
+        if (problem) {
+          out.push(problem);
+        }
+      }),
+    );
+  };
   for (const file of lessonNotebooks(dir)) {
     const name = path.basename(file);
     let cells: NotebookCell[];
     try {
       cells = readNotebook(file);
     } catch (e) {
-      problems.push((e as Error).message);
+      ordered.push([(e as Error).message]);
       continue;
     }
     const shared: Record<CellLanguage, string[]> = { java: [], c: [] };
@@ -131,45 +148,49 @@ export async function notebookProblems(
       if (challengeId) {
         const language = challengeLanguage(challengeId);
         if (!language) {
-          problems.push(`${where}: no challenge called "${challengeId}"`);
+          ordered.push([`${where}: no challenge called "${challengeId}"`]);
         } else if (language !== cell.language) {
-          problems.push(`${where}: "${challengeId}" is a ${language} challenge, but the cell is ${cell.language}`);
+          ordered.push([`${where}: "${challengeId}" is a ${language} challenge, but the cell is ${cell.language}`]);
         }
         continue;
       }
       const isShared = isSharedCell(cell.source);
-      if (cell.language === 'c' || (javacVersion ?? 0) >= 25) {
+      const runnable = cell.language === 'c' || (javacVersion ?? 0) >= 25;
+      if (runnable) {
         const { source } = cellProgram(shared[cell.language], cell.source, isShared, cell.language);
-        const outcome = await runCellSource(source, { tests: [{ input: '', output: '' }], timeLimitMs: CELL_TIME_LIMIT_MS, ...tools }, cell.language);
-        cellsRun++;
-        if (outcome.kind === 'compileError') {
-          problems.push(`${where} does not compile:\n${outcome.raw}`);
-        } else if (outcome.kind !== 'tests') {
-          problems.push(`${where}: ${outcome.kind === 'toolMissing' ? outcome.message : outcome.messages.join('; ')}`);
-        } else if (outcome.warnings?.length && cell.solution === undefined) {
-          // An exercise's starter is incomplete on purpose (unused parameters...); its answer must have no warnings.
-          problems.push(`${where} compiles with warnings:\n${outcome.warnings.map((w) => `  - line ${w.line}: ${w.message}`).join('\n')}`);
-        } else if (outcome.results[0].timedOut) {
-          problems.push(`${where} runs for more than ${CELL_TIME_LIMIT_MS / 1000} seconds`);
-        } else if (outcome.results[0].exitCode !== 0) {
-          problems.push(`${where} crashes:\n${outcome.results[0].stderr}`);
-        }
+        run(source, cell.language, (outcome) => {
+          if (outcome.kind === 'compileError') {
+            return `${where} does not compile:\n${outcome.raw}`;
+          } else if (outcome.kind !== 'tests') {
+            return `${where}: ${outcome.kind === 'toolMissing' ? outcome.message : outcome.messages.join('; ')}`;
+          } else if (outcome.warnings?.length && cell.solution === undefined) {
+            // An exercise's starter is incomplete on purpose (unused parameters...); its answer must have no warnings.
+            return `${where} compiles with warnings:\n${outcome.warnings.map((w) => `  - line ${w.line}: ${w.message}`).join('\n')}`;
+          } else if (outcome.results[0].timedOut) {
+            return `${where} runs for more than ${CELL_TIME_LIMIT_MS / 1000} seconds`;
+          } else if (outcome.results[0].exitCode !== 0) {
+            return `${where} crashes:\n${outcome.results[0].stderr}`;
+          }
+          return undefined;
+        });
       }
-      if (cell.solution !== undefined && (cell.language === 'c' || (javacVersion ?? 0) >= 25)) {
+      if (cell.solution !== undefined && runnable) {
         const { source } = cellProgram(shared[cell.language], cell.solution, false, cell.language);
-        const outcome = await runCellSource(source, { tests: [{ input: '', output: '' }], timeLimitMs: CELL_TIME_LIMIT_MS, ...tools }, cell.language);
-        cellsRun++;
-        const printed = outcome.kind === 'tests' ? outcome.results[0].actual : '';
-        if (outcome.kind !== 'tests' || outcome.results[0].exitCode !== 0 || outcome.results[0].timedOut || outcome.warnings?.length) {
-          problems.push(`${where}: the exercise's answer doesn't run cleanly${outcome.kind === 'compileError' ? `:\n${outcome.raw}` : ''}`);
-        } else if (!printed.includes('✓') || printed.includes('✗')) {
-          problems.push(`${where}: the exercise's answer fails its checks:\n${printed}`);
-        }
+        run(source, cell.language, (outcome) => {
+          const printed = outcome.kind === 'tests' ? outcome.results[0].actual : '';
+          if (outcome.kind !== 'tests' || outcome.results[0].exitCode !== 0 || outcome.results[0].timedOut || outcome.warnings?.length) {
+            return `${where}: the exercise's answer doesn't run cleanly${outcome.kind === 'compileError' ? `:\n${outcome.raw}` : ''}`;
+          } else if (!printed.includes('✓') || printed.includes('✗')) {
+            return `${where}: the exercise's answer fails its checks:\n${printed}`;
+          }
+          return undefined;
+        });
       }
       if (isShared) {
         shared[cell.language].push(cell.source);
       }
     }
   }
-  return { problems, cellsRun };
+  await Promise.all(pending);
+  return { problems: ordered.flat(), cellsRun };
 }

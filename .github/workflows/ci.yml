@@ -7,18 +7,24 @@ on:
 
 jobs:
   validate:
-    name: Validate (${{ matrix.os }}, JDK ${{ matrix.java }})
+    # Part 1 keeps the plain name (a required check); part 2 is required through Package, which needs every leg.
+    name: Validate (${{ matrix.os }}, JDK ${{ matrix.java }}${{ matrix.part && format(', part {0}', matrix.part) || '' }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         # JDK 25 checks both classic and modern (compact source / IO.println) solutions.
         # JDK 17 checks that the classic style still works on the oldest supported JDK.
+        # The content is split in two halves (--shard), checked on two machines at once: validation is
+        # CPU-bound, so more machines help where more parallel jobs on one machine don't.
         include:
-          - { os: ubuntu-latest, java: 25 }
-          - { os: windows-latest, java: 25 }
-          - { os: macos-latest, java: 25 }
-          - { os: ubuntu-latest, java: 17 }
+          - { os: ubuntu-latest, java: 25, shard: 1/2 }
+          - { os: ubuntu-latest, java: 25, shard: 2/2, part: 2 }
+          - { os: windows-latest, java: 25, shard: 1/2 }
+          - { os: windows-latest, java: 25, shard: 2/2, part: 2 }
+          - { os: macos-latest, java: 25, shard: 1/2 }
+          - { os: macos-latest, java: 25, shard: 2/2, part: 2 }
+          - { os: ubuntu-latest, java: 17, shard: 1/1 }
     steps:
       - uses: actions/checkout@v5
         with:
@@ -45,11 +51,22 @@ jobs:
         shell: bash
         run: node scripts/changed-content.js >> "$GITHUB_OUTPUT"
 
-      # The validator checks up to 4 challenges, quizzes and notebooks at a time.
-      - name: Compile and validate challenges
+      - name: Compile
+        run: npm run compile
+
+      # The validator runs up to 4 compilers and programs at a time. Changed folders go through the
+      # sphinx command, which also validates a folder that is itself one challenge, quiz or lesson.
+      - name: Validate content
         if: steps.scope.outputs.mode != 'none'
         shell: bash
-        run: npm run compile && node scripts/validate-challenges.js --strict --lang=pt-br ${{ steps.scope.outputs.roots }}
+        env:
+          ROOTS: ${{ steps.scope.outputs.roots }}
+        run: |
+          if [ -n "$ROOTS" ]; then
+            node out/cli.js validate --strict --lang=pt-br --shard=${{ matrix.shard }} $ROOTS
+          else
+            node scripts/validate-challenges.js --strict --lang=pt-br --shard=${{ matrix.shard }}
+          fi
 
       # C challenges use the system's compiler: gcc (Linux), clang (macOS), MinGW gcc without memory checks (Windows).
       - name: C compiler
@@ -57,12 +74,13 @@ jobs:
           node -e "require('./out/cRunner').findCCompiler().then((c) => console.log(c ? c.command + ' | ' + c.version + ' | memory checks: ' + c.sanitizers : 'none'))"
 
       - name: Unit tests
+        if: ${{ !matrix.part }}
         run: npm run test:unit
 
       # Starts VS Code with the extension. Needs JDK 25 for the modern starters, and a display
       # (xvfb) on Linux.
       - name: Integration tests
-        if: matrix.java == 25
+        if: matrix.java == 25 && !matrix.part
         run: ${{ runner.os == 'Linux' && 'xvfb-run -a ' || '' }}npm run test:integration
 
   # What Windows students get when they have no C compiler: Sphinx downloads the pinned llvm-mingw.

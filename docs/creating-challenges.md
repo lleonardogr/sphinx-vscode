@@ -605,7 +605,7 @@ node scripts/validate-challenges.js --generate path/...   # also fill in expecte
 node scripts/validate-challenges.js --jobs=1 path/...     # one check at a time
 ```
 
-The validator checks up to 4 challenges, quizzes and notebooks at the same time (one per CPU core). `--jobs=N` changes that; `sphinx validate` takes it too.
+The validator runs up to 4 compilers and programs at the same time (one per CPU core), across challenges, quizzes and notebook cells. `--jobs=N` changes that, and `--shard=K/N` checks only the Kth of N parts, to split the work between machines, as CI does. `sphinx validate` takes both.
 
 On a JDK older than 25, only `*.classic.java` files are checked, and the validator tells you which ones it skipped.
 
