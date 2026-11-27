@@ -18,6 +18,12 @@ async function main() {
   const strict = args.includes('--strict');
   // --lang=pt-br: also report missing translations in that language (repeatable).
   const languages = args.filter((a) => a.startsWith('--lang=')).map((a) => a.slice('--lang='.length));
+  // --jobs=N: how many checks run at the same time (default: one per core, up to 4).
+  const jobsArg = args.find((a) => a.startsWith('--jobs='));
+  const jobs = jobsArg ? Math.max(1, parseInt(jobsArg.slice('--jobs='.length), 10) || 1) : undefined;
+  // --shard=K/N: check only every Nth item, starting at the Kth (CI splits the work between machines).
+  const shardArg = (args.find((a) => a.startsWith('--shard=')) || '').match(/^--shard=(\d+)\/(\d+)$/);
+  const shard = shardArg && +shardArg[1] >= 1 && +shardArg[1] <= +shardArg[2] ? { index: +shardArg[1], count: +shardArg[2] } : undefined;
   // Subjects first: they define the units that "topic", "unit" and "requires" refer to.
   const subjects = loadSubjects([path.join(__dirname, '..', 'subjects')]);
   subjects.errors.forEach((e) => console.error(`✗ ${e}`));
@@ -33,6 +39,8 @@ async function main() {
     strict,
     languages,
     referenceRoots: builtIn,
+    jobs,
+    shard,
     onChallenge: (c) => process.stdout.write(c.ok ? '.' : 'x'),
   });
   process.stdout.write('\n');

@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- **Faster validation.** The validator runs up to 4 compilers and programs at the same time, one per CPU core, across challenges, quizzes and notebook cells, keeping the report in order. `--jobs=N` sets the number, and `--shard=K/N` checks one of N parts, in `sphinx validate` and the validation script. CI splits the content between two machines per system. In this repository, pull requests validate only the subjects and challenge folders they change, every push to `main` still validates everything, and the release waits for that run instead of validating again.
+
 ## [1.9.5] - 2026-11-27
 
 ### Changed

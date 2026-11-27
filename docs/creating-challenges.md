@@ -602,7 +602,10 @@ Always validate before sharing. Validation checks that:
 npm run validate                                          # all built-in challenges
 node scripts/validate-challenges.js path/to/my-challenges # another folder
 node scripts/validate-challenges.js --generate path/...   # also fill in expected outputs
+node scripts/validate-challenges.js --jobs=1 path/...     # one check at a time
 ```
+
+The validator runs up to 4 compilers and programs at the same time (one per CPU core), across challenges, quizzes and notebook cells. `--jobs=N` changes that, and `--shard=K/N` checks only the Kth of N parts, to split the work between machines, as CI does. `sphinx validate` takes both.
 
 On a JDK older than 25, only `*.classic.java` files are checked, and the validator tells you which ones it skipped.
 

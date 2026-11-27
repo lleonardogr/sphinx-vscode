@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  actions: read     # to find the CI run of the tagged commit
   id-token: write   # lets azure/login sign in as the Marketplace identity, without a stored token
 
 jobs:
@@ -44,9 +45,27 @@ jobs:
             exit 1
           fi
 
-      - run: npm run validate
+      # The tag points at a commit on main, which CI already validated in full (every challenge, quiz
+      # and notebook, on three systems). Wait for that run instead of validating everything again.
+      - name: CI passed for the tagged commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for attempt in $(seq 1 60); do
+            run=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$GITHUB_SHA&event=push" \
+              -q '.workflow_runs | sort_by(.created_at) | last | "\(.status) \(.conclusion) \(.html_url)"')
+            case "$run" in
+              "completed success "*) echo "CI passed: ${run##* }"; exit 0 ;;
+              "completed "*) echo "::error::CI didn't pass for $GITHUB_SHA: $run"; exit 1 ;;
+              "") echo "No CI run on main for $GITHUB_SHA yet (attempt $attempt)" ;;
+              *) echo "CI is still running: $run (attempt $attempt)" ;;
+            esac
+            sleep 60
+          done
+          echo "::error::Timed out waiting for CI on $GITHUB_SHA. Re-run this workflow once it passes."
+          exit 1
 
-      - run: npm run test:unit
+      - run: npm run compile && npm run test:unit
 
       - run: npm run package
 

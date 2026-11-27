@@ -90,7 +90,8 @@ The full guide is **[docs/creating-challenges.md](docs/creating-challenges.md)**
 ## Code changes
 
 - Keep `src/runner.ts`, `src/validator.ts` and `src/ai/prompt.ts` free of `vscode` imports. The validator script and tests reuse them.
-- Run `npm run validate` and `npm test` before opening a pull request.
+- Run `npm run validate` and `npm test` before opening a pull request. To check one folder quickly, pass it: `node scripts/validate-challenges.js --strict --lang=pt-br subjects/c`.
+- In a pull request, CI validates only the subjects and challenge folders it changes; a change to the engine, scripts or build validates everything, and so does every push to `main` ([scripts/changed-content.js](scripts/changed-content.js)).
 - Add a line under **Unreleased** in [CHANGELOG.md](CHANGELOG.md).
 
 ## Tests

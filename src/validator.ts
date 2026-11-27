@@ -49,8 +49,71 @@ export interface ValidateOptions {
   strict?: boolean;
   /** Also warn about missing translations in these languages (e.g. ["pt-br"]). */
   languages?: string[];
-  /** Called after each challenge, e.g. to print progress. */
+  /** Called after each challenge, e.g. to print progress (in the original order). */
   onChallenge?: (report: ChallengeReport) => void;
+  /** How many compilers and programs run at the same time (default: one per CPU core, up to 4). */
+  jobs?: number;
+  /** Check only part of the items, to split the work between machines: shard 1 of 2, 2 of 2… */
+  shard?: { index: number; count: number };
+}
+
+/** A gate that lets at most `n` calls run at once; the others wait their turn. */
+export function limiter(n: number): <T>(fn: () => Promise<T>) => Promise<T> {
+  let active = 0;
+  const waiting: (() => void)[] = [];
+  return async <T>(fn: () => Promise<T>): Promise<T> => {
+    while (active >= n) {
+      await new Promise<void>((resolve) => waiting.push(resolve));
+    }
+    active++;
+    try {
+      return await fn();
+    } finally {
+      active--;
+      waiting.shift()?.();
+    }
+  };
+}
+
+/** Every compile and run of a validation goes through this gate (set for the length of a validation). */
+let runSlot: <T>(fn: () => Promise<T>) => Promise<T> = (fn) => fn();
+
+/** The default number of parallel checks: one per core, up to 4, so time limits keep a margin. */
+export function defaultJobs(): number {
+  const cores = typeof os.availableParallelism === 'function' ? os.availableParallelism() : os.cpus().length;
+  return Math.max(1, Math.min(4, cores));
+}
+
+/**
+ * Runs the tasks with at most `limit` at a time, and reports each result in the tasks' order. If a task
+ * throws, no new task starts, the running ones finish, and then the first error is thrown.
+ */
+export async function inOrder<T>(tasks: (() => Promise<T>)[], limit: number, onResult: (result: T) => void): Promise<T[]> {
+  const results: T[] = new Array(tasks.length);
+  const done: boolean[] = new Array(tasks.length).fill(false);
+  let next = 0;
+  let reported = 0;
+  let failure: { error: unknown } | undefined;
+  const worker = async () => {
+    while (next < tasks.length && !failure) {
+      const i = next++;
+      try {
+        results[i] = await tasks[i]();
+      } catch (error) {
+        failure ??= { error };
+        return;
+      }
+      done[i] = true;
+      while (reported < tasks.length && done[reported]) {
+        onResult(results[reported++]);
+      }
+    }
+  };
+  await Promise.allSettled(Array.from({ length: Math.max(1, Math.min(limit, tasks.length)) }, worker));
+  if (failure) {
+    throw failure.error;
+  }
+  return results;
 }
 
 async function runAs(source: string, request: Omit<RunRequest, 'file'>, fileName = 'Main.java'): Promise<RunOutcome> {
@@ -58,7 +121,7 @@ async function runAs(source: string, request: Omit<RunRequest, 'file'>, fileName
   const file = path.join(dir, fileName);
   fs.writeFileSync(file, source);
   try {
-    return await runChallengeCode({ ...request, file });
+    return await runSlot(() => runChallengeCode({ ...request, file }));
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -445,54 +508,58 @@ async function validateRoots(roots: string[], opts: ValidateOptions): Promise<Va
   ];
   const javacVersion = await javacMajorVersion(opts.javaHome);
   const counters = { checked: 0, skipped: 0 };
-  const reports: ChallengeReport[] = [];
-  for (const c of challenges) {
-    const report = await validateOne(c, javacVersion, opts, counters);
-    for (const lang of opts.languages ?? []) {
-      report.warnings = [...(report.warnings ?? []), ...translationProblems(c.dir, lang).map((p) => `${lang}: ${p}`)];
-    }
-    if (opts.strict && report.warnings?.length) {
-      report.ok = false;
-    }
-    reports.push(report);
-    opts.onChallenge?.(report);
-  }
-  const broken = new Set(quizLoad.errors.map((e) => e.slice(0, e.indexOf(': '))));
-  for (const dir of quizDirs.filter((d) => !broken.has(d))) {
-    const report = await validateQuiz(dir, javacVersion, opts, counters);
+  const finish = (report: ChallengeReport, dir: string): ChallengeReport => {
     for (const lang of opts.languages ?? []) {
       report.warnings = [...(report.warnings ?? []), ...translationProblems(dir, lang).map((p) => `${lang}: ${p}`)];
     }
     if (opts.strict && report.warnings?.length) {
       report.ok = false;
     }
-    reports.push(report);
-    opts.onChallenge?.(report);
+    return report;
+  };
+  const tasks: (() => Promise<ChallengeReport>)[] = [];
+  for (const c of challenges) {
+    tasks.push(async () => finish(await validateOne(c, javacVersion, opts, counters), c.dir));
+  }
+  const broken = new Set(quizLoad.errors.map((e) => e.slice(0, e.indexOf(': '))));
+  for (const dir of quizDirs.filter((d) => !broken.has(d))) {
+    tasks.push(async () => finish(await validateQuiz(dir, javacVersion, opts, counters), dir));
   }
   // Notebook lessons: their cells must run, and their challenge cells must name a Java challenge.
   const known = new Map([...challenges, ...references].map((c) => [c.id, c.language]));
   const tools = { javaHome: opts.javaHome, cCompiler: opts.cCompiler, cPortableDirs: opts.cPortableDirs };
   for (const dir of findLessonDirs(roots)) {
-    const report = validateLesson(dir);
-    const notebooks = lessonNotebooks(dir);
-    if (notebooks.length) {
-      const checked = await notebookProblems(dir, javacVersion, (id) => known.get(id), tools);
-      report.problems.push(...checked.problems);
-      report.ok = report.problems.length === 0;
-      report.solutions = checked.cellsRun;
-      counters.checked += checked.cellsRun;
-    }
-    for (const lang of opts.languages ?? []) {
-      report.warnings = [...(report.warnings ?? []), ...translationProblems(dir, lang).map((p) => `${lang}: ${p}`)];
-      if (notebooks.some((f) => path.basename(f) === 'lesson.ipynb') && !notebooks.some((f) => path.basename(f) === `lesson.${lang}.ipynb`)) {
-        report.warnings.push(`${lang}: the lesson has a notebook but no lesson.${lang}.ipynb`);
+    tasks.push(async () => {
+      const report = validateLesson(dir);
+      const notebooks = lessonNotebooks(dir);
+      if (notebooks.length) {
+        const checked = await notebookProblems(dir, javacVersion, (id) => known.get(id), tools, runSlot);
+        report.problems.push(...checked.problems);
+        report.ok = report.problems.length === 0;
+        report.solutions = checked.cellsRun;
+        counters.checked += checked.cellsRun;
       }
-    }
-    if (opts.strict && report.warnings?.length) {
-      report.ok = false;
-    }
-    reports.push(report);
-    opts.onChallenge?.(report);
+      for (const lang of opts.languages ?? []) {
+        if (notebooks.some((f) => path.basename(f) === 'lesson.ipynb') && !notebooks.some((f) => path.basename(f) === `lesson.${lang}.ipynb`)) {
+          report.warnings = [...(report.warnings ?? []), `${lang}: the lesson has a notebook but no lesson.${lang}.ipynb`];
+        }
+      }
+      return finish(report, dir);
+    });
+  }
+  // Many items are checked at once, so a notebook's cells and a challenge's solutions overlap with other
+  // items; the gate keeps the compilers and programs actually running to `jobs`. Each one compiles in its
+  // own temporary folder, and the reports keep the original order.
+  const shard = opts.shard;
+  const mine = shard ? tasks.filter((_, i) => i % shard.count === shard.index - 1) : tasks;
+  const jobs = opts.jobs ?? defaultJobs();
+  const previous = runSlot;
+  runSlot = limiter(jobs);
+  let reports: ChallengeReport[];
+  try {
+    reports = await inOrder(mine, jobs * 3, (report) => opts.onChallenge?.(report));
+  } finally {
+    runSlot = previous;
   }
   return { javacVersion, loadErrors: errors, challenges: reports, checkedSolutions: counters.checked, skippedSolutions: counters.skipped };
 }
