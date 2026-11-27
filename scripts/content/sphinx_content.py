@@ -350,20 +350,158 @@ def nb_code(en, pt=None):
     return ('code', en, pt if pt is not None else en)
 
 
+def nb_exercise(title, title_pt, task, task_pt, starter, solution, starter_pt=None, solution_pt=None):
+    """A short exercise for lesson_notebook(): a task, a code cell to complete that ends with check(...) calls
+    (minimal tests that print ✓ or ✗), and the answer in a collapsed block. The validator runs the answer, which
+    must print only ✓. pt versions default to the English code (translate the comments)."""
+    return ('exercise', (title, task, starter, solution), (title_pt, task_pt, starter_pt or starter, solution_pt or solution))
+
+
+def nb_try(en, pt):
+    """A "Try it" prompt for lesson_notebook(): what to change in the cell above, and what to predict first."""
+    return ('markdown', f'🧪 **Try it:** {en}', f'🧪 **Experimente:** {pt}')
+
+
+def nb_step(title, title_pt, *items):
+    """One section of a notebook's step-by-step part (lesson_notebook(steps=[...])): a numbered heading and its
+    items (nb_note, nb_code, nb_try, nb_slides, nb_exercise...), one idea per step, in teaching order."""
+    return (title, title_pt, items)
+
+
+def nb_slides(name, frames, title, title_pt, aria, aria_pt):
+    """A step-by-step storyboard for lesson_notebook(): frames(t) returns the panels (see sphinx_slides.py), with
+    t(en, pt) picking each language's text. Writes <name>.svg and <name>.pt-br.svg next to the lesson."""
+    return ('slides', (name, frames, title, aria), (name, frames, title_pt, aria_pt))
+
+
+def _indent(code, n=4):
+    return '\n'.join((' ' * n + l) if l.strip() else '' for l in code.strip('\n').split('\n'))
+
+
+def _literal(text):
+    """A check's label as a Java or C string literal, with quotes and backslashes escaped."""
+    return '"' + text.replace('\\', '\\\\').replace('"', '\\"') + '"'
+
+
+def java_exercise(title, title_pt, task, task_pt, signature, default, todo, todo_pt, body, checks, before=''):
+    """nb_exercise() for a Java method: `signature` and the answer's `body`; the starter returns `default` after a
+    TODO. checks: (label, label_pt, call, expected) tuples, run in main() with check(). `before` holds extra
+    declarations (records, classes) placed above the method."""
+    def program(lang, inside):
+        lines = '\n'.join(f'    check({_literal(lp if lang == "pt" else le)}, {call}, {exp});' for le, lp, call, exp in checks)
+        top = f'{before.strip()}\n\n' if before.strip() else ''
+        return f'{top}{signature} {{\n{_indent(inside)}\n}}\n\nvoid main() {{\n{lines}\n}}'
+    starter = lambda lang, todo_text: program(lang, f'// TODO: {todo_text}' + (f'\nreturn {default};' if default is not None else ''))
+    return nb_exercise(title, title_pt, task, task_pt, starter('en', todo), program('en', body),
+                       starter('pt', todo_pt), program('pt', body))
+
+
+def c_exercise(title, title_pt, task, task_pt, signature, default, todo, todo_pt, body, checks, before=''):
+    """nb_exercise() for a C function, like java_exercise(). checks: (label, label_pt, call, expected) tuples;
+    an expected value in double quotes is compared with check_str, anything else with check_int. A check can also
+    be a plain line of C (setup such as a variable or a call), written as is."""
+    def program(lang, inside):
+        out = []
+        for c in checks:
+            if isinstance(c, str):
+                out.append(f'    {c}')
+                continue
+            le, lp, call, exp = c
+            fn = 'check_str' if exp.startswith('"') else 'check_int'
+            out.append(f'    {fn}({_literal(lp if lang == "pt" else le)}, {call}, {exp});')
+        top = f'{before.strip()}\n\n' if before.strip() else ''
+        return f'{top}{signature} {{\n{_indent(inside)}\n}}\n\nint main(void) {{\n' + '\n'.join(out) + '\n    return 0;\n}'
+    starter = lambda lang, todo_text: program(lang, f'// TODO: {todo_text}' + (f'\nreturn {default};' if default is not None else ''))
+    return nb_exercise(title, title_pt, task, task_pt, starter('en', todo), program('en', body),
+                       starter('pt', todo_pt), program('pt', body))
+
+
+_NB_CHECK = {
+    'java': {
+        'en': """// shared: check(...) prints ✓ or ✗; the exercises below use it
+void check(String what, Object actual, Object expected) {
+    if (Objects.equals(actual, expected)) {
+        IO.println("✓ " + what);
+    } else {
+        IO.println("✗ " + what + ": expected " + expected + ", got " + actual);
+    }
+}""",
+        'pt-br': """// shared: check(...) imprime ✓ ou ✗; os exercícios abaixo usam
+void check(String what, Object actual, Object expected) {
+    if (Objects.equals(actual, expected)) {
+        IO.println("✓ " + what);
+    } else {
+        IO.println("✗ " + what + ": esperado " + expected + ", veio " + actual);
+    }
+}""",
+    },
+    'c': {
+        'en': """// shared: check_int and check_str print ✓ or ✗; the exercises below use them
+void check_int(const char *what, long actual, long expected) {
+    if (actual == expected) {
+        printf("✓ %s\\n", what);
+    } else {
+        printf("✗ %s: expected %ld, got %ld\\n", what, expected, actual);
+    }
+}
+
+void check_str(const char *what, const char *actual, const char *expected) {
+    if (actual == NULL) {
+        actual = "(NULL)";
+    }
+    if (strcmp(actual, expected) == 0) {
+        printf("✓ %s\\n", what);
+    } else {
+        printf("✗ %s: expected \\"%s\\", got \\"%s\\"\\n", what, expected, actual);
+    }
+}""",
+        'pt-br': """// shared: check_int e check_str imprimem ✓ ou ✗; os exercícios abaixo usam
+void check_int(const char *what, long actual, long expected) {
+    if (actual == expected) {
+        printf("✓ %s\\n", what);
+    } else {
+        printf("✗ %s: esperado %ld, veio %ld\\n", what, expected, actual);
+    }
+}
+
+void check_str(const char *what, const char *actual, const char *expected) {
+    if (actual == NULL) {
+        actual = "(NULL)";
+    }
+    if (strcmp(actual, expected) == 0) {
+        printf("✓ %s\\n", what);
+    } else {
+        printf("✗ %s: esperado \\"%s\\", veio \\"%s\\"\\n", what, expected, actual);
+    }
+}""",
+    },
+}
+_NB_CHECK_NOTE = {
+    'en': '**Exercises** in this notebook end with `check(...)` lines: minimal tests that print ✓ when your code is right. Run the next cell once first, so they can use `check`.',
+    'pt-br': 'Os **exercícios** deste notebook terminam com linhas `check(...)`: testes mínimos que imprimem ✓ quando o seu código está certo. Rode a próxima célula uma vez antes, para eles poderem usar o `check`.',
+}
+_NB_EXERCISE = {'en': '✏️ Exercise', 'pt-br': '✏️ Exercício'}
+_NB_ANSWER = {'en': 'Show an answer', 'pt-br': 'Ver uma resposta'}
+_NB_PRACTICE = {
+    'en': """## Practice
+
+The notebook covered the basics. Now apply them in the unit's challenges, in the Sphinx sidebar, where Submit runs every test, hidden ones included:""",
+    'pt-br': """## Pratique
+
+O notebook cobriu o básico. Agora aplique nos desafios da unidade, na barra lateral do Sphinx, onde o Submit roda todos os testes, inclusive os ocultos:""",
+}
+
+_NB_CONTENTS = {
+    'en': '**In this notebook**, one idea at a time (run each cell before moving on):',
+    'pt-br': '**Neste notebook**, uma ideia de cada vez (rode cada célula antes de seguir):',
+}
+
 _NB_INTRO = {
     'en': '*Run a cell with ▶ (or Shift+Enter): Sphinx compiles and runs it on your computer. Change the code and run it again: this notebook is your own copy.*',
     'pt-br': '*Rode uma célula com ▶ (ou Shift+Enter): o Sphinx compila e roda a célula no seu computador. Mude o código e rode de novo: este notebook é a sua cópia.*',
 }
 _NB_OBJECTIVES = {'en': '**After this unit you can:**', 'pt-br': '**Depois desta unidade você consegue:**'}
 _NB_READINGS = {'en': '## Readings', 'pt-br': '## Leituras'}
-_NB_CHALLENGES = {
-    'en': """## Challenges
-
-Solve the unit's challenges right here: each cell starts with `// sphinx: challenge …`, and running it runs **all** of the challenge's tests, hidden ones included. A pass counts in your progress in the Sphinx sidebar, just like Submit. The full description, with examples and hints, opens from the sidebar.""",
-    'pt-br': """## Desafios
-
-Resolva os desafios da unidade aqui mesmo: cada célula começa com `// sphinx: challenge …`, e rodá-la roda **todos** os testes do desafio, inclusive os ocultos. Passar conta no seu progresso na barra lateral do Sphinx, como o Submit. A descrição completa, com exemplos e dicas, abre pela barra lateral.""",
-}
 _NB_LEVEL = {'en': {'Easy': 'Easy', 'Medium': 'Medium', 'Hard': 'Hard'}, 'pt-br': {'Easy': 'Fácil', 'Medium': 'Médio', 'Hard': 'Difícil'}}
 _NB_TEST = {'en': 'Test', 'pt-br': 'Teste'}
 
@@ -391,12 +529,14 @@ def _unit_challenges(subject_dir, unit):
     return [(name, meta, folder, is_test) for is_test, _, name, meta, folder in sorted(found)]
 
 
-def lesson_notebook(folder, insert=None, challenges=True):
+def lesson_notebook(folder, insert=None, practice=True, steps=None):
     """Writes lesson.ipynb and lesson.pt-br.ipynb next to a reading guide, built from the lesson itself: the title,
-    intro and objectives; lesson.md's "In short" with the cells in insert[k] (nb_note/nb_code) placed after its
+    intro and objectives; the step-by-step sections in `steps` (nb_step), numbered, with a list of them under the
+    objectives, before the recap; lesson.md's "In short" with the cells in insert[k] (nb_note/nb_code) placed after its
     paragraph k (paragraphs are split at blank lines, the "## In short" heading is 0); the readings with their
     "look for" notes; the text after the readings ("Check yourself"); and, when challenges is True, a cell with
-    the starter code for every challenge of the lesson's unit and the test that closes it."""
+    the unit's challenges as a "Practice" list (practice=False leaves it out). Exercises (nb_exercise) get a
+    shared check() cell at the top."""
     d = os.path.normpath(os.path.join(REPO, folder))
     meta = json.load(open(os.path.join(d, 'lesson.json'), encoding='utf8'))
     pt_meta = meta.get('translations', {}).get('pt-br', {})
@@ -413,15 +553,46 @@ def lesson_notebook(folder, insert=None, challenges=True):
         assert max(insert, default=0) < len(paragraphs), f'{folder}: insert points past the {len(paragraphs)} paragraphs of {md_file}'
         title = pt_meta.get('title', meta['title']) if lang == 'pt-br' else meta['title']
         objectives = pt_meta.get('objectives', meta['objectives']) if lang == 'pt-br' else meta['objectives']
-        cells = [_nb_cell('markdown', f"# {title}\n\n{_NB_INTRO[lang]}\n\n{_NB_OBJECTIVES[lang]}\n" + ''.join(f'- {o}\n' for o in objectives))]
+        steps = steps or []
+        step_titles = [pick(st[0], st[1]) for st in steps]
+        contents = ''.join(f'{n}. {st}\n' for n, st in enumerate(step_titles, 1))
+        cells = [_nb_cell('markdown', f"# {title}\n\n{_NB_INTRO[lang]}\n\n{_NB_OBJECTIVES[lang]}\n" + ''.join(f'- {o}\n' for o in objectives)
+                          + (f"\n{_NB_CONTENTS[lang]}\n{contents}" if steps else ''))]
+        all_items = [item for items in insert.values() for item in items] + [item for st in steps for item in st[2]]
+        if any(kind == 'exercise' for kind, _, _ in all_items):
+            cells.append(_nb_cell('markdown', _NB_CHECK_NOTE[lang]))
+            cells.append(_nb_cell('code', _NB_CHECK[language][lang], language))
+
+        def render(items):
+            for kind, en, pt in items:
+                if kind == 'slides':
+                    slide_name, frames, slide_title, aria = pick(en, pt)
+                    import sphinx_slides
+                    t = (lambda a, b: b) if lang == 'pt-br' else (lambda a, b: a)
+                    file = f"{slide_name}{'.pt-br' if lang == 'pt-br' else ''}.svg"
+                    with open(os.path.join(d, file), 'w', encoding='utf8') as f:
+                        f.write(sphinx_slides.storyboard(frames(t), aria))
+                    cells.append(_nb_cell('markdown', f'#### 🎞️ {slide_title}\n\n![{aria}]({file})'))
+                elif kind == 'exercise':
+                    ex_title, task, starter_code, solution = pick(en, pt)
+                    cells.append(_nb_cell('markdown', f'### {_NB_EXERCISE[lang]}: {ex_title}\n\n{task}'))
+                    cell = _nb_cell('code', starter_code, language)
+                    cell['metadata']['sphinx'] = {'solution': solution.strip('\n') + '\n'}
+                    cells.append(cell)
+                    cells.append(_nb_cell('markdown', f'<details>\n<summary>{_NB_ANSWER[lang]}</summary>\n\n```{language}\n{solution.strip()}\n```\n\n</details>'))
+                else:
+                    cells.append(_nb_cell(kind, pick(en, pt), language))
+
+        for n, (st, (_, _, items)) in enumerate(zip(step_titles, steps), 1):
+            cells.append(_nb_cell('markdown', f'## {n}. {st}'))
+            render(items)
         chunk = []
         for i, p in enumerate(paragraphs):
             chunk.append(p)
             if i in insert:
                 cells.append(_nb_cell('markdown', '\n\n'.join(chunk)))
                 chunk = []
-                for kind, en, pt in insert[i]:
-                    cells.append(_nb_cell(kind, pick(en, pt), language))
+                render(insert[i])
         if chunk:
             cells.append(_nb_cell('markdown', '\n\n'.join(chunk)))
         readings = []
@@ -432,19 +603,15 @@ def lesson_notebook(folder, insert=None, challenges=True):
             cells.append(_nb_cell('markdown', _NB_READINGS[lang] + '\n\n' + '\n'.join(readings)))
         if after.strip():
             cells.append(_nb_cell('markdown', after.strip()))
-        if challenges and meta.get('topic'):
+        if practice and meta.get('topic'):
             unit = _unit_challenges(subject_dir, meta['topic'])
-            if unit:
-                cells.append(_nb_cell('markdown', _NB_CHALLENGES[lang]))
+            items = []
             for name, cmeta, cfolder, is_test in unit:
                 ctitle = cmeta.get('translations', {}).get('pt-br', {}).get('title', cmeta['title']) if lang == 'pt-br' else cmeta['title']
                 level = _NB_LEVEL[lang].get(cmeta.get('difficulty', 'Easy'), cmeta.get('difficulty', ''))
-                prefix = f'{_NB_TEST[lang]}: ' if is_test else ''
-                cells.append(_nb_cell('markdown', f'### {prefix}{ctitle} · {level}'))
-                starter = os.path.join(cfolder, f'Starter.pt-br.{ext}' if lang == 'pt-br' else f'Starter.{ext}')
-                if not os.path.exists(starter):
-                    starter = os.path.join(cfolder, f'Starter.{ext}')
-                cells.append(_nb_cell('code', f'// sphinx: challenge {name}\n' + open(starter, encoding='utf8').read(), language))
+                items.append(f"- {_NB_TEST[lang] + ': ' if is_test else ''}**{ctitle}** · {level}")
+            if items:
+                cells.append(_nb_cell('markdown', _NB_PRACTICE[lang] + '\n\n' + '\n'.join(items)))
         nb = {'cells': cells, 'metadata': {'language_info': {'name': language}}, 'nbformat': 4, 'nbformat_minor': 5}
         with open(os.path.join(d, out_file), 'w', encoding='utf8') as f:
             f.write(json.dumps(nb, indent=1, ensure_ascii=False) + '\n')

@@ -8,7 +8,10 @@ C has no classes and no `String` or `boolean` built in: a program is functions, 
 int main(void) {
     int qty;
     double price;
-    scanf("%d %lf", &qty, &price);
+    if (scanf("%d %lf", &qty, &price) != 2) {   // how many values it read
+        printf("invalid input\n");
+        return 1;
+    }
     printf("%3d x %7.2f\n", qty, price);   // width 3; width 7 with 2 decimals
     switch (qty) {
         case 1:  printf("single\n"); break;

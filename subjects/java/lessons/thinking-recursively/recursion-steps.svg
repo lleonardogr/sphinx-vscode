@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 962 486" role="img" aria-label="binary(13) calls binary(6), binary(3) and binary(1); the base case returns &quot;1&quot; and each call adds one digit on the way back: &quot;11&quot;, &quot;110&quot;, &quot;1101&quot;">
+<g transform="translate(0 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
+<path d="M42.0 124 L42.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M168.0 124 L168.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M42.0 180 L168.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50.0" y="152" width="110" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="167.46" fill="#3b82f6" font-size="11" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-weight="700">binary(13)</text>
+<text x="174.0" y="164" fill="#8a94a6" font-size="12" text-anchor="start" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">← top</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">binary(13) needs binary(6)</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">first</text>
+</g>
+<g transform="translate(244 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
+<path d="M42.0 46 L42.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M168.0 46 L168.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M42.0 180 L168.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50.0" y="152" width="110" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="167.46" fill="#3b82f6" font-size="11" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-weight="700">binary(13)</text>
+<rect x="50.0" y="126" width="110" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="141.46" fill="#3b82f6" font-size="11" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-weight="700">binary(6)</text>
+<rect x="50.0" y="100" width="110" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="115.46" fill="#3b82f6" font-size="11" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-weight="700">binary(3)</text>
+<rect x="50.0" y="74" width="110" height="23" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="105.0" y="89.46" fill="#f59e0b" font-size="11" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-weight="700">binary(1)</text>
+<text x="174.0" y="86" fill="#f59e0b" font-size="12" text-anchor="start" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">← top</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">Each call waits for a smaller</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">one, down to binary(1)</text>
+</g>
+<g transform="translate(488 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
+<path d="M42.0 72 L42.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M168.0 72 L168.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M42.0 180 L168.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50.0" y="152" width="110" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="167.46" fill="#3b82f6" font-size="11" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-weight="700">binary(13)</text>
+<rect x="50.0" y="126" width="110" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="141.46" fill="#3b82f6" font-size="11" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-weight="700">binary(6)</text>
+<rect x="50.0" y="100" width="110" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="115.46" fill="#3b82f6" font-size="11" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-weight="700">binary(3)</text>
+<text x="174.0" y="112" fill="#8a94a6" font-size="12" text-anchor="start" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">← top</text>
+<rect x="178" y="32" width="44" height="23" rx="4" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1.5"/>
+<text x="200.0" y="48.9" fill="#10b981" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">&quot;1&quot;</text>
+<path d="M105.0 98.0 L192.6 61.1" stroke="#10b981" stroke-width="1.5" fill="none"/>
+<path d="M200.0 58.0 L194.4 65.3 L190.9 57.0 Z" fill="#10b981"/>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">The base case returns &quot;1&quot;</text>
+</g>
+<g transform="translate(732 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
+<path d="M42.0 98 L42.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M168.0 98 L168.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M42.0 180 L168.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50.0" y="152" width="110" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="167.46" fill="#3b82f6" font-size="11" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-weight="700">binary(13)</text>
+<rect x="50.0" y="126" width="110" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="141.46" fill="#3b82f6" font-size="11" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-weight="700">binary(6)</text>
+<text x="174.0" y="138" fill="#8a94a6" font-size="12" text-anchor="start" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">← top</text>
+<rect x="178" y="32" width="44" height="23" rx="4" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1.5"/>
+<text x="200.0" y="48.9" fill="#10b981" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">&quot;11&quot;</text>
+<path d="M105.0 124.0 L193.4 62.6" stroke="#10b981" stroke-width="1.5" fill="none"/>
+<path d="M200.0 58.0 L196.0 66.3 L190.9 58.9 Z" fill="#10b981"/>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">binary(3) adds 3 % 2: &quot;11&quot;</text>
+</g>
+<g transform="translate(0 250)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">5</text>
+<path d="M42.0 150 L42.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M168.0 150 L168.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M42.0 180 L168.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="168" y="32" width="54" height="23" rx="4" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1.5"/>
+<text x="195.0" y="48.9" fill="#10b981" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">&quot;1101&quot;</text>
+<path d="M105.0 176.0 L190.1 64.4" stroke="#10b981" stroke-width="1.5" fill="none"/>
+<path d="M195.0 58.0 L193.7 67.1 L186.6 61.6 Z" fill="#10b981"/>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">…then &quot;110&quot;, and binary(13)</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">returns &quot;1101&quot;</text>
+</g>
+</svg>

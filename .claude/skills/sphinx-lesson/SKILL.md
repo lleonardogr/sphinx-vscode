@@ -68,15 +68,16 @@ A reading guide gets a diagram when the idea is visual: place values, a packet, 
 
 ## 6. Build the notebook
 
-Every built-in lesson also ships as a notebook (`lesson.ipynb` and `lesson.pt-br.ipynb`), which is what students open. Its format is in [Notebook lessons](../../../docs/creating-challenges.md#notebook-lessons), and the experiments' standard is in the content guide's [Notebooks](../../../docs/content-guide.md#notebooks).
+Every built-in lesson also ships as a notebook (`lesson.ipynb` and `lesson.pt-br.ipynb`), which is what students open. Its format is in [Notebook lessons](../../../docs/creating-challenges.md#notebook-lessons), and the standard for its contents is in the content guide's [Notebooks](../../../docs/content-guide.md#notebooks). The notebook teaches and lets students try things; the unit's challenges are the practice, and the notebook never repeats them.
 
-- **The cells:** write the experiments in the subject's language (Java, or C for a C subject):
-  - 2–4 for a reading guide, 1–2 for a quick guide;
-  - each one introduced by one sentence that says what to try or predict.
+- **A storyboard:** one `nb_slides(...)` with 3–6 frames that show the idea step by step, drawn with [sphinx_slides.py](../../../scripts/content/sphinx_slides.py). Examples: a value leaving a stack; each variable in the stack and its object in the heap; a call stack growing and shrinking; a pointer writing into another variable.
+- **Step by step:** `lesson_notebook(folder, steps=[nb_step(...), …])` with 6–9 numbered steps, one idea each, in teaching order. Each step has an explanation with the syntax (a table where it helps), a short example (`nb_code`) and a `nb_try` asking students to change something and predict the output. Cover the lesson's whole "In short", which comes after the steps as the recap, plus the common mistakes. Write for students who are still getting used to the content.
+- **Exercises:** 2–5 short `java_exercise(...)` or `c_exercise(...)` calls on the basic operations, each with a TODO, a few checks and a complete answer. A challenge applies those operations to a real problem; an exercise must not be a smaller copy of a challenge.
 - **What they show:** the idea, never a challenge's solution. Use a different problem, or the library call the challenge forbids, so students can check their answers.
-- **Generating:** `lesson_notebook(folder, insert={k: [nb_note(en, pt), nb_code(en, pt)]})` places the cells after paragraph `k` of "In short" (the heading is paragraph 0). Never put a cell after a paragraph that sits inside a fenced code block. It adds the readings, "Check yourself", and a cell for every challenge of the unit.
+- **Generating:** the storyboard and the exercises go inside the steps they belong to. (Without `steps`, `insert={k: [...]}` places items after paragraph `k` of "In short", where the heading is paragraph 0.) Never put an item after a paragraph that sits inside a fenced code block. It adds the readings, "Check yourself", and the practice list of the unit's challenges.
+- **Render the storyboard and look at it** (`qlmanage`, as for diagrams). Check that captions fit and that boxes don't overlap.
 - **Rerun it** whenever `lesson.md` or the unit's challenges change, since the notebook copies them.
-- **Time and memory:** keep each cell well under the 20-second limit on a slow machine. C cells must compile without warnings and free what they allocate.
+- **Time and memory:** keep each cell well under the 20-second limit on a slow machine. C cells must compile without warnings and free what they allocate. An exercise's answer must print ✓ and no ✗; the validator runs it.
 
 ## 7. Write the files and validate
 

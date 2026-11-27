@@ -279,7 +279,10 @@ test('CS Fundamentals: switch subject, lessons first, prerequisites shown, then 
     const notebook = vscode.window.activeNotebookEditor?.notebook;
     assert.ok(notebook?.uri.fsPath.endsWith(path.join('notebooks', 'place-value-and-binary.ipynb')), `opened ${notebook?.uri.fsPath}`);
     assert.ok(fs.existsSync(path.join(path.dirname(notebook!.uri.fsPath), 'place-values.svg')), 'the diagram is copied next to it');
-    assert.ok(notebook!.getCells().some((c) => c.document.getText().startsWith('// sphinx: challenge base-converter')), 'with a cell for each challenge');
+    const cells = notebook!.getCells();
+    assert.ok(cells.some((c) => JSON.stringify(c.metadata).includes('"solution"')), 'with short exercises, their answers kept in the metadata');
+    assert.ok(cells.some((c) => /## Practice[\s\S]*Base Converter/.test(c.document.getText())), "ending with the unit's challenges as a practice list");
+    assert.ok(!cells.some((c) => c.document.getText().startsWith('// sphinx: challenge')), 'which the notebook no longer repeats');
     await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
     await api.lessonProgress.markRead('place-value-and-binary');
     assert.equal((api.tree.getTreeItem(api.tree.getChildren(numberSystems)[0] as never).iconPath as vscode.ThemeIcon).id, 'pass-filled');

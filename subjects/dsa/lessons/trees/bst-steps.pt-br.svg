@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 962 236" role="img" aria-label="Inserindo 8, 3, 10 e 6 numa árvore binária de busca, e depois buscando o 6 pelo caminho 8, 3, 6">
+<g transform="translate(0 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
+<circle cx="115" cy="44" r="14" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="115" y="48.32" fill="#f59e0b" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">8</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">insert 8: a primeira chave é a</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">raiz</text>
+</g>
+<g transform="translate(244 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
+<path d="M104.69696583533438 53.47879143149237 L75.30303416466562 80.52120856850763" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M125.30303416466562 53.47879143149237 L154.6969658353344 80.52120856850763" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<circle cx="115" cy="44" r="14" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="115" y="48.32" fill="#3b82f6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">8</text>
+<circle cx="65" cy="90" r="14" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="65" y="94.32" fill="#f59e0b" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">3</text>
+<circle cx="165" cy="90" r="14" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="165" y="94.32" fill="#f59e0b" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">10</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3 &lt; 8 vai para a esquerda, 10</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">&gt; 8 para a direita</text>
+</g>
+<g transform="translate(488 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
+<path d="M104.69696583533438 53.47879143149237 L75.30303416466562 80.52120856850763" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M125.30303416466562 53.47879143149237 L154.6969658353344 80.52120856850763" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M71.68518648587808 102.30074313401565 L83.31481351412192 123.69925686598435" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<circle cx="115" cy="44" r="14" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="115" y="48.32" fill="#3b82f6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">8</text>
+<circle cx="65" cy="90" r="14" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="65" y="94.32" fill="#3b82f6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">3</text>
+<circle cx="165" cy="90" r="14" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="165" y="94.32" fill="#3b82f6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">10</text>
+<circle cx="90" cy="136" r="14" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="90" y="140.32" fill="#f59e0b" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">6</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">insert 6: à esquerda do 8,</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">depois à direita do 3</text>
+</g>
+<g transform="translate(732 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
+<path d="M104.69696583533438 53.47879143149237 L75.30303416466562 80.52120856850763" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M125.30303416466562 53.47879143149237 L154.6969658353344 80.52120856850763" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M71.68518648587808 102.30074313401565 L83.31481351412192 123.69925686598435" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M58.31481351412193 102.30074313401565 L46.68518648587807 123.69925686598435" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<circle cx="115" cy="44" r="14" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="115" y="48.32" fill="#f59e0b" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">8</text>
+<circle cx="65" cy="90" r="14" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="65" y="94.32" fill="#f59e0b" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">3</text>
+<circle cx="165" cy="90" r="14" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="165" y="94.32" fill="#8a94a6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">10</text>
+<circle cx="90" cy="136" r="14" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="90" y="140.32" fill="#f59e0b" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">6</text>
+<circle cx="40" cy="136" r="14" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="40" y="140.32" fill="#8a94a6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">1</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">busca 6: 8 → 3 → 6, um</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">caminho, 3 passos</text>
+</g>
+</svg>

@@ -69,6 +69,8 @@ export interface NotebookCell {
   source: string;
   /** For code cells: the cell's language, or the notebook's. */
   language: CellLanguage;
+  /** For an exercise cell: the answer, kept in the cell's metadata (sphinx.solution) for the validator. */
+  solution?: string;
 }
 
 /** The cells of an .ipynb file. Throws on a file that isn't a notebook. */
@@ -84,10 +86,11 @@ export function readNotebook(file: string): NotebookCell[] {
       throw new Error(`${path.basename(file)}, cell ${i + 1}: "source" must be text or a list of lines`);
     }
   });
-  return nb.cells.map((c: { cell_type?: string; source?: string | string[]; metadata?: { vscode?: { languageId?: string } } }) => ({
+  return nb.cells.map((c: { cell_type?: string; source?: string | string[]; metadata?: { vscode?: { languageId?: string }; sphinx?: { solution?: unknown } } }) => ({
     kind: c.cell_type === 'code' ? 'code' : 'markdown',
     source: Array.isArray(c.source) ? c.source.join('') : (c.source ?? ''),
     language: c.metadata?.vscode?.languageId === 'c' ? 'c' : c.metadata?.vscode?.languageId === 'java' ? 'java' : notebookLanguage,
+    ...(typeof c.metadata?.sphinx?.solution === 'string' ? { solution: c.metadata.sphinx.solution } : {}),
   }));
 }
 
@@ -98,8 +101,8 @@ export function lessonNotebooks(dir: string): string[] {
 
 /**
  * Checks a lesson's notebooks: every plain cell compiles (C without warnings) and runs without crashing (Java with
- * JDK 25 or newer), and every challenge cell names a challenge in the cell's language. Returns the problems and how
- * many cells ran.
+ * JDK 25 or newer), every exercise's answer passes its own checks (prints ✓ and no ✗), and every challenge cell names
+ * a challenge in the cell's language. Returns the problems and how many cells ran.
  */
 export async function notebookProblems(
   dir: string,
@@ -143,12 +146,24 @@ export async function notebookProblems(
           problems.push(`${where} does not compile:\n${outcome.raw}`);
         } else if (outcome.kind !== 'tests') {
           problems.push(`${where}: ${outcome.kind === 'toolMissing' ? outcome.message : outcome.messages.join('; ')}`);
-        } else if (outcome.warnings?.length) {
+        } else if (outcome.warnings?.length && cell.solution === undefined) {
+          // An exercise's starter is incomplete on purpose (unused parameters...); its answer must have no warnings.
           problems.push(`${where} compiles with warnings:\n${outcome.warnings.map((w) => `  - line ${w.line}: ${w.message}`).join('\n')}`);
         } else if (outcome.results[0].timedOut) {
           problems.push(`${where} runs for more than ${CELL_TIME_LIMIT_MS / 1000} seconds`);
         } else if (outcome.results[0].exitCode !== 0) {
           problems.push(`${where} crashes:\n${outcome.results[0].stderr}`);
+        }
+      }
+      if (cell.solution !== undefined && (cell.language === 'c' || (javacVersion ?? 0) >= 25)) {
+        const { source } = cellProgram(shared[cell.language], cell.solution, false, cell.language);
+        const outcome = await runCellSource(source, { tests: [{ input: '', output: '' }], timeLimitMs: CELL_TIME_LIMIT_MS, ...tools }, cell.language);
+        cellsRun++;
+        const printed = outcome.kind === 'tests' ? outcome.results[0].actual : '';
+        if (outcome.kind !== 'tests' || outcome.results[0].exitCode !== 0 || outcome.results[0].timedOut || outcome.warnings?.length) {
+          problems.push(`${where}: the exercise's answer doesn't run cleanly${outcome.kind === 'compileError' ? `:\n${outcome.raw}` : ''}`);
+        } else if (!printed.includes('✓') || printed.includes('✗')) {
+          problems.push(`${where}: the exercise's answer fails its checks:\n${printed}`);
         }
       }
       if (isShared) {

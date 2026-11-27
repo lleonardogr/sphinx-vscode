@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 962 236" role="img" aria-label="A for loop adding the squares of 1 to 3: total goes 1, 5, 14, and the loop stops when i reaches 4">
+<g transform="translate(0 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
+<text x="16" y="50.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">int total = 0;</text>
+<text x="16" y="68.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">for (int i = 1; i &lt;= 3; i++) {</text>
+<text x="16" y="87.0" fill="#f59e0b" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">    total += i * i;</text>
+<text x="16" y="105.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">}</text>
+<text x="16" y="124.0" fill="#3b82f6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
+<text x="16" y="142.5" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">i = 1   total = 1</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">i = 1: total += 1</text>
+</g>
+<g transform="translate(244 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
+<text x="16" y="50.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">int total = 0;</text>
+<text x="16" y="68.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">for (int i = 1; i &lt;= 3; i++) {</text>
+<text x="16" y="87.0" fill="#f59e0b" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">    total += i * i;</text>
+<text x="16" y="105.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">}</text>
+<text x="16" y="124.0" fill="#3b82f6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
+<text x="16" y="142.5" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">i = 2   total = 5</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">i = 2: total += 4</text>
+</g>
+<g transform="translate(488 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
+<text x="16" y="50.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">int total = 0;</text>
+<text x="16" y="68.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">for (int i = 1; i &lt;= 3; i++) {</text>
+<text x="16" y="87.0" fill="#f59e0b" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">    total += i * i;</text>
+<text x="16" y="105.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">}</text>
+<text x="16" y="124.0" fill="#3b82f6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
+<text x="16" y="142.5" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">i = 3   total = 14</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">i = 3: total += 9</text>
+</g>
+<g transform="translate(732 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
+<text x="16" y="50.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">int total = 0;</text>
+<text x="16" y="68.5" fill="#f59e0b" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">for (int i = 1; i &lt;= 3; i++) {</text>
+<text x="16" y="87.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">    total += i * i;</text>
+<text x="16" y="105.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">}</text>
+<text x="16" y="124.0" fill="#3b82f6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
+<text x="16" y="142.5" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">i = 4   total = 14</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">i = 4: i &lt;= 3 is false, the</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">loop ends with total 14</text>
+</g>
+</svg>

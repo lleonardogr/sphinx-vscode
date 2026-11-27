@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 962 236" role="img" aria-label="Keys 12, 7, 15 and 9 go to bucket key % 5; 12 and 7 collide in bucket 2, and a lookup only searches that bucket">
+<g transform="translate(0 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
+<rect x="14" y="36" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="51.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">0</text>
+<rect x="14" y="64" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="79.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
+<rect x="14" y="92" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="107.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
+<path d="M42 103 L50 103" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50" y="92" width="38" height="23" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="69.0" y="107.82" fill="#f59e0b" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">12</text>
+<rect x="14" y="120" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="135.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
+<rect x="14" y="148" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="163.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">put 12: 12 % 5 = 2</text>
+</g>
+<g transform="translate(244 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
+<rect x="14" y="36" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="51.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">0</text>
+<rect x="14" y="64" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="79.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
+<rect x="14" y="92" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="107.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
+<path d="M42 103 L50 103" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50" y="92" width="38" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="69.0" y="107.82" fill="#3b82f6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">12</text>
+<path d="M88 103 L96 103" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="96" y="92" width="38" height="23" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="115.0" y="107.82" fill="#f59e0b" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">7</text>
+<rect x="14" y="120" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="135.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
+<rect x="14" y="148" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="163.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">put 7: 7 % 5 = 2, a collision:</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">the bucket keeps both</text>
+</g>
+<g transform="translate(488 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
+<rect x="14" y="36" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="51.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">0</text>
+<path d="M42 47 L50 47" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50" y="36" width="38" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="69.0" y="51.82" fill="#3b82f6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">15</text>
+<rect x="14" y="64" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="79.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
+<rect x="14" y="92" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="107.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
+<path d="M42 103 L50 103" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50" y="92" width="38" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="69.0" y="107.82" fill="#3b82f6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">12</text>
+<path d="M88 103 L96 103" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="96" y="92" width="38" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="115.0" y="107.82" fill="#3b82f6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">7</text>
+<rect x="14" y="120" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="135.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
+<rect x="14" y="148" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="163.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
+<path d="M42 159 L50 159" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50" y="148" width="38" height="23" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="69.0" y="163.82" fill="#f59e0b" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">9</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">put 15 and 9: buckets 0 and 4</text>
+</g>
+<g transform="translate(732 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
+<rect x="14" y="36" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="51.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">0</text>
+<path d="M42 47 L50 47" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50" y="36" width="38" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="69.0" y="51.82" fill="#3b82f6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">15</text>
+<rect x="14" y="64" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="79.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
+<rect x="14" y="92" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="107.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
+<path d="M42 103 L50 103" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50" y="92" width="38" height="23" rx="4" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1.5"/>
+<text x="69.0" y="107.82" fill="#10b981" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">12</text>
+<path d="M88 103 L96 103" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="96" y="92" width="38" height="23" rx="4" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1.5"/>
+<text x="115.0" y="107.82" fill="#10b981" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">7</text>
+<rect x="14" y="120" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="135.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
+<rect x="14" y="148" width="26" height="23" rx="4" fill="#8a94a6" fill-opacity="0.15" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="27.0" y="163.46" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
+<path d="M42 159 L50 159" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="50" y="148" width="38" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="69.0" y="163.82" fill="#3b82f6" font-size="12" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">9</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">get 7: go to bucket 2 and</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">compare only the keys there</text>
+</g>
+</svg>
