@@ -1,0 +1,39 @@
+{
+  "title": "Records, Enums and Equality",
+  "topic": "OOP",
+  "order": 4,
+  "challenges": [
+    "points-as-records",
+    "coins-enum",
+    "equal-points"
+  ],
+  "objectives": [
+    "Model plain data with a record, and a fixed set of values with an enum.",
+    "Tell == from equals, and write equals and hashCode so objects work as keys in sets and maps."
+  ],
+  "readings": [
+    {
+      "title": "Object as a Superclass",
+      "source": "dev.java (Oracle)",
+      "url": "https://dev.java/learn/language/oop/inheritance/objects/",
+      "type": "article",
+      "minutes": 8,
+      "lang": "en",
+      "lookFor": "The sections on toString, equals and hashCode: why equals must be overridden to compare values, and why hashCode must change along with it. You can skip clone and finalize."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Records, enums e igualdade",
+      "objectives": [
+        "Modelar dados simples com um record, e um conjunto fixo de valores com um enum.",
+        "Diferenciar == de equals, e escrever equals e hashCode para que objetos funcionem como chaves em sets e maps."
+      ],
+      "readings": [
+        {
+          "lookFor": "As seções sobre toString, equals e hashCode: por que o equals precisa ser sobrescrito para comparar valores, e por que o hashCode precisa mudar junto. Pode pular clone e finalize."
+        }
+      ]
+    }
+  }
+}

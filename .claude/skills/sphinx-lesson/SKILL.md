@@ -66,6 +66,10 @@ A reading guide gets a diagram when the idea is visual: place values, a packet, 
   - lines showing through see-through shapes: end each line at the shape's border;
   - text overlapping.
 
+## 5b. One idea per lesson
+
+A unit can have several lessons. When a unit's topic covers several ideas (classes, then inheritance and polymorphism, then interfaces), write one lesson per idea, with `order` 1, 2, 3…, and give each one `challenges=[...]`: the unit's challenges that practise it, shown right after it in the sidebar and in its notebook's Practice list. Every lesson needs at least one challenge; write one when none fits.
+
 ## 6. Build the notebook
 
 Every built-in lesson also ships as a notebook (`lesson.ipynb` and `lesson.pt-br.ipynb`), which is what students open. Its format is in [Notebook lessons](../../../docs/creating-challenges.md#notebook-lessons), and the standard for its contents is in the content guide's [Notebooks](../../../docs/content-guide.md#notebooks). The notebook teaches and lets students try things; the unit's challenges are the practice, and the notebook never repeats them.

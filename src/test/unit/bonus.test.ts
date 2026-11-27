@@ -70,7 +70,8 @@ describe('bonus goals', () => {
   it('are checked by the validator, which fills in their expected outputs from the bonus solution', async (t) => {
     if (!(await findCCompiler())) return t.skip('no C compiler on this machine');
     const dir = challengeFolder();
-    const report = await validateChallenges([path.dirname(dir)], { generate: true });
+    // One check at a time: a bonus goal is timed, and other test files run at the same time.
+    const report = await validateChallenges([path.dirname(dir)], { generate: true, jobs: 1 });
     assert.deepEqual(report.challenges[0].problems, []);
     const meta = JSON.parse(fs.readFileSync(path.join(dir, 'challenge.json'), 'utf8'));
     assert.equal(meta.bonus[1].tests[0].output, '4500000001500000000\n');
@@ -81,7 +82,7 @@ describe('bonus goals', () => {
     // The "no loops" solution uses a loop, and the "huge N" one is missing.
     const dir = challengeFolder({ 'Solution.bonus.no-loops.c': LOOP });
     fs.rmSync(path.join(dir, 'Solution.bonus.huge-n.c'));
-    const problems = (await validateChallenges([path.dirname(dir)])).challenges[0].problems;
+    const problems = (await validateChallenges([path.dirname(dir)], { jobs: 1 })).challenges[0].problems;
     assert.ok(problems.some((p) => /Solution\.bonus\.no-loops\.c breaks its own bonus rules/.test(p)), problems.join('\n'));
     assert.ok(problems.some((p) => /bonus "huge-n": no Solution\.bonus\.huge-n\.c/.test(p)), problems.join('\n'));
   });

@@ -1,0 +1,41 @@
+{
+  "title": "The Four Pillars of OOP",
+  "topic": "OOP",
+  "order": 2,
+  "challenges": [
+    "bank-account",
+    "shapes-inheritance",
+    "payroll"
+  ],
+  "objectives": [
+    "Protect an object's state with private fields and methods that check every change (encapsulation).",
+    "Build a class on top of another with extends and super, and override its methods (inheritance).",
+    "Treat objects of different classes through their parent type, each answering in its own way (polymorphism)."
+  ],
+  "readings": [
+    {
+      "title": "Polymorphism",
+      "source": "dev.java (Oracle)",
+      "url": "https://dev.java/learn/language/oop/inheritance/polymorphism/",
+      "type": "article",
+      "minutes": 7,
+      "lang": "en",
+      "lookFor": "The Bicycle example: each subclass overrides printDescription, and the same call gives a different answer. Then super for calling the parent's version, and how subclass constructors call the parent's."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Os quatro pilares da OO",
+      "objectives": [
+        "Proteger o estado de um objeto com campos private e métodos que conferem cada mudança (encapsulamento).",
+        "Construir uma classe em cima de outra com extends e super, e sobrescrever os métodos dela (herança).",
+        "Tratar objetos de classes diferentes pelo tipo do pai, cada um respondendo do seu jeito (polimorfismo)."
+      ],
+      "readings": [
+        {
+          "lookFor": "O exemplo da Bicycle: cada subclasse sobrescreve printDescription, e a mesma chamada dá uma resposta diferente. Depois o super para chamar a versão do pai, e como os construtores das subclasses chamam o do pai."
+        }
+      ]
+    }
+  }
+}

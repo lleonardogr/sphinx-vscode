@@ -6,7 +6,7 @@
 <text x="16" y="50.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">int age = 70;</text>
 <text x="16" y="68.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">if (age &lt; 12)       → ?</text>
 <text x="16" y="87.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">else if (age &gt;= 65) → ?</text>
-<text x="16" y="105.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">    ticket = &quot;senior&quot;;</text>
+<text x="16" y="105.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">    ticket = &quot;senior&quot;;</text>
 <text x="16" y="124.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">else                → ?</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">Java tests the conditions from</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">the top</text>
@@ -18,7 +18,7 @@
 <text x="16" y="50.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">int age = 70;</text>
 <text x="16" y="68.5" fill="#f59e0b" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">if (age &lt; 12)       → false</text>
 <text x="16" y="87.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">else if (age &gt;= 65) → ?</text>
-<text x="16" y="105.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">    ticket = &quot;senior&quot;;</text>
+<text x="16" y="105.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">    ticket = &quot;senior&quot;;</text>
 <text x="16" y="124.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">else                → ?</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">age &lt; 12 is false: skip that</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">block</text>
@@ -30,7 +30,7 @@
 <text x="16" y="50.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">int age = 70;</text>
 <text x="16" y="68.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">if (age &lt; 12)       → false</text>
 <text x="16" y="87.0" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">else if (age &gt;= 65) → true</text>
-<text x="16" y="105.5" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">    ticket = &quot;senior&quot;;</text>
+<text x="16" y="105.5" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">    ticket = &quot;senior&quot;;</text>
 <text x="16" y="124.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">else                → ?</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">age &gt;= 65 is true: run its</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">block</text>
@@ -42,7 +42,7 @@
 <text x="16" y="50.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">int age = 70;</text>
 <text x="16" y="68.5" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">if (age &lt; 12)       → false</text>
 <text x="16" y="87.0" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">else if (age &gt;= 65) → true</text>
-<text x="16" y="105.5" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">    ticket = &quot;senior&quot;;</text>
+<text x="16" y="105.5" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">    ticket = &quot;senior&quot;;</text>
 <text x="16" y="124.0" fill="#8a94a6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">else                → skipped</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">Only the first true block</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">runs; the rest is skipped</text>

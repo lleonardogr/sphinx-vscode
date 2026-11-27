@@ -1,0 +1,65 @@
+{
+  "title": "Notifications (Abstract Class)",
+  "topic": "OOP",
+  "difficulty": "Medium",
+  "order": 10,
+  "hints": [
+    "abstract class Notification { … } can't be created with new, but its subclasses can.",
+    "Write send once, in Notification. It calls channel() and format(text), which each subclass writes.",
+    "Each subclass constructor passes the recipient up with super(to)."
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Notificações (classe abstrata)",
+      "hints": [
+        "abstract class Notification { … } não pode ser criada com new, mas as subclasses dela podem.",
+        "Escreva o send uma vez só, em Notification. Ele chama channel() e format(text), que cada subclasse escreve.",
+        "O construtor de cada subclasse repassa o destinatário com super(to)."
+      ],
+      "mustContain": [
+        "Escreva Notification como uma classe abstrata.",
+        "Deixe channel() e format() abstratos em Notification.",
+        "Email, Sms e Push devem estender Notification."
+      ]
+    }
+  },
+  "mustContain": [
+    {
+      "pattern": "\\babstract\\s+class\\s+Notification\\b",
+      "message": "Write Notification as an abstract class."
+    },
+    {
+      "pattern": "\\babstract\\s+String\\s+(channel|format)\\s*\\(",
+      "message": "Leave channel() and format() abstract in Notification."
+    },
+    {
+      "pattern": "\\bextends\\s+Notification\\b",
+      "message": "Email, Sms and Push should extend Notification."
+    }
+  ],
+  "tests": [
+    {
+      "input": "3\nemail ana@example.org Your order has shipped\nsms +5511999990000 Your code: 4821\npush bia Meeting at 3pm\n",
+      "output": "EMAIL to ana@example.org: Your order has shipped\nSMS to +5511999990000: Your code: 4821\nPUSH to bia: MEETING AT 3PM\n"
+    },
+    {
+      "input": "2\nsms 555-0101 Short note\nsms 555-0102 This message is far too long for an SMS\n",
+      "output": "SMS to 555-0101: Short note\nSMS to 555-0102: This message ...\n"
+    },
+    {
+      "input": "1\npush caio hello\n",
+      "output": "PUSH to caio: HELLO\n",
+      "hidden": true
+    },
+    {
+      "input": "4\nemail x@y.z Hi\nsms 1 Sixteen chars ok\nsms 2 Seventeen chars!!\npush p MiXeD case 42\n",
+      "output": "EMAIL to x@y.z: Hi\nSMS to 1: Sixteen chars ok\nSMS to 2: Seventeen cha...\nPUSH to p: MIXED CASE 42\n",
+      "hidden": true
+    },
+    {
+      "input": "2\nemail team@example.org Weekly report attached\npush ops disk almost full\n",
+      "output": "EMAIL to team@example.org: Weekly report attached\nPUSH to ops: DISK ALMOST FULL\n",
+      "hidden": true
+    }
+  ]
+}

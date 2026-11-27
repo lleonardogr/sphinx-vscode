@@ -376,7 +376,7 @@ my-challenges/
 
 ### Lessons
 
-A **lesson** is a short page to read before the quiz and challenges of its unit. Built-in units use **reading guides**: a short summary, the unit's objectives and 1 to 3 curated readings from the web that open in the browser (see [Reading guides](content-guide.md#reading-guides) for the fields and how to choose sources). Lessons come first in their unit and show a reading time. When the student clicks **Mark as read**, the lesson gets a ✓ in the sidebar. A button at the end opens the next item in the path.
+A **lesson** is a short page to read before the quiz and challenges of its unit. A unit can have several lessons, one idea each, such as *Classes and Objects*, *The Four Pillars*, *Interfaces and Abstract Classes* and *Records, Enums and Equality* in Java's OOP unit; each one can list the challenges that practise it. Built-in units use **reading guides**: a short summary, the unit's objectives and 1 to 3 curated readings from the web that open in the browser (see [Reading guides](content-guide.md#reading-guides) for the fields and how to choose sources). Lessons come first in their unit and show a reading time. When the student clicks **Mark as read**, the lesson gets a ✓ in the sidebar. A button at the end opens the next item in the path.
 
 **The quick way: Create New Lesson.** In the teacher view (💼), run **Create New Lesson…** (in **Tools**, or **Sphinx: Create New Lesson…** from the Command Palette). Choose a folder, a title and the unit the lesson opens, then the kind:
 
@@ -409,6 +409,7 @@ place-value-and-binary/
 | `title` | yes | Shown in the sidebar and at the top of the lesson. |
 | `topic` | no | The unit it belongs to. |
 | `order` | no | Position among the unit's lessons; lower comes first. |
+| `challenges` | no | The unit's challenges that practise this lesson, by id, such as `["person-class", "rectangle-class"]`. The sidebar shows them right after the lesson, then the next lesson with its own; challenges no lesson lists come after all the lessons. The validator checks that each one exists, in the lesson's unit. |
 | `minutes` | no | The reading time. By default it's worked out from the text, at about 180 words a minute. |
 | `requires` | no | [Prerequisites](#prerequisites), as for challenges. |
 | `subject` | no | For a lesson without a unit, as for challenges. |
@@ -653,7 +654,7 @@ Students' progress is stored per challenge id, so keep ids stable after sharing.
 Challenges in this repository's `challenges/` folder ship with the extension. To add one:
 
 1. Fork the repository and run `npm install`.
-2. Create the challenge in `challenges/<id>/` (CS Fundamentals: `subjects/cs/challenges/<id>/`), with the `topic` of its [unit](../README.md#the-learning-path-100-challenges) and an `order` that keeps the unit going from easy to hard. **Create New Challenge** offers this folder when you have the repository open.
+2. Create the challenge in `challenges/<id>/` (CS Fundamentals: `subjects/cs/challenges/<id>/`), with the `topic` of its [unit](../README.md#the-learning-path-101-challenges) and an `order` that keeps the unit going from easy to hard. **Create New Challenge** offers this folder when you have the repository open.
 3. Add the Portuguese translation (see [Translating content](#translating-content)): built-in content ships in both languages.
 4. Run `npm run validate`. It is **strict** for the built-in content: besides compiling and running everything, it fails on the content standard in the checklist below (a "Things to know" section, at least 3 hidden tests and 2 hints, a description of 40 words or more) and on missing Portuguese translations. CI also validates on Linux, macOS and Windows, with JDK 17 and JDK 25.
 5. Add a line to `CHANGELOG.md` and open a pull request. See [CONTRIBUTING.md](../CONTRIBUTING.md).

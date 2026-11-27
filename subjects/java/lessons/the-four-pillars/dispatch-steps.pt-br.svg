@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 962 516" role="img" aria-label="Uma List&lt;Animal&gt; guarda um Dog e um Animal; describe() é herdado de Animal e chama sound(), e o Java roda a versão da classe de cada objeto: Au para o Dog, ... para o Animal">
+<g transform="translate(0 0)">
+<rect x="0.75" y="0.75" width="228.5" height="249.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
+<text x="16" y="50" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">List&lt;Animal&gt; zoo = List.of(</text>
+<text x="16" y="68" fill="#f59e0b" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">  new Dog(&quot;Rex&quot;),</text>
+<text x="16" y="86" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">  new Animal(&quot;Ann&quot;));</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">Um Dog é um Animal, então os</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">dois cabem numa List&lt;Animal&gt;</text>
+</g>
+<g transform="translate(244 0)">
+<rect x="0.75" y="0.75" width="228.5" height="249.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
+<text x="16" y="50.0" fill="#3b82f6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">a.describe()</text>
+<text x="16" y="68.5" fill="#3b82f6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
+<text x="16" y="87.0" fill="#3b82f6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">Dog não tem describe()</text>
+<text x="16" y="105.5" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">→ Animal.describe()</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">describe() é herdado de Animal</text>
+</g>
+<g transform="translate(488 0)">
+<rect x="0.75" y="0.75" width="228.5" height="249.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
+<text x="16" y="50.0" fill="#3b82f6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">describe() chama sound()</text>
+<text x="16" y="68.5" fill="#3b82f6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
+<text x="16" y="87.0" fill="#f59e0b" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">o objeto é um Dog:</text>
+<text x="16" y="105.5" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">Dog.sound() → &quot;Au&quot;</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">O Java procura primeiro na</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">classe do objeto, enquanto o</text>
+<text x="115.0" y="236" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">programa roda</text>
+</g>
+<g transform="translate(732 0)">
+<rect x="0.75" y="0.75" width="228.5" height="249.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
+<text x="16" y="50.0" fill="#3b82f6" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">o objeto é um Animal:</text>
+<text x="16" y="68.5" fill="#10b981" font-size="11.5" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">Animal.sound() → &quot;...&quot;</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">Um Animal comum usa a própria</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">versão</text>
+</g>
+<g transform="translate(0 265)">
+<rect x="0.75" y="0.75" width="228.5" height="249.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">5</text>
+<text x="16" y="50" fill="#f59e0b" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">Rex: Au</text>
+<text x="16" y="70" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">Ann: ...</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">Uma linha de código, duas</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">respostas: isso é polimorfismo</text>
+</g>
+</svg>

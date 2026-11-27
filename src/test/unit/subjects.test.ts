@@ -5,7 +5,7 @@ import { describe, it } from 'node:test';
 import { Challenge } from '../../challenges';
 import { loadLesson, parseReadings, readingMinutes, resolveLessonImages } from '../../lessons';
 import { readingProblems, validateChallenges } from '../../validator';
-import { buildPath, nextInPath, pathItemId, requirementStatus, solvedToUnlock, subjectOf, unitKey, unitName, unmetRequirements } from '../../path';
+import { buildPath, nextInPath, pathItemId, pathSequence, requirementStatus, solvedToUnlock, subjectOf, unitKey, unitName, unmetRequirements } from '../../path';
 import { QuizQuestion, isCorrect, loadQuiz, parseNumberAnswer } from '../../quizzes';
 import { addTeacherSubjects, allSubjects, findSubject, findUnit, loadSubjects, removeUnitFromSubjectFile, setSubjects, stricterLock, subjectContentRoots } from '../../subjects';
 import { ROOT, tempDir } from './helpers';
@@ -172,6 +172,18 @@ describe('lessons and the path', () => {
     assert.ok(cs.some((w) => w.includes('aim for 150 to 250')) && cs.some((w) => w.includes('2 objectives; a unit has 3 to 5')), cs.join('\n'));
   });
 
+  it('checks the challenges a lesson lists: they must exist, in its unit', async () => {
+    const reading = { title: 'T', source: 'S', url: 'https://example.org/a', type: 'article', minutes: 5, lang: 'en', lookFor: 'L' };
+    const dir = path.join(tempDir(), 'classes');
+    fs.mkdirSync(dir);
+    fs.writeFileSync(path.join(dir, 'lesson.json'), JSON.stringify({ title: 'Classes', topic: 'OOP', order: 1, objectives: ['One', 'Two'], readings: [reading], challenges: ['person-class', 'fizzbuzz', 'no-such-challenge'] }));
+    fs.writeFileSync(path.join(dir, 'lesson.md'), `## In short\n\n${'word '.repeat(70)}\n\n<!-- readings -->\n`);
+    const report = (await validateChallenges([path.dirname(dir)], { referenceRoots: [path.join(ROOT, 'challenges')] })).challenges[0];
+    assert.ok(!report.problems.some((p) => p.includes('person-class')), report.problems.join('\n'));
+    assert.ok(report.problems.some((p) => p.includes('"fizzbuzz", which is in the unit "Loops", not "OOP"')), report.problems.join('\n'));
+    assert.ok(report.problems.some((p) => p.includes('doesn\'t exist: "no-such-challenge"')), report.problems.join('\n'));
+  });
+
   it('loads relative images from the lesson folder only', () => {
     const dir = lessonFolder();
     const toUri = (file: string) => `webview://${path.relative(dir, file)}`;
@@ -191,6 +203,23 @@ describe('lessons and the path', () => {
     assert.deepEqual(cs.map((g) => `${g.number} · ${g.key}`), ['2 · NumberSystems']);
     assert.equal(pathItemId(nextInPath(cs, 'binary')!), 'b2d');
     assert.deepEqual(buildPath([challenge], [], [lesson], 'java'), []);
+  });
+
+  it('lists each lesson with the challenges it names, then the others, the quiz and the tests', () => {
+    const lessonAt = (id: string, order: number, challenges: string[]) => {
+      const dir = path.join(tempDir(), id);
+      fs.mkdirSync(dir);
+      fs.writeFileSync(path.join(dir, 'lesson.json'), JSON.stringify({ title: id, topic: 'NumberSystems', order, challenges }));
+      fs.writeFileSync(path.join(dir, 'lesson.md'), '## In short\n\nText.');
+      return loadLesson(dir, 'en');
+    };
+    const ch = (id: string, order: number) => ({ id, title: id, topic: 'NumberSystems', order, unit: undefined, requires: [] }) as unknown as Challenge;
+    const first = lessonAt('place-value', 1, ['b2d', 'd2b']);
+    const second = lessonAt('hexadecimal', 2, ['h2d']);
+    assert.deepEqual(first.challenges, ['b2d', 'd2b']);
+    const groups = buildPath([ch('b2d', 1), ch('h2d', 2), ch('d2b', 3), ch('converter', 4)], [], [second, first], 'cs');
+    assert.deepEqual(pathSequence(groups).map(pathItemId), ['place-value', 'b2d', 'd2b', 'hexadecimal', 'h2d', 'converter']);
+    assert.equal(pathItemId(nextInPath(groups, 'd2b')!), 'hexadecimal', '"next" follows the same order');
   });
 
   it('reports progress in each prerequisite unit', () => {

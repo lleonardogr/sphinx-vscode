@@ -23,7 +23,7 @@ Students pick a challenge from the **Sphinx** sidebar. The problem statement ope
 
 ![Solving FizzBuzz in Sphinx: write the code, run the sample tests, submit, and the challenge is marked as solved](media/screenshots/demo.gif)
 
-## The learning path (100 challenges)
+## The learning path (101 challenges)
 
 The sidebar lists numbered **units** in teaching order. Each unit runs from easy to harder challenges, ends with its quiz, and the last unit of a stage ends with a bigger **test** that mixes everything so far. Every unit opens with a **quick guide**: a one-minute summary around a short code example, the mistake to watch out for, and one curated page to read. It opens as an **interactive notebook**: step-by-step pictures of the idea, experiments to run and change, and short exercises with tests that print ✓, before the unit's challenges.
 
@@ -127,7 +127,7 @@ The fourth subject, for students who know Java's arrays, collections and methods
 - **Notebook lessons**: every unit's guide, in all four subjects, opens as a notebook in VS Code's notebook editor. Students follow a step-by-step storyboard of the idea (a value leaving a stack, a variable in the stack and its object in the heap), run and change small Java (JDK 25 or newer) or C experiments, and do short exercises whose tests print ✓, with no Jupyter or kernel to install (Sphinx runs the cells with the JDK and C compiler the challenges use). The notebook ends with the unit's challenges, the real practice.
 - **Bonus goals**: a challenge can offer up to 3 optional, harder goals (solve it without loops, fast enough for a huge input…), checked when it passes. Earned goals become stars in the panel, the sidebar and the unit's guide.
 - **Prerequisites**: an item can list the units it builds on, shown with the student's progress in each one. They're advice, unless a teacher turns on **prerequisite locks**: then the item opens once half (or all) of each unit it needs is solved.
-- **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/100 solved` counter for the current subject in the status bar.
+- **Progress tracking** shows ✓ in the tree, a count per unit, and an `x/101 solved` counter for the current subject in the status bar.
 - **Group by**: the filter button at the top of the sidebar groups challenges by **learning path** (units, the default), **difficulty** (Easy, Medium, Hard, then quizzes) or **progress** (not started, in progress, solved). The choice is remembered.
 
 > **Upgrading from Tech Challenges?** Sphinx is the same extension with a new name. Install Sphinx and uninstall Tech Challenges. Your settings (`techChallenges.*` → `sphinx.*`) are copied over automatically, and your code in `tech-challenges/` keeps being used. Solved-challenge progress and saved AI keys start fresh.

@@ -129,12 +129,25 @@ export function pathItemTitle(item: PathItem): string {
 
 /** Everything in path order: each group's lessons, then its challenges, its quiz and its tests. */
 export function pathSequence(groups: PathGroup[]): PathItem[] {
-  return groups.flatMap((g) => [
-    ...g.lessons.map((lesson) => ({ kind: 'lesson' as const, lesson })),
-    ...g.challenges.map((challenge) => ({ kind: 'challenge' as const, challenge })),
-    ...g.quizzes.map((quiz) => ({ kind: 'quiz' as const, quiz })),
-    ...g.tests.map((challenge) => ({ kind: 'challenge' as const, challenge })),
-  ]);
+  return groups.flatMap(unitItems);
+}
+
+/**
+ * A unit in order: each lesson followed by the challenges it lists (lesson.json "challenges"), then the
+ * challenges no lesson lists, then the quiz, then the tests that close the stage. Without such lists, that is
+ * every lesson, then every challenge.
+ */
+export function unitItems(g: PathGroup): PathItem[] {
+  const claimed = new Set(g.lessons.flatMap((l) => l.challenges));
+  return [
+    ...g.lessons.flatMap((lesson): PathItem[] => [
+      { kind: 'lesson', lesson },
+      ...g.challenges.filter((c) => lesson.challenges.includes(c.id)).map((challenge): PathItem => ({ kind: 'challenge', challenge })),
+    ]),
+    ...g.challenges.filter((c) => !claimed.has(c.id)).map((challenge): PathItem => ({ kind: 'challenge', challenge })),
+    ...g.quizzes.map((quiz): PathItem => ({ kind: 'quiz', quiz })),
+    ...g.tests.map((challenge): PathItem => ({ kind: 'challenge', challenge })),
+  ];
 }
 
 /** The item after `id` in the path (a lesson, challenge or quiz id), or undefined at the end. */

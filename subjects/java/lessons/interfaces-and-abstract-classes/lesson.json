@@ -1,0 +1,40 @@
+{
+  "title": "Interfaces and Abstract Classes",
+  "topic": "OOP",
+  "order": 3,
+  "challenges": [
+    "animal-interface",
+    "notifications-abstract-class"
+  ],
+  "objectives": [
+    "Write an interface as a contract and classes that implement it, and use them through the interface type.",
+    "Write an abstract class that does the common work and leaves abstract methods for each subclass.",
+    "Choose between an interface and an abstract class for a design."
+  ],
+  "readings": [
+    {
+      "title": "Abstract Methods and Classes",
+      "source": "dev.java (Oracle)",
+      "url": "https://dev.java/learn/language/oop/inheritance/abstract-classes/",
+      "type": "article",
+      "minutes": 7,
+      "lang": "en",
+      "lookFor": "What makes a method or a class abstract, then the section \"Abstract Classes Compared to Interfaces\", which says when to choose each one, and the GraphicObject example."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Interfaces e classes abstratas",
+      "objectives": [
+        "Escrever uma interface como contrato e classes que a implementam, e usá-las pelo tipo da interface.",
+        "Escrever uma classe abstrata que faz o trabalho comum e deixa métodos abstratos para cada subclasse.",
+        "Escolher entre uma interface e uma classe abstrata num projeto."
+      ],
+      "readings": [
+        {
+          "lookFor": "O que torna um método ou uma classe abstratos, depois a seção \"Abstract Classes Compared to Interfaces\", que diz quando escolher cada um, e o exemplo do GraphicObject."
+        }
+      ]
+    }
+  }
+}

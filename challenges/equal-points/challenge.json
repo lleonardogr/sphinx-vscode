@@ -2,7 +2,7 @@
   "title": "Equal Points (equals and hashCode)",
   "topic": "OOP",
   "difficulty": "Hard",
-  "order": 10,
+  "order": 11,
   "hints": [
     "equals must take an Object parameter: public boolean equals(Object o). Check the type with instanceof, then compare x and y.",
     "hashCode must return the same number for equal points: Objects.hash(x, y) does it.",
