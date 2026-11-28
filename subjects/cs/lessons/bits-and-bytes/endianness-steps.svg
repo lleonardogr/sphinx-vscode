@@ -6,7 +6,7 @@
 <text x="16" y="50" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">300 = 0x012C</text>
 <text x="16" y="70" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
 <text x="16" y="90" fill="#f59e0b" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">high byte: 0x01</text>
-<text x="16" y="110" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">low byte:  0x2C</text>
+<text x="16" y="110" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">low byte:  0x2C</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">300 needs two bytes</text>
 </g>
 <g transform="translate(244 0)">

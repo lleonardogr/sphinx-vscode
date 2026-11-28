@@ -7,7 +7,7 @@
 <text x="16" y="70" fill="#8a94a6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">1: ADD 3</text>
 <text x="16" y="90" fill="#8a94a6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">2: PRINT</text>
 <text x="16" y="110" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
-<text x="16" y="130" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">PC = 0   ACC = 0</text>
+<text x="16" y="130" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">PC = 0   ACC = 0</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">Fetch: PC = 0 points at LOAD 5</text>
 </g>
 <g transform="translate(244 0)">
@@ -18,7 +18,7 @@
 <text x="16" y="70" fill="#8a94a6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">1: ADD 3</text>
 <text x="16" y="90" fill="#8a94a6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">2: PRINT</text>
 <text x="16" y="110" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
-<text x="16" y="130" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">PC = 1   ACC = 5</text>
+<text x="16" y="130" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">PC = 1   ACC = 5</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">Execute: ACC = 5, PC moves to</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
 </g>
@@ -30,7 +30,7 @@
 <text x="16" y="70" fill="#f59e0b" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">1: ADD 3</text>
 <text x="16" y="90" fill="#8a94a6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">2: PRINT</text>
 <text x="16" y="110" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
-<text x="16" y="130" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">PC = 2   ACC = 8</text>
+<text x="16" y="130" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">PC = 2   ACC = 8</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">ADD 3: ACC = 8, PC moves to 2</text>
 </g>
 <g transform="translate(732 0)">
@@ -41,7 +41,7 @@
 <text x="16" y="70" fill="#8a94a6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">1: ADD 3</text>
 <text x="16" y="90" fill="#f59e0b" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">2: PRINT</text>
 <text x="16" y="110" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
-<text x="16" y="130" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">PC = 3   ACC = 8</text>
+<text x="16" y="130" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">PC = 3   ACC = 8</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">PRINT shows 8; then the cycle</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">goes on</text>
 </g>
