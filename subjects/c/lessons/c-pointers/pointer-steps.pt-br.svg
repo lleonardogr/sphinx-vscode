@@ -54,7 +54,7 @@
 <text x="16" y="50" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">printf(&quot;%d&quot;, x);</text>
 <text x="16" y="70" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">9</text>
 <text x="16" y="90" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace"></text>
-<text x="16" y="110" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">p  → 0x1000</text>
+<text x="16" y="110" fill="#3b82f6" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace" xml:space="preserve">p  → 0x1000</text>
 <text x="16" y="130" fill="#f59e0b" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">*p → 9</text>
 <text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">x mudou sem que o nome dele</text>
 <text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">fosse usado</text>

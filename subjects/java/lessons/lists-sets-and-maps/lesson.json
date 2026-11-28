@@ -1,22 +1,17 @@
 {
-  "title": "Lists, Sets and Maps",
+  "title": "Lists and Sets",
   "topic": "Collections",
   "order": 1,
+  "challenges": [
+    "todo-list",
+    "unique-words",
+    "first-occurrences"
+  ],
   "objectives": [
-    "Choose the collection that fits: a List, a Set, a Map or a queue.",
-    "Add, find and remove items in an ArrayList, and go through it.",
-    "Count and look things up by key with a HashMap."
+    "Add, find, change and remove items in an ArrayList, and go through it.",
+    "Keep one copy of each item with a Set, and choose HashSet, LinkedHashSet or TreeSet by the order you need."
   ],
   "readings": [
-    {
-      "title": "How to Work with Array Lists in Java",
-      "source": "freeCodeCamp, The Java Handbook",
-      "url": "https://www.freecodecamp.org/news/the-java-handbook/#heading-how-to-work-with-array-lists-in-java",
-      "type": "article",
-      "minutes": 10,
-      "lang": "en",
-      "lookFor": "Array lists (add, get, set, remove and size, and why it's ArrayList<Integer> and not ArrayList<int>), then the next section, Hash Maps (put, get, containsKey and looping over the entries). The handbook writes System.out.println inside public static void main; in Sphinx, IO.println and void main() do the same."
-    },
     {
       "title": "How to Use the Java Collections Framework",
       "source": "freeCodeCamp",
@@ -24,23 +19,19 @@
       "type": "article",
       "minutes": 12,
       "lang": "en",
-      "lookFor": "Optional, for the rest of the unit: how List, Set, Queue and Map differ, with HashSet, LinkedHashSet, TreeMap and ArrayDeque. You can skip the performance tables and thread safety."
+      "lookFor": "The sections on List (ArrayList) and Set (HashSet, LinkedHashSet, TreeSet): what each one keeps, and in which order. Maps and queues come in the next lessons."
     }
   ],
   "translations": {
     "pt-br": {
-      "title": "Listas, conjuntos e mapas",
+      "title": "Listas e conjuntos",
       "objectives": [
-        "Escolher a coleção certa: uma List, um Set, um Map ou uma fila.",
-        "Adicionar, achar e remover itens num ArrayList, e percorrê-lo.",
-        "Contar e consultar coisas por chave com um HashMap."
+        "Pôr, achar, trocar e tirar itens de um ArrayList, e percorrê-lo.",
+        "Guardar uma cópia de cada item com um Set, e escolher HashSet, LinkedHashSet ou TreeSet pela ordem de que precisa."
       ],
       "readings": [
         {
-          "lookFor": "Array lists (add, get, set, remove e size, e por que é ArrayList<Integer> e não ArrayList<int>), depois a próxima seção, Hash Maps (put, get, containsKey e percorrer as entradas). O livro escreve System.out.println dentro de public static void main; no Sphinx, IO.println e void main() fazem o mesmo."
-        },
-        {
-          "lookFor": "Opcional, para o resto da unidade: como List, Set, Queue e Map diferem, com HashSet, LinkedHashSet, TreeMap e ArrayDeque. Pode pular as tabelas de desempenho e a parte de threads."
+          "lookFor": "As seções sobre List (ArrayList) e Set (HashSet, LinkedHashSet, TreeSet): o que cada um guarda, e em que ordem. Maps e filas vêm nas próximas lições."
         }
       ]
     }

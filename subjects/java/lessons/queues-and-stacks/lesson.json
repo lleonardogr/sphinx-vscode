@@ -1,0 +1,38 @@
+{
+  "title": "Queues and Stacks",
+  "topic": "Collections",
+  "order": 3,
+  "challenges": [
+    "ticket-queue",
+    "balanced-brackets"
+  ],
+  "objectives": [
+    "Serve items in arrival order with a queue, and undo in reverse order with a stack, both with ArrayDeque.",
+    "Take items from a PriorityQueue in order of priority."
+  ],
+  "readings": [
+    {
+      "title": "Storing Elements in Stacks and Queues",
+      "source": "dev.java (Oracle)",
+      "url": "https://dev.java/learn/api/collections-and-streams/collections-framework/stacks-queues/",
+      "type": "article",
+      "minutes": 7,
+      "lang": "en",
+      "lookFor": "Pushing, popping and peeking, then how ArrayDeque models both a FIFO queue and a LIFO stack, and why to stay away from the old Stack class."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Filas e pilhas",
+      "objectives": [
+        "Atender itens na ordem de chegada com uma fila, e desfazer na ordem inversa com uma pilha, as duas com ArrayDeque.",
+        "Tirar itens de uma PriorityQueue em ordem de prioridade."
+      ],
+      "readings": [
+        {
+          "lookFor": "Push, pop e peek, depois como o ArrayDeque modela tanto uma fila FIFO quanto uma pilha LIFO, e por que evitar a antiga classe Stack."
+        }
+      ]
+    }
+  }
+}

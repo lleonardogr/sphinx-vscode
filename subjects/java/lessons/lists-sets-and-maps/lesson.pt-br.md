@@ -1,26 +1,24 @@
 ## Em resumo
 
-Coleções crescem e encolhem conforme você adiciona e remove itens. Uma **List** mantém a ordem e aceita repetidos; um **Set** guarda uma cópia de cada item; um **Map** liga cada **chave** a um valor.
+Coleções crescem e diminuem conforme você põe e tira itens, ao contrário dos arrays. Uma **List** mantém a ordem e aceita repetidos; um **Set** guarda uma cópia de cada item.
 
 ```java
 void main() {
-    Map<String, Double> prices = new HashMap<>();
-    prices.put("maçã", 0.5);
-    prices.put("pão", 2.25);
     List<String> cart = new ArrayList<>();
     cart.add("maçã");
     cart.add("pão");
     cart.add("maçã");
-    double total = 0;
-    for (String item : cart) {
-        total += prices.getOrDefault(item, 0.0);
-    }
-    Set<String> kinds = new HashSet<>(cart);
-    IO.println(cart.size() + " itens, " + kinds.size() + " diferentes, total " + total);
+    cart.add(1, "leite");                // no índice 1
+    IO.println(cart + " " + cart.size());
+    cart.remove("pão");
+    IO.println(cart.get(0) + " " + cart.contains("leite"));
+
+    Set<String> kinds = new TreeSet<>(cart);
+    IO.println(kinds);                   // [leite, maçã]: ordenado, sem repetidos
 }
 ```
 
-Coleções `Hash…` são rápidas mas sem ordem, as `Linked…` mantêm a ordem de chegada e as `Tree…` mantêm tudo ordenado. Um `ArrayDeque` funciona como fila ou pilha.
+`HashSet` é o mais rápido, mas não tem ordem útil, `LinkedHashSet` mantém a ordem de chegada, e `TreeSet` os mantém ordenados.
 
 **Cuidado:** coleções guardam objetos, então escreva `List<Integer>`, não `List<int>`.
 

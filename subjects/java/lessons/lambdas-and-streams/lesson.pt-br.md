@@ -1,22 +1,24 @@
 ## Em resumo
 
-Uma **lambda** é uma pequena função escrita como valor: `t -> t >= 50` recebe `t` e responde verdadeiro ou falso. Um **stream** roda um pipeline sobre uma coleção: uma origem, depois passos como `filter`, `map` e `sorted`, depois **uma operação terminal** que dá o resultado.
+Uma **lambda** é uma pequena função escrita como valor: `n -> n % 2 == 0` recebe `n` e responde verdadeiro ou falso. Uma **referência a método** como `String::length` cita um método que já existe. Muitos métodos recebem uma delas para saber *o que fazer*: quais itens tirar, ou como comparar dois itens.
 
 ```java
+record Player(String name, int score) {}
+
 void main() {
-    List<Double> totals = List.of(120.0, 35.5, 60.0, 15.0);
-    double big = totals.stream()
-            .filter(t -> t >= 50)
-            .mapToDouble(t -> t)
-            .sum();
-    long small = totals.stream().filter(t -> t < 50).count();
-    boolean huge = totals.stream().anyMatch(t -> t > 100);
-    IO.println(big + " em pedidos grandes, " + small + " pequenos, algum enorme: " + huge);
+    Predicate<Integer> isEven = n -> n % 2 == 0;
+    IO.println(isEven.test(4));
+
+    List<Player> table = new ArrayList<>(List.of(
+            new Player("Caio", 50), new Player("Ana", 75), new Player("Bia", 50)));
+    table.sort(Comparator.comparingInt(Player::score).reversed()
+            .thenComparing(Player::name));
+    IO.println(table);   // Ana 75, depois Bia e Caio, empatados em 50
 }
 ```
 
-As operações terminais incluem `sum`, `count`, `toList()` e `collect(...)`; `Collectors.groupingBy` e `partitioningBy` montam mapas.
+Um comparador devolve um número negativo, zero ou positivo, dizendo qual de dois itens vem primeiro.
 
-**Cuidado:** um stream só pode ser usado uma vez, e nada roda até a operação terminal. Comece um novo `.stream()` para cada pipeline.
+**Cuidado:** uma lambda só pode usar uma variável local se essa variável nunca mudar depois de receber o valor.
 
 <!-- readings -->

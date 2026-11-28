@@ -1,0 +1,40 @@
+{
+  "title": "Maps",
+  "topic": "Collections",
+  "order": 2,
+  "challenges": [
+    "word-frequency",
+    "phone-book",
+    "weekly-hours",
+    "most-common-words"
+  ],
+  "objectives": [
+    "Store and look up values by key with a Map, counting and grouping along the way.",
+    "Go through a map's entries, and choose HashMap, LinkedHashMap, TreeMap or EnumMap by the key order you need."
+  ],
+  "readings": [
+    {
+      "title": "Using Maps to Store Key Value Pairs",
+      "source": "dev.java (Oracle)",
+      "url": "https://dev.java/learn/api/collections-and-streams/collections-framework/maps/",
+      "type": "article",
+      "minutes": 9,
+      "lang": "en",
+      "lookFor": "How a map stores key/value pairs, then \"Practicing Map Operations\": getting a value, getOrDefault, checking for a key, and removing an entry."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Maps",
+      "objectives": [
+        "Guardar e buscar valores pela chave com um Map, contando e agrupando pelo caminho.",
+        "Percorrer as entradas de um map, e escolher HashMap, LinkedHashMap, TreeMap ou EnumMap pela ordem de chaves de que precisa."
+      ],
+      "readings": [
+        {
+          "lookFor": "Como um map guarda pares chave/valor, depois \"Practicing Map Operations\": pegar um valor, getOrDefault, conferir uma chave e tirar uma entrada."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Stream Pipelines",
+  "topic": "Streams",
+  "order": 2,
+  "challenges": [
+    "even-squares",
+    "stream-statistics",
+    "name-list",
+    "top-scorers"
+  ],
+  "objectives": [
+    "Build a stream pipeline: a source, steps such as filter, map, sorted and limit, then one terminal operation.",
+    "Compute with number streams (sum, average, max) and handle an empty result with Optional."
+  ],
+  "readings": [
+    {
+      "title": "Processing Data in Memory Using the Stream API",
+      "source": "dev.java (Oracle)",
+      "url": "https://dev.java/learn/api/collections-and-streams/streams/map-filter-reduce/",
+      "type": "article",
+      "minutes": 9,
+      "lang": "en",
+      "lookFor": "The map-filter-reduce idea, then how a stream pipeline expresses it: mapping, filtering, and reducing to one result."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Pipelines de stream",
+      "objectives": [
+        "Montar um pipeline de stream: uma origem, etapas como filter, map, sorted e limit, e depois uma operação terminal.",
+        "Calcular com streams de números (sum, average, max) e tratar um resultado vazio com Optional."
+      ],
+      "readings": [
+        {
+          "lookFor": "A ideia de map-filter-reduce, depois como um pipeline de stream a expressa: mapear, filtrar e reduzir a um resultado."
+        }
+      ]
+    }
+  }
+}
