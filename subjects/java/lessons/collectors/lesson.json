@@ -1,0 +1,39 @@
+{
+  "title": "Collectors",
+  "topic": "Streams",
+  "order": 3,
+  "challenges": [
+    "group-by-length",
+    "pass-or-fail",
+    "word-index"
+  ],
+  "objectives": [
+    "Collect a stream into a list, a set, a String or a map with collect and Collectors.",
+    "Group and split with groupingBy and partitioningBy, and flatten nested lists with flatMap."
+  ],
+  "readings": [
+    {
+      "title": "Using a Collector as a Terminal Operation",
+      "source": "dev.java (Oracle)",
+      "url": "https://dev.java/learn/api/collections-and-streams/streams/using-collectors/",
+      "type": "article",
+      "minutes": 20,
+      "lang": "en",
+      "lookFor": "The sections \"Collecting in a String of Characters\", \"Partitioning Elements with a Predicate\" and \"Collecting in a Map with Grouping By\". You can stop before the post-processing sections."
+    }
+  ],
+  "translations": {
+    "pt-br": {
+      "title": "Collectors",
+      "objectives": [
+        "Juntar um stream numa lista, num set, numa String ou num map com collect e Collectors.",
+        "Agrupar e dividir com groupingBy e partitioningBy, e achatar listas aninhadas com flatMap."
+      ],
+      "readings": [
+        {
+          "lookFor": "As seções \"Collecting in a String of Characters\", \"Partitioning Elements with a Predicate\" e \"Collecting in a Map with Grouping By\". Pode parar antes das seções de pós-processamento."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 962 236" role="img" aria-label="comparingInt(score) puts lower scores first, reversed() flips it, and thenComparing(name) breaks a tie between Bia and Caio, giving Ana 75, Bia 50, Caio 50">
+<g transform="translate(0 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
+<text x="16" y="50" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">compare(Caio 50, Ana 75)</text>
+<text x="16" y="68" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">comparingInt(score)</text>
+<text x="16" y="86" fill="#10b981" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">→ 50 - 75 &lt; 0</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">Negative: Caio comes first</text>
+</g>
+<g transform="translate(244 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
+<text x="16" y="50" fill="#f59e0b" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">.reversed()</text>
+<text x="16" y="68" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">→ the sign flips</text>
+<text x="16" y="86" fill="#10b981" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">Ana 75 comes first</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">reversed() turns the order</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">around: highest score first</text>
+</g>
+<g transform="translate(488 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
+<text x="16" y="50" fill="#3b82f6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">compare(Caio 50, Bia 50)</text>
+<text x="16" y="68" fill="#8a94a6" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">→ 0: a tie</text>
+<text x="16" y="86" fill="#f59e0b" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">.thenComparing(name)</text>
+<text x="16" y="104" fill="#10b981" font-size="11" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">→ &quot;Bia&quot; &lt; &quot;Caio&quot;</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">A tie goes to the next</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">comparator</text>
+</g>
+<g transform="translate(732 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
+<text x="16" y="50" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">Ana 75</text>
+<text x="16" y="70" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">Bia 50</text>
+<text x="16" y="90" fill="#10b981" font-size="13" text-anchor="start" font-family="ui-monospace, Menlo, Consolas, monospace">Caio 50</text>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">The sorted table</text>
+</g>
+</svg>

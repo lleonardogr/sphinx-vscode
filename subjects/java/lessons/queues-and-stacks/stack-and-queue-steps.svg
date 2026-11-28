@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 962 486" role="img" aria-label="A stack: push A, push B, then pop takes B. A queue: D joins at the back, then poll takes A from the front.">
+<g transform="translate(0 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">1</text>
+<path d="M62.0 124 L62.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M148.0 124 L148.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M62.0 180 L148.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="70.0" y="152" width="70" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="168.9" fill="#3b82f6" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">A</text>
+<text x="154.0" y="164" fill="#8a94a6" font-size="12" text-anchor="start" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">← top</text>
+<rect x="8" y="32" width="44" height="23" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="30.0" y="48.9" fill="#f59e0b" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">A</text>
+<path d="M30.0 58.0 L99.9 143.8" stroke="#f59e0b" stroke-width="1.5" fill="none"/>
+<path d="M105.0 150.0 L96.5 146.6 L103.4 141.0 Z" fill="#f59e0b"/>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">push(&quot;A&quot;)</text>
+</g>
+<g transform="translate(244 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">2</text>
+<path d="M62.0 98 L62.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M148.0 98 L148.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M62.0 180 L148.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="70.0" y="152" width="70" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="168.9" fill="#3b82f6" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">A</text>
+<rect x="70.0" y="126" width="70" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="142.9" fill="#3b82f6" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">B</text>
+<text x="154.0" y="138" fill="#8a94a6" font-size="12" text-anchor="start" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">← top</text>
+<rect x="8" y="32" width="44" height="23" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="30.0" y="48.9" fill="#f59e0b" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">B</text>
+<path d="M30.0 58.0 L99.0 118.7" stroke="#f59e0b" stroke-width="1.5" fill="none"/>
+<path d="M105.0 124.0 L96.0 122.1 L102.0 115.3 Z" fill="#f59e0b"/>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">push(&quot;B&quot;): B goes on top of A</text>
+</g>
+<g transform="translate(488 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">3</text>
+<path d="M62.0 124 L62.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M148.0 124 L148.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<path d="M62.0 180 L148.0 180" stroke="#8a94a6" stroke-width="1.5" fill="none"/>
+<rect x="70.0" y="152" width="70" height="23" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="105.0" y="168.9" fill="#3b82f6" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">A</text>
+<text x="154.0" y="164" fill="#8a94a6" font-size="12" text-anchor="start" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">← top</text>
+<rect x="178" y="32" width="44" height="23" rx="4" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1.5"/>
+<text x="200.0" y="48.9" fill="#10b981" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">B</text>
+<path d="M105.0 150.0 L194.3 63.6" stroke="#10b981" stroke-width="1.5" fill="none"/>
+<path d="M200.0 58.0 L197.4 66.8 L191.1 60.3 Z" fill="#10b981"/>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">pop() takes B, the last one in</text>
+</g>
+<g transform="translate(732 0)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">4</text>
+<rect x="59.0" y="90" width="35" height="30" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="76.5" y="110.4" fill="#3b82f6" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">A</text>
+<rect x="97.0" y="90" width="35" height="30" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="114.5" y="110.4" fill="#3b82f6" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">B</text>
+<rect x="135.0" y="90" width="35" height="30" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="152.5" y="110.4" fill="#3b82f6" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">C</text>
+<text x="77.0" y="138" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">front</text>
+<text x="153.0" y="138" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">back</text>
+<rect x="186" y="42" width="35" height="30" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="203.5" y="62.4" fill="#f59e0b" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">D</text>
+<path d="M205.0 72.0 L174.9 89.9" stroke="#f59e0b" stroke-width="1.5" fill="none"/>
+<path d="M168.0 94.0 L172.6 86.0 L177.2 93.8 Z" fill="#f59e0b"/>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">offer(&quot;D&quot;) joins at the back</text>
+</g>
+<g transform="translate(0 250)">
+<rect x="0.75" y="0.75" width="228.5" height="234.5" rx="8" fill="none" stroke="#8a94a6" stroke-opacity="0.45" stroke-width="1.5"/>
+<circle cx="18" cy="18" r="11" fill="#3b82f6"/>
+<text x="18" y="22.5" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">5</text>
+<rect x="59.0" y="90" width="35" height="30" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="76.5" y="110.4" fill="#3b82f6" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">B</text>
+<rect x="97.0" y="90" width="35" height="30" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="114.5" y="110.4" fill="#3b82f6" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">C</text>
+<rect x="135.0" y="90" width="35" height="30" rx="4" fill="#3b82f6" fill-opacity="0.15" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="152.5" y="110.4" fill="#3b82f6" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">D</text>
+<text x="77.0" y="138" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">front</text>
+<text x="153.0" y="138" fill="#8a94a6" font-size="11" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">back</text>
+<rect x="8" y="42" width="35" height="30" rx="4" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1.5"/>
+<text x="25.5" y="62.4" fill="#10b981" font-size="15" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700">A</text>
+<path d="M58.0 94.0 L47.5 78.6" stroke="#10b981" stroke-width="1.5" fill="none"/>
+<path d="M43.0 72.0 L51.2 76.1 L43.8 81.1 Z" fill="#10b981"/>
+<text x="115.0" y="206" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">poll() takes A, the first one</text>
+<text x="115.0" y="221" fill="#8a94a6" font-size="12.5" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif">in</text>
+</g>
+</svg>

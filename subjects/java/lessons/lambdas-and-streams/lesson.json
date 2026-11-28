@@ -1,46 +1,35 @@
 {
-  "title": "Lambdas and Streams",
+  "title": "Lambdas and Method References",
   "topic": "Streams",
   "order": 1,
+  "challenges": [
+    "sort-with-comparator"
+  ],
   "objectives": [
-    "Pass behaviour as a value with a lambda, such as a comparator.",
-    "Build a stream pipeline: filter, map and sort, then one terminal operation.",
-    "Group and count with collectors instead of loops."
+    "Pass behaviour as a value with a lambda or a method reference, such as a test or a comparator.",
+    "Build comparators with Comparator.comparing, thenComparing and reversed."
   ],
   "readings": [
     {
-      "title": "Processing Data in Memory Using the Stream API",
-      "source": "dev.java",
-      "url": "https://dev.java/learn/api/collections-and-streams/streams/map-filter-reduce/",
-      "type": "article",
-      "minutes": 9,
-      "lang": "en",
-      "lookFor": "Map, filter and reduce compared with the same loop, intermediate operations (they return a stream) versus terminal ones (they produce the result), and why nothing runs until the terminal one."
-    },
-    {
       "title": "Writing Your First Lambda Expression",
-      "source": "dev.java",
+      "source": "dev.java (Oracle)",
       "url": "https://dev.java/learn/language/fp/lambdas/first-lambdas/",
       "type": "article",
       "minutes": 9,
       "lang": "en",
-      "lookFor": "Optional: the (parameters) -> body syntax, with one expression or a block in braces. The parts on capturing local values and serialization are more than you need now."
+      "lookFor": "Why a lambda needs a functional interface, the Predicate and Consumer examples, and how the syntax gets shorter step by step."
     }
   ],
   "translations": {
     "pt-br": {
-      "title": "Lambdas e streams",
+      "title": "Lambdas e referências a métodos",
       "objectives": [
-        "Passar comportamento como valor com uma lambda, como um comparador.",
-        "Montar um pipeline de stream: filtrar, mapear e ordenar, depois uma operação terminal.",
-        "Agrupar e contar com collectors em vez de laços."
+        "Passar comportamento como valor com uma lambda ou uma referência a método, como um teste ou um comparador.",
+        "Montar comparadores com Comparator.comparing, thenComparing e reversed."
       ],
       "readings": [
         {
-          "lookFor": "Map, filter e reduce comparados com o mesmo laço, operações intermediárias (devolvem um stream) versus terminais (produzem o resultado), e por que nada roda até a terminal."
-        },
-        {
-          "lookFor": "Opcional: a sintaxe (parâmetros) -> corpo, com uma expressão ou um bloco entre chaves. As partes sobre capturar valores locais e serialização são mais do que você precisa agora."
+          "lookFor": "Por que uma lambda precisa de uma interface funcional, os exemplos de Predicate e Consumer, e como a sintaxe fica mais curta passo a passo."
         }
       ]
     }
